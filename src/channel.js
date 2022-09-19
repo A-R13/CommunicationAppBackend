@@ -1,5 +1,5 @@
-function channelcreateV1 (authUserId, name, isPublic) {
+function channelJoinV1 ( authUserId, channelId ) {
     return {
-        channelId: 1,
+        
     }
 }
