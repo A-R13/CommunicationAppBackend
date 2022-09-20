@@ -24,3 +24,8 @@ function channelDetailsV1( authUserId, channelId ) {
 
 }
 
+function channelJoinV1 ( authUserId, channelId ) {
+    return {
+        
+    }
+}
