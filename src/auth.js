@@ -3,3 +3,9 @@ function authRegisterV1(email, password, nameFirst, nameLast) {
             authUserId: 1
         }
 }
+
+function authLoginV1(email, password) {
+        return {
+            authUserId: 1
+        }
+}
