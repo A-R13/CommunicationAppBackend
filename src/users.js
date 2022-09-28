@@ -1,11 +1,7 @@
 import { getData } from './dataStore.js';
 
 export function userProfileV1 (authUserId, uId ) {
-
     let data = getData();
-
-    /**Need to do errors */
-
     let counter = 0;
 
     for (let authUserIdfinder of data.users) {
