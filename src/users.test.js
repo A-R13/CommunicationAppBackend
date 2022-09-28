@@ -12,4 +12,9 @@ describe("Testing for userProfileV1", () => {
         });
     });
 
+    test("uId doesnt refer to valid  user", () => {
+        expect(userProfileV1(1234,abcd)).toStrictEqual({error: 'error'});
+    });
+
+
 });
