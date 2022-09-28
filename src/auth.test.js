@@ -1,19 +1,36 @@
-import { clearV1 } from './other';
+import { clearV1 } from './other.js';
 import { authRegisterV1 } from './auth.js';
-import { getData, setData } from './dataStore';
+import { getData, setData } from './dataStore.js';
 
 describe ('Testing authRegister function', () => {
 
     test('Testing successful registration', () => {
-        clearV1();
+        //const data = getData();
         const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
-        expect(user).toEqual(user.authUserId);
+        const data = getData();
+        expect(user.authUserId).toEqual(data.users[user.authUserId]);  
+        clearV1();     
     });
 
     test('Testing successful registration (Numbers in name)', () => {
-        clearV1();
+        //const data = getData();
         const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        expect(user).toEqual(user.authUserId);
+        const data = getData();
+        
+        expect(user.authUserId).toEqual(data.users[user.authUserId]);
+        clearV1();
+        
+    });
+    test('Testing successful registration (Numbers in name)', () => {
+        //const data = getData();
+        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const data = getData();
+        expect(user.authUserId).toEqual(data.users[user.authUserId]);
+        expect(user2.authUserId).toEqual(data.users[user2.authUserId]);        
+        expect(user3.authUserId).toEqual(data.users[user3.authUserId]);
+        clearV1();
     });
 
     test('Testing failed registration (password being too short)', () => {
