@@ -2,7 +2,7 @@ import { getData } from './dataStore.js';
 
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();
-    let counter = 0;
+    let counter = 0; // The counter checks if the Id inputted is valid of not
 
     for (let authUserIdfinder of data.users) {
 
