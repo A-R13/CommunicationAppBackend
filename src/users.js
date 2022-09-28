@@ -7,13 +7,19 @@ export function userProfileV1 (authUserId, uId ) {
     for (let authUserIdfinder of data.users) {
 
         if (authUserId === authUserIdfinder.id && uId === authUserIdfinder.id) {
-            return authUserIdfinder;
+            return {
+                id: authUserIdfinder.id,
+                email: authUserIdfinder.email,
+                nameFirst: authUserIdfinder.nameFirst,
+                nameLast: authUserIdfinder.nameLast,
+                handle: authUserIdfinder.handle,
+            };
         } else {
             counter++;
         }
     };
 
-    if (counter == data.users.length) {
+    if (counter === data.users.length) {
         return {error: 'error'};
     }
 
