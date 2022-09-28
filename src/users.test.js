@@ -117,7 +117,7 @@ describe("Testing for userProfileV1", () => {
 
     });
 
-    test("Testing a larger data base which fails", () => {
+    test("AuthuserId doesnt match uID", () => {
         const base_data = {
             'users': [
                 {   'id': 1,
@@ -156,5 +156,43 @@ describe("Testing for userProfileV1", () => {
 
     });
 
+    test("AuthuserId is invalid", () => {
+        const base_data = {
+            'users': [
+                {   'id': 1,
+                    'email' : "user1@ad.unsw.edu.au",
+                    'nameFirst' : 'user1',
+                    'nameLast' : 'last1',
+                    'handle' : 'user1last1',
+                },
+                {   'id': 2,
+                    'email' : "user2@ad.unsw.edu.au",
+                    'nameFirst' : 'user2',
+                    'nameLast' : 'last2',
+                    'handle' : 'user2last2',
+                },
+                {   'id': 3,
+                    'email' : "user3@ad.unsw.edu.au",
+                    'nameFirst' : 'user3',
+                    'nameLast' : 'last3',
+                    'handle' : 'user1last3',
+                },
+                {   'id': 4,
+                    'email' : "user4@ad.unsw.edu.au",
+                    'nameFirst' : 'user4',
+                    'nameLast' : 'last4',
+                    'handle' : 'user1last4',
+                },
+                ],
+            'channels': [
+                {   'id': 1,
+                    'name' : 'channel1',},
+                ],
+        };
+
+        setData(base_data);
+        expect(userProfileV1(5, 1)).toStrictEqual({error: 'error'});
+
+    });
 
 });
