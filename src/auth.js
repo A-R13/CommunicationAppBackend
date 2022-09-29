@@ -11,7 +11,7 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
         }
     }
     // checks whether email is already in use by another user
-    if (data.users.find(users => users.email === email)){ 
+    if (data.users.find(users => users.email === email)){
         return{
             error: 'Email in Use.'
         }
@@ -52,12 +52,10 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
     );
 
     setData(data);
-
     return { 
         authUserId: uid
     }
 }
-
 
 function authLoginV1(email, password) {
         return {
