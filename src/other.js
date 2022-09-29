@@ -8,3 +8,4 @@ const cleared_data = {    // Should be the same as the intial data object in dat
 export function clearV1 () {
     setData(cleared_data);
 }
+
