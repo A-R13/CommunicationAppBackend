@@ -2,72 +2,57 @@ import { clearV1 } from './other.js';
 import { authRegisterV1 } from './auth.js';
 import { getData, setData } from './dataStore.js';
 
+
 describe ('Testing authRegister function', () => {
+    afterEach(() => {
+        clearV1();
+    });
 
     test('Testing successful registration', () => {
-        //const data = getData();
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
-        const data = getData();
-        expect(user.authUserId).toEqual(data.users[user.authUserId]);  
-        clearV1();     
+        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana'); 
+        expect(user).toStrictEqual({authUserId: expect.any(Number)});
     });
-
-    test('Testing successful registration (Numbers in name)', () => {
-        //const data = getData();
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const data = getData();
-        
-        expect(user.authUserId).toEqual(data.users[user.authUserId]);
-        clearV1();
-        
+    test('Testing successful registration (Removing Non alpha-Numeric)', () => {    
+        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12$#', 'Rana31');
+        expect(user).toStrictEqual({authUserId: expect.any(Number)});
     });
-    test('Testing successful registration (Numbers in name)', () => {
-        //const data = getData();
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const data = getData();
-        expect(user.authUserId).toEqual(data.users[user.authUserId]);
-        expect(user2.authUserId).toEqual(data.users[user2.authUserId]);        
-        expect(user3.authUserId).toEqual(data.users[user3.authUserId]);
-        clearV1();
+    test('Testing successful registration (Multiple Users, Unique ID)', () => {
+        const user = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const user2 = authRegisterV1('example4@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        expect(user).toStrictEqual({authUserId: expect.any(Number)});
+        expect(user2).toStrictEqual({authUserId: expect.any(Number)});
+        expect(user2).not.toBe(user);
     });
 
     test('Testing failed registration (password being too short)', () => {
-        clearV1();
-        const user = authRegisterV1('example@gmail.com', 'ABC12', 'Aditya', 'Rana');
-        expect(user).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example5@gmail.com', 'ABC12', 'Aditya', 'Rana');
+        expect(user).toStrictEqual({error: expect.any(String)});
     });
 
     test('Testing failed registration Invalid email', () => {
-        clearV1();
-        const user = authRegisterV1('examplegmail.comm', 'ABC12', 'Aditya', 'Rana');
-        expect(user).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example6gmail.comm', 'ABC12', 'Aditya', 'Rana');
+        expect(user).toStrictEqual({error: expect.any(String)});
     });
 
     test('Testing failed registration (email already used by another user)', () => {
-        clearV1();
-        const user = authRegisterV1('example@gmail.com', 'ABCD12', 'Aditya', 'Rana');
-        const user2 = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
-        expect(user2).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example7@gmail.com', 'ABCD12', 'Aditya', 'Rana');
+        const user2 = authRegisterV1('example7@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+        expect(user2).toStrictEqual({error: expect.any(String)});
     });
 
     test('Testing Failed registration (no first name)', () => {
-        clearV1();
-        const user = authRegisterV1('example@gmail.com', 'ABC123', '', 'Rana');
-        expect(user).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example8@gmail.com', 'ABC123', '', 'Rana');
+        expect(user).toStrictEqual({error: expect.any(String)});
     });
 
     test('Testing failed registration (no surname)', () => {
-        clearV1();
-        const user = authRegisterV1('example@gmail.com', 'ABC123', 'Aditya', '');
-        expect(user).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example9@gmail.com', 'ABC123', 'Aditya', '');
+        expect(user).toStrictEqual({error: expect.any(String)});
     });
 
     test ('Testing failed registration (name is too long)', () => {
-        clearV1();
-        const user = authRegisterV1('example@gmail.com', 'ABC123', 'Adityasdqwasdasdqed12341dsacdacasdadw13ascqavrsdfsa', 'Rana');
-        expect(user).toStrictEqual({error: 'error'});
+        const user = authRegisterV1('example10@gmail.com', 'ABC123', 'Adityasdqwasdasdqed12341dsacdacasdadw13ascqavrsdfsa', 'Rana');
+        expect(user).toStrictEqual({error: expect.any(String)});
     });
-
+    
 });
