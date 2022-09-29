@@ -1,6 +1,6 @@
-import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
-import { clearV1 } from './other';
-import { getData, setData } from './dataStore';
+import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.js';
+import { clearV1 } from './other.js';
+import { getData, setData } from './dataStore.js';
 
 describe('channelsCreate tests', () => {
     const sample_data = {
@@ -14,9 +14,11 @@ describe('channelsCreate tests', () => {
             ],
     };
 
+    let userid;
+
     beforeEach(() => {
         setData(sample_data); 
-        let userid = sample_data.id;
+        userid = sample_data.id;
     })
 
     afterEach(() => {
@@ -26,13 +28,13 @@ describe('channelsCreate tests', () => {
     test('Error Returns', () => {
         expect(channelsCreateV1(userid, '', true)).toStrictEqual({ error: expect.any(String) });
         expect(channelsCreateV1(userid, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
-        expect(channelsCreateV1(abc, 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
+        expect(channelsCreateV1('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
     })
     
     test('Correct Return', () => {
         const channel_created = channelsCreateV1(userid, 'Channel1', true);
 
-        expect(course).toStrictEqual({ channelId: expect.any(Number) });
+        expect(channel_created).toStrictEqual({ channelId: expect.any(Number) });
     })
 
 
