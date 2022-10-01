@@ -1,25 +1,32 @@
-import { getData } from './dataStore.js';
+import { getData, setData } from './dataStore.js';
 
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();
-    let counter = 0; // The counter checks if the Id inputted is valid of not
+    let check_authUserId = false;
+    let check_uId = false;
+
+    if (data.users.find(users => users.uid === authUserId)){
+        check_authUserId = true;
+    }
+
+    if (data.users.find(users => users.uid === uId)){
+        check_uId = true;
+    }
+
 
     for (let authUserIdfinder of data.users) {
-
-        if (authUserId === authUserIdfinder.id && uId === authUserIdfinder.id) {
+        if (check_authUserId === true && check_uId === true && authUserId === authUserIdfinder.uid && uId == authUserIdfinder.uid) {
             return {
-                id: authUserIdfinder.id,
+                uid: authUserIdfinder.uid,
                 email: authUserIdfinder.email,
                 nameFirst: authUserIdfinder.nameFirst,
                 nameLast: authUserIdfinder.nameLast,
-                handle: authUserIdfinder.handle,
+                user_handle: authUserIdfinder.user_handle,
             };
-        } else {
-            counter++;
-        }
+        } 
     };
 
-    if (counter === data.users.length) {
+    if (check_authUserId === false || check_uId === false || authUserId != uId) {
         return {error: 'error'};
     }
 
