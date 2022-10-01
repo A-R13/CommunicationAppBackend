@@ -10,3 +10,6 @@ ClearV1
 authRegisterV1
 - Passwords can be max 32 characters
 - Passwords can contain only printable ASCII characters
+
+channelsCreateV1
+- The user which created the channel is added as both a 'owner' and 'member', meaning they exist in both the ownerMembers and allMembers arrays inside the channel object.

@@ -32,7 +32,8 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
             Firstname: user.nameFirst,
             Lastname: user.nameLast,
           },
-        ]
+        ],
+        messages: [],
       }
 
         channels_array.push(channel);
