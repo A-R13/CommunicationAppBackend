@@ -13,3 +13,6 @@ authRegisterV1
 
 channelsCreateV1
 - The user which created the channel is added as both a 'owner' and 'member', meaning they exist in both the ownerMembers and allMembers arrays inside the channel object.
+
+channelMessages
+- The more recent the message, the higher its unique 'messageId'.
