@@ -1,5 +1,6 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
+import { channelsCreateV1 } from './channels.js';
 
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();

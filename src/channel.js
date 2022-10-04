@@ -1,30 +1,46 @@
 import { getData, setData } from './dataStore.js';
+import { authRegisterV1 } from './auth.js';
+import { channelsCreateV1 } from './channels.js';
 
 export function channelDetailsV1( authUserId, channelId ) {
+  let data = getData();
+  let check_authUserId = false;
+  let check_channelId = false;
+  let check_inchannel = false;
 
-    return {
-        name: 'Hayden',
-        ownerMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
-        allMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
+  if (data.users.find(users => users.authUserId === authUserId)){
+    check_authUserId = true;
+}
+
+  if (data.channels.find(channels => channels.channelId === channelId)){
+    check_channelId = true;
+}
+
+  for (let i of data.channels) {
+    if (i.channelId === channelId ) {
+      for (let j = 0; j < data.channels[i.channelId].allMembers.length; j++) {
+        if (data.channels[i.channelId].allMembers[j].authUserId === authUserId) {
+          check_inchannel = true;
+        }
       }
+    };
+  }
+
+  if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
+    return {error: "error"};
+  } else {
+    return {
+      course: data.channels[channelId],
+    };
+  }
+
 
 }
+
+const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+const channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
+console.log(channelDetailsV1(user1.authUserId,user1.authUserId));
+
 
 
 

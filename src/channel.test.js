@@ -1,8 +1,8 @@
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } from './channel.js';
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
-import { clearV1 } from './other.js';
-import { getData, setData } from './dataStore.js';
+import { clearV1 } from './other';
+import { getData, setData } from './dataStore';
 
 afterEach(() => {
     clearV1();
@@ -193,6 +193,36 @@ describe('Channel Messages tests', () => {
 
     })
 })
+
+describe("Channel details testing", () => {
+    test("Testing base case", () => {
+        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        const channel_created = channelsCreateV1(user1.authUserId, 'Channel1', true);
+
+        expect(channelDetailsV1(1,1).toStrictEqual(
+            {
+                name: 'Hayden',
+                ownerMembers: [
+                  {
+                    uId: 1,
+                    email: 'example@gmail.com',
+                    nameFirst: 'Hayden',
+                    nameLast: 'Jacobs',
+                    handleStr: 'haydenjacobs',
+                  }
+                ],
+                allMembers: [
+                  {
+                    uId: 1,
+                    email: 'example@gmail.com',
+                    nameFirst: 'Hayden',
+                    nameLast: 'Jacobs',
+                    handleStr: 'haydenjacobs',
+                  }
+                ],
+            }));
+    });
+});
 
 
 /*
