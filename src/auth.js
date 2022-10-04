@@ -5,10 +5,11 @@ import { clearV1 } from './other.js';
 export function authRegisterV1(email, password, nameFirst, nameLast) {
     let data = getData();
     // checks whether email, password, first name and last name are valid
-    if (!validator.isEmail(email) || password.length < 6 || password.length > 32 ||nameFirst.length < 1 || nameFirst.length > 50 || nameLast.length < 1 || nameLast.length > 50) {
-        return {
-            error: 'Invalid Details.'
-        }
+    if (!validator.isEmail(email) || password.length < 6 || password.length > 32 || nameFirst.length < 1 || 
+        nameFirst.length > 50 || nameLast.length < 1 || nameLast.length > 50) {
+            return {
+                error: 'Invalid Details.'
+            }
     }
     // checks whether email is already in use by another user
     if (data.users.find(users => users.email === email)){
@@ -33,28 +34,30 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
         }
         user_handle = user_handle + counter;
     }
-    let uid = 0;
+    let id = 0;
         // increment counter until a new unique handle is created
-        while (data.users.find(users => users.authUserId === uid)){
-            uid ++;
+        while (data.users.find(users => users.authUserId === id)){
+            id ++;
         }
 
     // Assign, push and set the data 
     data.users.push(
         {
-            authUserId: uid,
+            authUserId: id,
             user_handle: user_handle,
             email: email,
             password: password,
-            first_name: nameFirst,
-            surname: nameLast,
+            nameFirst: nameFirst,
+            nameLast: nameLast,
         }
     );
 
     setData(data);
     return { 
-        authUserId: uid
-    } 
+
+        authUserId: id
+    }
+
 }
 
 export function authLoginV1(email, password) {
