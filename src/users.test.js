@@ -1,8 +1,10 @@
 import { getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
+import { authRegisterV1 } from './auth';
 
 describe("Testing for userProfileV1", () => {
     test("Base case", () => {
+        /*
         const base_data = {
             'users': [
                 {   'uid': 1,
@@ -17,15 +19,22 @@ describe("Testing for userProfileV1", () => {
                     'name' : 'channel1',},
                 ]
         };
+        */
+        
+        // setData(base_data);
 
-        setData(base_data);
+        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+
+        console.log(user1);
         /** input a data point from getData*/
-        expect(userProfileV1(1,1)).toStrictEqual(
-            {   'uid': 1,
-                'email' : "user1@ad.unsw.edu.au",
-                'nameFirst' : 'user1',
-                'nameLast' : 'last1',
-                'user_handle' : 'user1last1',
+        expect(userProfileV1(user1.authUserId, user1.authUserId)).toStrictEqual(
+            { 
+                authUserId: user1.authUserId,
+                email : "geoffrey@email.com",
+                nameFirst : 'Geoff',
+                nameLast : 'Mok',
+                user_handle : 'geoffmok',
+
             },
         );
     });
