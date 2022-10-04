@@ -2,7 +2,6 @@ import { getData, setData } from './dataStore.js';
 
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
-
     const data = getData();
     const user = data.users.find(a => a.authUserId === authUserId);
   
@@ -50,10 +49,9 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
   
     return { channelId: channelID }
 
-
-    } else {
-      return { error: `Channel name does not meet the required standards standard` };
-    }
+  } else {
+    return { error: `Channel name does not meet the required standards standard` };
+  }
 }
 
 
@@ -79,3 +77,4 @@ export function channelsListAllV1(authUserId) {
         ],
     };
 }
+
