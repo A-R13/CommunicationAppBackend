@@ -6,6 +6,13 @@ let data = {
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
+
+/**
+ * { email: 'daiel.hkuu1@hmailc.om,
+ * authUserId:  
+ * }
+ * 
+ */
 /*
 Example usage
     let store = getData()
