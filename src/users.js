@@ -17,11 +17,14 @@ export function userProfileV1 (authUserId, uId ) {
     for (let authUserIdfinder of data.users) {
         if (check_authUserId === true && check_uId === true && uId === authUserIdfinder.authUserId) {
             return {
-                authUserId: authUserIdfinder.authUserId,
-                user_handle: authUserIdfinder.user_handle,
-                email: authUserIdfinder.email,
-                nameFirst: authUserIdfinder.nameFirst,
-                nameLast: authUserIdfinder.nameLast
+                user : {
+                    uId: authUserIdfinder.authUserId,
+                    email: authUserIdfinder.email,
+                    nameFirst: authUserIdfinder.nameFirst,
+                    nameLast: authUserIdfinder.nameLast,
+                    handleStr: authUserIdfinder.user_handle,
+                }
+
             };
         } 
     };

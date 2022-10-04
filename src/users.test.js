@@ -6,18 +6,20 @@ import { authRegisterV1 } from './auth';
 describe("Testing for userProfileV1", () => {
     test("Base case", () => {
 
-        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        const user1 = authRegisterV1("geoffrey1@email.com", "abcd1234", "Geoff1", "Mok1");
 
 
         /** input a data point from getData*/
         expect(userProfileV1(user1.authUserId, user1.authUserId)).toStrictEqual(
-            { 
-                authUserId: user1.authUserId,
-                email : "geoffrey@email.com",
-                nameFirst : 'Geoff',
-                nameLast : 'Mok',
-                user_handle : 'geoffmok',
-            },
+            {
+                user: {
+                  uId: 0,
+                  email: 'geoffrey1@email.com',
+                  nameFirst: 'Geoff1',
+                  nameLast: 'Mok1',
+                  handleStr: 'geoff1mok1'
+                }
+              }
         );
     });
 
@@ -47,13 +49,15 @@ describe("Testing for userProfileV1", () => {
         const user4 = authRegisterV1("geoffrey4@email.com", "abcd1234", "Geoff4", "Mok4");
 
         expect(userProfileV1(user3.authUserId, user2.authUserId)).toStrictEqual(
-            { 
-                authUserId: user2.authUserId,
-                email : "geoffrey2@email.com",
-                nameFirst : 'Geoff2',
-                nameLast : 'Mok2',
-                user_handle : 'geoff2mok2',
-            },
+            {
+                user: {
+                  uId: user2.authUserId,
+                  email: 'geoffrey2@email.com',
+                  nameFirst: 'Geoff2',
+                  nameLast: 'Mok2',
+                  handleStr: 'geoff2mok2'
+                }
+              }
         );
 
     });
