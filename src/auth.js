@@ -67,7 +67,7 @@ export function authLoginV1(email, password) {
             // if inputted password is a registered password of respective email
             if (array[num].password === password) {
                 // return the respective id
-                return { authUserId: array[num].authUserId}; // tell guy to change to id, insteado of authuserid
+                return { authUserId: array[num].authUserId}; 
             } else {
                 // otherwise return an error
                 return { error: 'error' };
