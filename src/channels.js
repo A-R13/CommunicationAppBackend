@@ -2,16 +2,28 @@ import { getData, setData } from './dataStore.js';
 
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
+    const data = getData();
+    const user = data.users.find(a => a.authUserId === authUserId);
+  
+    if (user === undefined) {
+      return { error: `User with authUserId '${authUserId}' does not exist!` };
+    }
+  
+    if (name.length >= 1 && name.length <= 20) {
+      // const channelID = Math.floor(Math.random() * 10000);
 
-  const data = getData();
-  const user = data.users.find(a => a.authUserId === authUserId);
+    let channelID;
+    console.log(data)
+      // increment counter until a new unique channel number is created
 
-  if (user === undefined) {
-    return { error: `User with authUserId '${authUserId}' does not exist!` };
-  }
-
-  if (name.length >= 1 && name.length <= 20) {
-    const channelID = Math.floor(Math.random() * 10000);
+    if (data.channels = []) {
+      channelID = 0;
+    } else {
+      while (data.channels.find(a => a.channelId === channelID)){
+        channelID++;
+      }
+    }
+    
     const channel = {
       channelId: channelID,
       channelName: name,
@@ -19,26 +31,23 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
       ownerMembers: [
         {
           authUserId: user.authUserId,
-          UserHandle: user.user_handle,
-          Firstname: user.nameFirst,
-          Lastname: user.nameLast,
+          User_Handle: user.user_handle,
         },
       ],
       allMembers: [
         {
           authUserId: user.authUserId,
-          UserId: user.user_handle,
-          Firstname: user.nameFirst,
-          Lastname: user.nameLast,
+          User_Handle: user.user_handle,
         },
       ],
       messages: [],
     }
-      data.channels.push(channel);
 
-      setData(data);
-      
-      return { channelId: channelID }
+    data.channels.push(channel);
+
+    setData(data);
+  
+    return { channelId: channelID }
 
   } else {
     return { error: `Channel name does not meet the required standards standard` };

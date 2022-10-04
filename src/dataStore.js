@@ -4,6 +4,37 @@ let data = {
   'channels': [],
 };
 
+/* Use the below structure
+Single User =  {
+            authUserId: id,
+            user_handle: user_handle,
+            email: email,
+            password: password,
+            nameFirst: nameFirst,
+            nameLast: nameLast,
+        }
+
+Single Channel = {
+        channelId: channelID,
+        channelName: name,
+        isPublic: isPublic,
+        ownerMembers: [
+          {
+            authUserId: user.authUserId,
+            User_Handle: user.user_handle,
+          },
+        ],
+        allMembers: [
+          {
+            authUserId: user.authUserId,
+            User_Handle: user.user_handle,
+          },
+        ],
+        messages: [],
+      }
+
+*/
+
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
 /*
