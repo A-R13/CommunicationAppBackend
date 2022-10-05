@@ -1,4 +1,5 @@
 import { getData, setData } from './dataStore.js';
+import { authRegisterV1 } from './auth.js';
 
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
@@ -10,44 +11,36 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
     }
   
     if (name.length >= 1 && name.length <= 20) {
-      // const channelID = Math.floor(Math.random() * 10000);
-
-    let channelID;
-    console.log(data)
-      // increment counter until a new unique channel number is created
-
-    if (data.channels = []) {
-      channelID = 0;
-    } else {
-      while (data.channels.find(a => a.channelId === channelID)){
-        channelID++;
+      
+      
+      // const channelID = Math.floor(Math.random() * 10000); a random number generator
+      let channelID = data.channels.length;
+        // increment counter until a new unique channel number is created
+      
+      const channel = {
+        channelId: channelID,
+        channelName: name,
+        isPublic: isPublic,
+        ownerMembers: [
+          {
+            authUserId: authUserId,
+            User_Handle: user.user_handle,
+          },
+        ],
+        allMembers: [
+          {
+            authUserId: authUserId,
+            User_Handle: user.user_handle,
+          },
+        ],
+        messages: [],
       }
-    }
+
+      data.channels.push(channel);
+
+      setData(data);
     
-    const channel = {
-      channelId: channelID,
-      channelName: name,
-      isPublic: isPublic,
-      ownerMembers: [
-        {
-          authUserId: user.authUserId,
-          User_Handle: user.user_handle,
-        },
-      ],
-      allMembers: [
-        {
-          authUserId: user.authUserId,
-          User_Handle: user.user_handle,
-        },
-      ],
-      messages: [],
-    }
-
-    data.channels.push(channel);
-
-    setData(data);
-  
-    return { channelId: channelID }
+      return { channelId: channelID }
 
   } else {
     return { error: `Channel name does not meet the required standards standard` };
