@@ -59,13 +59,13 @@ export function channelsListV1 (authUserId) {
 
 
 export function channelsListAllV1(authUserId) {
-    return {
-        channels: [
-            {
-            channelId: 1,
-            name: 'My Channel',
-            }
-        ],
-    };
+  return {
+      channels: [
+          {
+          channelId: 1,
+          name: 'My Channel',
+          }
+      ],
+  };
 }
 
