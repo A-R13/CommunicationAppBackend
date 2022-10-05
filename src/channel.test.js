@@ -275,3 +275,78 @@ describe("Channel details testing", () => {
             });
     });
 });
+
+
+
+
+
+describe("channelJoin tests", () => { 
+    let user1;
+    let user2; 
+    let channel1; 
+    let channel2;
+
+    beforeEach(() => {
+        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe').authUserId;
+        channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
+
+        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
+        channel2 = channelsCreateV1(user1, 'Channel2', true).channelId;
+    })
+
+    test ('error returns', () => { 
+        //invalid channel
+        expect(channelJoinV1(user1, 'abcde')).toStrictEqual({ error: expect.any(String)});
+        
+        //user is already in channel
+        expect(channelJoinV1(user1, channel1)).toStrictEqual({ error: expect.any(String)}); 
+
+        //channel is private and user is not already a channel member
+        expect(channelJoinV1(user1, channel2)).toStrictEqual({ error: expect.any(String)}); 
+
+        //invalid user 
+        expect(channelJoinV1('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
+        
+    })
+
+    test('Correct Returns', () => {
+        const data = getData();
+
+        const user_1 = data.users.find(a => a.authUserId === user1);
+        const user_2 = data.users.find(a => a.authUserId === user2);
+        const channel = data.channels.find(a => a.channelId === channel2);
+        const members = channel.allMembers;
+
+        expect(members).toStrictEqual([
+            {
+              authUserId: user_1.authUserId,
+              User_Handle: user_1.user_handle,
+            },
+          ]);
+
+        expect(channelJoinV1(user2, channel2)).toStrictEqual({ });
+
+        expect(members).toStrictEqual([
+            {
+                authUserId: user_1.authUserId,
+                User_Handle: user_1.user_handle,
+            },
+            {
+                authUserId: user_2.authUserId,
+                User_Handle: user_2.user_handle,
+            }
+          ]);
+
+            /*
+            correct return type for members after channels create is edited
+            {
+                uId: authUserId,
+                email: user.email,
+                nameFirst: user.nameFirst,
+                nameLast: user.nameLast,
+                handleStr: user.user_name,
+            }
+            */
+    })
+
+})
