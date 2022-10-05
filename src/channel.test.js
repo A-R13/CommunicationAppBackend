@@ -41,14 +41,12 @@ describe('Channel Messages tests', () => {
     })
 
 
-    test('Correct Return', () => {
+    test('Correct Return with less than 50 messages', () => {
         
         const data = getData();
         
         const channel_1 = data.channels.find(a => a.channelId === channel1);
         
-        const channel_2 = data.channels.find(a => a.channelId === channel2);
-
         const messages_3 = [{
                 messageId: 3,
                 authUserId: user1,
@@ -73,19 +71,6 @@ describe('Channel Messages tests', () => {
         channel_1.messages = [];
 
         channel_1.messages = messages_3;
-        
-        // For the second test, adding over 50 messages.
-        const messages_54 = [];
-        for (let i = 1; i < 55; i++) {
-            const message = {
-                messageId: i,
-                authUserId: user2,
-                message: `Message ${i}`,
-                timeSent: 1000 + i,
-            }
-            messages_54.unshift(message);
-        }
-        channel_2.messages = messages_54;
 
         setData(data);
 
@@ -113,6 +98,27 @@ describe('Channel Messages tests', () => {
             end: -1,
         } );
 
+    })
+
+    test('Correct Return with more than 50 messages', () => {
+        const data = getData();
+
+        const channel_2 = data.channels.find(a => a.channelId === channel2);
+
+        const messages_54 = [];
+
+        for (let i = 1; i < 55; i++) {
+            const message = {
+                messageId: i,
+                authUserId: user2,
+                message: `Message ${i}`,
+                timeSent: 1000 + i,
+            }
+            messages_54.unshift(message);
+        }
+        channel_2.messages = messages_54;
+
+        setData(data);
 
         // Over 50 msgs
         expect(channelMessagesV1(user2, channel2, 0)).toStrictEqual( {

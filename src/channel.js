@@ -78,4 +78,3 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
   }
 
 }
-
