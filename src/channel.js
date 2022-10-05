@@ -58,7 +58,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
   
   const user_in_channel = channel.allMembers.find(a => a.authUserId === authUserId);  
   if (user_in_channel === undefined) {
-    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel}'!` };
+    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel.channelId}'!` };
   } else if (user === undefined) {
     return { error: `User with authUserId '${authUserId}' does not exist!` };
   }
@@ -77,36 +77,4 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
     }
   }
 
-  /*
-  return {
-      messages: [
-          {
-            messageId: 1,
-            uId: 1,
-            message: 'Hello world',
-            timeSent: 1582426789,
-          }
-        ],
-        start: 0,
-        end: 50,
-  }
-  */
 }
-
-
-/*
-const messages_54 = [];
-for (let i = 1; i < 55; i++) {
-    const message = {
-        messageId: i,
-        uId: 'abc',
-        message: `Message ${i}`,
-        timeSent: 1000 + i,
-    }
-    messages_54.unshift(message);
-}
-console.log(messages_54);
-
-console.log(messages_54.splice(0,50));
-console.log(messages_54.splice(50,100));
-*/
