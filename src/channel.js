@@ -51,6 +51,7 @@ channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 export function channelJoinV1 ( authUserId, channelId ) {
     return {
+      
         
     }
 }
