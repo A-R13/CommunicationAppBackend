@@ -192,7 +192,6 @@ describe('Channel Messages tests', () => {
 
     })
 })
-<<<<<<< HEAD
 
 describe("Channel details testing", () => {
 
@@ -230,6 +229,49 @@ describe("Channel details testing", () => {
                     AllMembers: data.channels[1].allMembers,
             } 
           
+            });
+    });
+
+    clearV1();
+
+    test("Channel ID is invalid", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+
+        expect(channelDetailsV1(data.users[0].authUserId, 3)).toStrictEqual(
+            {
+                error: "error",
+            });
+    });
+
+    clearV1();
+
+    test("authuser ID is invalid", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+
+        expect(channelDetailsV1(3, 1)).toStrictEqual(
+            {
+                error: "error",
+            });
+    });
+
+    clearV1();
+
+    test("Channel ID is valid but authuser is not in the channel", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        authRegisterV1("brian@email.com", "abcd1234", "Brian", "Mok");
+        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+
+        expect(channelDetailsV1(data.users[1].authUserId, data.channels[0].channelId)).toStrictEqual(
+            {
+                error: "error",
             });
     });
 });
