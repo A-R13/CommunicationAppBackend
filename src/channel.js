@@ -50,8 +50,34 @@ console.log(data.channels)
 channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 export function channelJoinV1 ( authUserId, channelId ) {
+
+  const user = data.users.find(a => a.authUserId === authUserId); 
+  const channel = data.channels.find(c => c.channelId === channelId); 
+
+  if (!channel(channelId)) {
+    return { error: `${channelId} does not refer to a valid channel `};
+  }
+  
+  const join_channel = channel.allMembers.includes(authUserId);
+
+  if (join_channel) {
+    return { error: `${authUserId} is already a member of the channel` };
+  }
+
+  join_channel.allMembers.push(authUserId); 
+
+  const private_channel = channelsCreateV1(user, channel, false);
+
+  if (private_channel)  {
+      return { error: `${channelId} is private, you cannot join this channel`};
+  }
+
+
+  if (!user(authUserId)) { 
+    return { error: `${authUserId} is invalid`};
+  }
+
     return {
-      
         
     }
 }
