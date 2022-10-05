@@ -1,8 +1,8 @@
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } from './channel.js';
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
-import { clearV1 } from './other';
-import { getData, setData } from './dataStore';
+import { clearV1 } from './other.js';
+import { getData, setData } from './dataStore.js';
 
 afterEach(() => {
     clearV1();
@@ -44,8 +44,6 @@ describe('Channel Messages tests', () => {
     test('Correct Return', () => {
         
         const data = getData();
-
-        console.log(data);
         
         const channelid1 = channel1.channelId;
         const channel_1 = data.channels.find(a => a.channelId === channelid1);
@@ -195,32 +193,42 @@ describe('Channel Messages tests', () => {
 })
 
 describe("Channel details testing", () => {
-    test("Testing base case", () => {
-        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        const channel_created = channelsCreateV1(user1.authUserId, 'Channel1', true);
 
-        expect(channelDetailsV1(1,1).toStrictEqual(
+    test("Testing base case", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+
+        expect(channelDetailsV1(data.users[0].authUserId, data.channels[0].channelId)).toStrictEqual(
             {
-                name: 'Hayden',
-                ownerMembers: [
-                  {
-                    uId: 1,
-                    email: 'example@gmail.com',
-                    nameFirst: 'Hayden',
-                    nameLast: 'Jacobs',
-                    handleStr: 'haydenjacobs',
-                  }
-                ],
-                allMembers: [
-                  {
-                    uId: 1,
-                    email: 'example@gmail.com',
-                    nameFirst: 'Hayden',
-                    nameLast: 'Jacobs',
-                    handleStr: 'haydenjacobs',
-                  }
-                ],
-            }));
+                channel : {
+                    name: data.users[0].nameFirst,
+                    isPublic: true,
+                    ownerMembers: data.channels[0].ownerMembers,
+                    AllMembers: data.channels[0].allMembers,
+            } 
+          
+            });
+    });
+
+    clearV1();
+
+    test("Testing base case v2", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+
+        expect(channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)).toStrictEqual(
+            {
+                channel : {
+                    name: data.users[0].nameFirst,
+                    isPublic: true,
+                    ownerMembers: data.channels[1].ownerMembers,
+                    AllMembers: data.channels[1].allMembers,
+            } 
+          
+            });
     });
 });
 

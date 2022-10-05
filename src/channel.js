@@ -30,19 +30,24 @@ export function channelDetailsV1( authUserId, channelId ) {
     return {error: "error"};
   } else {
     return {
-      course: data.channels[channelId],
+      channel : {
+        name: data.users[authUserId].nameFirst,
+        isPublic: data.channels[channelId].isPublic,
+        ownerMembers: data.channels[channelId].ownerMembers,
+        AllMembers: data.channels[channelId].allMembers,
+      } 
+
     };
   }
-
-
 }
 
-const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-const channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
-console.log(channelDetailsV1(user1.authUserId,user1.authUserId));
+const data = getData();
+authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+console.log(data.channels)
 
-
-
+channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 export function channelJoinV1 ( authUserId, channelId ) {
     return {
