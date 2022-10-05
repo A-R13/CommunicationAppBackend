@@ -1,198 +1,85 @@
 import { getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
+import { clearV1 } from './other';
+import { authRegisterV1 } from './auth';
 
 describe("Testing for userProfileV1", () => {
     test("Base case", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                ],
-            'channels': [
-                {   'uId': 1,
-                    'name' : 'channel1',},
-                ]
-        };
 
-        setData(base_data);
+        const user1 = authRegisterV1("geoffrey1@email.com", "abcd1234", "Geoff1", "Mok1");
+
+
         /** input a data point from getData*/
-        expect(userProfileV1(1,1)).toStrictEqual(
-            {   'uid': 1,
-                'email' : "user1@ad.unsw.edu.au",
-                'nameFirst' : 'user1',
-                'nameLast' : 'last1',
-                'user_handle' : 'user1last1',
-            },
+        expect(userProfileV1(user1.authUserId, user1.authUserId)).toStrictEqual(
+            {
+                user: {
+                  uId: 0,
+                  email: 'geoffrey1@email.com',
+                  nameFirst: 'Geoff1',
+                  nameLast: 'Mok1',
+                  handleStr: 'geoff1mok1'
+                }
+              }
         );
     });
 
-    test("uId doesnt refer to valid  user", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                ],
-            'channels': [
-                {   'uId': 1,
-                    'name' : 'channel1',},
-                ]
-        };
+    clearV1();
 
-        setData(base_data);
-        expect(userProfileV1(1, 2)).toStrictEqual({error: 'error'});
+    test("uId doesnt refer to valid  user", () => {
+
+        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+
+        expect(userProfileV1(user1.authUserId, 2)).toStrictEqual({error: 'error'});
     });
+
+    clearV1();
 
 
     test("authUserId is invalid test", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                ],
-            'channels': [
-                {   'id': 1,
-                    'name' : 'channel1',},
-                ]
-        };
 
-        setData(base_data);
-        expect(userProfileV1(2, 1)).toStrictEqual({error: 'error'});
+        const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+
+        expect(userProfileV1(2, user1.authUserId)).toStrictEqual({error: 'error'});
     });
     
     test("Testing a larger data base which runs", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                {   'uid': 2,
-                    'email' : "user2@ad.unsw.edu.au",
-                    'nameFirst' : 'user2',
-                    'nameLast' : 'last2',
-                    'user_handle' : 'user2last2',
-                },
-                {   'uid': 3,
-                    'email' : "user3@ad.unsw.edu.au",
-                    'nameFirst' : 'user3',
-                    'nameLast' : 'last3',
-                    'user_handle' : 'user1last3',
-                },
-                {   'uid': 4,
-                    'email' : "user4@ad.unsw.edu.au",
-                    'nameFirst' : 'user4',
-                    'nameLast' : 'last4',
-                    'user_handle' : 'user1last4',
-                },
-                ],
-            'channels': [
-                {   'id': 1,
-                    'name' : 'channel1',},
-                ],
-        };
+        const user1 = authRegisterV1("geoffrey1@email.com", "abcd1234", "Geoff1", "Mok1");
+        const user2 = authRegisterV1("geoffrey2@email.com", "abcd1234", "Geoff2", "Mok2");
+        const user3 = authRegisterV1("geoffrey3@email.com", "abcd1234", "Geoff3", "Mok3");
+        const user4 = authRegisterV1("geoffrey4@email.com", "abcd1234", "Geoff4", "Mok4");
 
-        setData(base_data);
-        expect(userProfileV1(2,2)).toStrictEqual(
-            {   
-            'uid': 2,
-            'email' : "user2@ad.unsw.edu.au",
-            'nameFirst' : 'user2',
-            'nameLast' : 'last2',
-            'user_handle' : 'user2last2',
-            },
+        expect(userProfileV1(user3.authUserId, user2.authUserId)).toStrictEqual(
+            {
+                user: {
+                  uId: user2.authUserId,
+                  email: 'geoffrey2@email.com',
+                  nameFirst: 'Geoff2',
+                  nameLast: 'Mok2',
+                  handleStr: 'geoff2mok2'
+                }
+              }
         );
 
     });
 
-    test("AuthuserId doesnt match uID", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                {   'uid': 2,
-                    'email' : "user2@ad.unsw.edu.au",
-                    'nameFirst' : 'user2',
-                    'nameLast' : 'last2',
-                    'user_handle' : 'user2last2',
-                },
-                {   'uid': 3,
-                    'email' : "user3@ad.unsw.edu.au",
-                    'nameFirst' : 'user3',
-                    'nameLast' : 'last3',
-                    'user_handle' : 'user1last3',
-                },
-                {   'uid': 4,
-                    'email' : "user4@ad.unsw.edu.au",
-                    'nameFirst' : 'user4',
-                    'nameLast' : 'last4',
-                    'user_handle' : 'user1last4',
-                },
-                ],
-            'channels': [
-                {   'uId': 1,
-                    'name' : 'channel1',},
-                ],
-        };
+    test("uID isnt valid", () => {
 
-        setData(base_data);
-        expect(userProfileV1(1, 2)).toStrictEqual({error: 'error'});
+        const user1 = authRegisterV1("geoffrey1@email.com", "abcd1234", "Geoff1", "Mok1");
+        const user2 = authRegisterV1("geoffrey2@email.com", "abcd1234", "Geoff2", "Mok2");
+        const user3 = authRegisterV1("geoffrey3@email.com", "abcd1234", "Geoff3", "Mok3");
+        const user4 = authRegisterV1("geoffrey4@email.com", "abcd1234", "Geoff4", "Mok4");
+
+        expect(userProfileV1(user2.authUserId, 5)).toStrictEqual({error: 'error'});
 
     });
 
     test("AuthuserId is invalid", () => {
-        const base_data = {
-            'users': [
-                {   'uid': 1,
-                    'email' : "user1@ad.unsw.edu.au",
-                    'nameFirst' : 'user1',
-                    'nameLast' : 'last1',
-                    'user_handle' : 'user1last1',
-                },
-                {   'uid': 2,
-                    'email' : "user2@ad.unsw.edu.au",
-                    'nameFirst' : 'user2',
-                    'nameLast' : 'last2',
-                    'user_handle' : 'user2last2',
-                },
-                {   'uid': 3,
-                    'email' : "user3@ad.unsw.edu.au",
-                    'nameFirst' : 'user3',
-                    'nameLast' : 'last3',
-                    'user_handle' : 'user1last3',
-                },
-                {   'uid': 4,
-                    'email' : "user4@ad.unsw.edu.au",
-                    'nameFirst' : 'user4',
-                    'nameLast' : 'last4',
-                    'user_handle' : 'user1last4',
-                },
-                ],
-            'channels': [
-                {   'id': 1,
-                    'name' : 'channel1',},
-                ],
-        };
+        const user1 = authRegisterV1("geoffrey1@email.com", "abcd1234", "Geoff1", "Mok1");
+        const user2 = authRegisterV1("geoffrey2@email.com", "abcd1234", "Geoff2", "Mok2");
+        const user3 = authRegisterV1("geoffrey3@email.com", "abcd1234", "Geoff3", "Mok3");
+        const user4 = authRegisterV1("geoffrey4@email.com", "abcd1234", "Geoff4", "Mok4");
 
-        setData(base_data);
-        expect(userProfileV1(5, 1)).toStrictEqual({error: 'error'});
+        expect(userProfileV1(5, user2.authUserId)).toStrictEqual({error: 'error'});
 
     });
 
