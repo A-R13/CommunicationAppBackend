@@ -49,6 +49,18 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
 
 
 export function channelsListV1 (authUserId) {
+
+  const data = getData(); 
+  const user = data.users.find(a => a.authUserId === authUserId);
+  const channel = data.channels.find(c=> c.channelId === channelId);
+
+  if (user === undefined) { 
+    return { error: `${authUserId} is invalid` };
+  }
+
+  
+
+
     return {
         channels: [
             {
