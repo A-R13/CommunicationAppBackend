@@ -32,7 +32,7 @@ describe('channelsCreate tests', () => {
 
 
 describe('ChannelsListAll tests', () => {
-    const uid;
+    let uid;
     // User needs to be created in order test this function
     beforeEach(() =>{
         uid = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana').authUserId;
