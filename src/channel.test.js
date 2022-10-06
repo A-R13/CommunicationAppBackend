@@ -326,17 +326,6 @@ describe("channelJoin tests", () => {
             },
           ]);
 
-
-            /*
-            correct return type for members after channels create is edited
-            {
-                uId: authUserId,
-                email: user.email,
-                nameFirst: user.nameFirst,
-                nameLast: user.nameLast,
-                handleStr: user.user_name,
-            }
-            */
     })
 
 })
