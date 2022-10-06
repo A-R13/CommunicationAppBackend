@@ -61,8 +61,7 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
 }
 
 /**
- * <Description: Given a registered user's email and password, 
- * returns their authUserId value.>
+ * <Description: Given a registered user's email and password, returns their authUserId value.>
  * @param {string} email
  * @param {string} password 
  * @returns {number} authUserId - unique Id of the user
