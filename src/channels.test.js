@@ -32,8 +32,7 @@ describe('channelsCreate tests', () => {
 
 
 describe('ChannelsListAll tests', () => {
-
-    let uid;
+    const uid;
     // User needs to be created in order test this function
     beforeEach(() =>{
         uid = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana').authUserId;
@@ -62,7 +61,6 @@ describe('ChannelsListAll tests', () => {
     })
 
     test ('Testing successful channelsListAll (No channels)', () => {
-
         expect(channelsListAllV1(uid)).toStrictEqual({
             channels: []
         })
@@ -70,9 +68,7 @@ describe('ChannelsListAll tests', () => {
     })
 
     test ('Testing failed channelsListAll (invalid authUserId)', () => {
-
         const channel = channelsCreateV1(uid, 'Channel', false);
-
         expect(channelsListAllV1(uid + 1)).toStrictEqual({error: expect.any(String)});
     })
 
