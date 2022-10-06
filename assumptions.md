@@ -17,3 +17,7 @@ channelsCreateV1
 
 channelMessages
 - The more recent the message, the higher its unique 'messageId'.
+
+channelListAllV1
+- If there are no created channels the function will return an empty array
+- The channels array will be descending order, such that the oldest channel will appear at the top of the array and the most recent channel created will appear at the bottom.

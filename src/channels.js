@@ -71,15 +71,34 @@ export function channelsListV1 (authUserId) {
     };
 }
 
+/**
+ * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
+ * 
+ * @param {number} authUserId - It is the id of the user
+ * 
+ * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
+ */
 
 export function channelsListAllV1(authUserId) {
-    return {
-        channels: [
-            {
-            channelId: 1,
-            name: 'My Channel',
-            }
-        ],
-    };
-}
+  const data = getData();
+  const user = data.users.find(user => user.authUserId === authUserId);
+  
+  if (user === undefined) {
+    return { error: `Invalid Auth user Id` };
+  }
 
+  // temporary array for channels
+  const temp_channels = [];
+
+  for (const channel of data.channels){
+    temp_channels.push(
+      {
+        channelId: channel.channelId,
+        name:channel.channelName,
+      }
+    )
+  }
+  return {
+    channels: temp_channels,
+  };
+}
