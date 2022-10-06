@@ -23,7 +23,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
         channelID++;
       }
     }
-    
+
     const channel = {
       channelId: channelID,
       channelName: name,
