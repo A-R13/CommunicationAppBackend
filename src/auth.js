@@ -70,7 +70,7 @@ export function authLoginV1(email, password) {
 
     const data = getData();
     const array = data.users;
-    for (num in array) {
+    for (const num in array) {
         if (array[num].email === email) {
             if (array[num].password === password) {
                 return { authUserId: array[num].authUserId}; 
