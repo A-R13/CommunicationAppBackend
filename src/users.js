@@ -1,5 +1,6 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
+import { channelsCreateV1 } from './channels.js';
 
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();
@@ -14,15 +15,17 @@ export function userProfileV1 (authUserId, uId ) {
         check_uId = true;
     }
 
-
     for (let authUserIdfinder of data.users) {
-        if (check_authUserId === true && check_uId === true && authUserId === authUserIdfinder.authUserId && uId === authUserIdfinder.authUserId) {
+        if (check_authUserId === true && check_uId === true && uId === authUserIdfinder.authUserId) {
             return {
-                authUserId: authUserIdfinder.authUserId,
-                user_handle: authUserIdfinder.user_handle,
-                email: authUserIdfinder.email,
-                nameFirst: authUserIdfinder.nameFirst,
-                nameLast: authUserIdfinder.nameLast
+                user : {
+                    uId: authUserIdfinder.authUserId,
+                    email: authUserIdfinder.email,
+                    nameFirst: authUserIdfinder.nameFirst,
+                    nameLast: authUserIdfinder.nameLast,
+                    handleStr: authUserIdfinder.user_handle,
+                }
+
             };
         } 
     };

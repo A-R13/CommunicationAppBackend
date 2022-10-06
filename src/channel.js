@@ -1,32 +1,53 @@
 import { getData, setData } from './dataStore.js';
+import { authRegisterV1 } from './auth.js';
+import { channelsCreateV1 } from './channels.js';
 
 export function channelDetailsV1( authUserId, channelId ) {
+  let data = getData();
+  let check_authUserId = false;
+  let check_channelId = false;
+  let check_inchannel = false;
 
-    return {
-        name: 'Hayden',
-        ownerMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
-        allMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
-      }
-
+  if (data.users.find(users => users.authUserId === authUserId)){
+    check_authUserId = true;
 }
 
+  if (data.channels.find(channels => channels.channelId === channelId)){
+    check_channelId = true;
+}
 
+  for (let i of data.channels) {
+    if (i.channelId === channelId ) {
+      for (let j = 0; j < data.channels[i.channelId].allMembers.length; j++) {
+        if (data.channels[i.channelId].allMembers[j].authUserId === authUserId) {
+          check_inchannel = true;
+        }
+      }
+    };
+  }
+
+  if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
+    return {error: "error"};
+  } else {
+    return {
+      channel : {
+        name: data.users[authUserId].nameFirst,
+        isPublic: data.channels[channelId].isPublic,
+        ownerMembers: data.channels[channelId].ownerMembers,
+        AllMembers: data.channels[channelId].allMembers,
+      } 
+
+    };
+  }
+}
+
+const data = getData();
+authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
+channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+console.log(data.channels)
+
+channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 export function channelJoinV1 ( authUserId, channelId ) {
     return {
@@ -58,7 +79,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
   
   const user_in_channel = channel.allMembers.find(a => a.authUserId === authUserId);  
   if (user_in_channel === undefined) {
-    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel}'!` };
+    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel.channelId}'!` };
   } else if (user === undefined) {
     return { error: `User with authUserId '${authUserId}' does not exist!` };
   }
@@ -76,37 +97,4 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
       end: (start + 50), 
     }
   }
-
-  /*
-  return {
-      messages: [
-          {
-            messageId: 1,
-            uId: 1,
-            message: 'Hello world',
-            timeSent: 1582426789,
-          }
-        ],
-        start: 0,
-        end: 50,
-  }
-  */
 }
-
-
-/*
-const messages_54 = [];
-for (let i = 1; i < 55; i++) {
-    const message = {
-        messageId: i,
-        uId: 'abc',
-        message: `Message ${i}`,
-        timeSent: 1000 + i,
-    }
-    messages_54.unshift(message);
-}
-console.log(messages_54);
-
-console.log(messages_54.splice(0,50));
-console.log(messages_54.splice(50,100));
-*/
