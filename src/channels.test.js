@@ -30,24 +30,46 @@ describe('channelsCreate tests', () => {
 
 })
 
-describe('channels list testing', () => { 
 
-    afterEach(() => { 
-        clearV1(); 
+describe('ChannelsListAll tests', () => {
+    const uid;
+    // User needs to be created in order test this function
+    beforeEach(() =>{
+        uid = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana').authUserId;
+    })
+
+    afterEach(() => {
+        clearV1();
+    });
+
+    test ('Testing successful channelsListAll (Private and Public)', () => {
+        const channel1 = channelsCreateV1(uid, 'Channel1', true);
+        const channel2 = channelsCreateV1(uid, 'Channel2', false);
+
+        expect(channelsListAllV1(uid)).toStrictEqual({
+            channels: [
+                {
+                    channelId: channel1.channelId,
+                    name: expect.any(String),
+                },
+                {
+                    channelId: channel2.channelId,
+                    name: expect.any(String),
+                }
+            ]
+        })
+    })
+
+    test ('Testing successful channelsListAll (No channels)', () => {
+        expect(channelsListAllV1(uid)).toStrictEqual({
+            channels: []
+        })
 
     })
 
-    test("base case", () => { 
-        const user1 = authRegisterV1("athavan@gmail.com", "abcd1234", "Athavan", "Nithiananthan")
-        const channel_id = channelsCreateV1(user1.authUserId, "Channel1",  true);
-
-        expect(channelsListV1(user1.authUserId))
-
-    })
-
-    test ('errors', () => { 
-        //if authUserId is invalid 
-        expect(channelsListV1("abcde")).toStrictEqual({ error: expect.any(String) });
+    test ('Testing failed channelsListAll (invalid authUserId)', () => {
+        const channel = channelsCreateV1(uid, 'Channel', false);
+        expect(channelsListAllV1(uid + 1)).toStrictEqual({error: expect.any(String)});
     })
 
 })
