@@ -54,6 +54,7 @@ channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 /**
  * <Description: function adds authorised user into a channel they can join>
  * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
  * @returns does not return anything
  */
 
