@@ -48,7 +48,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
 }
 
 /**
- * <description: function provides a list of all channels the user is part of>
+ * <description: function provides a list of all channels the authorised user is part of>
  * @param {number} authUserId - unique ID of the user
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
