@@ -60,8 +60,11 @@ export function channelsListV1 (authUserId) {
 }
 
 /**
- * @param {number} the id of the user
- * @returns {Array<Objects>} lists all the created channels with their Id and name
+ * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
+ * 
+ * @param {number} authUserId - It is the id of the user
+ * 
+ * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
 export function channelsListAllV1(authUserId) {
