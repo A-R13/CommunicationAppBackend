@@ -29,3 +29,27 @@ describe('channelsCreate tests', () => {
 
 
 })
+/*
+describe('channels list testing', () => { 
+
+    afterEach(() => { 
+        clearV1(); 
+
+    })
+
+    test("base case", () => { 
+        const user1 = authRegisterV1("athavan@gmail.com", "abcd1234", "Athavan", "Nithiananthan")
+        const channel_id = channelsCreateV1(user1.authUserId, "Channel1",  true);
+
+        expect(channelsListV1(user1.authUserId))
+
+    })
+
+    test ('errors', () => { 
+        //if authUserId is invalid 
+        expect(channelsListV1("abcde")).toStrictEqual({ error: expect.any(String) });
+    })
+
+})
+
+*/
