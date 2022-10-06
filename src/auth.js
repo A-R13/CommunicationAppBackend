@@ -64,7 +64,7 @@ export function authLoginV1(email, password) {
 
     const data = getData();
     const array = data.users;
-    for (num in array) {
+    for (const num in array) {
         // if inputted email is a registered email
         if (array[num].email === email) {
             // if inputted password is a registered password of respective email
