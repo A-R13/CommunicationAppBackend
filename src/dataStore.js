@@ -4,8 +4,8 @@ let data = {
   'channels': [],
 };
 
-/* Use the below structure
-Single User =  {
+/* The manner in which users and channels should be stored.
+User in data.users =  {
             authUserId: id,
             user_handle: user_handle,
             email: email,
@@ -20,14 +20,20 @@ Single Channel = {
         isPublic: isPublic,
         ownerMembers: [
           {
-            authUserId: user.authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         allMembers: [
           {
-            authUserId: user.authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         messages: [],

@@ -19,7 +19,7 @@ export function channelDetailsV1( authUserId, channelId ) {
   for (let i of data.channels) {
     if (i.channelId === channelId ) {
       for (let j = 0; j < data.channels[i.channelId].allMembers.length; j++) {
-        if (data.channels[i.channelId].allMembers[j].authUserId === authUserId) {
+        if (data.channels[i.channelId].allMembers[j].uId === authUserId) {
           check_inchannel = true;
         }
       }
@@ -41,14 +41,6 @@ export function channelDetailsV1( authUserId, channelId ) {
   }
 }
 
-const data = getData();
-authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
-console.log(data.channels)
-
-channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
-
 
 
 /**
@@ -60,12 +52,13 @@ channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 //helper function
 export function getChannel(channelId) {
+  let data = getData();
   return data.channels.find(c => c.channelId === channelId);
 }
 
 export function channelJoinV1 ( authUserId, channelId ) {
 
-  const data = getData();
+  let data = getData();
 
 
   const user = data.users.find(a => a.authUserId === authUserId);
@@ -75,7 +68,7 @@ export function channelJoinV1 ( authUserId, channelId ) {
     return { error: `${channelId} does not refer to a valid channel `};
   }
 
-  if (channel.allMembers.find(a => a.authUserId === authUserId)) {
+  if (channel.allMembers.find(a => a.uId === authUserId)) {
     return { error: `${authUserId} is already a member of the channel` };
   }
 
@@ -89,13 +82,17 @@ export function channelJoinV1 ( authUserId, channelId ) {
   }
 
  
-  channel.allMembers.push( { authUserId: user.authUserId, User_Handle: user.user_handle }); 
+  channel.allMembers.push( {
+    uId: user.authUserId,
+    email: user.email,
+    nameFirst: user.nameFirst,
+    nameLast: user.nameLast,
+    handleStr: user.user_handle,
+    } ); 
 
   setData(data);
 
-    return {
-        
-    }
+  return { };
 }
 
 
@@ -120,7 +117,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
     return { error: `Start '${start}' is greater than the total number of messages in the specified channel`};
   }
   
-  const user_in_channel = channel.allMembers.find(a => a.authUserId === authUserId);  
+  const user_in_channel = channel.allMembers.find(a => a.uId === authUserId);  
   if (user_in_channel === undefined) {
     return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel.channelId}'!` };
   } else if (user === undefined) {

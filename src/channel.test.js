@@ -26,7 +26,6 @@ describe('Channel Messages tests', () => {
     
     test('Error Returns', () => {
     
-       
         // channelid does not refer to an existing channel
         expect(channelMessagesV1(user1, 'abc', 0)).toStrictEqual({ error: expect.any(String) });
 
@@ -193,6 +192,7 @@ describe('Channel Messages tests', () => {
     })
 })
 
+
 describe("Channel details testing", () => {
 
     test("Testing base case", () => {
@@ -227,8 +227,7 @@ describe("Channel details testing", () => {
                     isPublic: true,
                     ownerMembers: data.channels[1].ownerMembers,
                     AllMembers: data.channels[1].allMembers,
-            } 
-          
+                } 
             });
     });
 
@@ -277,9 +276,6 @@ describe("Channel details testing", () => {
 });
 
 
-
-
-
 describe("channelJoin tests", () => { 
     let user1;
     let user2; 
@@ -321,8 +317,11 @@ describe("channelJoin tests", () => {
 
         expect(members).toStrictEqual([
             {
-              authUserId: user_1.authUserId,
-              User_Handle: user_1.user_handle,
+                uId: user_1.authUserId,
+                email: user_1.email,
+                nameFirst: user_1.nameFirst,
+                nameLast: user_1.nameLast,
+                handleStr: user_1.user_handle,
             },
           ]);
 
