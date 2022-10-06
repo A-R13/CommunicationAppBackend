@@ -195,6 +195,18 @@ describe('Channel Messages tests', () => {
 })
 
 
+describe('Channel Invite tests', () => {
+    test('creator of channel can invite other valid uIds', () => {
+        const john = authRegisterV1('john.smith@gmail.com', 'password11', 'john', 'smith');
+        const diane = authRegisterV1('diane.phillip@gmail.com', 'password', 'diane', 'phillip');
+        const liam = authRegisterV1('liam.hudge@gmail.com', 'password', 'liam', 'hudge');
+        const channel = channelsCreateV1(john.authUserId, 'funChannelName', true);
+        expect(channelInviteV1(john.authUserId, channel.channelId, diane.authUserId)).toStrictEqual({});
+        expect(channelDetailsV1(diane.authUserId, channel.channelId))
+          .toStrictEqual(expect.objectContaining(expect.arrayContaining([john.authUserId, diane.authUserId])));
+      });
+})
+
 /*
 let user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
 let channel1 = channelsCreateV1(user1, 'Channel1', true);
