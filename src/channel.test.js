@@ -276,8 +276,7 @@ describe("Channel details testing", () => {
     });
 });
 
-describe("Channel Join Test", () => { 
-
+describe("channelJoin tests", () => { 
     let user1;
     let user2; 
     let channel1; 
@@ -291,13 +290,29 @@ describe("Channel Join Test", () => {
         channel2 = channelsCreateV1(user1, 'Channel2', true).channelId;
     })
 
+    test ('error returns', () => { 
+        //invalid channel
+        expect(channelJoinV1(user1, 'abcde')).toStrictEqual({ error: expect.any(String)});
+        
+        //user is already in channel
+        expect(channelJoinV1(user1, channel1)).toStrictEqual({ error: expect.any(String)}); 
+
+        //channel is private and user is not already a channel member
+        expect(channelJoinV1(user1, channel2)).toStrictEqual({ error: expect.any(String)}); 
+
+        //invalid user 
+        expect(channelJoinV1('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
+        
+    })
+
+    
     test('Correct Returns', () => {
-        const data = getData();
+        let data = getData();
 
         const user_1 = data.users.find(a => a.authUserId === user1);
         const user_2 = data.users.find(a => a.authUserId === user2);
         const channel = data.channels.find(a => a.channelId === channel2);
-        const members = channel.allMembers;
+        let members = channel.allMembers;
 
         expect(members).toStrictEqual([
             {
@@ -306,20 +321,12 @@ describe("Channel Join Test", () => {
             },
           ]);
 
-        expect(channelJoinV1(user2, channel2)).toStrictEqual({ });
+    })
 
-        expect(members).toStrictEqual([
-            {
-                authUserId: user_1.authUserId,
-                User_Handle: user_1.user_handle,
-            },
-            {
-                authUserId: user_2.authUserId,
-                User_Handle: user_2.user_handle,
-            }
-          ]);
+})
 
-            /*
+
+/*
             correct return type for members after channels create is edited
             {
                 uId: authUserId,
@@ -329,5 +336,3 @@ describe("Channel Join Test", () => {
                 handleStr: user.user_name,
             }
             */
-    })
-});

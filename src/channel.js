@@ -42,7 +42,50 @@ export function channelDetailsV1( authUserId, channelId ) {
 }
 
 
+
+
+/**
+ * <Description: function adds authorised user into a channel they can join>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns does not return anything
+ */
+
+//helper function
+export function getChannel(channelId) {
+  return data.channels.find(c => c.channelId === channelId);
+}
+
 export function channelJoinV1 ( authUserId, channelId ) {
+
+  const data = getData();
+
+
+  const user = data.users.find(a => a.authUserId === authUserId);
+  const channel = getChannel(channelId);
+  
+  if (!channel) {
+    return { error: `${channelId} does not refer to a valid channel `};
+  }
+
+  if (channel.allMembers.find(a => a.authUserId === authUserId)) {
+    return { error: `${authUserId} is already a member of the channel` };
+  }
+
+  if (channel.isPublic === false)  {
+      return { error: `${channelId} is private, you cannot join this channel`};
+  }
+
+
+  if (user === undefined) { 
+    return { error: `${authUserId} is invalid`};
+  }
+
+ 
+  channel.allMembers.push( { authUserId: user.authUserId, User_Handle: user.user_handle }); 
+
+  setData(data);
+
     return {
         
     }
