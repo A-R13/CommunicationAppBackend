@@ -30,7 +30,6 @@ describe('channelsCreate tests', () => {
 
 })
 
-
 describe('ChannelsListAll tests', () => {
     let uid;
     // User needs to be created in order test this function
