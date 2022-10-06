@@ -3,96 +3,153 @@ import { channelsCreateV1 } from './channels.js';
 import { getData, setData } from './dataStore.js';
 
 export function channelDetailsV1( authUserId, channelId ) {
+  let data = getData();
+  let check_authUserId = false;
+  let check_channelId = false;
+  let check_inchannel = false;
 
-    return {
-        name: 'Hayden',
-        ownerMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
-        allMembers: [
-          {
-            uId: 1,
-            email: 'example@gmail.com',
-            nameFirst: 'Hayden',
-            nameLast: 'Jacobs',
-            handleStr: 'haydenjacobs',
-          }
-        ],
+  if (data.users.find(users => users.authUserId === authUserId)){
+    check_authUserId = true;
+}
+
+  if (data.channels.find(channels => channels.channelId === channelId)){
+    check_channelId = true;
+}
+
+  for (let i of data.channels) {
+    if (i.channelId === channelId ) {
+      for (let j = 0; j < data.channels[i.channelId].allMembers.length; j++) {
+        if (data.channels[i.channelId].allMembers[j].authUserId === authUserId) {
+          check_inchannel = true;
+        }
       }
+    };
+  }
 
+  if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
+    return {error: "error"};
+  } else {
+    return {
+      channel : {
+        name: data.users[authUserId].nameFirst,
+        isPublic: data.channels[channelId].isPublic,
+        ownerMembers: data.channels[channelId].ownerMembers,
+        AllMembers: data.channels[channelId].allMembers,
+      } 
+
+    };
+  }
 }
 
 
+/**
+ * <Description: function adds authorised user into a channel they can join>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns does not return anything
+ */
+
+//helper function
+export function getChannel(channelId) {
+  return data.channels.find(c => c.channelId === channelId);
+}
 
 export function channelJoinV1 ( authUserId, channelId ) {
+  const data = getData();
+
+
+  const user = data.users.find(a => a.authUserId === authUserId);
+  const channel = getChannel(channelId);
+  
+  if (!channel) {
+    return { error: `${channelId} does not refer to a valid channel `};
+  }
+
+  if (channel.allMembers.find(a => a.authUserId === authUserId)) {
+    return { error: `${authUserId} is already a member of the channel` };
+  }
+
+  if (channel.isPublic === false)  {
+      return { error: `${channelId} is private, you cannot join this channel`};
+  }
+
+
+  if (user === undefined) { 
+    return { error: `${authUserId} is invalid`};
+  }
+
+ 
+  channel.allMembers.push( { authUserId: user.authUserId, User_Handle: user.user_handle }); 
+
+  setData(data);
+
     return {
         
     }
 }
 
+/**
+ * <Description: Invites a user with ID uId to join channel with ID channelID.
+ * Once invited, the user is added to the channel immediately. In both public
+ * and private channels, all members are able to invite users.
+ 
+ * @param {number} authUserId 
+ * @param {number} channelId 
+ * @param {number} uId 
+ * @returns 
+ */
 
 export function channelInviteV1( authUserId, channelId, uId ) {
     const data = getData();
     const userArray = data.users;
     const channelArray = data.channels;
     
-
     const channel = data.channels.find(c => c.channelId === channelId);
     const user1 = data.users.find(a => a.authUserId === authUserId);
     const user2 = data.users.find(u => u.authUserId === uId);
-    
 
-    // invalid channelId, invalid authUserId, invalid uId
+    // checking for invalid channelId, invalid authUserId, invalid uId
     if (channel === undefined || user1 === undefined || user2 === undefined) {
       return {error: 'invalid IDs'};
     }
 
-    /* USE THIS TO GET RID OF CHANNELID = INDEX ASSUMPTION / FIND WHAT INDEX CHANNEL IS IN
+    // find which index the channel is in
+    let i = 0;
     for (const num1 in channelArray) {
       if (channelArray[num1].channelId === channelId) {
-        // break
-        const i = num1; // channelId in loops below would be replaced by i;
+        i = num1; // channelId in loops below would be replaced by i;
       }
-    } */
+    } 
 
-    // uId is already part of the channel
-    // assumes channelId works the same as a counter (0,1,2...) -> channelId = index of array
-    const allMembersArray = channelArray[channelId].allMembers;
+    // error - uId is already part of the channel
+    const allMembersArray = channelArray[i].allMembers;
     for (const num2 in allMembersArray) {
       if (allMembersArray[num2].authUserId === uId) {
         return {error: 'uId already part of the channel'};
       }
     }
 
-    // authUserId is not part of the channel
-    // still makes the same assumption as above, is the syntax correct?
+    // error - authUserId is not part of the channel
     let isMember = false;
-    if (channelArray[channelId].allMembers.find(allMembers => allMembers.authUserId === authUserId)) {
+    if (channelArray[i].allMembers.find(allMembers => allMembers.authUserId === authUserId)) {
       isMember = true;
     }
     if (isMember === false) {
       return {error: 'authUserId not part of the channel'};
     }
 
-    // no errors, pushing the right object to the end of the allMembers array = adding user to channel
+    // no errors, pushing user object to channel
     let j = 0;
     for (const num3 in userArray) {
       if (userArray[num3].authUserId === uId) {
         j = num3;
       }
     } 
-
     const userData = userArray[j];
     data.channels[channelId].allMembers.push(userData);
-
     return {};
-}
+}  
+
 
 export function channelMessagesV1 ( authUserId, channelId, start ){
 
@@ -128,44 +185,8 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
       end: (start + 50), 
     }
   }
-
-  /*
-  return {
-      messages: [
-          {
-            messageId: 1,
-            uId: 1,
-            message: 'Hello world',
-            timeSent: 1582426789,
-          }
-        ],
-        start: 0,
-        end: 50,
-  }
-  */
 }
 
 
-/*
-const messages_54 = [];
-for (let i = 1; i < 55; i++) {
-    const message = {
-        messageId: i,
-        uId: 'abc',
-        message: `Message ${i}`,
-        timeSent: 1000 + i,
-    }
-    messages_54.unshift(message);
-}
-console.log(messages_54);
-
-console.log(messages_54.splice(0,50));
-console.log(messages_54.splice(50,100));
-*/
 
 
-const john = authRegisterV1('john.smith@gmail.com', 'password11', 'john', 'smith').authUserId;
-const diane = authRegisterV1('diane.phillip@gmail.com', 'password', 'diane', 'phillip').authUserId;
-const liam = authRegisterV1('liam.hudge@gmail.com', 'password', 'liam', 'hudge').authUserId;
-const channel = channelsCreateV1(john, 'funChannelName', true);
-console.log(channelInviteV1(john, channel.channelId, diane));
