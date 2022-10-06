@@ -59,6 +59,10 @@ export function channelsListV1 (authUserId) {
     };
 }
 
+/**
+ * @param {number} the id of the user
+ * @returns {Array<Objects>} lists all the created channels with their Id and name
+ */
 
 export function channelsListAllV1(authUserId) {
   const data = getData();
@@ -67,7 +71,7 @@ export function channelsListAllV1(authUserId) {
   if (user === undefined) {
     return { error: `Invalid Auth user Id` };
   }
-  
+
   // temporary array for channels
   const temp_channels = [];
 
@@ -84,6 +88,3 @@ export function channelsListAllV1(authUserId) {
   };
 }
 
-authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
-
-console.log(channelsListAllV1(0));
