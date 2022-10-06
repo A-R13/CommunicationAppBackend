@@ -61,13 +61,29 @@ export function channelsListV1 (authUserId) {
 
 
 export function channelsListAllV1(authUserId) {
+  const data = getData();
+  const user = data.users.find(user => user.authUserId === authUserId);
+  
+  if (user === undefined) {
+    return { error: `Invalid Auth user Id` };
+  }
+  
+  // temporary array for channels
+  const temp_channels = [];
+
+  for (const channel of data.channels){
+    temp_channels.push(
+      {
+        channelId: channel.channelId,
+        name:channel.channelName,
+      }
+    )
+  }
   return {
-    channels: [
-        {
-        channelId: 1,
-        name: 'My Channel',
-        }
-    ],
+    channels: temp_channels,
   };
 }
 
+authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+
+console.log(channelsListAllV1(0));
