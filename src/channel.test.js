@@ -205,6 +205,22 @@ describe('Channel Invite tests', () => {
         expect(channelDetailsV1(diane.authUserId, channel.channelId))
           .toStrictEqual(expect.objectContaining(expect.arrayContaining([john.authUserId, diane.authUserId])));
       });
+
+      // invited member of channel can invite other valid uids
+
+      // member invited by other member can invite other valid uids
+
+      // invalid channel
+      
+      // invalid authuser
+
+      // invalid uid
+
+      // uid is already a member of the channel
+
+      // authuser is not a member of the channel
+
+      // error if different people invite the same person
 })
 
 /*

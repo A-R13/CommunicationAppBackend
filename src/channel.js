@@ -84,14 +84,9 @@ export function channelInviteV1( authUserId, channelId, uId ) {
     let j = 0;
     for (const num3 in userArray) {
       if (userArray[num3].authUserId === uId) {
-        // break
         j = num3;
       }
     } 
-
-    // testing break works
-/*  console.log("exited for loop, num is");
-    console.log(num); */
 
     const userData = userArray[j];
     data.channels[channelId].allMembers.push(userData);
