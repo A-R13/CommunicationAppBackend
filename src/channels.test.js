@@ -77,7 +77,7 @@ describe('ChannelsListAll tests', () => {
 
 describe('channelsListV1 tests', () => {
 
-    const user; 
+    let user; 
 
     beforeEach (() => {
         user = authRegisterV1('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith').authUserId
@@ -95,7 +95,7 @@ describe('channelsListV1 tests', () => {
     test ('Check for channels user is authorised in', () => {
         const channel = channelsCreateV1(user, 'Channel', true);
 
-        expect(channel).toStrictEqual( {
+        expect(channelsListV1(channel.channelId)).toStrictEqual( {
             channels: [
                 {
                     channelId: channel.channelId,

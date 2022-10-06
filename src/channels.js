@@ -61,13 +61,14 @@ export function channelsListV1 (authUserId) {
   if (user === undefined) {
     return { error: `${authUserId} is invalid`};
   }
-
+/*
   if (channel.isPublic === false) {
     return {};
   }
+*/
   const list_channels = []; 
 
-  for (let channelFinder of data.channels) {
+  for (let channel of data.channels) {
     if (channel.isPublic === true) {
       list_channels.push(
         {
