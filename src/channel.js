@@ -10,11 +10,11 @@ export function channelDetailsV1( authUserId, channelId ) {
 
   if (data.users.find(users => users.authUserId === authUserId)){
     check_authUserId = true;
-}
+  }
 
   if (data.channels.find(channels => channels.channelId === channelId)){
     check_channelId = true;
-}
+  }
 
   for (let i of data.channels) {
     if (i.channelId === channelId ) {
@@ -41,13 +41,6 @@ export function channelDetailsV1( authUserId, channelId ) {
   }
 }
 
-const data = getData();
-authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
-console.log(data.channels)
-
-channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 export function channelJoinV1 ( authUserId, channelId ) {
     return {
@@ -62,6 +55,22 @@ export function channelInviteV1( authUserId, channelId ) {
 
     }
 }
+
+
+/**
+  * If the accessing user is member of the target channel, the function returns an array of messages starting at the provided start and ending at 
+  * either start + 50, or earlier if there are less than (start + 50) messages in the channel. 
+  * 
+  * @param {number} authUserId - The UserId of the user accessing the messages of the channel
+  * @param {number} channelId - The target channel from where messages should be recieved
+  * @param {number} start - The starting point of returned messages.
+  * ...
+  * 
+  * @returns {{ error: string }} - A string which what error has occured. 
+  * @returns {{ messages: array<{ messageId: number, uId: number, message: string, timeSent: number}>, start: number, end: number}} - 
+  * Messages array contains all the requested messages, start is the point inputed by the user, and end is either -1 if messages in channel < (start + 50), or 
+  * (start + 50), if there are more than 50 messages past the start point.
+*/
 
 export function channelMessagesV1 ( authUserId, channelId, start ){
 
