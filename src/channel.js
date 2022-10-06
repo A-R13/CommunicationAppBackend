@@ -51,6 +51,12 @@ channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
 
 
 
+/**
+ * <Description: function adds authorised user into a channel they can join>
+ * @param {number} channelId - unique ID for a channel
+ * @returns does not return anything
+ */
+
 //helper function
 export function getChannel(channelId) {
   return data.channels.find(c => c.channelId === channelId);
@@ -59,6 +65,7 @@ export function getChannel(channelId) {
 export function channelJoinV1 ( authUserId, channelId ) {
 
   const data = getData();
+
 
   const user = data.users.find(a => a.authUserId === authUserId);
   const channel = getChannel(channelId);
@@ -75,11 +82,15 @@ export function channelJoinV1 ( authUserId, channelId ) {
       return { error: `${channelId} is private, you cannot join this channel`};
   }
 
+
   if (user === undefined) { 
     return { error: `${authUserId} is invalid`};
   }
 
-  channel.allMembers.push( { authUserId: user.authUserId, User_handle: user.user_handle }); 
+ 
+  channel.allMembers.push( { authUserId: user.authUserId, User_Handle: user.user_handle }); 
+
+  setData(data);
 
     return {
         

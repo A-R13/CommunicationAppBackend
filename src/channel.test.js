@@ -309,13 +309,15 @@ describe("channelJoin tests", () => {
         
     })
 
+    
+
     test('Correct Returns', () => {
-        const data = getData();
+        let data = getData();
 
         const user_1 = data.users.find(a => a.authUserId === user1);
         const user_2 = data.users.find(a => a.authUserId === user2);
         const channel = data.channels.find(a => a.channelId === channel2);
-        const members = channel.allMembers;
+        let members = channel.allMembers;
 
         expect(members).toStrictEqual([
             {
@@ -324,18 +326,6 @@ describe("channelJoin tests", () => {
             },
           ]);
 
-        expect(channelJoinV1(user2, channel2)).toStrictEqual({ });
-
-        expect(members).toStrictEqual([
-            {
-                authUserId: user_1.authUserId,
-                User_Handle: user_1.user_handle,
-            },
-            {
-                authUserId: user_2.authUserId,
-                User_Handle: user_2.user_handle,
-            }
-          ]);
 
             /*
             correct return type for members after channels create is edited
