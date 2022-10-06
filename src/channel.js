@@ -54,7 +54,22 @@ export function getChannel(channelId) {
   return data.channels.find(c => c.channelId === channelId);
 }
 
+
+
+/**
+ * <Description: function adds authorised user into a channel they can join>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns does not return anything
+ */
+
+//helper function
+export function getChannel(channelId) {
+  return data.channels.find(c => c.channelId === channelId);
+}
+
 export function channelJoinV1 ( authUserId, channelId ) {
+
   const data = getData();
 
 
