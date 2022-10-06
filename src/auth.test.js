@@ -82,22 +82,10 @@ describe ('Testing authLogin function', () => {
         expect(login).toStrictEqual({error: expect.any(String)});
     });
 
-    // Email (right) / Password (no input)
-    test("Testing failed login (password is empty input)", () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-        const login = authLoginV1('example@gmail.com', '');
-        expect(login).toStrictEqual({error: expect.any(String)});
-    });
     // Email (does not exist) / Password (null)
     test("Testing failed login (email does not exist)", () => {
         const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
         const login = authLoginV1('csesoc@gmail.com', 'ABCD1234');
-        expect(login).toStrictEqual({error: expect.any(String)});
-    });
-    // Email (no input) / Password (null)
-    test("Testing failed login (email is empty input)", () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-        const login = authLoginV1('', 'ABCD1234');
         expect(login).toStrictEqual({error: expect.any(String)});
     });
 });

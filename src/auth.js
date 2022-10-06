@@ -60,24 +60,26 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
 
 }
 
+/**
+ * <Description: Given a registered user's email and password, 
+ * returns their authUserId value.>
+ * @param {string} email
+ * @param {string} password 
+ * @returns {number} authUserId - unique Id of the user
+ */
 export function authLoginV1(email, password) {
 
     const data = getData();
     const array = data.users;
     for (num in array) {
-        // if inputted email is a registered email
         if (array[num].email === email) {
-            // if inputted password is a registered password of respective email
             if (array[num].password === password) {
-                // return the respective id
                 return { authUserId: array[num].authUserId}; 
             } else {
-                // otherwise return an error
                 return { error: 'error' };
             }
         }
     }
-
     return { error: 'error' };
 
 }
