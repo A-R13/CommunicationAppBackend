@@ -54,12 +54,32 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
 
     setData(data);
     return { 
+
         authUserId: id
     }
+
 }
 
-function authLoginV1(email, password) {
-        return {
-            authUserId: 1
+/**
+ * <Description: Given a registered user's email and password, returns their authUserId value.>
+ * @param {string} email
+ * @param {string} password 
+ * @returns {number} authUserId - unique Id of the user
+ */
+export function authLoginV1(email, password) {
+
+    const data = getData();
+    const array = data.users;
+    for (const num in array) {
+        if (array[num].email === email) {
+            if (array[num].password === password) {
+                return { authUserId: array[num].authUserId}; 
+            } else {
+                return { error: 'error' };
+            }
         }
+    }
+    return { error: 'error' };
+
 }
+

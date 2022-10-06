@@ -1,6 +1,6 @@
-import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
+import { getData, setData } from './dataStore.js';
 
 export function channelDetailsV1( authUserId, channelId ) {
   let data = getData();
@@ -41,13 +41,18 @@ export function channelDetailsV1( authUserId, channelId ) {
   }
 }
 
-const data = getData();
-authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
-console.log(data.channels)
 
-channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
+/**
+ * <Description: function adds authorised user into a channel they can join>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns does not return anything
+ */
+
+//helper function
+export function getChannel(channelId) {
+  return data.channels.find(c => c.channelId === channelId);
+}
 
 
 
@@ -98,13 +103,68 @@ export function channelJoinV1 ( authUserId, channelId ) {
     }
 }
 
+/**
+ * <Description: Invites a user with ID uId to join channel with ID channelID.
+ * Once invited, the user is added to the channel immediately. In both public
+ * and private channels, all members are able to invite users.
+ 
+ * @param {number} authUserId 
+ * @param {number} channelId 
+ * @param {number} uId 
+ * @returns 
+ */
 
-export function channelInviteV1( authUserId, channelId ) {
+export function channelInviteV1( authUserId, channelId, uId ) {
+    const data = getData();
+    const userArray = data.users;
+    const channelArray = data.channels;
+    
+    const channel = data.channels.find(c => c.channelId === channelId);
+    const user1 = data.users.find(a => a.authUserId === authUserId);
+    const user2 = data.users.find(u => u.authUserId === uId);
 
-    return {
-
+    // checking for invalid channelId, invalid authUserId, invalid uId
+    if (channel === undefined || user1 === undefined || user2 === undefined) {
+      return {error: 'invalid IDs'};
     }
-}
+
+    // find which index the channel is in
+    let i = 0;
+    for (const num1 in channelArray) {
+      if (channelArray[num1].channelId === channelId) {
+        i = num1; // channelId in loops below would be replaced by i;
+      }
+    } 
+
+    // error - uId is already part of the channel
+    const allMembersArray = channelArray[i].allMembers;
+    for (const num2 in allMembersArray) {
+      if (allMembersArray[num2].authUserId === uId) {
+        return {error: 'uId already part of the channel'};
+      }
+    }
+
+    // error - authUserId is not part of the channel
+    let isMember = false;
+    if (channelArray[i].allMembers.find(allMembers => allMembers.authUserId === authUserId)) {
+      isMember = true;
+    }
+    if (isMember === false) {
+      return {error: 'authUserId not part of the channel'};
+    }
+
+    // no errors, pushing user object to channel
+    let j = 0;
+    for (const num3 in userArray) {
+      if (userArray[num3].authUserId === uId) {
+        j = num3;
+      }
+    } 
+    const userData = userArray[j];
+    data.channels[channelId].allMembers.push(userData);
+    return {};
+}  
+
 
 export function channelMessagesV1 ( authUserId, channelId, start ){
 
@@ -122,7 +182,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
   
   const user_in_channel = channel.allMembers.find(a => a.authUserId === authUserId);  
   if (user_in_channel === undefined) {
-    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel.channelId}'!` };
+    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel}'!` };
   } else if (user === undefined) {
     return { error: `User with authUserId '${authUserId}' does not exist!` };
   }
@@ -141,3 +201,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
     }
   }
 }
+
+
+
+
