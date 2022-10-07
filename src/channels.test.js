@@ -99,11 +99,19 @@ describe('channelsListV1 tests', () => {
             channels: [
                 {
                     channelId: channel.channelId,
-                    name: expect.any(String),
+                    name: 'Channel',
                 }
             ]
         })
 
     })
+
+    test ('Testing if no channel is creating', () => {
+        expect(channelsListAllV1(user)).toStrictEqual({
+            channels: []
+        })
+
+    })
+    
 
 })

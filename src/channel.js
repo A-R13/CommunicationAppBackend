@@ -63,7 +63,7 @@ export function channelJoinV1 ( authUserId, channelId ) {
   const data = getData();
 
 
-  const user = data.users.find(a => a.authUserId === authUserId);
+  const user = getAuthUserId(authUserId);
   const channel = getChannel(channelId);
   
   if (!channel) {
@@ -88,9 +88,6 @@ export function channelJoinV1 ( authUserId, channelId ) {
 
   setData(data);
 
-    return {
-        
-    }
 }
 
 /**
