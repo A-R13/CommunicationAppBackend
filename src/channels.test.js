@@ -1,4 +1,5 @@
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.js';
+import { channelDetailsV1 } from './channel.js';
 import { authRegisterV1 } from './auth.js';
 import { clearV1 , getAuthUserId, getChannel, getUId } from './other.js';
 import { getData, setData } from './dataStore.js';
@@ -22,9 +23,33 @@ describe('channelsCreate tests', () => {
     })
     
     test('Correct Return', () => {
+        const user = getAuthUserId(userid);
         const channel_created = channelsCreateV1(userid, 'Channel1', true);
 
         expect(channel_created).toStrictEqual({ channelId: expect.any(Number) });
+
+        expect(channelDetailsV1(userid, channel_created.channelId)).toStrictEqual( {
+            name: 'Channel1', 
+            isPublic: true,
+            ownerMembers: [
+                {
+                  uId: user.authUserId,
+                  email: user.email,
+                  nameFirst: user.nameFirst,
+                  nameLast: user.nameLast,
+                  handleStr: user.user_handle,
+                },
+              ],
+              allMembers: [
+                {
+                  uId: user.authUserId,
+                  email: user.email,
+                  nameFirst: user.nameFirst,
+                  nameLast: user.nameLast,
+                  handleStr: user.user_handle,
+                },
+              ]
+            } )
     })
 
 

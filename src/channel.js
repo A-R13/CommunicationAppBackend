@@ -41,10 +41,10 @@ export function channelDetailsV1( authUserId, channelId ) {
     return {error: "error"};
   } else {
     return {
-        name: data.users[authUserId].nameFirst,
+        name: data.channels[channelId].channelName,
         isPublic: data.channels[channelId].isPublic,
         ownerMembers: data.channels[channelId].ownerMembers,
-        AllMembers: data.channels[channelId].allMembers,
+        allMembers: data.channels[channelId].allMembers,
       };
   }
 }
