@@ -16,11 +16,11 @@ describe('Channel Messages tests', () => {
     let channel2;
 
     beforeEach(() => {
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-        channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
+        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
+        channel1 = channelsCreateV1(user1, 'Channel1', true);
 
-        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-        channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
+        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
+        channel2 = channelsCreateV1(user2, 'Channel2', true);
     })
 
     
@@ -91,7 +91,7 @@ describe('Channel Messages tests', () => {
 
         setData(data);
 
-        expect(channelMessagesV1(user1.authUserId, channelid1, 0)).toStrictEqual( {
+        expect(channelMessagesV1(user1, channelid1, 0)).toStrictEqual( {
             messages: [{
                 messageId: 3,
                 uId: user1,
@@ -117,7 +117,7 @@ describe('Channel Messages tests', () => {
 
 
         // Over 50 msgs
-        expect(channelMessagesV1(user2.authUserId, channelid2, 0)).toStrictEqual( {
+        expect(channelMessagesV1(user2, channelid2, 0)).toStrictEqual( {
             messages : [
                 { messageId: 54, uId: user2, message: 'Message 54', timeSent: 1054 },
                 { messageId: 53, uId: user2, message: 'Message 53', timeSent: 1053 },
@@ -175,7 +175,7 @@ describe('Channel Messages tests', () => {
 
         });
 
-        expect(channelMessagesV1(user2.authUserId, channelid2, 50)).toStrictEqual( {
+        expect(channelMessagesV1(user2, channelid2, 50)).toStrictEqual( {
             messages : [
                 { messageId: 4, uId: user2, message: 'Message 4', timeSent: 1004 },
                 { messageId: 3, uId: user2, message: 'Message 3', timeSent: 1003 },

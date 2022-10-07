@@ -1,6 +1,14 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
 
+/**
+ * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
+ * @param {number} authUserId - unique ID of the user
+ * @param {string} name - Name of the channel to be created
+ * @param {boolean} isPublic - To determine whether the channel will be public (true) or private (false)
+ * 
+ * @returns { {channelId: number} } - The channelId of the newly created channel
+ */
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
     const data = getData();
