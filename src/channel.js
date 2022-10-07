@@ -1,6 +1,7 @@
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
 import { getData, setData } from './dataStore.js';
+import { getChannel, getAuthUserId, getUId } from './other.js';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -54,6 +55,7 @@ export function channelDetailsV1( authUserId, channelId ) {
  * @returns does not return anything
  */
 
+<<<<<<< HEAD
 //helper function
 export function getChannel(channelId) {
   const data = getData();
@@ -61,6 +63,8 @@ export function getChannel(channelId) {
 }
 
 
+=======
+>>>>>>> 669fa9277fffbe503849318381cffb00504af5f0
 export function channelJoinV1 ( authUserId, channelId ) {
 
   const data = getData();
