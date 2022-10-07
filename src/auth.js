@@ -2,6 +2,15 @@ import validator from "validator";
 import { getData, setData } from "./dataStore.js";
 import { clearV1 } from './other.js';
 
+/**
+ * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>
+ * @param {string} email - valid email id for user 
+ * @param {string} password - valid password for user
+ * @param {string} first name - valid first name for user
+ * @param {string} last name  - valid last name for user
+ * @returns {number} authUserId - unique Id of the user
+ */
+
 export function authRegisterV1(email, password, nameFirst, nameLast) {
     let data = getData();
     // checks whether email, password, first name and last name are valid
