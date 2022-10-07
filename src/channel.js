@@ -110,8 +110,8 @@ export function channelJoinV1 ( authUserId, channelId ) {
   const channelArray = data.channels;
   
   const channel = data.channels.find(c => c.channelId === channelId);
-  const user1 = data.users.find(a => a.authUserId === authUserId);
-  const user2 = data.users.find(u => u.authUserId === uId);
+  const user1 = getAuthUserId(authUserId);
+  const user2 = getUId(uId);
 
   // checking for invalid channelId, invalid authUserId, invalid uId
   if (channel === undefined || user1 === undefined || user2 === undefined) {
