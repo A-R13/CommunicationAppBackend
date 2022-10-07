@@ -55,16 +55,7 @@ export function channelDetailsV1( authUserId, channelId ) {
  * @returns does not return anything
  */
 
-<<<<<<< HEAD
-//helper function
-export function getChannel(channelId) {
-  const data = getData();
-  return data.channels.find(c => c.channelId === channelId);
-}
 
-
-=======
->>>>>>> 669fa9277fffbe503849318381cffb00504af5f0
 export function channelJoinV1 ( authUserId, channelId ) {
 
   const data = getData();
