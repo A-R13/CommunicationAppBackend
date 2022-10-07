@@ -2,6 +2,14 @@ import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
 
+/**
+ * <Description: Returns a users profile for a valid uId that is given to check>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns {name: name, isPublic: booleon, ownerMembers: Object, AllMembers: Object}
+ */
+
+
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();
     let check_authUserId = false;
