@@ -9,7 +9,7 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * @param {number} authUserId - unique ID for a user
  * @returns {name: name, isPublic: isPublic, ownerMembers: 
  * [{ uId, email, nameFirst, nameLast, handleStr}], 
- * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}}
+ * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}
  */
 
 
