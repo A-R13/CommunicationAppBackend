@@ -95,10 +95,10 @@ describe("Channel details testing", () => {
         
         expect(channelDetailsV1(data.users[1].authUserId, data.channels[0].channelId)).toStrictEqual(
                 {
-                    name: data.users[1].nameFirst,
+                    name: data.channels[0].channelName,
                     isPublic: true,
                     ownerMembers: data.channels[0].ownerMembers,
-                    AllMembers: data.channels[0].allMembers,
+                    allMembers: data.channels[0].allMembers,
                 } 
             );
     });
