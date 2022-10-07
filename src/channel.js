@@ -164,7 +164,15 @@ export function channelInviteV1( authUserId, channelId, uId ) {
 }  
 
 
-//// NEED TO ADD DOCUMENTATION 
+/**
+ * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel. 
+ * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show. 
+ 
+ * @param {number} authUserId 
+ * @param {number} channelId 
+ * @param {number} start 
+ * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
+ */
 
 export function channelMessagesV1 ( authUserId, channelId, start ){
 
