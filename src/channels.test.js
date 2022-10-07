@@ -50,16 +50,44 @@ describe('ChannelsListAll tests', () => {
             channels: [
                 {
                     channelId: channel1.channelId,
-                    name: expect.any(String),
+                    name: 'Channel1',
                 },
                 {
                     channelId: channel2.channelId,
-                    name: expect.any(String),
+                    name: 'Channel2',
                 }
             ]
         })
     })
 
+    test ('Testing successful channelsListAll (More Channels))', () => {
+
+        const channel1 = channelsCreateV1(uid, 'Channel1', true);
+        const channel2 = channelsCreateV1(uid, 'Channel2', false);
+        const channel3 = channelsCreateV1(uid, 'Channel3', false);
+        const channel4 = channelsCreateV1(uid, 'Channel4', false);
+
+        expect(channelsListAllV1(uid)).toStrictEqual({
+            channels: [
+                {
+                    channelId: channel1.channelId,
+                    name: 'Channel1',
+                },
+                {
+                    channelId: channel2.channelId,
+                    name: 'Channel2',
+                },
+                {
+                    channelId: channel3.channelId,
+                    name: 'Channel3',
+                },
+                {
+                    channelId: channel4.channelId,
+                    name: 'Channel4',
+                },
+            ]
+        })
+    })
     test ('Testing successful channelsListAll (No channels)', () => {
         expect(channelsListAllV1(uid)).toStrictEqual({
             channels: []
