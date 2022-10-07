@@ -173,8 +173,8 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
 
   const data = getData();
 
-  const user = data.users.find(a => a.authUserId === authUserId);
-  const channel = data.channels.find(a => a.channelId === channelId);
+  const user = getAuthUserId(authUserId);
+  const channel = getChannel(channelId);
 
 
   if (channel === undefined) {
