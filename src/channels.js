@@ -107,7 +107,8 @@ export function channelsListV1 (authUserId) {
 
 export function channelsListAllV1(authUserId) {
   const data = getData();
-  const user = data.users.find(user => user.authUserId === authUserId);
+  //Helper function 
+  const user = getAuthUserId(authUserId);
   
   if (user === undefined) {
     return { error: `Invalid Auth user Id` };

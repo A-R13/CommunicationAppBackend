@@ -60,10 +60,9 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
             nameLast: nameLast,
         }
     );
-
+    
     setData(data);
     return { 
-
         authUserId: id
     }
 
