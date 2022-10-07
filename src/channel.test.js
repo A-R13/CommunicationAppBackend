@@ -198,14 +198,13 @@ describe("Channel details testing", () => {
         authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
         channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
         expect(channelDetailsV1(data.users[0].authUserId, data.channels[0].channelId)).toStrictEqual(
-            {
-                channel : {
+                {
                     name: data.users[0].nameFirst,
                     isPublic: true,
                     ownerMembers: data.channels[0].ownerMembers,
                     AllMembers: data.channels[0].allMembers,
                 } 
-            });
+                );
     });
 
     clearV1();
@@ -217,14 +216,13 @@ describe("Channel details testing", () => {
         channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
         
         expect(channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)).toStrictEqual(
-            {
-                channel : {
+                {
                     name: data.users[0].nameFirst,
                     isPublic: true,
                     ownerMembers: data.channels[1].ownerMembers,
                     AllMembers: data.channels[1].allMembers,
                 } 
-            });
+            );
     });
 
     clearV1();
@@ -335,14 +333,12 @@ describe('Channel Invite tests', () => {
         const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true); 
         expect(channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(dennis.authUserId, channel.channelId)).toStrictEqual(
-            {
-                channel: {
+                {
                     name: data.users[dennis.authUserId].nameFirst,
                     isPublic: true,
                     ownerMembers: data.channels[channel.channelId].ownerMembers,
                     AllMembers: data.channels[channel.channelId].allMembers,
                 }
-            }
         )
     });
 
@@ -355,14 +351,12 @@ describe('Channel Invite tests', () => {
         channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId);
         expect(channelInviteV1(dennis.authUserId, channel.channelId, geoffrey.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(geoffrey.authUserId, channel.channelId)).toStrictEqual(
-            {
-                channel: {
+                {
                     name: data.users[geoffrey.authUserId].nameFirst,
                     isPublic: true,
                     ownerMembers: data.channels[channel.channelId].ownerMembers,
                     AllMembers: data.channels[channel.channelId].allMembers,
                 },
-            }
         )
     });
 
@@ -377,14 +371,12 @@ describe('Channel Invite tests', () => {
         channelInviteV1(dennis.authUserId, channel.channelId, geoffrey.authUserId);
         expect(channelInviteV1(geoffrey.authUserId, channel.channelId, aditya.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(aditya.authUserId, channel.channelId)).toStrictEqual(
-            {
-                channel: {
+                {
                     name: data.users[aditya.authUserId].nameFirst,
                     isPublic: true,
                     ownerMembers: data.channels[channel.channelId].ownerMembers,
                     AllMembers: data.channels[channel.channelId].allMembers,
                 },
-            }
         )
     });
 
@@ -395,14 +387,12 @@ describe('Channel Invite tests', () => {
         const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', false); 
         expect(channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(dennis.authUserId, channel.channelId)).toStrictEqual(
-            {
-                channel: {
+                {
                     name: data.users[dennis.authUserId].nameFirst,
                     isPublic: false,
                     ownerMembers: data.channels[channel.channelId].ownerMembers,
                     AllMembers: data.channels[channel.channelId].allMembers,
                 }
-            }
         )
     });
 
