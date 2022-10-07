@@ -1,6 +1,6 @@
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
-import { clearV1 } from './other.js';
+import { clearV1 , getAuthUserId, getChannel, getUId } from './other.js';
 import { getData, setData } from './dataStore.js';
 
 describe('channelsCreate tests', () => {

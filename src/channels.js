@@ -1,5 +1,7 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
+import { getChannel, getAuthUserId, getUId } from './other.js';
+
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -12,7 +14,7 @@ import { authRegisterV1 } from './auth.js';
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
     const data = getData();
-    const user = data.users.find(a => a.authUserId === authUserId);
+    const user = getAuthUserId(authUserId);
   
     if (user === undefined) {
       return { error: `User with authUserId '${authUserId}' does not exist!` };

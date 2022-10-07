@@ -1,7 +1,7 @@
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } from './channel.js';
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
-import { clearV1 } from './other.js';
+import { clearV1, getAuthUserId, getChannel, getUId } from './other.js';
 import { getData, setData } from './dataStore.js';
 
 afterEach(() => {
@@ -45,10 +45,10 @@ describe('Channel Messages tests', () => {
         const data = getData();
         
         const channelid1 = channel1.channelId;
-        const channel_1 = data.channels.find(a => a.channelId === channelid1);
+        const channel_1 = getChannel(channelid1);
         
         const channelid2 = channel2.channelId;
-        const channel_2 = data.channels.find(a => a.channelId === channelid2);
+        const channel_2 = getChannel(channelid2);
 
         const messages_3 = [{
                 messageId: 3,
@@ -412,7 +412,7 @@ describe('Channel Invite tests', () => {
         const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
         const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
         const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
-        expect(channelInviteV1(nicole.authUserId, Math.floor(Math.random() * 10000), dennis.authUserId)).toStrictEqual(
+        expect(channelInviteV1(nicole.authUserId, 'a', dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
         )
     });
@@ -422,7 +422,7 @@ describe('Channel Invite tests', () => {
         const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
         const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
         const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
-        expect(channelInviteV1(Math.floor(Math.random() * 10000), channel.channelId, dennis.authUserId)).toStrictEqual(
+        expect(channelInviteV1('a', channel.channelId, dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
         )
     });
@@ -432,7 +432,7 @@ describe('Channel Invite tests', () => {
         const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
         const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
         const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
-        expect(channelInviteV1(nicole.authUserId, channel.channelId, Math.floor(Math.random() * 10000))).toStrictEqual(
+        expect(channelInviteV1(nicole.authUserId, channel.channelId, 'a')).toStrictEqual(
             { error: expect.any(String) }
         )
     });

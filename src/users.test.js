@@ -1,6 +1,6 @@
 import { getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
-import { clearV1 } from './other';
+import { clearV1, getAuthUserId, getChannel, getUId } from './other';
 import { authRegisterV1 } from './auth';
 
 describe("Testing for userProfileV1", () => {
