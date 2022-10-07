@@ -281,7 +281,8 @@ describe("channelJoin tests", () => {
     let channel2;
 
     beforeEach(() => {
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe').authUserId;
+        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
+
         channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
 
         user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
@@ -302,7 +303,6 @@ describe("channelJoin tests", () => {
         expect(channelJoinV1('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
         
     })
-
 
     test('Correct Returns', () => {
 
@@ -472,3 +472,4 @@ describe('Channel Invite tests', () => {
     });
 
 });
+

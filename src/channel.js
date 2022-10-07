@@ -51,7 +51,8 @@ export function channelDetailsV1( authUserId, channelId ) {
 
 //helper function
 export function getChannel(channelId) {
-  let data = getData();
+  const data = getData();
+
   return data.channels.find(c => c.channelId === channelId);
 }
 
