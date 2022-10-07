@@ -7,7 +7,7 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * <Description: Returns a users profile for a valid uId that is given to check>
  * @param {number} channelId - unique ID for a channel
  * @param {number} authUserId - unique ID for a user
- * @returns {name: name, isPublic: booleon, ownerMembers: Object, AllMembers: Object}
+ * @returns {user}
  */
 
 
