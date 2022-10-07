@@ -1,7 +1,7 @@
 import { clearV1 } from './other.js';
 import { authRegisterV1, authLoginV1 } from './auth.js';
 import { getData, setData } from './dataStore.js';
-
+import { getChannel, getAuthUserId, getUId } from './other.js';
 
 describe ('Testing authRegister function', () => {
     afterEach(() => {
