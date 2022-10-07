@@ -1,6 +1,15 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
+import { getChannel, getAuthUserId, getUId } from './other.js';
+
+/**
+ * <Description: Returns a users profile for a valid uId that is given to check>
+ * @param {number} channelId - unique ID for a channel
+ * @param {number} authUserId - unique ID for a user
+ * @returns {user}
+ */
+
 
 export function userProfileV1 (authUserId, uId ) {
     let data = getData();
@@ -35,12 +44,3 @@ export function userProfileV1 (authUserId, uId ) {
     }
 
 };
-
-/*
-const user1 = authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok").authUserId;
-let data = getData();
-console.log(user1);
-console.log(data);
-
-console.log(userProfileV1(user1,user1));
-*/
