@@ -1,6 +1,6 @@
 import validator from "validator";
 import { getData, setData } from "./dataStore.js";
-import { clearV1 } from './other.js';
+import { clearV1, getChannel, getAuthUserId, getUId } from './other.js';
 
 /**
  * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>

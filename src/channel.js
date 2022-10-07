@@ -1,6 +1,7 @@
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
 import { getData, setData } from './dataStore.js';
+import { getChannel, getAuthUserId, getUId } from './other.js';
 
 export function channelDetailsV1( authUserId, channelId ) {
   let data = getData();
@@ -48,13 +49,6 @@ export function channelDetailsV1( authUserId, channelId ) {
  * @param {number} authUserId - unique ID for a user
  * @returns does not return anything
  */
-
-//helper function
-export function getChannel(channelId) {
-  const data = getData();
-
-  return data.channels.find(c => c.channelId === channelId);
-}
 
 export function channelJoinV1 ( authUserId, channelId ) {
 
