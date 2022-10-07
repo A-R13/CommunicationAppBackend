@@ -91,7 +91,7 @@ export function channelsListV1 (authUserId) {
     }
   }
   return {
-      channels: list_channels,
+    channels: list_channels,
   };
 
 }
@@ -109,7 +109,6 @@ export function channelsListAllV1(authUserId) {
   const data = getData();
   //Helper function 
   const user = getAuthUserId(authUserId);
-  
   if (user === undefined) {
     return { error: `Invalid Auth user Id` };
   }
