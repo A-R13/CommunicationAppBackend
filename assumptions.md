@@ -15,8 +15,15 @@ channelsCreateV1
 channelMessages
 * The more recent the message, the higher its unique 'messageId'.
 
+channelDetailsV1
+- the return output, if correct, always has the user in all members for the channel.
+
 dataStore
 - Data is stored as an object containing an array of users and channels. 
+
+Userprofilev1
+- For a given valid uId, it will return their user if the original user is also valid
+
 
 ClearV1
 - After running the function the 'cleared' data is just an empty array of users and channels
