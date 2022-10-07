@@ -41,14 +41,6 @@ export function channelDetailsV1( authUserId, channelId ) {
   }
 }
 
-const data = getData();
-authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
-console.log(data.channels)
-
-channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)
-
 export function channelJoinV1 ( authUserId, channelId ) {
     return {
         
