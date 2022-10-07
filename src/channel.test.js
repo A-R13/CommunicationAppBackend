@@ -283,10 +283,7 @@ describe("Channel details testing", () => {
 
 
 
-<<<<<<< src/channel.test.js
 
-=======
->>>>>>> src/channel.test.js
 describe("channelJoin tests", () => { 
     let user1;
     let user2; 
@@ -294,11 +291,8 @@ describe("channelJoin tests", () => {
     let channel2;
 
     beforeEach(() => {
-<<<<<<< src/channel.test.js
         user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
-=======
         user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe').authUserId;
->>>>>>> src/channel.test.js
         channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
 
         user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
@@ -320,17 +314,11 @@ describe("channelJoin tests", () => {
         
     })
 
-<<<<<<< src/channel.test.js
 
     
 
     test('Correct Returns', () => {
 
-=======
-    
-
-    test('Correct Returns', () => {
->>>>>>> src/channel.test.js
         let data = getData();
 
         const user_1 = data.users.find(a => a.authUserId === user1);
@@ -338,18 +326,13 @@ describe("channelJoin tests", () => {
         const channel = data.channels.find(a => a.channelId === channel2);
         let members = channel.allMembers;
 
-<<<<<<< src/channel.test.js
 
-=======
->>>>>>> src/channel.test.js
         expect(members).toStrictEqual([
             {
               authUserId: user_1.authUserId,
               User_Handle: user_1.user_handle,
             },
           ]);
-
-<<<<<<< src/channel.test.js
 
     })
 
@@ -504,9 +487,3 @@ describe('Channel Invite tests', () => {
 
 });
 
-
-=======
-    })
-
-})
->>>>>>> src/channel.test.js

@@ -42,18 +42,6 @@ export function channelDetailsV1( authUserId, channelId ) {
 }
 
 
-/**
- * <Description: function adds authorised user into a channel they can join>
- * @param {number} channelId - unique ID for a channel
- * @param {number} authUserId - unique ID for a user
- * @returns does not return anything
- */
-
-//helper function
-export function getChannel(channelId) {
-  return data.channels.find(c => c.channelId === channelId);
-}
-
 
 
 /**
@@ -65,6 +53,7 @@ export function getChannel(channelId) {
 
 //helper function
 export function getChannel(channelId) {
+  const data = getData();
   return data.channels.find(c => c.channelId === channelId);
 }
 
