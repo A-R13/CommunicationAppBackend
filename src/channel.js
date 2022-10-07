@@ -7,7 +7,9 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * <Description: function gives the channel details for a existing channel>
  * @param {number} channelId - unique ID for a channel
  * @param {number} authUserId - unique ID for a user
- * @returns {name: name, isPublic: isPublic, ownerMembers: [array], AllMembers: [array]}}
+ * @returns {name: name, isPublic: isPublic, ownerMembers: 
+ * [{ uId, email, nameFirst, nameLast, handleStr}], 
+ * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}}
  */
 
 
