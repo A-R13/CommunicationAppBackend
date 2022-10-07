@@ -86,6 +86,25 @@ describe("Channel details testing", () => {
 
     clearV1();
 
+    test("Testing base case v3", () => {
+        const data = getData();
+        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
+        authRegisterV1("geoffrey2@email.com", "abcd1234", "Geoff2", "Mok2");
+        channelsCreateV1(data.users[1].authUserId, 'Channel1', true);
+        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
+        
+        expect(channelDetailsV1(data.users[1].authUserId, data.channels[0].channelId)).toStrictEqual(
+                {
+                    name: data.users[1].nameFirst,
+                    isPublic: true,
+                    ownerMembers: data.channels[0].ownerMembers,
+                    AllMembers: data.channels[0].allMembers,
+                } 
+            );
+    });
+
+    clearV1();
+
     test("Channel ID is invalid", () => {
         const data = getData();
         authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
