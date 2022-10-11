@@ -49,14 +49,12 @@ export function channelDetailsV1( authUserId, channelId ) {
   }
 }
 
-
 /**
  * <Description: function adds authorised user into a channel they can join>
  * @param {number} channelId - unique ID for a channel
  * @param {number} authUserId - unique ID for a user
  * @returns does not return anything
  */
-
 
 export function channelJoinV1 ( authUserId, channelId ) {
 
