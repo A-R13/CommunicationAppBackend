@@ -181,20 +181,25 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
   const channel = getChannel(channelId);
 
 
-  if (channel === undefined) {
+  if (channel === undefined) { 
+    // If channel is undefined 
     return { error: `Channel with channelId '${channel}' does not exist!` };
-  } else if (start > channel.messages.length) {
+  } else if (start > channel.messages.length) { 
+    // If the provided start is greater than the total messages in the channel, an error will be returned
     return { error: `Start '${start}' is greater than the total number of messages in the specified channel`};
   }
   
   const user_in_channel = channel.allMembers.find(a => a.uId === authUserId);  
   if (user_in_channel === undefined) {
+    // If user is not a member of the target channel, return an error
     return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel}'!` };
   } else if (user === undefined) {
+    // If user doesn't exist at all, return an error
     return { error: `User with authUserId '${authUserId}' does not exist!` };
   }
 
   if ((start + 50) > channel.messages.length) {
+    // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
       messages: channel.messages.slice(start, channel.messages.length),
       start: start,
@@ -202,6 +207,7 @@ export function channelMessagesV1 ( authUserId, channelId, start ){
     }
   } else {
     return {
+      // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
       messages: channel.messages.slice(start, (start + 50)),
       start: start,
       end: (start + 50), 

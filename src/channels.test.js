@@ -9,6 +9,7 @@ describe('channelsCreate tests', () => {
     let userid;
 
     beforeEach(() => {
+        clearV1();
         userid = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe').authUserId;
     })
 
