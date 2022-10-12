@@ -21,32 +21,27 @@ export function channelDetailsV1( authUserId, channelId ) {
 
   if (data.users.find(users => users.authUserId === authUserId)){
     check_authUserId = true;
-}
+  }
 
   if (data.channels.find(channels => channels.channelId === channelId)){
     check_channelId = true;
-}
+    const channel = getChannel(channelId);
 
-  for (let i of data.channels) {
-    if (i.channelId === channelId ) {
-      for (let j = 0; j < data.channels[i.channelId].allMembers.length; j++) {
-        if (data.channels[i.channelId].allMembers[j].uId === authUserId) {
-          check_inchannel = true;
-        }
-      }
-    };
+    if (channel.allMembers.find(a => a.uId === authUserId)) {
+      check_inchannel = true;
+    }
   }
-  
+
   if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
     return {error: "error"};
-  } else {
-    return {
-        name: data.channels[channelId].channelName,
-        isPublic: data.channels[channelId].isPublic,
-        ownerMembers: data.channels[channelId].ownerMembers,
-        allMembers: data.channels[channelId].allMembers,
-      };
-  }
+  } 
+
+  return {
+      name: data.channels[channelId].channelName,
+      isPublic: data.channels[channelId].isPublic,
+      ownerMembers: data.channels[channelId].ownerMembers,
+      allMembers: data.channels[channelId].allMembers,
+    };
 }
 
 
