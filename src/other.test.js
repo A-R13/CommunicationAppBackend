@@ -1,4 +1,4 @@
-import { clearV1 } from './other';
+import { clearV1, getAuthUserId, getChannel, getUId } from './other';
 import { getData, setData } from './dataStore';
 
 const expected_clear_data = {

@@ -1,10 +1,20 @@
 import { getData, setData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
+import { getChannel, getAuthUserId, getUId } from './other.js';
 
+
+/**
+ * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
+ * @param {number} authUserId - unique ID of the user
+ * @param {string} name - Name of the channel to be created
+ * @param {boolean} isPublic - To determine whether the channel will be public (true) or private (false)
+ * 
+ * @returns { {channelId: number} } - The channelId of the newly created channel
+ */
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
     const data = getData();
-    const user = data.users.find(a => a.authUserId === authUserId);
+    const user = getAuthUserId(authUserId);
   
     if (user === undefined) {
       return { error: `User with authUserId '${authUserId}' does not exist!` };
@@ -23,14 +33,20 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
         isPublic: isPublic,
         ownerMembers: [
           {
-            authUserId: authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         allMembers: [
           {
-            authUserId: authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         messages: [],
@@ -56,7 +72,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
 export function channelsListV1 (authUserId) {
 
   const data = getData(); 
-  const user = data.users.find(a => a.authUserId === authUserId);
+  const user = getAuthUserId(authUserId);
 
   if (user === undefined) {
     return { error: `${authUserId} is invalid`};
@@ -65,17 +81,19 @@ export function channelsListV1 (authUserId) {
   const list_channels = []; 
 
   for (let channel of data.channels) {
-    if (channel.isPublic === true) {
-      list_channels.push(
-        {
-          channelId: channel.channelId,
-          name: channel.channelName,
-        }
-      )
-    }
+  	if (channel.allMembers.find(a => a.uId === authUserId) || channel.ownerMembers.find(a => a.uId === authUserId) ) {
+    	if (channel.isPublic === true) {
+      		list_channels.push(
+        	{
+          		channelId: channel.channelId,
+          		name: channel.channelName,
+        	}
+      		)
+    	}
+  	}
   }
   return {
-      channels: list_channels,
+    channels: list_channels,
   };
 
 }
@@ -91,8 +109,8 @@ export function channelsListV1 (authUserId) {
 
 export function channelsListAllV1(authUserId) {
   const data = getData();
-  const user = data.users.find(user => user.authUserId === authUserId);
-  
+  //Helper function 
+  const user = getAuthUserId(authUserId);
   if (user === undefined) {
     return { error: `Invalid Auth user Id` };
   }

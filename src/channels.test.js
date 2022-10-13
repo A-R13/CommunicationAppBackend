@@ -1,6 +1,7 @@
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.js';
+import { channelDetailsV1 } from './channel.js';
 import { authRegisterV1 } from './auth.js';
-import { clearV1 } from './other.js';
+import { clearV1 , getAuthUserId, getChannel, getUId } from './other.js';
 import { getData, setData } from './dataStore.js';
 
 describe('channelsCreate tests', () => {
@@ -20,11 +21,35 @@ describe('channelsCreate tests', () => {
         expect(channelsCreateV1(userid, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
         expect(channelsCreateV1('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
     })
-    
+
     test('Correct Return', () => {
+        const user = getAuthUserId(userid);
         const channel_created = channelsCreateV1(userid, 'Channel1', true);
 
         expect(channel_created).toStrictEqual({ channelId: expect.any(Number) });
+
+        expect(channelDetailsV1(userid, channel_created.channelId)).toStrictEqual( {
+            name: 'Channel1',
+            isPublic: true,
+            ownerMembers: [
+                {
+                  uId: user.authUserId,
+                  email: user.email,
+                  nameFirst: user.nameFirst,
+                  nameLast: user.nameLast,
+                  handleStr: user.user_handle,
+                },
+              ],
+              allMembers: [
+                {
+                  uId: user.authUserId,
+                  email: user.email,
+                  nameFirst: user.nameFirst,
+                  nameLast: user.nameLast,
+                  handleStr: user.user_handle,
+                },
+              ]
+            } )
     })
 
 
@@ -50,16 +75,44 @@ describe('ChannelsListAll tests', () => {
             channels: [
                 {
                     channelId: channel1.channelId,
-                    name: expect.any(String),
+                    name: 'Channel1',
                 },
                 {
                     channelId: channel2.channelId,
-                    name: expect.any(String),
+                    name: 'Channel2',
                 }
             ]
         })
     })
 
+    test ('Testing successful channelsListAll (More Channels))', () => {
+
+        const channel1 = channelsCreateV1(uid, 'Channel1', true);
+        const channel2 = channelsCreateV1(uid, 'Channel2', false);
+        const channel3 = channelsCreateV1(uid, 'Channel3', false);
+        const channel4 = channelsCreateV1(uid, 'Channel4', false);
+
+        expect(channelsListAllV1(uid)).toStrictEqual({
+            channels: [
+                {
+                    channelId: channel1.channelId,
+                    name: 'Channel1',
+                },
+                {
+                    channelId: channel2.channelId,
+                    name: 'Channel2',
+                },
+                {
+                    channelId: channel3.channelId,
+                    name: 'Channel3',
+                },
+                {
+                    channelId: channel4.channelId,
+                    name: 'Channel4',
+                },
+            ]
+        })
+    })
     test ('Testing successful channelsListAll (No channels)', () => {
         expect(channelsListAllV1(uid)).toStrictEqual({
             channels: []
@@ -77,14 +130,14 @@ describe('ChannelsListAll tests', () => {
 
 describe('channelsListV1 tests', () => {
 
-    let user; 
+    let user;
 
     beforeEach (() => {
         user = authRegisterV1('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith').authUserId
     })
 
     afterEach (() => {
-        clearV1(); 
+        clearV1();
 
     })
 
@@ -93,17 +146,41 @@ describe('channelsListV1 tests', () => {
     })
 
     test ('Check for channels user is authorised in', () => {
-        const channel = channelsCreateV1(user, 'Channel', true);
+        const channel1 = channelsCreateV1(user, 'Channel1', true);
 
         expect(channelsListV1(channel.channelId)).toStrictEqual( {
             channels: [
                 {
-                    channelId: channel.channelId,
-                    name: expect.any(String),
+                    channelId: channel1.channelId,
+                    name: 'Channel1',
+                }
+
+            ]
+        })
+
+    })
+
+    test ('Correct returns', () => {
+        const user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'Jake', 'Smith')
+        const user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Jacob', 'Smith')
+        const channel3 = channelsCreateV1(user1, 'ChannelName', true)
+        expect(channelsListV1(user1)).toStrictEqual({
+            channels: [
+                {
+                    channelId: channel3.channelId,
+                    name: 'ChannelName',
                 }
             ]
         })
 
     })
+
+    test ('Testing if no channel is creating', () => {
+        expect(channelsListV1(user)).toStrictEqual({
+            channels: []
+        })
+
+    })
+
 
 })
