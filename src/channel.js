@@ -43,7 +43,21 @@ export function channelDetailsV1( authUserId, channelId ) {
       allMembers: data.channels[channelId].allMembers,
     };
 }
+let data = getData();
+let user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+let channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
 
+let user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+let channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
+
+let channel3 = channelsCreateV1(user1.authUserId, 'Channel3', true);
+
+let user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+let channel4 = channelsCreateV1(user3.authUserId, 'Channel4', true);
+
+channelJoinV1(data.users[1].authUserId, 3)
+console.log(data.users[user3.authUserId].user_handle)
+console.log(channelDetailsV1(user3.authUserId, channel4.channelId).allMembers);
 
 /**
  * <Description: function adds authorised user into a channel they can join>

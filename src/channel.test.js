@@ -53,6 +53,7 @@ describe("Channel details testing", () => {
 
     let user1;
     let user2;
+    let user3;
     let channel1;
     let channel2;
     let channel3;
@@ -65,6 +66,9 @@ describe("Channel details testing", () => {
         channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
 
         channel3 = channelsCreateV1(user1.authUserId, 'Channel3', true);
+
+        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+
     })
 
 
@@ -137,6 +141,42 @@ describe("Channel details testing", () => {
                     nameLast: 'Doe',
                     handleStr: 'bobdoe'
                 }],
+            } 
+            );
+    });
+
+    test("Testing for duplicate names", () => {
+        channelJoinV1(2, 1);
+        expect(channelDetailsV1(2, 1)).toStrictEqual(
+            {
+                name: 'Channel2',
+                isPublic: true,
+                ownerMembers: [ {
+                    uId: 1,
+                    email: 'example2@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe0'
+                }, {
+                    uId: 2,
+                    email: 'example3@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe1'
+                }],
+                allMembers: [{
+                    uId: 1,
+                    email: 'example2@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe0'
+                }, {
+                    uId: 2,
+                    email: 'example3@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe1'
+                } ],
             } 
             );
     });
