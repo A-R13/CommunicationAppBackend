@@ -1,10 +1,9 @@
 import { clearV1 } from './other.js';
 import { authRegisterV1, authLoginV1 } from './auth.js';
-import { getData, setData } from './dataStore.js';
 import { getChannel, getAuthUserId, getUId } from './other.js';
 
 describe ('Testing authRegister function', () => {
-    afterEach(() => {
+    beforeEach(() => {
         clearV1();
     });
 
@@ -19,7 +18,7 @@ describe ('Testing authRegister function', () => {
     });
     test('Testing successful registration (Multiple Users, Unique ID)', () => {
         const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const user2 = authRegisterV1('example2@gmai    l.com', 'ABCD1234', 'Aditya12', 'Rana21');
         expect(user).toStrictEqual({authUserId: expect.any(Number)});
         expect(user2).toStrictEqual({authUserId: expect.any(Number)});
         expect(user2).not.toBe(user);
@@ -88,4 +87,5 @@ describe ('Testing authLogin function', () => {
         const login = authLoginV1('csesoc@gmail.com', 'ABCD1234');
         expect(login).toStrictEqual({error: expect.any(String)});
     });
+
 });
