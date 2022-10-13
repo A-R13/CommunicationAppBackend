@@ -51,99 +51,117 @@ describe('Channel Messages tests', () => {
 
 describe("Channel details testing", () => {
 
+    let user1;
+    let user2;
+    let channel1;
+    let channel2;
+    let channel3;
+
+    beforeEach(() => {
+        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+        channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
+
+        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+        channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
+
+        channel3 = channelsCreateV1(user1.authUserId, 'Channel3', true);
+    })
+
 
     test("Testing base case", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-        expect(channelDetailsV1(data.users[0].authUserId, data.channels[0].channelId)).toStrictEqual(
+        expect(channelDetailsV1(user1.authUserId, channel1.channelId)).toStrictEqual(
                 {
-                    name: data.channels[0].channelName,
+                    name: 'Channel1',
                     isPublic: true,
-                    ownerMembers: data.channels[0].ownerMembers,
-                    allMembers: data.channels[0].allMembers,
+                    ownerMembers: [ {
+                        uId: 0,
+                        email: 'example1@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'Doe',
+                        handleStr: 'nicoledoe'
+                    }],
+                    allMembers: [{
+                        uId: 0,
+                        email: 'example1@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'Doe',
+                        handleStr: 'nicoledoe'
+                    }],
                 } 
                 );
     });
 
-    clearV1();
 
     test("Testing base case v2", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
         
-        expect(channelDetailsV1(data.users[0].authUserId, data.channels[1].channelId)).toStrictEqual(
+        expect(channelDetailsV1(user1.authUserId, channel3.channelId)).toStrictEqual(
                 {
-                    name: data.channels[1].channelName,
+                    name: "Channel3",
                     isPublic: true,
-                    ownerMembers: data.channels[1].ownerMembers,
-                    allMembers: data.channels[1].allMembers,
+                    ownerMembers: [ {
+                        uId: 0,
+                        email: 'example1@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'Doe',
+                        handleStr: 'nicoledoe'
+                    }],
+                    allMembers: [ {
+                        uId: 0,
+                        email: 'example1@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'Doe',
+                        handleStr: 'nicoledoe'
+                    }],
                 } 
             );
     });
 
-    clearV1();
 
     test("Testing base case v3", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        authRegisterV1("geoffrey2@email.com", "abcd1234", "Geoff2", "Mok2");
-        channelsCreateV1(data.users[1].authUserId, 'Channel1', true);
-        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
-        
-        expect(channelDetailsV1(data.users[1].authUserId, data.channels[0].channelId)).toStrictEqual(
-                {
-                    name: data.channels[0].channelName,
-                    isPublic: true,
-                    ownerMembers: data.channels[0].ownerMembers,
-                    allMembers: data.channels[0].allMembers,
-                } 
+
+        expect(channelDetailsV1(user2.authUserId, channel2.channelId)).toStrictEqual(
+            {
+                name: 'Channel2',
+                isPublic: true,
+                ownerMembers: [ {
+                    uId: 1,
+                    email: 'example2@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe'
+                }],
+                allMembers: [{
+                    uId: 1,
+                    email: 'example2@gmail.com',
+                    nameFirst: 'Bob',
+                    nameLast: 'Doe',
+                    handleStr: 'bobdoe'
+                }],
+            } 
             );
     });
 
-    clearV1();
-
     test("Channel ID is invalid", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
         
-        expect(channelDetailsV1(data.users[0].authUserId, 3)).toStrictEqual(
+        expect(channelDetailsV1(user1.authUserId, 4)).toStrictEqual(
 
             {
                 error: "error",
             });
     });
-
-
-    clearV1();
 
 
     test("authuser ID is invalid", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
 
-        expect(channelDetailsV1(3, 1)).toStrictEqual(
+        expect(channelDetailsV1(3, user1.channelId)).toStrictEqual(
             {
                 error: "error",
             });
     });
 
-    clearV1();
-
     test("Channel ID is valid but authuser is not in the channel", () => {
-        const data = getData();
-        authRegisterV1("geoffrey@email.com", "abcd1234", "Geoff", "Mok");
-        authRegisterV1("brian@email.com", "abcd1234", "Brian", "Mok");
-        channelsCreateV1(data.users[0].authUserId, 'Channel1', true);
-        channelsCreateV1(data.users[0].authUserId, 'Channel2', true);
 
-        expect(channelDetailsV1(data.users[1].authUserId, data.channels[0].channelId)).toStrictEqual(
+        expect(channelDetailsV1(user1.authUserId, channel2.channelId)).toStrictEqual(
             {
                 error: "error",
             });

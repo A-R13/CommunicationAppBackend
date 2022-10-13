@@ -21,7 +21,7 @@ export function channelDetailsV1( authUserId, channelId ) {
 
   if (data.users.find(users => users.authUserId === authUserId)){
     check_authUserId = true;
-  }
+}
 
   if (data.channels.find(channels => channels.channelId === channelId)){
     check_channelId = true;
@@ -30,7 +30,7 @@ export function channelDetailsV1( authUserId, channelId ) {
     if (channel.allMembers.find(a => a.uId === authUserId)) {
       check_inchannel = true;
     }
-  }
+}
 
   if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
     return {error: "error"};
