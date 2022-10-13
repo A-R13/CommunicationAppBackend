@@ -262,140 +262,162 @@ describe("channelJoin tests", () => {
 
 describe('Channel Invite tests', () => {
 
+    let nicole;
+    let dennis;
+    let geoffrey;
+    let channel; 
+
+    beforeEach(() => {
+        nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+        dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
+        geoffrey = authRegisterV1('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
+        channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
+        
+    })
+
     test('creator of channel can invite other valid uIds', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true); 
         expect(channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(dennis.authUserId, channel.channelId)).toStrictEqual(
                 {
-                    name: data.channels[channel.channelId].channelName,
+                    name: 'funChannelName',
                     isPublic: true,
-                    ownerMembers: data.channels[channel.channelId].ownerMembers,
-                    allMembers: data.channels[channel.channelId].allMembers,
+                    ownerMembers: [{
+                        uId: 0,
+                        email: 'nicole.jiang@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'jiang',
+                        handleStr: 'nicolejiang'
+                    }],
+                    allMembers: [{
+                        uId: 0,
+                        email: 'nicole.jiang@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'jiang',
+                        handleStr: 'nicolejiang'
+                    }, {
+                        uId: 1,
+                        email: 'dennis.pulickal@gmail.com',
+                        nameFirst: 'dennis',
+                        nameLast: 'pulickal',
+                        handleStr: 'dennispulickal'
+                    }],
                 }
-        )
+        );
     });
-
+    
     test('invited valid user can invite other valid users', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const geoffrey = authRegisterV1('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId);
         expect(channelInviteV1(dennis.authUserId, channel.channelId, geoffrey.authUserId)).toStrictEqual({});
         expect(channelDetailsV1(geoffrey.authUserId, channel.channelId)).toStrictEqual(
                 {
-                    name: data.channels[channel.channelId].channelName,
+                    name: 'funChannelName',
                     isPublic: true,
-                    ownerMembers: data.channels[channel.channelId].ownerMembers,
-                    allMembers: data.channels[channel.channelId].allMembers,
-                },
-        )
-    });
-
-    test('an user invited by an invited user can invite other valid users', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const geoffrey = authRegisterV1('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
-        const aditya = authRegisterV1('aditya.rana@gmail.com', 'password4', 'aditya', 'rana');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
-        channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId);
-        channelInviteV1(dennis.authUserId, channel.channelId, geoffrey.authUserId);
-        expect(channelInviteV1(geoffrey.authUserId, channel.channelId, aditya.authUserId)).toStrictEqual({});
-        expect(channelDetailsV1(aditya.authUserId, channel.channelId)).toStrictEqual(
-                {
-                    name: data.channels[channel.channelId].channelName,
-                    isPublic: true,
-                    ownerMembers: data.channels[channel.channelId].ownerMembers,
-                    allMembers: data.channels[channel.channelId].allMembers,
-                },
-        )
-    });
-
-    test('private channels can also let users become members upon invitation', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', false); 
-        expect(channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual({});
-        expect(channelDetailsV1(dennis.authUserId, channel.channelId)).toStrictEqual(
-                {
-                    name: data.channels[channel.channelId].channelName,
-                    isPublic: false,
-                    ownerMembers: data.channels[channel.channelId].ownerMembers,
-                    allMembers: data.channels[channel.channelId].allMembers,
+                    ownerMembers: [{
+                        uId: 0,
+                        email: 'nicole.jiang@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'jiang',
+                        handleStr: 'nicolejiang'
+                    }],
+                    
+                    allMembers: [{
+                        uId: 0,
+                        email: 'nicole.jiang@gmail.com',
+                        nameFirst: 'nicole',
+                        nameLast: 'jiang',
+                        handleStr: 'nicolejiang'
+                    }, {
+                        uId: 1,
+                        email: 'dennis.pulickal@gmail.com',
+                        nameFirst: 'dennis',
+                        nameLast: 'pulickal',
+                        handleStr: 'dennispulickal'
+                    }, {
+                        uId: 2,
+                        email: 'geoffrey.mok@gmail.com',
+                        nameFirst: 'geoffrey',
+                        nameLast: 'mok',
+                        handleStr: 'geoffreymok'
+                    }],
                 }
-        )
+        );
     });
 
+    
+    test('private channels can also let users become members upon invitation', () => {
+        let channelPriv = channelsCreateV1(nicole.authUserId, 'funChannelName', false);
+        expect(channelInviteV1(nicole.authUserId, channelPriv.channelId, dennis.authUserId)).toStrictEqual({});
+        expect(channelDetailsV1(dennis.authUserId, channelPriv.channelId)).toStrictEqual(
+            {
+                name: 'funChannelName',
+                isPublic: false,
+                ownerMembers: [{
+                    uId: 0,
+                    email: 'nicole.jiang@gmail.com',
+                    nameFirst: 'nicole',
+                    nameLast: 'jiang',
+                    handleStr: 'nicolejiang'
+                }],
+                allMembers: [{
+                    uId: 0,
+                    email: 'nicole.jiang@gmail.com',
+                    nameFirst: 'nicole',
+                    nameLast: 'jiang',
+                    handleStr: 'nicolejiang'
+                }, {
+                    uId: 1,
+                    email: 'dennis.pulickal@gmail.com',
+                    nameFirst: 'dennis',
+                    nameLast: 'pulickal',
+                    handleStr: 'dennispulickal'
+                }],
+            }
+        );
+    });
 
     test('throw error when channel is invalid', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         expect(channelInviteV1(nicole.authUserId, 'a', dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
-        )
+        );
     });
 
     test('throw error when authUser is invalid', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         expect(channelInviteV1('a', channel.channelId, dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
-        )
+        );
     });
 
     test('throw error when uId is invalid', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         expect(channelInviteV1(nicole.authUserId, channel.channelId, 'a')).toStrictEqual(
             { error: expect.any(String) }
-        )
+        );
     });
 
     test('throw error when uId is already a member', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId);
         expect(channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
-        )
+        );
     });
 
     test('throw error when authUserId is not a member', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const aditya = authRegisterV1('aditya.rana@gmail.com', 'password4', 'aditya', 'rana');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
-        expect(channelInviteV1(dennis.authUserId, channel.channelId, aditya.authUserId)).toStrictEqual(
+        expect(channelInviteV1(dennis.authUserId, channel.channelId, geoffrey.authUserId)).toStrictEqual(
             { error: expect.any(String) }
         );
     });    
 
     test('throw error when authUserId is not a member', () => {
-        const data = getData();
-        const nicole = authRegisterV1('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-        const dennis = authRegisterV1('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
-        const aditya = authRegisterV1('aditya.rana@gmail.com', 'password4', 'aditya', 'rana');
-        const channel = channelsCreateV1(nicole.authUserId, 'funChannelName', true);
         channelInviteV1(nicole.authUserId, channel.channelId, dennis.authUserId);
-        expect(channelInviteV1(aditya.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual(
+        expect(channelInviteV1(geoffrey.authUserId, channel.channelId, dennis.authUserId)).toStrictEqual(
             { error: expect.any(String) }
         );
     });
+    
+    test('throw error when user tries to invite themself', () => {
+        expect(channelInviteV1(nicole.authUserId, channel.channelId, nicole.authUserId)).toStrictEqual(
+            { error: expect.any(String) }
+        );
+    })
 
 });
 
