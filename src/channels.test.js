@@ -2,7 +2,6 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.
 import { channelDetailsV1 } from './channel.js';
 import { authRegisterV1 } from './auth.js';
 import { clearV1 , getAuthUserId, getChannel, getUId } from './other.js';
-import { getData, setData } from './dataStore.js';
 
 describe('channelsCreate tests', () => {
 
@@ -61,6 +60,7 @@ describe('ChannelsListAll tests', () => {
     let uid;
     // User needs to be created in order test this function
     beforeEach(() =>{
+        clearV1();
         uid = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana').authUserId;
     })
 

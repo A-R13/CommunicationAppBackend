@@ -18,7 +18,7 @@ describe ('Testing authRegister function', () => {
     });
     test('Testing successful registration (Multiple Users, Unique ID)', () => {
         const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
-        const user2 = authRegisterV1('example2@gmai    l.com', 'ABCD1234', 'Aditya12', 'Rana21');
+        const user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Aditya12', 'Rana21');
         expect(user).toStrictEqual({authUserId: expect.any(Number)});
         expect(user2).toStrictEqual({authUserId: expect.any(Number)});
         expect(user2).not.toBe(user);

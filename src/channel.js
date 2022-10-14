@@ -43,21 +43,7 @@ export function channelDetailsV1( authUserId, channelId ) {
       allMembers: data.channels[channelId].allMembers,
     };
 }
-let data = getData();
-let user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-let channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
 
-let user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-let channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
-
-let channel3 = channelsCreateV1(user1.authUserId, 'Channel3', true);
-
-let user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-let channel4 = channelsCreateV1(user3.authUserId, 'Channel4', true);
-
-channelJoinV1(data.users[1].authUserId, 3)
-console.log(data.users[user3.authUserId].user_handle)
-console.log(channelDetailsV1(user3.authUserId, channel4.channelId).allMembers);
 
 /**
  * <Description: function adds authorised user into a channel they can join>
@@ -71,7 +57,6 @@ export function channelJoinV1 ( authUserId, channelId ) {
 
   const data = getData();
 
-
   const user = getAuthUserId(authUserId);
   const channel = getChannel(channelId);
 
@@ -83,17 +68,15 @@ export function channelJoinV1 ( authUserId, channelId ) {
     return { error: `${authUserId} is already a member of the channel` };
   }
 
-  if (channel.isPublic === false)  {
-      return { error: `${channelId} is private, you cannot join this channel`};
-  }
-
-
   if (user === undefined) {
     return { error: `${authUserId} is invalid`};
   }
+  
+  if (channel.isPublic === false && data.users[0] !== user)  { // User 0 is a global owner by default, thus can join any channel 
+      return { error: `${channelId} is private, you cannot join this channel`};
+  }
 
-
-  channel.allMembers.push( { email: user.email, handleStr: user.handleStr, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
+  channel.allMembers.push( { email: user.email, handleStr: user.user_handle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
 
   setData(data);
 

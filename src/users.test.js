@@ -1,4 +1,3 @@
-import { getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 import { clearV1, getAuthUserId, getChannel, getUId } from './other';
 import { authRegisterV1 } from './auth';

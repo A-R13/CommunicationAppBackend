@@ -2,7 +2,6 @@ import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } f
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
 import { clearV1, getAuthUserId, getChannel, getUId } from './other.js';
-import { getData, setData } from './dataStore.js';
 
 afterEach(() => {
     clearV1();
@@ -59,21 +58,33 @@ describe("Channel details testing", () => {
     let channel3;
 
     beforeEach(() => {
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-        channel1 = channelsCreateV1(user1.authUserId, 'Channel1', true);
+        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
+        channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
 
-        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-        channel2 = channelsCreateV1(user2.authUserId, 'Channel2', true);
+        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
+        channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
 
-        channel3 = channelsCreateV1(user1.authUserId, 'Channel3', true);
+        channel3 = channelsCreateV1(user1, 'Channel3', true).channelId;
 
-        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
 
     })
 
+    test("Error testing", () => {
+
+        // Channel ID is invalid
+        expect(channelDetailsV1(user1, 4)).toStrictEqual({ error: "error", });
+        
+        // authUserID is invalid
+        expect(channelDetailsV1(3, user1)).toStrictEqual({ error: "error", });
+
+        // Channel ID is valid but authUserID is not in the channel
+        expect(channelDetailsV1(user1, channel2)).toStrictEqual({ error: "error", });
+    });
+
 
     test("Testing base case", () => {
-        expect(channelDetailsV1(user1.authUserId, channel1.channelId)).toStrictEqual(
+        expect(channelDetailsV1(user1, channel1)).toStrictEqual(
                 {
                     name: 'Channel1',
                     isPublic: true,
@@ -98,7 +109,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v2", () => {
 
-        expect(channelDetailsV1(user1.authUserId, channel3.channelId)).toStrictEqual(
+        expect(channelDetailsV1(user1, channel3)).toStrictEqual(
                 {
                     name: "Channel3",
                     isPublic: true,
@@ -123,7 +134,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v3", () => {
 
-        expect(channelDetailsV1(user2.authUserId, channel2.channelId)).toStrictEqual(
+        expect(channelDetailsV1(user2, channel2)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,
@@ -145,9 +156,10 @@ describe("Channel details testing", () => {
             );
     });
 
+    
     test("Testing for duplicate names", () => {
-        channelJoinV1(2, 1);
-        expect(channelDetailsV1(2, 1)).toStrictEqual(
+        channelJoinV1(user3, channel2);
+        expect(channelDetailsV1(user3, channel2)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,
@@ -156,56 +168,25 @@ describe("Channel details testing", () => {
                     email: 'example2@gmail.com',
                     nameFirst: 'Bob',
                     nameLast: 'Doe',
-                    handleStr: 'bobdoe0'
-                }, {
-                    uId: 2,
-                    email: 'example3@gmail.com',
-                    nameFirst: 'Bob',
-                    nameLast: 'Doe',
-                    handleStr: 'bobdoe1'
+                    handleStr: 'bobdoe'
                 }],
                 allMembers: [{
                     uId: 1,
                     email: 'example2@gmail.com',
                     nameFirst: 'Bob',
                     nameLast: 'Doe',
-                    handleStr: 'bobdoe0'
+                    handleStr: 'bobdoe'
                 }, {
                     uId: 2,
                     email: 'example3@gmail.com',
                     nameFirst: 'Bob',
                     nameLast: 'Doe',
-                    handleStr: 'bobdoe1'
+                    handleStr: 'bobdoe0'
                 } ],
             }
             );
     });
 
-    test("Channel ID is invalid", () => {
-
-        expect(channelDetailsV1(user1.authUserId, 4)).toStrictEqual(
-
-            {
-                error: "error",
-            });
-    });
-
-
-    test("authuser ID is invalid", () => {
-
-        expect(channelDetailsV1(3, user1.channelId)).toStrictEqual(
-            {
-                error: "error",
-            });
-    });
-
-    test("Channel ID is valid but authuser is not in the channel", () => {
-
-        expect(channelDetailsV1(user1.authUserId, channel2.channelId)).toStrictEqual(
-            {
-                error: "error",
-            });
-    });
 });
 
 describe("channelJoin tests", () => {
@@ -213,21 +194,19 @@ describe("channelJoin tests", () => {
     let user2;
     let channel1;
     let channel2;
+    let channel3;
 
     let user3;
-    let user4;
-    let user5;
-    let channel3;
-    let channel4;
 
 
     beforeEach(() => {
         clearV1();
         user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
-        channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
+        channel1 = channelsCreateV1(user1, 'Channel1', false).channelId;
 
         user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
-        channel2 = channelsCreateV1(user1, 'Channel2', true).channelId;
+        channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
+        channel3 = channelsCreateV1(user2, 'Channel3', false).channelId
     })
 
     test ('error returns', () => {
@@ -239,50 +218,29 @@ describe("channelJoin tests", () => {
         //user is already in channel
         expect(channelJoinV1(user1, channel1)).toStrictEqual({ error: expect.any(String)});
 
-        //channel is private and user is not already a channel member
-        expect(channelJoinV1(user1, channel2)).toStrictEqual({ error: expect.any(String)});
+        //channel is private and user is not already a channel member or a global owner
+        expect(channelJoinV1(user2, channel1)).toStrictEqual({ error: expect.any(String)});
 
         //invalid user
         expect(channelJoinV1('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
 
     })
+    
 
     test('Correct Returns', () => {
-
-        let data = getData();
-
         user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe').authUserId
-        user4 = authRegisterV1('example4@gmail.com', 'ABCD1234', 'Jake', 'Doe').authUserId
-        user5 = authRegisterV1('example5@gmail.com', 'ABCD1234', 'Jacob', 'Doe').authUserId
-        channel3 = channelsCreateV1(user4, 'ChannelName', false).channelId
-        channel4 = channelsCreateV1(user4, 'ChannelName', true).channelId
 
-        const user_1 = data.users.find(a => a.authUserId === user1);
-        const user_2 = data.users.find(a => a.authUserId === user2);
-        const channel = data.channels.find(a => a.channelId === channel2);
-        let members = channel.allMembers;
+        // user joining a public channel 
+        expect(channelJoinV1(user3, channel2)).toStrictEqual({});
 
-
-
-
-        expect(members).toStrictEqual([
-            {
-                uId: user_1.authUserId,
-                email: user_1.email,
-                nameFirst: user_1.nameFirst,
-                nameLast: user_1.nameLast,
-                handleStr: user_1.user_handle,
-            },
-          ]);
-
-        expect(channelJoinV1(user3, channel3)).toStrictEqual({});
-
-        expect(channelJoinV1(user3, channel4)).toStrictEqual({});
-        expect(channelJoinV1(user5, channel3)).toStrictEqual({ error: expect.any(String) });
-
+        // global owner joining a private channel 
+        expect(channelJoinV1(user1, channel3)).toStrictEqual({});
 
     })
 });
+
+
+
 
 describe('Channel Invite tests', () => {
 
