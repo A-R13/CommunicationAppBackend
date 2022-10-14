@@ -8,25 +8,25 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * @param {number} authUserId - unique ID of the user
  * @param {string} name - Name of the channel to be created
  * @param {boolean} isPublic - To determine whether the channel will be public (true) or private (false)
- * 
+ *
  * @returns { {channelId: number} } - The channelId of the newly created channel
  */
 
 export function channelsCreateV1 (authUserId, name, isPublic) {
     const data = getData();
     const user = getAuthUserId(authUserId);
-  
+
     if (user === undefined) {
       return { error: `User with authUserId '${authUserId}' does not exist!` };
     }
-  
+
     if (name.length >= 1 && name.length <= 20) {
-      
-      
+
+
       // const channelID = Math.floor(Math.random() * 10000); a random number generator
       let channelID = data.channels.length;
         // increment counter until a new unique channel number is created
-      
+
       const channel = {
         channelId: channelID,
         channelName: name,
@@ -55,7 +55,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
       data.channels.push(channel);
 
       setData(data);
-    
+
       return { channelId: channelID }
 
   } else {
@@ -71,23 +71,25 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
 
 export function channelsListV1 (authUserId) {
 
-  const data = getData(); 
+  const data = getData();
   const user = getAuthUserId(authUserId);
 
   if (user === undefined) {
     return { error: `${authUserId} is invalid`};
   }
 
-  const list_channels = []; 
+  const list_channels = [];
 
   for (let channel of data.channels) {
-    if (channel.isPublic === true) {
-      list_channels.push(
-        {
-          channelId: channel.channelId,
-          name: channel.channelName,
-        }
-      )
+    if (channel.allMembers.find(a => a.uId === authUserId) || channel.ownerMembers.find(a => a.uId === authUserId)) {
+      if (channel.isPublic === true) {
+        list_channels.push(
+          {
+            channelId: channel.channelId,
+            name: channel.channelName,
+          }
+        )
+      }
     }
   }
   return {
@@ -99,15 +101,15 @@ export function channelsListV1 (authUserId) {
 
 /**
  * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
- * 
+ *
  * @param {number} authUserId - It is the id of the user
- * 
+ *
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
 export function channelsListAllV1(authUserId) {
   const data = getData();
-  //Helper function 
+  //Helper function
   const user = getAuthUserId(authUserId);
   if (user === undefined) {
     return { error: `Invalid Auth user Id` };

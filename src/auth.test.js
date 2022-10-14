@@ -1,10 +1,9 @@
 import { clearV1 } from './other.js';
 import { authRegisterV1, authLoginV1 } from './auth.js';
-import { getData, setData } from './dataStore.js';
 import { getChannel, getAuthUserId, getUId } from './other.js';
 
 describe ('Testing authRegister function', () => {
-    afterEach(() => {
+    beforeEach(() => {
         clearV1();
     });
 
@@ -88,4 +87,5 @@ describe ('Testing authLogin function', () => {
         const login = authLoginV1('csesoc@gmail.com', 'ABCD1234');
         expect(login).toStrictEqual({error: expect.any(String)});
     });
+
 });
