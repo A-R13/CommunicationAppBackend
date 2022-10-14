@@ -214,6 +214,12 @@ describe("channelJoin tests", () => {
     let channel1;
     let channel2;
 
+    let user3;
+    let user4;
+    let user5;
+    let channel3;
+    let channel4;
+
 
     beforeEach(() => {
         clearV1();
@@ -225,6 +231,8 @@ describe("channelJoin tests", () => {
     })
 
     test ('error returns', () => {
+
+
         //invalid channel
         expect(channelJoinV1(user1, 'abcde')).toStrictEqual({ error: expect.any(String)});
 
@@ -243,10 +251,19 @@ describe("channelJoin tests", () => {
 
         let data = getData();
 
+        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe').authUserId
+        user4 = authRegisterV1('example4@gmail.com', 'ABCD1234', 'Jake', 'Doe').authUserId
+        user5 = authRegisterV1('example5@gmail.com', 'ABCD1234', 'Jacob', 'Doe').authUserId
+        channel3 = channelsCreateV1(user4, 'ChannelName', false).channelId
+        channel4 = channelsCreateV1(user4, 'ChannelName', true).channelId
+
         const user_1 = data.users.find(a => a.authUserId === user1);
         const user_2 = data.users.find(a => a.authUserId === user2);
         const channel = data.channels.find(a => a.channelId === channel2);
         let members = channel.allMembers;
+
+
+
 
         expect(members).toStrictEqual([
             {
@@ -258,6 +275,10 @@ describe("channelJoin tests", () => {
             },
           ]);
 
+        expect(channelJoinV1(user3, channel3)).toStrictEqual({});
+
+        expect(channelJoinV1(user3, channel4)).toStrictEqual({});
+        expect(channelJoinV1(user5, channel3)).toStrictEqual({ error: expect.any(String) });
 
 
     })

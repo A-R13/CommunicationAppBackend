@@ -22,7 +22,7 @@ describe('channelsCreate tests', () => {
         expect(channelsCreateV1(userid, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
         expect(channelsCreateV1('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
     })
-    
+
     test('Correct Return', () => {
         const user = getAuthUserId(userid);
         const channel_created = channelsCreateV1(userid, 'Channel1', true);
@@ -30,7 +30,7 @@ describe('channelsCreate tests', () => {
         expect(channel_created).toStrictEqual({ channelId: expect.any(Number) });
 
         expect(channelDetailsV1(userid, channel_created.channelId)).toStrictEqual( {
-            name: 'Channel1', 
+            name: 'Channel1',
             isPublic: true,
             ownerMembers: [
                 {
@@ -131,14 +131,15 @@ describe('ChannelsListAll tests', () => {
 
 describe('channelsListV1 tests', () => {
 
-    let user; 
+    let user;
 
     beforeEach (() => {
+        clearV1();
         user = authRegisterV1('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith').authUserId
     })
 
     afterEach (() => {
-        clearV1(); 
+        clearV1();
 
     })
 
@@ -146,14 +147,38 @@ describe('channelsListV1 tests', () => {
         expect(channelsListV1('abcd')).toStrictEqual( {error: expect.any(String)} );
     })
 
-    test ('Check for channels user is authorised in', () => {
+    test ('testing user in multiple channels', () => {
         const channel = channelsCreateV1(user, 'Channel', true);
+        const channel1 = channelsCreateV1(user, 'Channel1', true);
+        const channel2 = channelsCreateV1(user, 'Channel2', true);
 
-        expect(channelsListV1(channel.channelId)).toStrictEqual( {
+        expect(channelsListV1(user)).toStrictEqual( {
             channels: [
                 {
                     channelId: channel.channelId,
                     name: 'Channel',
+                },
+                {
+                    channelId: channel1.channelId,
+                    name: 'Channel1',
+                },
+                {
+                    channelId: channel2.channelId,
+                    name: 'Channel2',
+                },
+
+            ]
+        })
+    })
+
+    test ('testing channel owner in channel', () => {
+        const channel3 = channelsCreateV1(user, 'Channel3', true);
+
+        expect(channelsListV1(user)).toStrictEqual ({
+            channels: [
+                {
+                    channelId: channel3.channelId,
+                    name: 'Channel3',
                 }
             ]
         })
@@ -161,11 +186,11 @@ describe('channelsListV1 tests', () => {
     })
 
     test ('Testing if no channel is creating', () => {
-        expect(channelsListAllV1(user)).toStrictEqual({
+        expect(channelsListV1(user)).toStrictEqual({
             channels: []
         })
 
     })
-    
+
 
 })
