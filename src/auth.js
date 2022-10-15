@@ -14,7 +14,7 @@ import { clearV1, getChannel, getAuthUserId, getUId } from './other.js';
 export function authRegisterV1(email, password, nameFirst, nameLast) {
     let data = getData();
     // checks whether email, password, first name and last name are valid
-    if (!validator.isEmail(email) || password.length < 6 || password.length > 32 || nameFirst.length < 1 || 
+    if (!validator.isEmail(email) || password.length < 6 || nameFirst.length < 1 || 
         nameFirst.length > 50 || nameLast.length < 1 || nameLast.length > 50) {
             return {
                 error: 'Invalid Details.'
@@ -90,4 +90,3 @@ export function authLoginV1(email, password) {
     return { error: 'error' };
 
 }
-
