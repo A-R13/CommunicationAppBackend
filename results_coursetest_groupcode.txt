@@ -1,0 +1,121 @@
+npm verb cli /import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/bin/node /import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/bin/npm
+npm info using npm@8.19.2
+npm info using node@v18.10.0
+npm timing npm:load:whichnode Completed in 1ms
+npm timing config:load:defaults Completed in 1ms
+npm timing config:load:file:/import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/lib/node_modules/npm/npmrc Completed in 1ms
+npm timing config:load:builtin Completed in 2ms
+npm timing config:load:cli Completed in 2ms
+npm timing config:load:env Completed in 0ms
+npm timing config:load:file:/import/cage/2/z5295293/CS1531_22T3/project-automarking/tempstore/.npmrc Completed in 0ms
+npm timing config:load:project Completed in 17ms
+npm timing config:load:file:/import/cage/2/z5295293/.npmrc Completed in 0ms
+npm timing config:load:user Completed in 0ms
+npm timing config:load:file:/import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/etc/npmrc Completed in 0ms
+npm timing config:load:global Completed in 0ms
+npm timing config:load:validate Completed in 1ms
+npm timing config:load:credentials Completed in 0ms
+npm timing config:load:setEnvs Completed in 1ms
+npm timing config:load Completed in 24ms
+npm timing npm:load:configload Completed in 24ms
+npm timing npm:load:mkdirpcache Completed in 1ms
+npm timing npm:load:mkdirplogs Completed in 1ms
+npm verb title npm run test course_tests/
+npm verb argv "run" "test" "--loglevel" "verbose" "course_tests/"
+npm timing npm:load:setTitle Completed in 1ms
+npm timing config:load:flatten Completed in 2ms
+npm timing npm:load:display Completed in 5ms
+npm verb logfile logs-max:10 dir:/import/cage/2/z5295293/.npm/_logs
+npm verb logfile /import/cage/2/z5295293/.npm/_logs/2022-10-16T12_22_56_865Z-debug-0.log
+npm timing npm:load:logFile Completed in 5ms
+npm timing npm:load:timers Completed in 0ms
+npm timing npm:load:configScope Completed in 0ms
+npm timing npm:load Completed in 38ms
+
+> test
+> jest course_tests/
+
+npm http fetch GET 200 https://registry.npmjs.org/npm 37ms (cache hit)
+PASS course_tests/tests/user_tests/userProfile.test.js (8.074 s)
+PASS course_tests/tests/auth_tests/authRegister.test.js (7.934 s)
+PASS course_tests/tests/other_tests/clear.test.js (8.045 s)
+PASS course_tests/tests/channel_tests/channelMessages.test.js (7.951 s)
+PASS course_tests/tests/channel_tests/channelInvite.test.js (7.9 s)
+PASS course_tests/tests/channel_tests/channelJoin.test.js (7.995 s)
+PASS course_tests/tests/channel_tests/channelDetails.test.js (8.289 s)
+PASS course_tests/tests/channels_tests/channelsListall.test.js (8.089 s)
+PASS course_tests/tests/channels_tests/channelsCreate.test.js (8.083 s)
+PASS course_tests/tests/auth_tests/authLogin.test.js (8.098 s)
+FAIL course_tests/tests/channels_tests/channelsList.test.js (8.034 s)
+  ● Test channel owner in channel › Create channel then list details
+
+    expect(received).toContainEqual(expected) // deep equality
+
+    Expected value: {"channelId": 0, "name": "andy"}
+    Received array: []
+
+      25 |       const chId = channelsCreateV1(uId, 'andy', pub).channelId;
+      26 |       const deets = { channelId: chId, name: 'andy' };
+    > 27 |       expect(channelsListV1(uId).channels).toContainEqual(deets);
+         |                                            ^
+      28 |     }
+      29 |   );
+      30 | });
+
+      at toContainEqual (course_tests/tests/channels_tests/channelsList.test.js:27:44)
+
+  ● Test channel member in channel › Create channel then list details
+
+    expect(received).toContainEqual(expected) // deep equality
+
+    Expected value: {"channelId": 0, "name": "andy"}
+    Received array: []
+
+      37 |       channelInviteV1(uId, chId, uIdWoody);
+      38 |       const deets = { channelId: chId, name: 'andy' };
+    > 39 |       expect(channelsListV1(uId).channels).toContainEqual(deets);
+         |                                            ^
+      40 |     }
+      41 |   );
+      42 | });
+
+      at toContainEqual (course_tests/tests/channels_tests/channelsList.test.js:39:44)
+
+  ● Test user in multiple channels › Create channel then list details
+
+    expect(received).toStrictEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "channelId": 0,
+    +     "name": "andy",
+    +   },
+    +   Object {
+    +     "channelId": 1,
+    +     "name": "ZERG",
+    +   },
+    + ]
+
+      53 |       deets.sort((a, b) => (a.channelId - b.channelId));
+      54 |       expectedDeets.sort((a, b) => (a.channelId - b.channelId));
+    > 55 |       expect(expectedDeets).toStrictEqual(deets);
+         |                             ^
+      56 |     }
+      57 |   );
+      58 | });
+
+      at toStrictEqual (course_tests/tests/channels_tests/channelsList.test.js:55:29)
+
+Test Suites: 1 failed, 10 passed, 11 total
+Tests:       3 failed, 59 passed, 62 total
+Snapshots:   0 total
+Time:        12.602 s
+Ran all test suites matching /course_tests\//i.
+npm timing command:run Completed in 16256ms
+npm verb exit 1
+npm timing npm Completed in 16300ms
+npm verb code 1
