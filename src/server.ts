@@ -4,6 +4,12 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 
+import { authRegisterV2, authLoginV2 } from './auth';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2 } from './channel';
+import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
+import { userProfileV2 } from './users';
+import { clearV1 } from './other';
+
 // Set up web app
 const app = express();
 // Use middleware that allows us to access the JSON body of requests
@@ -26,6 +32,20 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 // for logging errors (print to terminal)
 app.use(morgan('dev'));
+
+app.delete('/clear/v1', (req: Request, res: Response) => {
+  res.json(clearV1());
+});
+
+app.post('/auth/register/v2', (req: Request, res: Response, next) => {
+  const { email, password, nameFirst, nameLast } = req.body;
+
+  res.json(authRegisterV2(email, password, nameFirst, nameLast));
+})
+
+
+
+
 
 // start server
 const server = app.listen(PORT, HOST, () => {

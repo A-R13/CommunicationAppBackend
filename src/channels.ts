@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore.js';
-import { authRegisterV1 } from './auth.js';
+import { authRegisterV2 } from './auth.js';
 import { getChannel, getAuthUserId, getUId } from './other.js';
 
 
@@ -12,7 +12,7 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * @returns { {channelId: number} } - The channelId of the newly created channel
  */
 
-export function channelsCreateV1 (authUserId, name, isPublic) {
+export function channelsCreateV2 (authUserId, name, isPublic) {
     const data = getData();
     const user = getAuthUserId(authUserId);
 
@@ -69,7 +69,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
-export function channelsListV1 (authUserId) {
+export function channelsListV2 (authUserId) {
 
   const data = getData();
   const user = getAuthUserId(authUserId);
@@ -107,7 +107,7 @@ export function channelsListV1 (authUserId) {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-export function channelsListAllV1(authUserId) {
+export function channelsListAllV2(authUserId) {
   const data = getData();
   //Helper function
   const user = getAuthUserId(authUserId);

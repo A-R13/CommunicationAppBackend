@@ -1,3 +1,6 @@
+import request from 'sync-request';
+import config from './config.json';
+
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } from './channel.js';
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';

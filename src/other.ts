@@ -1,4 +1,9 @@
-import { getData, setData } from './dataStore.js';
+import { getData, setData } from './dataStore';
+import { port, url } from './config.json';
+
+
+import request, { HttpVerb } from 'sync-request';
+const SERVER_URL = `${url}:${port}`;
 
 /**
  * <description: Resets the dataStore to its intial state. 'Clearing' away any additional added objects. >
@@ -13,6 +18,8 @@ export function clearV1 () {
     'channels': []
   };  
   setData(cleared_data);
+
+  return {};
 }
 
 
@@ -46,5 +53,20 @@ export function getAuthUserId(authUserId) {
 export function getUId(uId) {
   const data = getData();
   return data.users.find(u => u.authUserId === uId);
+}
+
+
+// From wk5 Labs 
+export function requestHelper(method: HttpVerb, path: string, payload: object) {
+  let qs = {};
+  let json = {};
+  if (['GET', 'DELETE'].includes(method)) {
+    qs = payload;
+  } else {
+    // PUT/POST
+    json = payload;
+  }
+  const res = request(method, SERVER_URL + path, { qs, json });
+  return JSON.parse(res.getBody('utf-8'));
 }
 

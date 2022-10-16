@@ -1,6 +1,6 @@
 import { getData, setData } from './dataStore.js';
-import { authRegisterV1 } from './auth.js';
-import { channelsCreateV1 } from './channels.js';
+import { authRegisterV2 } from './auth.js';
+import { channelsCreateV2 } from './channels.js';
 import { getChannel, getAuthUserId, getUId } from './other.js';
 
 /**
@@ -11,7 +11,7 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  */
 
 
-export function userProfileV1 (authUserId, uId ) {
+export function userProfileV2 (authUserId, uId ) {
     let data = getData();
     let check_authUserId = false;
     let check_uId = false;

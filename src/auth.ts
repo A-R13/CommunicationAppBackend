@@ -1,6 +1,6 @@
 import validator from "validator";
-import { getData, setData } from "./dataStore.js";
-import { clearV1, getChannel, getAuthUserId, getUId } from './other.js';
+import { getData, setData } from './dataStore';
+import { clearV1, getChannel, getAuthUserId, getUId } from './other';
 
 /**
  * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>
@@ -11,7 +11,7 @@ import { clearV1, getChannel, getAuthUserId, getUId } from './other.js';
  * @returns {number} authUserId - unique Id of the user
  */
 
-export function authRegisterV1(email, password, nameFirst, nameLast) {
+export function authRegisterV2(email: string, password: string, nameFirst: string, nameLast: string): any {
     let data = getData();
     // checks whether email, password, first name and last name are valid
     if (!validator.isEmail(email) || password.length < 6 || nameFirst.length < 1 || 
@@ -74,7 +74,7 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
  * @param {string} password 
  * @returns {number} authUserId - unique Id of the user
  */
-export function authLoginV1(email, password) {
+export function authLoginV2(email, password) {
 
     const data = getData();
     const array = data.users;

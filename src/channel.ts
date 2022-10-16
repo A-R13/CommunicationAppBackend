@@ -1,4 +1,4 @@
-import { authRegisterV1 } from './auth.js';
+import { authRegisterV2 } from './auth';
 import { channelsCreateV1 } from './channels.js';
 import { getData, setData } from './dataStore.js';
 import { getChannel, getAuthUserId, getUId } from './other.js';
@@ -13,7 +13,7 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  */
 
 
-export function channelDetailsV1( authUserId, channelId ) {
+export function channelDetailsV2( authUserId, channelId ) {
   let data = getData();
   let check_authUserId = false;
   let check_channelId = false;
@@ -55,7 +55,7 @@ export function channelDetailsV1( authUserId, channelId ) {
  */
 
 
-export function channelJoinV1 ( authUserId, channelId ) {
+export function channelJoinV2 ( authUserId, channelId ) {
 
   const data = getData();
 
@@ -99,7 +99,7 @@ export function channelJoinV1 ( authUserId, channelId ) {
 
 
 
- export function channelInviteV1( authUserId, channelId, uId ) {
+ export function channelInviteV2 ( authUserId, channelId, uId ) {
   const data = getData();
   const userArray = data.users;
   const channelArray = data.channels;
@@ -167,7 +167,7 @@ export function channelJoinV1 ( authUserId, channelId ) {
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function channelMessagesV1 ( authUserId, channelId, start ){
+export function channelMessagesV2 ( authUserId, channelId, start ){
 
   const data = getData();
 
