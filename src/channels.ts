@@ -107,7 +107,7 @@ export function channelsListV2 (authUserId) {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-export function channelsListAllV2(authUserId) {
+export function channelsListAllV2(token: string) {
   const data = getData();
   //Helper function
   const user = getAuthUserId(authUserId);
