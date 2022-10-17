@@ -49,6 +49,12 @@ app.post('/channels/create/v2',(req: Request, res: Response, next) => {
   res.json(channelsCreateV2(token, name, isPublic));
 } )
 
+app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+
+  res.json(channelsListAllV2(token)); 
+})
+
 app.get('/user/profile/v2',(req: Request, res: Response, next) => {
   const { token, uId } = req.body;
 
@@ -60,7 +66,6 @@ app.get('/channel/details/v2',(req: Request, res: Response, next) => {
 
   res.json(channelDetailsV2(token, channelId));
 } )
-
 
 // start server
 const server = app.listen(PORT, HOST, () => {

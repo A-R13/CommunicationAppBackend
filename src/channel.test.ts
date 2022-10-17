@@ -1,14 +1,22 @@
 import request from 'sync-request';
 import config from './config.json';
 
-import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1 } from './channel.js';
-import { channelsCreateV1 } from './channels.js';
-import { authRegisterV1 } from './auth.js';
-import { clearV1, getAuthUserId, getChannel, getUId } from './other.js';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2 } from './channel';
+import { channelsCreateV2 } from './channels';
+import { authRegisterV2 } from './auth';
+import { clearV1, getAuthUserId, getChannel, getUId, requestHelper, requestClear } from './other';
+
+import { requestAuthRegister } from './auth.test';
+import { requestChannelsCreate } from './channels.test'
 
 afterEach(() => {
     clearV1();
 })
+
+export function reqeustchannelDetails( token : string, channelId : number) {
+    return requestHelper('GET', '/channel/details/v2', { token, channelId });
+}
+/*
 
 describe('Channel Messages tests', () => {
 
@@ -20,7 +28,7 @@ describe('Channel Messages tests', () => {
     beforeEach(() => {
         user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
         channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
-
+ß
         user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
         channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
     })
@@ -49,7 +57,7 @@ describe('Channel Messages tests', () => {
     })
 
 })
-
+*/
 
 describe("Channel details testing", () => {
 
@@ -61,33 +69,33 @@ describe("Channel details testing", () => {
     let channel3;
 
     beforeEach(() => {
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
-        channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
+        user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+        channel1 = requestChannelsCreate(user1.token, 'Channel1', true).channelId;
 
-        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
-        channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
+        user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+        channel2 = requestChannelsCreate(user2.token, 'Channel2', true).channelId;
 
-        channel3 = channelsCreateV1(user1, 'Channel3', true).channelId;
+        channel3 = requestChannelsCreate(user1.token, 'Channel3', true).channelId;
 
-        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
+        user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
 
     })
 
     test("Error testing", () => {
 
         // Channel ID is invalid
-        expect(channelDetailsV1(user1, 4)).toStrictEqual({ error: "error", });
+        expect(channelDetailsV2(user1.token, 4)).toStrictEqual({ error: "error", });
         
         // authUserID is invalid
-        expect(channelDetailsV1(3, user1)).toStrictEqual({ error: "error", });
+        expect(channelDetailsV2("Randomtoken", channel1)).toStrictEqual({ error: "error", });
 
         // Channel ID is valid but authUserID is not in the channel
-        expect(channelDetailsV1(user1, channel2)).toStrictEqual({ error: "error", });
+        expect(channelDetailsV2(user1.token, channel2)).toStrictEqual({ error: "error", });
     });
 
 
     test("Testing base case", () => {
-        expect(channelDetailsV1(user1, channel1)).toStrictEqual(
+        expect(channelDetailsV2(user1.token, channel1)).toStrictEqual(
                 {
                     name: 'Channel1',
                     isPublic: true,
@@ -112,7 +120,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v2", () => {
 
-        expect(channelDetailsV1(user1, channel3)).toStrictEqual(
+        expect(channelDetailsV2(user1.token, channel3)).toStrictEqual(
                 {
                     name: "Channel3",
                     isPublic: true,
@@ -137,7 +145,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v3", () => {
 
-        expect(channelDetailsV1(user2, channel2)).toStrictEqual(
+        expect(channelDetailsV2(user2.token, channel2)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,
@@ -161,8 +169,8 @@ describe("Channel details testing", () => {
 
     
     test("Testing for duplicate names", () => {
-        channelJoinV1(user3, channel2);
-        expect(channelDetailsV1(user3, channel2)).toStrictEqual(
+        channelJoinV2(user3.token, channel2);
+        expect(channelDetailsV2(user3.token, channel2)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,
@@ -192,6 +200,7 @@ describe("Channel details testing", () => {
 
 });
 
+/*
 describe("channelJoin tests", () => {
     let user1;
     let user2;
@@ -406,3 +415,4 @@ describe('Channel Invite tests', () => {
 
 });
 
+*/

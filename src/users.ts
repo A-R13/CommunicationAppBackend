@@ -45,13 +45,12 @@ export function userProfileV2 (token : string, uId : number ) : any {
 
         return {error: 'error'};
     }
-
-    
+  
 
 };
-
+/*
 let data = getData();
 authRegisterV2('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
 authRegisterV2('exampl2e@gmail.com', 'ABCD1234', 'Geoff', 'Mok');
 
-console.log(userProfileV2(data.users[0].sessions[0], 1));
+console.log(userProfileV2(data.users[0].sessions[0], 1)); */
