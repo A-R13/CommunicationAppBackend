@@ -61,10 +61,6 @@ app.get('/user/profile/v2',(req: Request, res: Response, next) => {
   res.json(userProfileV2(token, uId));
 } )
 
-
-
-
-
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
