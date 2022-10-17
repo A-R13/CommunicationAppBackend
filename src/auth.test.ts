@@ -1,6 +1,6 @@
-import request, { HttpVerb } from 'sync-request';
+import request from 'sync-request';
 import config from './config.json';
-import { requestHelper } from './other';
+import { requestHelper, requestClear } from './other';
 
 const OK = 200;
 const port = config.port;
@@ -8,11 +8,8 @@ const url = config.url;
 
 
 // Function Wrappers using above function NOT WORKING RN
-function requestClear() {
-    return requestHelper('DELETE', '/clear/v1', {});
-  }
 
-function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
+export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
     return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
 }
 

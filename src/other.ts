@@ -56,6 +56,12 @@ export function getUId(uId) {
 }
 
 
+export function getToken(token) {
+  const data = getData();
+  return data.users.find(a => a.sessions.includes(token) === true);
+}
+
+
 // From wk5 Labs 
 export function requestHelper(method: HttpVerb, path: string, payload: object) {
   let qs = {};
@@ -70,3 +76,6 @@ export function requestHelper(method: HttpVerb, path: string, payload: object) {
   return JSON.parse(res.getBody('utf-8'));
 }
 
+export function requestClear() {
+  return requestHelper('DELETE', '/clear/v1', {});
+}

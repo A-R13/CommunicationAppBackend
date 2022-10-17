@@ -60,6 +60,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
             password: password,
             nameFirst: nameFirst,
             nameLast: nameLast,
+            sessions: [token],
         }
     );
 

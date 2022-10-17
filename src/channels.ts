@@ -1,6 +1,6 @@
-import { getData, setData } from './dataStore.js';
-import { authRegisterV2 } from './auth.js';
-import { getChannel, getAuthUserId, getUId } from './other.js';
+import { getData, setData } from './dataStore';
+import { authRegisterV2 } from './auth';
+import { getChannel, getAuthUserId, getUId, getToken } from './other';
 
 
 /**
@@ -12,12 +12,12 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  * @returns { {channelId: number} } - The channelId of the newly created channel
  */
 
-export function channelsCreateV2 (authUserId, name, isPublic) {
+export function channelsCreateV2 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
     const data = getData();
-    const user = getAuthUserId(authUserId);
+    const user = getToken(token);
 
     if (user === undefined) {
-      return { error: `User with authUserId '${authUserId}' does not exist!` };
+      return { error: `User with token '${token}' does not exist!` };
     }
 
     if (name.length >= 1 && name.length <= 20) {
