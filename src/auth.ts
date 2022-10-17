@@ -12,7 +12,7 @@ import { clearV1, getChannel, getAuthUserId, getUId } from './other';
  * @returns {number} authUserId - unique Id of the user
  */
 
-export function authRegisterV2(email: string, password: string, nameFirst: string, nameLast: string): any {
+export function authRegisterV2(email: string, password: string, nameFirst: string, nameLast: string): {token: string, authUserId: number} | {error: string} {
     let data = getData();
     // checks whether email, password, first name and last name are valid
     if (!validator.isEmail(email) || password.length < 6 || nameFirst.length < 1 || 
