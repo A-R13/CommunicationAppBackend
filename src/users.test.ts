@@ -1,35 +1,49 @@
 import request from 'sync-request';
 import config from './config.json';
-import { requestHelper } from './other';
 
 
 
-import { userProfileV1 } from './users';
-import { clearV1, getAuthUserId, getChannel, getUId } from './other';
-import { authRegisterV1 } from './auth';
+import { userProfileV2 } from './users';
+import { clearV1, getAuthUserId, getChannel, getUId, requestHelper, requestClear } from './other';
+import { authRegisterV2 } from './auth';
+
+import { requestAuthRegister } from './auth.test';
+
+export function requestUserProfile (token: string, uId: number) {
+    return requestHelper('GET', '/user/profile/v2', { token, uId, });
+}
 
 
 
 
 
 
-
-
-describe("Testing for userProfileV1", () => {
+describe("Testing for userProfileV2", () => {
     
-    let user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-    let user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-    let user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'geoff', 'Doe');
-    let user4 = authRegisterV1('example4@gmail.com', 'ABCD1234', 'brian', 'Doe');
+    let user1;
+    let user2;
+    let user3;
+    let user4;
+
+    beforeEach(() => {
+        requestClear();
+        user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+        user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+        user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'geoff', 'Doe');
+        user4 = requestAuthRegister('example4@gmail.com', 'ABCD1234', 'brian', 'Doe');
+
+    })
 
 
     test("Base case", () => {
 
         /** input a data point from getData*/
-        expect(userProfileV1(user1.authUserId, user1.authUserId)).toStrictEqual(
+        expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual(
             {
                 user: {
                   uId: 0,
+                  token: user1.token,
+                  token2: user2.token,
                   email: 'example1@gmail.com',
                   nameFirst: 'nicole',
                   nameLast: 'Doe',
@@ -41,7 +55,7 @@ describe("Testing for userProfileV1", () => {
 
     test("Testing a larger data base which runs", () => {
 
-        expect(userProfileV1(user3.authUserId, user2.authUserId)).toStrictEqual(
+        expect(requestUserProfile(user3.token, user2.authUserId)).toStrictEqual(
             {
                 user: {
                   uId: 1,
@@ -56,26 +70,26 @@ describe("Testing for userProfileV1", () => {
 
     test("uId doesnt refer to valid  user", () => {
 
-        expect(userProfileV1(user1.authUserId, 4)).toStrictEqual({error: 'error'});
+        expect(requestUserProfile(user1.token, 4)).toStrictEqual({error: 'error'});
     });
 
 
     test("authUserId is invalid test", () => {
 
 
-        expect(userProfileV1(5, user1.authUserId)).toStrictEqual({error: 'error'});
+        expect(requestUserProfile("randomstring", user1.authUserId)).toStrictEqual({error: 'error'});
     });
     
 
     test("uID isnt valid", () => {
 
-        expect(userProfileV1(user2.authUserId, 5)).toStrictEqual({error: 'error'});
+        expect(requestUserProfile(user2.token, 5)).toStrictEqual({error: 'error'});
 
     });
 
     test("AuthuserId is invalid", () => {
 
-        expect(userProfileV1(5, user2.authUserId)).toStrictEqual({error: 'error'});
+        expect(requestUserProfile("Randomstring", user2.authuserId)).toStrictEqual({error: 'error'});
 
     });
 
