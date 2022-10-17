@@ -55,6 +55,13 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
   res.json(channelsListAllV2(token)); 
 })
 
+app.get('/user/profile/v2',(req: Request, res: Response, next) => {
+  const { token, uId } = req.body;
+
+  res.json(userProfileV2(token, uId));
+} )
+
+
 
 
 
