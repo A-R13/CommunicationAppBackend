@@ -1,58 +1,69 @@
 import request from 'sync-request';
 import config from './config.json';
 
-import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels.js';
-import { channelDetailsV1 } from './channel.js';
-import { authRegisterV1 } from './auth.js';
-import { clearV1 , getAuthUserId, getChannel, getUId } from './other.js';
+import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
+import { channelDetailsV2 } from './channel';
+import { authRegisterV2 } from './auth';
+
+import { requestAuthRegister } from './auth.test';
+import { requestHelper, requestClear, getAuthUserId, getChannel, getUId } from './other';
+
+
+export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
+    return requestHelper('POST', '/channels/create/v2', { token, name, isPublic });
+}
+
+
+requestClear();
+let user = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
 
 describe('channelsCreate tests', () => {
 
-    let userid;
-
     beforeEach(() => {
-        clearV1();
-        userid = authRegisterV1('example1@gmail.com', 'ABCD1234', 'John', 'Doe').authUserId;
+        requestClear();
+        user = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
     })
 
     afterEach(() => {
-        clearV1();
+        requestClear();
     })
 
     test('Error Returns', () => {
-        expect(channelsCreateV1(userid, '', true)).toStrictEqual({ error: expect.any(String) });
-        expect(channelsCreateV1(userid, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
-        expect(channelsCreateV1('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelsCreate(user.token, '', true)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelsCreate(user.token, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelsCreate('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
     })
 
     test('Correct Return', () => {
-        const user = getAuthUserId(userid);
-        const channel_created = channelsCreateV1(userid, 'Channel1', true);
+        // const target_user = getAuthUserId(user.authUserId);
+        const channel_created = requestChannelsCreate(user.token, 'Channel1', true);
 
         expect(channel_created).toStrictEqual({ channelId: expect.any(Number) });
 
+        /*
         expect(channelDetailsV1(userid, channel_created.channelId)).toStrictEqual( {
             name: 'Channel1',
             isPublic: true,
             ownerMembers: [
                 {
-                  uId: user.authUserId,
-                  email: user.email,
-                  nameFirst: user.nameFirst,
-                  nameLast: user.nameLast,
-                  handleStr: user.user_handle,
+                  uId: target_user.authUserId,
+                  email: target_user.email,
+                  nameFirst: target_user.nameFirst,
+                  nameLast: target_user.nameLast,
+                  handleStr: target_user.user_handle,
                 },
               ],
               allMembers: [
                 {
-                  uId: user.authUserId,
-                  email: user.email,
-                  nameFirst: user.nameFirst,
-                  nameLast: user.nameLast,
-                  handleStr: user.user_handle,
+                  uId: target_user.authUserId,
+                  email: target_user.email,
+                  nameFirst: target_user.nameFirst,
+                  nameLast: target_user.nameLast,
+                  handleStr: target_user.user_handle,
                 },
               ]
             } )
+            */
     })
 
 

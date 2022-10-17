@@ -60,6 +60,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
             password: password,
             nameFirst: nameFirst,
             nameLast: nameLast,
+            sessions: [token],
         }
     );
     
@@ -70,8 +71,6 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
     }
 
 }
-
-authRegisterV2('ad@gmail.com', 'asdasdad', 'asdad', 'asdads');
 
 /**
  * <Description: Given a registered user's email and password, returns their authUserId value.>
