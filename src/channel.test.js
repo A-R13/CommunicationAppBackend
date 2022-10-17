@@ -57,6 +57,7 @@ describe("Channel details testing", () => {
     let channel2;
     let channel3;
 
+
     beforeEach(() => {
         user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
         channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
