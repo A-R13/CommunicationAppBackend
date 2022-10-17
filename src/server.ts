@@ -49,6 +49,12 @@ app.post('/channels/create/v2',(req: Request, res: Response, next) => {
   res.json(channelsCreateV2(token, name, isPublic));
 } )
 
+app.get('/user/profile/v2',(req: Request, res: Response, next) => {
+  const { token, uId } = req.body;
+
+  res.json(userProfileV2(token, uId));
+} )
+
 
 
 
