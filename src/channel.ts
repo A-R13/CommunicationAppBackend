@@ -1,7 +1,7 @@
 import { authRegisterV2 } from './auth';
-import { channelsCreateV1 } from './channels.js';
-import { getData, setData } from './dataStore.js';
-import { getChannel, getAuthUserId, getUId } from './other.js';
+import { channelsCreateV2 } from './channels';
+import { getData, setData } from './dataStore';
+import { getChannel, getAuthUserId, getUId, getToken } from './other';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -13,28 +13,41 @@ import { getChannel, getAuthUserId, getUId } from './other.js';
  */
 
 
-export function channelDetailsV2( authUserId, channelId ) {
+export function channelDetailsV2( token : string, channelId : number ) {
   let data = getData();
-  let check_authUserId = false;
   let check_channelId = false;
   let check_inchannel = false;
 
-  if (data.users.find(users => users.authUserId === authUserId)){
-    check_authUserId = true;
-}
+  const userToken = getToken(token)
+
+  if (userToken === undefined) {
+      return {error: "error"};
+  }
+
+  let userIdentity;
+
+  for (let i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
 
   if (data.channels.find(channels => channels.channelId === channelId)){
     check_channelId = true;
-    const channel = getChannel(channelId);
 
-    if (channel.allMembers.find(a => a.uId === authUserId)) {
-      check_inchannel = true;
+    for (let j in data.channels[channelId].allMembers) {
+      if (data.channels[channelId].allMembers[j].uId === userIdentity) {
+        check_inchannel = true;
+      }
     }
-}
 
-  if (check_authUserId === false || check_channelId === false || check_inchannel === false) {
+  }
+
+  if (check_channelId === false || check_inchannel === false) {
     return {error: "error"};
   }
+
+
 
   return {
       name: data.channels[channelId].channelName,
@@ -45,14 +58,13 @@ export function channelDetailsV2( authUserId, channelId ) {
 }
 
 
-
-
 /**
  * <Description: function adds authorised user into a channel they can join>
  * @param {number} channelId - unique ID for a channel
  * @param {number} authUserId - unique ID for a user
  * @returns does not return anything
  */
+
 
 
 export function channelJoinV2 ( authUserId, channelId ) {
@@ -98,7 +110,7 @@ export function channelJoinV2 ( authUserId, channelId ) {
  */
 
 
-
+/*
  export function channelInviteV2 ( authUserId, channelId, uId ) {
   const data = getData();
   const userArray = data.users;
@@ -156,7 +168,7 @@ export function channelJoinV2 ( authUserId, channelId ) {
 
   return {};
 }
-
+*/
 /**
  * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
@@ -208,7 +220,6 @@ export function channelMessagesV2 ( authUserId, channelId, start ){
     }
   }
 }
-
 
 
 

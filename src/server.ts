@@ -55,7 +55,11 @@ app.get('/user/profile/v2',(req: Request, res: Response, next) => {
   res.json(userProfileV2(token, uId));
 } )
 
+app.get('/channel/details/v2',(req: Request, res: Response, next) => {
+  const { token, channelId } = req.query;
 
+  res.json(channelDetailsV2(token, channelId));
+} )
 
 
 // start server

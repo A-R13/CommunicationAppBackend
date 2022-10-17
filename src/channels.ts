@@ -69,13 +69,14 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
-export function channelsListV2 (authUserId) {
+export function channelsListV2 (authUserId){
 
   const data = getData();
   const user = getAuthUserId(authUserId);
 
+
   if (user === undefined) {
-    return { error: `${authUserId} is invalid`};
+    return { error: `${token} is invalid`};
   }
 
   const list_channels = [];
@@ -107,12 +108,13 @@ export function channelsListV2 (authUserId) {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-export function channelsListAllV2(token: string) {
+export function channelsListAllV2(token: string): {channels: []} | {error: string} {
   const data = getData();
   //Helper function
-  const user = getAuthUserId(authUserId);
+  const user = getToken(token);
+
   if (user === undefined) {
-    return { error: `Invalid Auth user Id` };
+    return { error: `User with token '${token}' does not exist!` };
   }
 
   // temporary array for channels
