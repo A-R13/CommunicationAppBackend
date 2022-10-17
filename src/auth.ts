@@ -49,7 +49,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
         while (data.users.find(users => users.authUserId === id)){
             id ++;
         }
-
+    // generate a string token
     const token = uuidv4();
     // Assign, push and set the data 
     data.users.push(
@@ -62,7 +62,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
             nameLast: nameLast,
         }
     );
-    
+
     setData(data);
     return { 
         token: token,
@@ -70,9 +70,6 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
     }
 
 }
-
-authRegisterV2('ad@gmail.com', 'asdasdad', 'asdad', 'asdads');
-
 /**
  * <Description: Given a registered user's email and password, returns their authUserId value.>
  * @param {string} email
