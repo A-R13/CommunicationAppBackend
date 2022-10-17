@@ -1,4 +1,5 @@
 import validator from "validator";
+import { v4 as uuidv4 } from 'uuid';
 import { getData, setData } from './dataStore';
 import { clearV1, getChannel, getAuthUserId, getUId } from './other';
 
@@ -48,6 +49,8 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
         while (data.users.find(users => users.authUserId === id)){
             id ++;
         }
+
+    const token = uuidv4();
     // Assign, push and set the data 
     data.users.push(
         {
@@ -62,6 +65,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
     
     setData(data);
     return { 
+        token: token,
         authUserId: id
     }
 
