@@ -1,7 +1,7 @@
 import request from 'sync-request';
 import config from './config.json';
 
-import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2 } from './channel';
+import { channelDetailsV2, channelJoinV2, channelMessagesV2 } from './channel';
 import { channelsCreateV2 } from './channels';
 import { authRegisterV2 } from './auth';
 import { clearV1, getAuthUserId, getChannel, getUId, requestHelper, requestClear } from './other';
@@ -13,7 +13,7 @@ afterEach(() => {
     clearV1();
 })
 
-export function reqeustchannelDetails( token : string, channelId : number) {
+export function requestchannelDetails( token : string, channelId : number) {
     return requestHelper('GET', '/channel/details/v2', { token, channelId });
 }
 /*
@@ -69,13 +69,15 @@ describe("Channel details testing", () => {
     let channel3;
 
     beforeEach(() => {
+        requestClear();
+
         user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-        channel1 = requestChannelsCreate(user1.token, 'Channel1', true).channelId;
+        channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
 
         user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-        channel2 = requestChannelsCreate(user2.token, 'Channel2', true).channelId;
+        channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
 
-        channel3 = requestChannelsCreate(user1.token, 'Channel3', true).channelId;
+        channel3 = requestChannelsCreate(user1.token, 'Channel3', true);
 
         user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe');
 
@@ -84,18 +86,19 @@ describe("Channel details testing", () => {
     test("Error testing", () => {
 
         // Channel ID is invalid
-        expect(channelDetailsV2(user1.token, 4)).toStrictEqual({ error: "error", });
+        expect(requestchannelDetails(user1.token, 4)).toStrictEqual({ error: "error", });
         
         // authUserID is invalid
-        expect(channelDetailsV2("Randomtoken", channel1)).toStrictEqual({ error: "error", });
+        expect(requestchannelDetails("Randomtoken", channel1.channelId)).toStrictEqual({ error: "error", });
 
         // Channel ID is valid but authUserID is not in the channel
-        expect(channelDetailsV2(user1.token, channel2)).toStrictEqual({ error: "error", });
+        expect(requestchannelDetails(user1.token, channel2.channelId)).toStrictEqual({ error: "error", });
     });
 
 
     test("Testing base case", () => {
-        expect(channelDetailsV2(user1.token, channel1)).toStrictEqual(
+
+        expect(requestchannelDetails(user1.token, channel1.channelId)).toStrictEqual(
                 {
                     name: 'Channel1',
                     isPublic: true,
@@ -120,7 +123,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v2", () => {
 
-        expect(channelDetailsV2(user1.token, channel3)).toStrictEqual(
+        expect(requestchannelDetails(user1.token, channel3.channelId)).toStrictEqual(
                 {
                     name: "Channel3",
                     isPublic: true,
@@ -145,7 +148,7 @@ describe("Channel details testing", () => {
 
     test("Testing base case v3", () => {
 
-        expect(channelDetailsV2(user2.token, channel2)).toStrictEqual(
+        expect(requestchannelDetails(user2.token, channel2.channelId)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,
@@ -169,8 +172,8 @@ describe("Channel details testing", () => {
 
     
     test("Testing for duplicate names", () => {
-        channelJoinV2(user3.token, channel2);
-        expect(channelDetailsV2(user3.token, channel2)).toStrictEqual(
+        channelJoinV2(user3.token, channel2.channelId);
+        expect(requestchannelDetails(user3.token, channel2.channelId)).toStrictEqual(
             {
                 name: 'Channel2',
                 isPublic: true,

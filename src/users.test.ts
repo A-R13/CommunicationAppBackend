@@ -42,8 +42,6 @@ describe("Testing for userProfileV2", () => {
             {
                 user: {
                   uId: 0,
-                  token: user1.token,
-                  token2: user2.token,
                   email: 'example1@gmail.com',
                   nameFirst: 'nicole',
                   nameLast: 'Doe',

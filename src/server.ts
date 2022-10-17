@@ -56,15 +56,16 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
 })
 
 app.get('/user/profile/v2',(req: Request, res: Response, next) => {
-  const { token, uId } = req.body;
+  const { token, uId } = req.query;
 
-  res.json(userProfileV2(token, uId));
+  res.json(userProfileV2(token, parseInt(uId)));
 } )
 
 app.get('/channel/details/v2',(req: Request, res: Response, next) => {
-  const { token, channelId } = req.query;
+  const token = req.query.token as string;
+  const channelId = req.query.channelId as string;
 
-  res.json(channelDetailsV2(token, channelId));
+  res.json(channelDetailsV2(token, parseInt(channelId)));
 } )
 
 // start server
