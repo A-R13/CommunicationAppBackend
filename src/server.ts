@@ -83,6 +83,12 @@ app.post('/channel/join/v2', (req: Request, res: Response, next) => {
   res.json(channelJoinV2(token, parseInt(channelId)));
 })
 
+app.get('/channels/list/v2', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+
+  res.json(channelsListV2(token));
+})
+
 
 
 

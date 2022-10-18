@@ -69,11 +69,11 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
-/*
-export function channelsListV2 (authUserId){
+
+export function channelsListV2 (token: string): {channels: []} {
 
   const data = getData();
-  const user = getAuthUserId(authUserId);
+  const user = getToken(token);
 
 
   if (user === undefined) {
@@ -99,7 +99,7 @@ export function channelsListV2 (authUserId){
   };
 
 }
-*/
+
 
 /**
  * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
