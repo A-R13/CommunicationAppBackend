@@ -31,7 +31,7 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
     // create user handle 
     let user_handle = (nameFirst.toLowerCase() + nameLast.toLowerCase()).replace(/[^a-z0-9]/gi, '');
     
-    if (user_handle.length > 20){
+    if (user_handle.length > 20){                                                                                                                                                                                                                                                                           
         user_handle = user_handle.substring(0, 20);
     }
     
@@ -76,15 +76,20 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
  * @param {string} email
  * @param {string} password 
  * @returns {number} authUserId - unique Id of the user
+ * @returns {string} token
  */
-export function authLoginV2(email, password) {
+export function authLoginV2(email: string, password: string): {token: string, authUserId: number} | {error: string} {
 
     const data = getData();
     const array = data.users;
     for (const num in array) {
         if (array[num].email === email) {
             if (array[num].password === password) {
-                return { authUserId: array[num].authUserId}; 
+                const token = uuidv4();
+                array[num].sessions.push(token);
+                return { 
+                    token: token,
+                    authUserId: array[num].authUserId}; 
             } else {
                 return { error: 'error' };
             }
