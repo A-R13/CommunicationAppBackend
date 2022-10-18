@@ -103,26 +103,26 @@ export function channelJoinV2 ( token: string, channelId: number ) {
  * Once invited, the user is added to the channel immediately. In both public
  * and private channels, all members are able to invite users.
 
- * @param {number} authUserId
+ * @param {string} token
  * @param {number} channelId
  * @param {number} uId
  * @returns
  */
 
 
-/*
- export function channelInviteV2 ( authUserId, channelId, uId ) {
+
+ export function channelInviteV2 ( token: string, channelId: number, uId: number ) {
   const data = getData();
   const userArray = data.users;
   const channelArray = data.channels;
 
   const channel = data.channels.find(c => c.channelId === channelId);
-  const user1 = getAuthUserId(authUserId);
-  const user2 = getUId(uId);
+  const user = getUId(uId);
+  const authUserToken = getToken(token);
 
-  // checking for invalid channelId, invalid authUserId, invalid uId
-  if (channel === undefined || user1 === undefined || user2 === undefined) {
-    return {error: 'invalid IDs'};
+  // checking for invalid channelId, invalid uId, invalid token
+  if (channel === undefined || user === undefined || authUserToken === undefined) {
+    return {error: 'invalid parameters'};
   }
 
   // find which index the channel is in
@@ -141,13 +141,10 @@ export function channelJoinV2 ( token: string, channelId: number ) {
     }
   }
 
-  // error - authUserId is not part of the channel
-  let isMember = false;
-  if (channelArray[i].allMembers.find(allMembers => allMembers.uId === authUserId)) {
-    isMember = true;
-  }
-  if (isMember === false) {
-    return {error: 'authUserId not part of the channel'};
+  // error - if the authuser is not a member of the channel, figure out what token really is, what the helper function getToken returns etc.
+  const user_in_channel = channel.allMembers.find(a => a.uId === authUserToken.authUserId);
+  if (user_in_channel === undefined) {
+    return { error: `User with authUserId '${authUserToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
   }
 
   // no errors, pushing user object to channel
@@ -168,7 +165,7 @@ export function channelJoinV2 ( token: string, channelId: number ) {
 
   return {};
 }
-*/
+
 /**
  * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
