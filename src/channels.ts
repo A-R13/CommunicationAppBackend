@@ -109,7 +109,6 @@ export function channelsListV2 (authUserId){
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-/*
 
 export function channelsListAllV2(token: string): {channels: []} | {error: string} {
   const data = getData();
@@ -135,4 +134,3 @@ export function channelsListAllV2(token: string): {channels: []} | {error: strin
     channels: temp_channels,
   };
 }
-*/
