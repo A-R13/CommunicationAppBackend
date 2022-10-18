@@ -23,6 +23,10 @@ export function requestChannelsListAll (token: string){
     return requestHelper('GET', '/channels/listall/v2', {token});
 }
 
+export function requestChannelsList (token: string) {
+    return requestHelper('GET', '/channels/list/v2', { token });
+}
+
 requestClear();
 
 describe('channelsCreate tests', () => {
@@ -148,33 +152,33 @@ describe('ChannelsListAll tests', () => {
     })
 
 })
-/*
+
 describe('channelsListV1 tests', () => {
 
     let user;
 
     beforeEach (() => {
-        clearV1();
-        user = authRegisterV1('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith').authUserId
+        requestClear();
+        user = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith')
     })
 
 
     afterEach (() => {
-        clearV1();
+        requestClear();
     })
 
 
     test ('Testing error return', () => {
-        expect(channelsListV1('abcd')).toStrictEqual( {error: expect.any(String)} );
+        expect(requestChannelsList('abcd')).toStrictEqual( {error: expect.any(String)} );
     })
 
 
     test ('testing user in multiple channels', () => {
-        const channel = channelsCreateV1(user, 'Channel', true);
-        const channel1 = channelsCreateV1(user, 'Channel1', true);
-        const channel2 = channelsCreateV1(user, 'Channel2', true);
+        const channel = requestChannelsCreate(user.token, 'Channel', true);
+        const channel1 = requestChannelsCreate(user.token, 'Channel1', true);
+        const channel2 = requestChannelsCreate(user.token, 'Channel2', true);
 
-        expect(channelsListV1(user)).toStrictEqual( {
+        expect(requestChannelsList(user.token)).toStrictEqual( {
             channels: [
                 {
                     channelId: channel.channelId,
@@ -193,8 +197,8 @@ describe('channelsListV1 tests', () => {
     })
 
     test ('testing channel owner in channel', () => {
-        const channel3 = channelsCreateV1(user, 'Channel3', true);
-        expect(channelsListV1(user)).toStrictEqual ({
+        const channel3 = requestChannelsCreate(user.token, 'Channel3', true);
+        expect(requestChannelsList(user.token)).toStrictEqual ({
             channels: [
                 {
                     channelId: channel3.channelId,
@@ -208,11 +212,9 @@ describe('channelsListV1 tests', () => {
 
     test ('Testing if no channel is creating', () => {
 
-        expect(channelsListV1(user)).toStrictEqual({
+        expect(requestChannelsList(user.token)).toStrictEqual({
             channels: []
         })
     })
 
 })
-
-*/
