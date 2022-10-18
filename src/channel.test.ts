@@ -1,22 +1,26 @@
 import request from 'sync-request';
 import config from './config.json';
 
-import { channelDetailsV2, channelJoinV2, channelMessagesV2 } from './channel';
-import { channelsCreateV2 } from './channels';
-import { authRegisterV2 } from './auth';
-import { clearV1, getAuthUserId, getChannel, getUId, requestHelper, requestClear } from './other';
 
+import { getAuthUserId, getChannel, getUId, requestHelper, requestClear } from './other';
 import { requestAuthRegister } from './auth.test';
 import { requestChannelsCreate } from './channels.test'
 
-afterEach(() => {
-    clearV1();
-})
+
 
 export function requestchannelDetails( token : string, channelId : number) {
     return requestHelper('GET', '/channel/details/v2', { token, channelId });
 }
-/*
+
+export function requestChannelMessages(token : string, channelId : number, start: number) {
+    return requestHelper('GET', '/channel/messages/v2', { token, channelId, start });
+}
+
+requestClear();
+
+afterEach(() => {
+    requestClear();
+})
 
 describe('Channel Messages tests', () => {
 
@@ -26,38 +30,40 @@ describe('Channel Messages tests', () => {
     let channel2;
 
     beforeEach(() => {
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
-        channel1 = channelsCreateV1(user1, 'Channel1', true).channelId;
-ß
-        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
-        channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
+        requestClear();
+        user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};
+        channel1 = requestChannelsCreate(user1.token, 'Channel1', true) as { channelId: number };
+
+        user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};
+        channel2 = requestChannelsCreate(user2.token, 'Channel2', true) as { channelId: number };
     })
 
 
     test('Error Returns', () => {
 
         // channelid does not refer to an existing channel
-        expect(channelMessagesV1(user1, 'abc', 0)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelMessages(user1.token, 69, 0)).toStrictEqual({ error: expect.any(String) });
 
         // start is greater than no of messages in channel
-        expect(channelMessagesV1(user1, channel1, 50)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelMessages(user1.token, channel1.channelId, 50)).toStrictEqual({ error: expect.any(String) });
 
         // channelid is valid but user is not member of that channel
-        expect(channelMessagesV1(user1, channel2, 0)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelMessages(user1.token, channel2.channelId, 0)).toStrictEqual({ error: expect.any(String) });
 
         // authuserid is invalid
-        expect(channelMessagesV1('abc', channel1, 0)).toStrictEqual({ error: expect.any(String) });
+        expect(requestChannelMessages('abc', channel1.channelId, 0)).toStrictEqual({ error: expect.any(String) });
 
     })
 
     test('Correct Return', () => {
         // start is 0, should return empty messages array.
-        expect(channelMessagesV1(user1, channel1, 0)).toStrictEqual( {messages: [], start: 0, end: -1}  );
+        expect(requestChannelMessages(user1.token, channel1.channelId, 0)).toStrictEqual( {messages: [], start: 0, end: -1}  );
 
     })
 
 })
-*/
+
+
 
 describe("Channel details testing", () => {
 
@@ -170,7 +176,7 @@ describe("Channel details testing", () => {
             );
     });
 
-    
+    /*
     test("Testing for duplicate names", () => {
         channelJoinV2(user3.token, channel2.channelId);
         expect(requestchannelDetails(user3.token, channel2.channelId)).toStrictEqual(
@@ -200,6 +206,7 @@ describe("Channel details testing", () => {
             }
             );
     });
+    */
 
 });
 

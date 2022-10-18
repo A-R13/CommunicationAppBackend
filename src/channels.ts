@@ -69,6 +69,7 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
+/*
 export function channelsListV2 (authUserId){
 
   const data = getData();
@@ -98,7 +99,7 @@ export function channelsListV2 (authUserId){
   };
 
 }
-
+*/
 
 /**
  * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
@@ -107,6 +108,8 @@ export function channelsListV2 (authUserId){
  *
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
+
+/*
 
 export function channelsListAllV2(token: string): {channels: []} | {error: string} {
   const data = getData();
@@ -132,3 +135,4 @@ export function channelsListAllV2(token: string): {channels: []} | {error: strin
     channels: temp_channels,
   };
 }
+*/

@@ -33,6 +33,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 // for logging errors (print to terminal)
 app.use(morgan('dev'));
 
+
 app.delete('/clear/v1', (req: Request, res: Response) => {
   res.json(clearV1());
 });
@@ -55,18 +56,30 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
   res.json(channelsListAllV2(token)); 
 })
 
-app.get('/user/profile/v2',(req: Request, res: Response, next) => {
+app.get('/user/profile/v2', (req: Request, res: Response, next) => {
   const { token, uId } = req.query;
 
   res.json(userProfileV2(token, parseInt(uId)));
 } )
 
-app.get('/channel/details/v2',(req: Request, res: Response, next) => {
+app.get('/channel/details/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   const channelId = req.query.channelId as string;
 
   res.json(channelDetailsV2(token, parseInt(channelId)));
 } )
+
+app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const channelId = req.query.channelId as string;
+  const start = req.query.start as string;
+
+  res.json(channelMessagesV2(token, parseInt(channelId), parseInt(start)));
+})
+
+
+
+
 
 // start server
 const server = app.listen(PORT, HOST, () => {

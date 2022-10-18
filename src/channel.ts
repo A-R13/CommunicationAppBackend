@@ -66,7 +66,7 @@ export function channelDetailsV2( token : string, channelId : number ) {
  */
 
 
-
+/*
 export function channelJoinV2 ( authUserId, channelId ) {
 
   const data = getData();
@@ -97,7 +97,7 @@ export function channelJoinV2 ( authUserId, channelId ) {
 
   return {};
 }
-
+*/
 /**
  * <Description: Invites a user with ID uId to join channel with ID channelID.
  * Once invited, the user is added to the channel immediately. In both public
@@ -179,11 +179,12 @@ export function channelJoinV2 ( authUserId, channelId ) {
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function channelMessagesV2 ( authUserId, channelId, start ){
+export function channelMessagesV2 ( token: string, channelId: number, start: number ){
 
   const data = getData();
 
-  const user = getAuthUserId(authUserId);
+  const userToken = getToken(token);
+  // const userId = userToken.authUserId;
   const channel = getChannel(channelId);
 
 
@@ -195,14 +196,16 @@ export function channelMessagesV2 ( authUserId, channelId, start ){
     return { error: `Start '${start}' is greater than the total number of messages in the specified channel`};
   }
 
-  const user_in_channel = channel.allMembers.find(a => a.uId === authUserId);
+  if (userToken === undefined) {
+    // If user doesn't exist at all, return an error
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  const user_in_channel = channel.allMembers.find(a => a.uId === userToken.authUserId);
   if (user_in_channel === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: `User with authUserId '${authUserId}' is not a member of channel with channelId '${channel}'!` };
-  } else if (user === undefined) {
-    // If user doesn't exist at all, return an error
-    return { error: `User with authUserId '${authUserId}' does not exist!` };
-  }
+    return { error: `User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
+  }  
 
   if ((start + 50) > channel.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
@@ -220,6 +223,3 @@ export function channelMessagesV2 ( authUserId, channelId, start ){
     }
   }
 }
-
-
-
