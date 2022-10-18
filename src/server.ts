@@ -38,6 +38,12 @@ app.delete('/clear/v1', (req: Request, res: Response) => {
   res.json(clearV1());
 });
 
+app.post('/auth/login/v2', (req: Request, res: Response, next) => {
+  const { email, password } = req.body;
+
+  res.json(authLoginV2(email, password));
+})
+
 app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
@@ -83,7 +89,11 @@ app.post('/channel/join/v2', (req: Request, res: Response, next) => {
   res.json(channelJoinV2(token, parseInt(channelId)));
 })
 
+app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
+  const { token, channelId, uId } = req.body;
 
+  res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
+})
 
 
 // start server
