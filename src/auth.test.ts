@@ -13,6 +13,9 @@ export function requestAuthRegister(email: string, password: string, nameFirst: 
     return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
 }
 
+export function requestAuthLogin(email: string, password: string) {
+    return requestHelper('POST', '/auth/login/v2', { email, password});
+}
 
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
 
@@ -86,37 +89,40 @@ describe ('Testing authRegister function', () => {
     });
 });
 
-/*
+
 describe ('Testing authLogin function', () => {
 
     // Testing login details are valid (registered)
     test('Testing successful login', () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang')
-        const login = authLoginV1('example@gmail.com', 'ABCD1234');
-        expect(login).toStrictEqual({authUserId: expect.any(Number)});
+        const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang')
+        const login = requestAuthLogin('example@gmail.com', 'ABCD1234');
+        expect(login).toStrictEqual(
+            {
+                token: expect.any(String),
+                authUserId: expect.any(Number)
+            });
     });
 
     // Email and password are valid/registered, but don't match (for different users)
     test("Testing failed login (registered email and password don't match)", () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-        const user2 = authRegisterV1('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
-        const login = authLoginV1('example@gmail.com', 'WXYZ5678');
+        const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+        const user2 = requestAuthRegister('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
+        const login = requestAuthLogin('example@gmail.com', 'WXYZ5678');
         expect(login).toStrictEqual({error: expect.any(String)});
     })
 
     // Email (right) / Password (does not exist)
     test("Testing failed login (password does not exist)", () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang'); 
-        const login = authLoginV1('example@gmail.com', 'QWERTY');
+        const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang'); 
+        const login = requestAuthLogin('example@gmail.com', 'QWERTY');
         expect(login).toStrictEqual({error: expect.any(String)});
     });
 
     // Email (does not exist) / Password (null)
     test("Testing failed login (email does not exist)", () => {
-        const user = authRegisterV1('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-        const login = authLoginV1('csesoc@gmail.com', 'ABCD1234');
+        const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+        const login = requestAuthLogin('csesoc@gmail.com', 'ABCD1234');
         expect(login).toStrictEqual({error: expect.any(String)});
     });
 
 });
-*/
