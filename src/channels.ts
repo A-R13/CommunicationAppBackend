@@ -1,7 +1,5 @@
 import { getData, setData } from './dataStore';
-import { authRegisterV2 } from './auth';
-import { getChannel, getAuthUserId, getUId, getToken } from './other';
-
+import { getToken } from './other';
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -13,53 +11,50 @@ import { getChannel, getAuthUserId, getUId, getToken } from './other';
  */
 
 export function channelsCreateV2 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
-    const data = getData();
-    const user = getToken(token);
+  const data = getData();
+  const user = getToken(token);
 
-    if (user === undefined) {
-      return { error: `User with token '${token}' does not exist!` };
-    }
+  if (user === undefined) {
+    return { error: `User with token '${token}' does not exist!` };
+  }
 
-    if (name.length >= 1 && name.length <= 20) {
+  if (name.length >= 1 && name.length <= 20) {
+    // const channelID = Math.floor(Math.random() * 10000); a random number generator
+    const channelID = data.channels.length;
+    // increment counter until a new unique channel number is created
 
+    const channel = {
+      channelId: channelID,
+      channelName: name,
+      isPublic: isPublic,
+      ownerMembers: [
+        {
+          uId: user.authUserId,
+          email: user.email,
+          nameFirst: user.nameFirst,
+          nameLast: user.nameLast,
+          handleStr: user.userHandle,
+        },
+      ],
+      allMembers: [
+        {
+          uId: user.authUserId,
+          email: user.email,
+          nameFirst: user.nameFirst,
+          nameLast: user.nameLast,
+          handleStr: user.userHandle,
+        },
+      ],
+      messages: [],
+    };
 
-      // const channelID = Math.floor(Math.random() * 10000); a random number generator
-      let channelID = data.channels.length;
-        // increment counter until a new unique channel number is created
+    data.channels.push(channel);
 
-      const channel = {
-        channelId: channelID,
-        channelName: name,
-        isPublic: isPublic,
-        ownerMembers: [
-          {
-            uId: user.authUserId,
-            email: user.email,
-            nameFirst: user.nameFirst,
-            nameLast: user.nameLast,
-            handleStr: user.user_handle,
-          },
-        ],
-        allMembers: [
-          {
-            uId: user.authUserId,
-            email: user.email,
-            nameFirst: user.nameFirst,
-            nameLast: user.nameLast,
-            handleStr: user.user_handle,
-          },
-        ],
-        messages: [],
-      }
+    setData(data);
 
-      data.channels.push(channel);
-
-      setData(data);
-
-      return { channelId: channelID }
-
+    return { channelId: channelID };
   } else {
-    return { error: `Channel name does not meet the required standards standard` };
+    return { error: 'Channel name does not meet the required standards standard' };
   }
 }
 
@@ -69,37 +64,32 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
-
 export function channelsListV2 (token: string): {channels: []} {
-
   const data = getData();
   const user = getToken(token);
 
-
   if (user === undefined) {
-    return { error: `${token} is invalid`};
+    return { error: `${token} is invalid` };
   }
 
-  const list_channels = [];
+  const listChannels = [];
 
-  for (let channel of data.channels) {
-    if (channel.allMembers.find(a => a.uId === authUserId) || channel.ownerMembers.find(a => a.uId === authUserId)) {
+  for (const channel of data.channels) {
+    if (channel.allMembers.find(a => a.uId === user.authUserId) || channel.ownerMembers.find(a => a.uId === user.authUserId)) {
       if (channel.isPublic === true) {
-        list_channels.push(
+        listChannels.push(
           {
             channelId: channel.channelId,
             name: channel.channelName,
           }
-        )
+        );
       }
     }
   }
   return {
-    channels: list_channels,
+    channels: listChannels,
   };
-
 }
-
 
 /**
  * <Function Description: Takes in a valid authUserId and lists all the created channels (both Public and Private channels)>
@@ -109,10 +99,9 @@ export function channelsListV2 (token: string): {channels: []} {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-
 export function channelsListAllV2(token: string): {channels: []} | {error: string} {
   const data = getData();
-  //Helper function
+  // Helper function
   const user = getToken(token);
 
   if (user === undefined) {
@@ -120,17 +109,17 @@ export function channelsListAllV2(token: string): {channels: []} | {error: strin
   }
 
   // temporary array for channels
-  const temp_channels = [];
+  const tempChannels = [];
 
-  for (const channel of data.channels){
-    temp_channels.push(
+  for (const channel of data.channels) {
+    tempChannels.push(
       {
         channelId: channel.channelId,
-        name:channel.channelName,
+        name: channel.channelName,
       }
-    )
+    );
   }
   return {
-    channels: temp_channels,
+    channels: tempChannels,
   };
 }
