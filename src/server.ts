@@ -53,7 +53,7 @@ app.post('/channels/create/v2',(req: Request, res: Response, next) => {
 app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
-  res.json(channelsListAllV2(token)); 
+  res.json(channelsListAllV2(token));
 })
 
 app.get('/user/profile/v2', (req: Request, res: Response, next) => {
@@ -77,6 +77,11 @@ app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
   res.json(channelMessagesV2(token, parseInt(channelId), parseInt(start)));
 })
 
+app.post('/channel/join/v2', (req: Request, res: Response, next) => {
+  const { token, channelId } = req.body;
+
+  res.json(channelJoinV2(token, parseInt(channelId)));
+})
 
 
 

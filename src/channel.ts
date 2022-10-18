@@ -66,12 +66,12 @@ export function channelDetailsV2( token : string, channelId : number ) {
  */
 
 
-/*
-export function channelJoinV2 ( authUserId, channelId ) {
+
+export function channelJoinV2 ( token: string, channelId: number ) {
 
   const data = getData();
 
-  const user = getAuthUserId(authUserId);
+  const user = getToken(token);
   const channel = getChannel(channelId);
 
   if (!channel) {
@@ -79,14 +79,14 @@ export function channelJoinV2 ( authUserId, channelId ) {
   }
 
   if (channel.allMembers.find(a => a.uId === authUserId)) {
-    return { error: `${authUserId} is already a member of the channel` };
+    return { error: `${token} is already a member of the channel` };
   }
 
   if (user === undefined) {
-    return { error: `${authUserId} is invalid`};
+    return { error: `${token} is invalid`};
   }
-  
-  if (channel.isPublic === false && data.users[0] !== user)  { // User 0 is a global owner by default, thus can join any channel 
+
+  if (channel.isPublic === false && data.users[0] !== user)  { // User 0 is a global owner by default, thus can join any channel
       return { error: `${channelId} is private, you cannot join this channel`};
   }
 
@@ -97,7 +97,7 @@ export function channelJoinV2 ( authUserId, channelId ) {
 
   return {};
 }
-*/
+
 /**
  * <Description: Invites a user with ID uId to join channel with ID channelID.
  * Once invited, the user is added to the channel immediately. In both public
@@ -205,7 +205,7 @@ export function channelMessagesV2 ( token: string, channelId: number, start: num
   if (user_in_channel === undefined) {
     // If user is not a member of the target channel, return an error
     return { error: `User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
-  }  
+  }
 
   if ((start + 50) > channel.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded

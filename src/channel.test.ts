@@ -16,6 +16,10 @@ export function requestChannelMessages(token : string, channelId : number, start
     return requestHelper('GET', '/channel/messages/v2', { token, channelId, start });
 }
 
+export function requestChannelJoin(token : string, channelId: number) {
+    return requestHelper('POST', '/channel/join/v2', { token, channelId });
+}
+
 requestClear();
 
 afterEach(() => {
@@ -93,7 +97,7 @@ describe("Channel details testing", () => {
 
         // Channel ID is invalid
         expect(requestchannelDetails(user1.token, 4)).toStrictEqual({ error: "error", });
-        
+
         // authUserID is invalid
         expect(requestchannelDetails("Randomtoken", channel1.channelId)).toStrictEqual({ error: "error", });
 
@@ -210,7 +214,7 @@ describe("Channel details testing", () => {
 
 });
 
-/*
+
 describe("channelJoin tests", () => {
     let user1;
     let user2;
@@ -222,46 +226,47 @@ describe("channelJoin tests", () => {
 
 
     beforeEach(() => {
-        clearV1();
-        user1 = authRegisterV1('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe').authUserId;
-        channel1 = channelsCreateV1(user1, 'Channel1', false).channelId;
+        requestClear();
 
-        user2 = authRegisterV1('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe').authUserId;
-        channel2 = channelsCreateV1(user2, 'Channel2', true).channelId;
-        channel3 = channelsCreateV1(user2, 'Channel3', false).channelId
+        user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+        channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
+
+        user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+        channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
+        channel3 = requestChannelsCreate(user2.token, 'Channel3', false)
     })
 
     test ('error returns', () => {
 
 
         //invalid channel
-        expect(channelJoinV1(user1, 'abcde')).toStrictEqual({ error: expect.any(String)});
+        expect(requestChannelJoin(user1.token, 99)).toStrictEqual({ error: expect.any(String)});
 
         //user is already in channel
-        expect(channelJoinV1(user1, channel1)).toStrictEqual({ error: expect.any(String)});
+        expect(requestChannelJoin(user1.token, channel1)).toStrictEqual({ error: expect.any(String)});
 
         //channel is private and user is not already a channel member or a global owner
-        expect(channelJoinV1(user2, channel1)).toStrictEqual({ error: expect.any(String)});
+        expect(requestChannelJoin(user2.token, channel1)).toStrictEqual({ error: expect.any(String)});
 
         //invalid user
-        expect(channelJoinV1('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
+        expect(requestChannelJoin('abcde', channel1)).toStrictEqual({ error: expect.any(String)});
 
     })
-    
+
 
     test('Correct Returns', () => {
-        user3 = authRegisterV1('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe').authUserId
+        user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe')
 
-        // user joining a public channel 
-        expect(channelJoinV1(user3, channel2)).toStrictEqual({});
+        // user joining a public channel
+        expect(requestChannelJoin(user3.token, channel2)).toStrictEqual({});
 
-        // global owner joining a private channel 
-        expect(channelJoinV1(user1, channel3)).toStrictEqual({});
+        // global owner joining a private channel
+        expect(requestChannelJoin(user1.token, channel3)).toStrictEqual({});
 
     })
 });
 
-
+/*
 
 
 describe('Channel Invite tests', () => {
