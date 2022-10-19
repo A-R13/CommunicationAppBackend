@@ -100,11 +100,10 @@ app.get('/channels/list/v2', (req: Request, res: Response, next) => {
   res.json(channelsListV2(token));
 });
 
-app.get('/channel/leave/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const channelId = req.query.channelId as string;
+app.post('/channel/leave/v1', (req: Request, res: Response, next) => {
+  const { token, channelId } = req.body;
 
-  res.json(channelleaveV1(token, parseInt(channelId)));
+  res.json(channelleaveV1(token, channelId));
 });
 
 // start server

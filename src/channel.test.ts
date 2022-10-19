@@ -418,31 +418,25 @@ describe("Channel leave function", () => {
   test("Errors", () => {
     expect(requestChannelLeave("RANDOMSTRING", channel.channelId)).toStrictEqual({error: expect.any(String)});
 
-    expect(requestChannelLeave("RANDOMSTRING", channel2.channelId)).toStrictEqual({error: expect.any(String)});
+    expect(requestChannelLeave("RANDOMSTRING", 3)).toStrictEqual({error: expect.any(String)});
 
-    expect(requestChannelLeave(nicole.token, channel2.channelId)).toStrictEqual({error: expect.any(String)});
+    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({error: expect.any(String)});
   })
 
-  test("Works for one person in a channel", () => {
+  test("Works for one person in a channel. return error as user not in channel anymore", () => {
     requestChannelLeave(nicole.token, channel.channelId);
     expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
-      {
-        name: 'Channel1',
-        isPublic: true,
-        ownerMembers: [],
-        allMembers: [],
-      }
+      {error: expect.any(String)}
     );
   })
 
   test("Works for two person in a channel, not a owner", () => {
     
     requestChannelJoin(geoffrey.token, channel.channelId);
-
     requestChannelLeave(geoffrey.token, channel.channelId);
     expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
       {
-        name: 'Channel1',
+        name: 'funChannelName',
         isPublic: true,
         ownerMembers: [{
           uId: 0,
@@ -457,6 +451,26 @@ describe("Channel leave function", () => {
           nameFirst: 'nicole',
           nameLast: 'jiang',
           handleStr: 'nicolejiang'
+        }],
+      }
+    );
+  })
+
+  test("Works for two person in a channel, Is an owner but removes other", () => {
+    
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(geoffrey.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [],
+        allMembers: [{
+          uId: 2,
+          email: 'geoffrey.mok@gmail.com',
+          nameFirst: 'geoffrey',
+          nameLast: 'mok',
+          handleStr: 'geoffreymok'
         }],
       }
     );
