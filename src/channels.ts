@@ -99,7 +99,6 @@ export function channelsListV2 (token: string): {channels: []} {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-
 export function channelsListAllV2(token: string): {channels: []} | {error: string} {
   const data = getData();
   // Helper function

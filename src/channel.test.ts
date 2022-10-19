@@ -400,38 +400,34 @@ describe('Channel Invite tests', () => {
   });
 });
 
-describe("Channel leave function", () => {
-
+describe('Channel leave function', () => {
   let nicole;
-  let dennis;
   let geoffrey;
   let channel;
 
   beforeEach(() => {
     requestClear();
     nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
-    dennis = requestAuthRegister('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
     geoffrey = requestAuthRegister('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
     channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
   });
 
-  test("Errors", () => {
-    expect(requestChannelLeave("RANDOMSTRING", channel.channelId)).toStrictEqual({error: expect.any(String)});
+  test('Errors', () => {
+    expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual({ error: expect.any(String) });
 
-    expect(requestChannelLeave("RANDOMSTRING", 3)).toStrictEqual({error: expect.any(String)});
+    expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual({ error: expect.any(String) });
 
-    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({error: expect.any(String)});
-  })
+    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({ error: expect.any(String) });
+  });
 
-  test("Works for one person in a channel. return error as user not in channel anymore", () => {
+  test('Works for one person in a channel. return error as user not in channel anymore', () => {
     requestChannelLeave(nicole.token, channel.channelId);
     expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
-      {error: expect.any(String)}
+      { error: expect.any(String) }
     );
-  })
+  });
 
-  test("Works for two person in a channel, not a owner", () => {
-    
+  test('Works for two person in a channel, not a owner', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
     requestChannelLeave(geoffrey.token, channel.channelId);
     expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
@@ -454,10 +450,9 @@ describe("Channel leave function", () => {
         }],
       }
     );
-  })
+  });
 
-  test("Works for two person in a channel, Is an owner but removes other", () => {
-    
+  test('Works for two person in a channel, Is an owner but removes other', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
     requestChannelLeave(nicole.token, channel.channelId);
     expect(requestchannelDetails(geoffrey.token, channel.channelId)).toStrictEqual(
@@ -474,6 +469,5 @@ describe("Channel leave function", () => {
         }],
       }
     );
-  })
-
+  });
 });

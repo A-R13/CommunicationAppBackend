@@ -98,8 +98,6 @@ export function channelJoinV2 (token: string, channelId: number) {
  * @returns
  */
 
-
-
 export function channelInviteV2 (token: string, channelId: number, uId: number) {
   const data = getData();
   const userArray = data.users;
@@ -155,7 +153,6 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   return {};
 }
 
-
 /**
  * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
@@ -208,14 +205,14 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
 }
 
 export function channelleaveV1(token : string, channelId : number) {
-  let data = getData();
+  const data = getData();
 
   let checkChannelId = false;
   let checkInChannel = false;
 
   const userToken = getToken(token);
 
-  // Checks if token is valid 
+  // Checks if token is valid
   if (userToken === undefined) {
     return { error: 'error from invalid token' };
   }
@@ -241,21 +238,20 @@ export function channelleaveV1(token : string, channelId : number) {
   if (checkChannelId === false || checkInChannel === false) {
     return { error: 'Error from false channelId or not in channel' };
   } else {
-
-    for (let j in data.channels[channelId].allMembers) {
+    for (const j in data.channels[channelId].allMembers) {
       if (data.channels[channelId].allMembers[j].uId === userIdentity) {
         data.channels[channelId].allMembers.splice(j, 1);
       }
     }
 
-    for (let k in data.channels[channelId].ownerMembers) {
+    for (const k in data.channels[channelId].ownerMembers) {
       if (data.channels[channelId].ownerMembers[k].uId === userIdentity) {
         data.channels[channelId].ownerMembers.splice(k, 1);
       }
     }
-
   }
   // set data and return nothing
   setData(data);
-  return {}; 
+
+  return {};
 }
