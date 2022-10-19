@@ -18,6 +18,10 @@ export function requestChannelInvite(token : string, channelId: number, uId: num
   return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
 }
 
+export function requestChannelLeave(token : string, channelId: number) {
+  return requestHelper('POST', '/channel/leave/v1', { token, channelId });
+}
+
 requestClear();
 
 afterEach(() => {
@@ -394,4 +398,68 @@ describe('Channel Invite tests', () => {
       { error: expect.any(String) }
     );
   });
+});
+
+describe("Channel leave function", () => {
+
+  let nicole;
+  let dennis;
+  let geoffrey;
+  let channel;
+
+  beforeEach(() => {
+    requestClear();
+    nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+    dennis = requestAuthRegister('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
+    geoffrey = requestAuthRegister('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
+    channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
+  });
+
+  test("Errors", () => {
+    expect(requestChannelLeave("RANDOMSTRING", channel.channelId)).toStrictEqual({error: expect.any(String)});
+
+    expect(requestChannelLeave("RANDOMSTRING", channel2.channelId)).toStrictEqual({error: expect.any(String)});
+
+    expect(requestChannelLeave(nicole.token, channel2.channelId)).toStrictEqual({error: expect.any(String)});
+  })
+
+  test("Works for one person in a channel", () => {
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'Channel1',
+        isPublic: true,
+        ownerMembers: [],
+        allMembers: [],
+      }
+    );
+  })
+
+  test("Works for two person in a channel, not a owner", () => {
+    
+    requestChannelJoin(geoffrey.token, channel.channelId);
+
+    requestChannelLeave(geoffrey.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'Channel1',
+        isPublic: true,
+        ownerMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+        allMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+      }
+    );
+  })
+
 });

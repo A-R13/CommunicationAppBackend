@@ -203,3 +203,7 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
     };
   }
 }
+
+export function channelleaveV1(token : string, channelId : number) {
+
+}
