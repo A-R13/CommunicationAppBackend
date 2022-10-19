@@ -64,7 +64,7 @@ describe('Testing authRegister function', () => {
   });
 
   test('Testing failed registration (email already used by another user)', () => {
-    const user = requestAuthRegister('example2@gmail.com', 'ABCD12', 'Aditya', 'Rana');
+    requestAuthRegister('example2@gmail.com', 'ABCD12', 'Aditya', 'Rana');
     const user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(user2).toStrictEqual({ error: expect.any(String) });
   });
@@ -88,7 +88,7 @@ describe('Testing authRegister function', () => {
 describe('Testing authLogin function', () => {
   // Testing login details are valid (registered)
   test('Testing successful login', () => {
-    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('example@gmail.com', 'ABCD1234');
     expect(login).toStrictEqual(
       {
@@ -99,22 +99,22 @@ describe('Testing authLogin function', () => {
 
   // Email and password are valid/registered, but don't match (for different users)
   test("Testing failed login (registered email and password don't match)", () => {
-    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-    const user2 = requestAuthRegister('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+    requestAuthRegister('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
     const login = requestAuthLogin('example@gmail.com', 'WXYZ5678');
     expect(login).toStrictEqual({ error: expect.any(String) });
   });
 
   // Email (right) / Password (does not exist)
   test('Testing failed login (password does not exist)', () => {
-    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('example@gmail.com', 'QWERTY');
     expect(login).toStrictEqual({ error: expect.any(String) });
   });
 
   // Email (does not exist) / Password (null)
   test('Testing failed login (email does not exist)', () => {
-    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('csesoc@gmail.com', 'ABCD1234');
     expect(login).toStrictEqual({ error: expect.any(String) });
   });

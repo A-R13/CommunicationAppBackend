@@ -33,7 +33,6 @@ app.get('/echo', (req: Request, res: Response, next) => {
 // for logging errors (print to terminal)
 app.use(morgan('dev'));
 
-
 app.delete('/clear/v1', (req: Request, res: Response) => {
   res.json(clearV1());
 });
@@ -42,38 +41,38 @@ app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   const { email, password } = req.body;
 
   res.json(authLoginV2(email, password));
-})
+});
 
 app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
   res.json(authRegisterV2(email, password, nameFirst, nameLast));
-})
+});
 
-app.post('/channels/create/v2',(req: Request, res: Response, next) => {
+app.post('/channels/create/v2', (req: Request, res: Response, next) => {
   const { token, name, isPublic } = req.body;
 
   res.json(channelsCreateV2(token, name, isPublic));
-} )
+});
 
 app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(channelsListAllV2(token));
-})
+});
 
 app.get('/user/profile/v2', (req: Request, res: Response, next) => {
   const { token, uId } = req.query;
 
   res.json(userProfileV2(token, parseInt(uId)));
-} )
+});
 
 app.get('/channel/details/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   const channelId = req.query.channelId as string;
 
   res.json(channelDetailsV2(token, parseInt(channelId)));
-} )
+});
 
 app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
@@ -81,26 +80,25 @@ app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
   const start = req.query.start as string;
 
   res.json(channelMessagesV2(token, parseInt(channelId), parseInt(start)));
-})
+});
 
 app.post('/channel/join/v2', (req: Request, res: Response, next) => {
   const { token, channelId } = req.body;
 
   res.json(channelJoinV2(token, parseInt(channelId)));
-})
+});
 
 app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
 
   res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
-})
+});
 
 app.get('/channels/list/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(channelsListV2(token));
-})
-
+});
 
 // start server
 const server = app.listen(PORT, HOST, () => {
