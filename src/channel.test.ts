@@ -461,7 +461,7 @@ describe('Channel leave function', () => {
         isPublic: true,
         ownerMembers: [],
         allMembers: [{
-          uId: 2,
+          uId: 1,
           email: 'geoffrey.mok@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
