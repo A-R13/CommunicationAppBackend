@@ -89,19 +89,16 @@ app.post('/channel/join/v2', (req: Request, res: Response, next) => {
   res.json(channelJoinV2(token, parseInt(channelId)));
 })
 
-<<<<<<< HEAD
 app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
-=======
+
+  res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
+})
+
 app.get('/channels/list/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(channelsListV2(token));
-})
-
->>>>>>> 53d3bc48daf0bb982f4d964728de151e8de6855a
-
-  res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
 })
 
 
