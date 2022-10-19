@@ -1,7 +1,7 @@
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data = {
-  'users': [],
-  'channels': [],
+  users: [],
+  channels: [],
 };
 
 /* The manner in which users and channels should be stored.
@@ -43,12 +43,11 @@ Single Channel = {
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
-
 /**
  * { email: 'daiel.hkuu1@hmailc.om,
- * authUserId:  
+ * authUserId:
  * }
- * 
+ *
  */
 /*
 Example usage
