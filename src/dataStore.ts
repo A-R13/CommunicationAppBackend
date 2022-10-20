@@ -2,6 +2,7 @@
 let data = {
   users: [],
   channels: [],
+  dms: [],
 };
 
 /* The manner in which users and channels should be stored.

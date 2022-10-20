@@ -14,7 +14,8 @@ const SERVER_URL = `${url}:${port}`;
 export function clearV1 () {
   const clearedData = {
     users: [],
-    channels: []
+    channels: [],
+    dms: []
   };
   setData(clearedData);
 
