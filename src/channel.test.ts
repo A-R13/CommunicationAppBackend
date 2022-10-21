@@ -18,6 +18,10 @@ export function requestChannelInvite(token : string, channelId: number, uId: num
   return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
 }
 
+export function requestChannelLeave(token : string, channelId: number) {
+  return requestHelper('POST', '/channel/leave/v1', { token, channelId });
+}
+
 requestClear();
 
 afterEach(() => {
@@ -392,6 +396,78 @@ describe('Channel Invite tests', () => {
   test('throw error when user tries to invite themself', () => {
     expect(requestChannelInvite(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual(
       { error: expect.any(String) }
+    );
+  });
+});
+
+describe('Channel leave function', () => {
+  let nicole;
+  let geoffrey;
+  let channel;
+
+  beforeEach(() => {
+    requestClear();
+    nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+    geoffrey = requestAuthRegister('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
+    channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
+  });
+
+  test('Errors', () => {
+    expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual({ error: expect.any(String) });
+
+    expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual({ error: expect.any(String) });
+
+    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Works for one person in a channel. return error as user not in channel anymore', () => {
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      { error: expect.any(String) }
+    );
+  });
+
+  test('Works for two person in a channel, not a owner', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestChannelLeave(geoffrey.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+        allMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+      }
+    );
+  });
+
+  test('Works for two person in a channel, Is an owner but removes other', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(geoffrey.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [],
+        allMembers: [{
+          uId: 1,
+          email: 'geoffrey.mok@gmail.com',
+          nameFirst: 'geoffrey',
+          nameLast: 'mok',
+          handleStr: 'geoffreymok'
+        }],
+      }
     );
   });
 });

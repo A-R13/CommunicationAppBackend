@@ -16,19 +16,19 @@ export function channelDetailsV2(token : string, channelId : number) {
   let checkInChannel = false;
 
   const userToken = getToken(token);
-
+  // checks if token is valid
   if (userToken === undefined) {
     return { error: 'error' };
   }
 
   let userIdentity;
-
+  // finds auth user id if token is valid
   for (const i in data.users) {
     if (data.users[i].sessions.includes(token) === true) {
       userIdentity = data.users[i].authUserId;
     }
   }
-
+  // checks if channel is valid and if user is in channel
   if (data.channels.find(channels => channels.channelId === channelId)) {
     checkChannelId = true;
 
@@ -202,4 +202,56 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
       end: (start + 50),
     };
   }
+}
+
+export function channelleaveV1(token : string, channelId : number) {
+  const data = getData();
+
+  let checkChannelId = false;
+  let checkInChannel = false;
+
+  const userToken = getToken(token);
+
+  // Checks if token is valid
+  if (userToken === undefined) {
+    return { error: 'error from invalid token' };
+  }
+
+  let userIdentity;
+  // Finds the authUserId from the valid token
+  for (const i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
+  // Checks if valid channelId and if the user is in the channel
+  if (data.channels.find(channels => channels.channelId === channelId)) {
+    checkChannelId = true;
+
+    for (const j in data.channels[channelId].allMembers) {
+      if (data.channels[channelId].allMembers[j].uId === userIdentity) {
+        checkInChannel = true;
+      }
+    }
+  }
+  // If not in channel or channel isnt real, return error. Else, remove the member from channel.
+  if (checkChannelId === false || checkInChannel === false) {
+    return { error: 'Error from false channelId or not in channel' };
+  } else {
+    for (const j in data.channels[channelId].allMembers) {
+      if (data.channels[channelId].allMembers[j].uId === userIdentity) {
+        data.channels[channelId].allMembers.splice(j, 1);
+      }
+    }
+
+    for (const k in data.channels[channelId].ownerMembers) {
+      if (data.channels[channelId].ownerMembers[k].uId === userIdentity) {
+        data.channels[channelId].ownerMembers.splice(k, 1);
+      }
+    }
+  }
+  // set data and return nothing
+  setData(data);
+
+  return {};
 }
