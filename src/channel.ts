@@ -4,7 +4,7 @@ import { getChannel, getUId, getToken } from './other';
 /**
  * <Description: function gives the channel details for a existing channel>
  * @param {number} channelId - unique ID for a channel
- * @param {number} authUserId - unique ID for a user
+ * @param {string} token - unique sesssion token for a user
  * @returns {name: name, isPublic: isPublic, ownerMembers:
  * [{ uId, email, nameFirst, nameLast, handleStr}],
  * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}
@@ -157,7 +157,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
  * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
 
- * @param {number} authUserId
+ * @param {string} token
  * @param {number} channelId
  * @param {number} start
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}

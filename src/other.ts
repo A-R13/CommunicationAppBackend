@@ -29,7 +29,7 @@ export function clearV1 () {
  * [{ uId, email, nameFirst, nameLast, handleStr}],
  * allMembers: [{uId, email, nameFirst, nameLast, handleStr}], messages } }
  */
-export function getChannel(channelId) {
+export function getChannel(channelId: number) {
   const data = getData();
   return data.channels.find(c => c.channelId === channelId);
 }
@@ -39,22 +39,27 @@ export function getChannel(channelId) {
  * @param {number} authUserId
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
  */
-export function getAuthUserId(authUserId) {
+export function getAuthUserId(authUserId: number) {
   const data = getData();
   return data.users.find(a => a.authUserId === authUserId);
 }
 
 /**
  * <Description: Returns the object in users array which corresponds with inputted uId. >
- * @param {number} authUserId
+ * @param {number} uId
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
  */
-export function getUId(uId) {
+export function getUId(uId: number) {
   const data = getData();
   return data.users.find(u => u.authUserId === uId);
 }
 
-export function getToken(token) {
+/**
+ * <Description: Returns the object in users array which corresponds with inputted uId. >
+ * @param {string} token
+ * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
+ */
+export function getToken(token: string) {
   const data = getData();
   return data.users.find(a => a.sessions.includes(token) === true);
 }
