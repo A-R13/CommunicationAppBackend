@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { getUId, getToken } from './other';
+import { getUId, getToken, getChannel } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -61,8 +61,43 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
  * @returns { {dmId: number} } - The dmId of the newly created dm
  */
 
- export function messageSendV1 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
+export function messageSendV1 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
 
+  const channel = getChannel(channelId);
+  const user = getToken(token);
+
+  if (channel === undefined) {
+    // If channel is undefined
+    return { error: `Channel with channelId '${channel}' does not exist!` };
+  } else if (message.length < 1 || message.length > 1000) {
+    return { error: `The message is either too short (< 1) or too long (> 1000).` };
+  } else if (user === undefined) {
+    // If user doesn't exist at all, return an error
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  const userInChannel = channel.allMembers.find(a => a.uId === user.authUserId);
+  if (userInChannel === undefined) {
+    // If user is not a member of the target channel, return an error
+    return { error: `User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channel}'!` };
+  }
+
+  const messageid = Math.floor(Math.random() * 10000);
+
+  const msgg = {
+    messageId: messageid,
+    uId: user.authUserId,
+    message: message, 
+    timeSent: Math.floor(Date.now() / 1000),
+  }
+  
+  const data = getData();
+  channel = data.channels.find(c => c === channel);
+  channel.messages.unshift(msgg);
+
+  setData();
+
+  return { messageId: messageid };
 }
 
 
