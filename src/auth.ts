@@ -100,15 +100,13 @@ export function authLoginV2(email: string, password: string): {token: string, au
 
 export function authLogoutV1(token: string): {} | {error: string} {
   const data = getData();
-  const user = getToken(token);
+  const test = getToken(token);
 
-  if (typeof user === 'undefined') {
-    return { error: `User with token '${token}' does not exist!` };
+  if ( test === undefined) {
+    return { error: `Invalid Token` };
   }
 
-
-  const index = user.sessions.indexOf(token);
-  console.log(index);
+  const index = test.sessions.indexOf(token);
 
   for (const users of data.users){
     if (users.authUserId === user.authUserId){
@@ -119,3 +117,11 @@ export function authLogoutV1(token: string): {} | {error: string} {
 
   return {};
 }
+/*
+const data = getData();
+const user = authRegisterV2('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+console.log(user);
+const user2 = console.log(getToken(user.token));
+console.log(data.users);
+(console.log(authLogoutV1(user.token)));
+console.log(data.users);*/
