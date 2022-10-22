@@ -1,11 +1,12 @@
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data = {
-  'users': [],
-  'channels': [],
+  users: [],
+  channels: [],
+  dms: [],
 };
 
-/* Use the below structure
-Single User =  {
+/* The manner in which users and channels should be stored.
+User in data.users =  {
             authUserId: id,
             user_handle: user_handle,
             email: email,
@@ -20,14 +21,20 @@ Single Channel = {
         isPublic: isPublic,
         ownerMembers: [
           {
-            authUserId: user.authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         allMembers: [
           {
-            authUserId: user.authUserId,
-            User_Handle: user.user_handle,
+            uId: user.authUserId,
+            email: user.email,
+            nameFirst: user.nameFirst,
+            nameLast: user.nameLast,
+            handleStr: user.user_handle,
           },
         ],
         messages: [],
@@ -37,6 +44,12 @@ Single Channel = {
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
+/**
+ * { email: 'daiel.hkuu1@hmailc.om,
+ * authUserId:
+ * }
+ *
+ */
 /*
 Example usage
     let store = getData()
