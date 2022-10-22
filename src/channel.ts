@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { getChannel, getUId, getToken } from './other';
+import { channelType, userShort, message, getChannel, getUId, getToken } from './other';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -116,7 +116,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   let i = 0;
   for (const num1 in channelArray) {
     if (channelArray[num1].channelId === channelId) {
-      i = num1; // channelId in loops below would be replaced by i;
+      i = parseInt(num1); // channelId in loops below would be replaced by i;
     }
   }
 
@@ -138,7 +138,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   let j = 0;
   for (const num3 in userArray) {
     if (userArray[num3].authUserId === uId) {
-      j = num3;
+      j = parseInt(num3);
     }
   }
   const userData = {
@@ -163,10 +163,10 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function channelMessagesV2 (token: string, channelId: number, start: number) {
+export function channelMessagesV2 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
   const userToken = getToken(token);
   // const userId = userToken.authUserId;
-  const channel = getChannel(channelId);
+  const channel: channelType = getChannel(channelId);
 
   if (channel === undefined) {
     // If channel is undefined
@@ -181,7 +181,7 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
     return { error: `User with token '${token}' does not exist!` };
   }
 
-  const userInChannel = channel.allMembers.find(a => a.uId === userToken.authUserId);
+  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
     return { error: `User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
@@ -240,13 +240,13 @@ export function channelleaveV1(token : string, channelId : number) {
   } else {
     for (const j in data.channels[channelId].allMembers) {
       if (data.channels[channelId].allMembers[j].uId === userIdentity) {
-        data.channels[channelId].allMembers.splice(j, 1);
+        data.channels[channelId].allMembers.splice(parseInt(j), 1);
       }
     }
 
     for (const k in data.channels[channelId].ownerMembers) {
       if (data.channels[channelId].ownerMembers[k].uId === userIdentity) {
-        data.channels[channelId].ownerMembers.splice(k, 1);
+        data.channels[channelId].ownerMembers.splice(parseInt(k), 1);
       }
     }
   }

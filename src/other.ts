@@ -4,6 +4,68 @@ import { port, url } from './config.json';
 import request, { HttpVerb } from 'sync-request';
 const SERVER_URL = `${url}:${port}`;
 
+// Exported types
+
+export interface userType {
+  authUserId: number,
+  userHandle: string,
+  email: string,
+  password: string,
+  nameFirst: string,
+  nameLast: string,
+  sessions: string[],
+}
+
+export interface userShort {
+  uId: number,
+  email: string,
+  nameFirst: string,
+  nameLast: string,
+  handleStr: string,
+}
+
+export interface message {
+  messageId: number,
+  uId: number,
+  message: string,
+  timeSent: number,
+}
+
+export interface channelType {
+  channelId: number,
+  channelName: string,
+  isPublic: boolean,
+  ownerMembers: userShort[],
+  allMembers: userShort[],
+  messages: message[],
+}
+
+export interface channelShort {
+  channelId: number,
+  name: string,
+}
+
+export interface dmType {
+  name: string,
+  dmId: number,
+  members: userShort[],
+}
+
+export interface dataa {
+  users: userType[],
+  channels: channelType[],
+  dms: dmType[],
+}
+
+export interface newUser {
+  token: string,
+  authUserId: number
+}
+
+export interface newChannel {
+  channelId: number
+}
+
 /**
  * <description: Resets the dataStore to its intial state. 'Clearing' away any additional added objects. >
  * @param {} - None
@@ -12,10 +74,10 @@ const SERVER_URL = `${url}:${port}`;
  */
 
 export function clearV1 () {
-  const clearedData = {
+  const clearedData: dataa = {
     users: [],
     channels: [],
-    dms: []
+    dms: [],
   };
   setData(clearedData);
 

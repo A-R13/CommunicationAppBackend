@@ -7,7 +7,7 @@ import cors from 'cors';
 import { authRegisterV2, authLoginV2 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { dmCreateV1 } from './messages';
+import { dmCreateV1, messageSendV1 } from './messages';
 import { userProfileV2 } from './users';
 import { clearV1 } from './other';
 
@@ -63,7 +63,8 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
 });
 
 app.get('/user/profile/v2', (req: Request, res: Response, next) => {
-  const { token, uId } = req.query;
+  const token = req.query.token as string;
+  const uId = req.query.uId as string;
 
   res.json(userProfileV2(token, parseInt(uId)));
 });
@@ -111,6 +112,12 @@ app.post('/dm/create/v1', (req: Request, res: Response, next) => {
   const { token, uIds } = req.body;
 
   res.json(dmCreateV1(token, uIds));
+});
+
+app.post('/message/send/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, message } = req.body;
+
+  res.json(messageSendV1(token, channelId, message));
 });
 
 // start server
