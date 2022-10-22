@@ -1,5 +1,9 @@
 import { getData, setData } from './dataStore';
+<<<<<<< HEAD
 import { getToken } from './other';
+=======
+import { channelType, channelShort, getToken } from './other';
+>>>>>>> master
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -23,7 +27,11 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
     const channelID = data.channels.length;
     // increment counter until a new unique channel number is created
 
+<<<<<<< HEAD
     const channel = {
+=======
+    const channel: channelType = {
+>>>>>>> master
       channelId: channelID,
       channelName: name,
       isPublic: isPublic,
@@ -64,7 +72,11 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
+<<<<<<< HEAD
 export function channelsListV2 (token: string): {channels: []} {
+=======
+export function channelsListV2 (token: string): {channels: channelShort[]} | {error: string} {
+>>>>>>> master
   const data = getData();
   const user = getToken(token);
 
@@ -99,7 +111,11 @@ export function channelsListV2 (token: string): {channels: []} {
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
+<<<<<<< HEAD
 export function channelsListAllV2(token: string): {channels: []} | {error: string} {
+=======
+export function channelsListAllV2(token: string): {channels: channelShort[]} | {error: string} {
+>>>>>>> master
   const data = getData();
   // Helper function
   const user = getToken(token);

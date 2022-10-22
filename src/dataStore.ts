@@ -1,5 +1,11 @@
+import { dataa } from './other';
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
+<<<<<<< HEAD:src/dataStore.ts
 let data = {
+=======
+let data: dataa = {
+>>>>>>> master:src/dataStore.js
   users: [],
   channels: [],
   dms: [],
@@ -70,7 +76,7 @@ function getData() {
 }
 
 // Use set(newData) to pass in the entire data object, with modifications made
-function setData(newData) {
+function setData(newData: dataa) {
   data = newData;
 }
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { requestHelper, requestClear } from './other';
+=======
+import { requestHelper, requestClear, newUser, newChannel } from './other';
+>>>>>>> master
 import { requestAuthRegister } from './auth.test';
 import { requestChannelsCreate } from './channels.test';
 
@@ -29,6 +33,7 @@ afterEach(() => {
 });
 
 describe('Channel Messages tests', () => {
+<<<<<<< HEAD
   let user1;
   let user2;
   let channel1;
@@ -41,6 +46,20 @@ describe('Channel Messages tests', () => {
 
     user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};
     channel2 = requestChannelsCreate(user2.token, 'Channel2', true) as { channelId: number };
+=======
+  let user1: newUser;
+  let user2: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
+
+  beforeEach(() => {
+    requestClear();
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
+
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
+>>>>>>> master
   });
 
   test('Error Returns', () => {
@@ -64,12 +83,21 @@ describe('Channel Messages tests', () => {
 });
 
 describe('Channel details testing', () => {
+<<<<<<< HEAD
   let user1;
   let user2;
   let user3;
   let channel1;
   let channel2;
   let channel3;
+=======
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
+  let channel3: newChannel;
+>>>>>>> master
 
   beforeEach(() => {
     requestClear();
@@ -197,6 +225,7 @@ describe('Channel details testing', () => {
 });
 
 describe('channelJoin tests', () => {
+<<<<<<< HEAD
   let user1;
   let user2;
   let channel1;
@@ -204,16 +233,34 @@ describe('channelJoin tests', () => {
   let channel3;
 
   let user3;
+=======
+  let user1: newUser;
+  let user2: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
+  let channel3: newChannel;
+
+  let user3: newUser;
+>>>>>>> master
 
   beforeEach(() => {
     requestClear();
 
+<<<<<<< HEAD
     user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe') as {token: string, authUserId: number};
     channel1 = requestChannelsCreate(user1.token, 'Channel1', false) as { channelId: number };
 
     user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};
     channel2 = requestChannelsCreate(user2.token, 'Channel2', true) as { channelId: number };
     channel3 = requestChannelsCreate(user2.token, 'Channel3', false) as { channelId: number };
+=======
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
+
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
+    channel3 = requestChannelsCreate(user2.token, 'Channel3', false);
+>>>>>>> master
   });
 
   test('error returns', () => {
@@ -242,10 +289,17 @@ describe('channelJoin tests', () => {
 });
 
 describe('Channel Invite tests', () => {
+<<<<<<< HEAD
   let nicole;
   let dennis;
   let geoffrey;
   let channel;
+=======
+  let nicole: newUser;
+  let dennis: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
+>>>>>>> master
 
   beforeEach(() => {
     requestClear();
@@ -401,9 +455,15 @@ describe('Channel Invite tests', () => {
 });
 
 describe('Channel leave function', () => {
+<<<<<<< HEAD
   let nicole;
   let geoffrey;
   let channel;
+=======
+  let nicole: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
+>>>>>>> master
 
   beforeEach(() => {
     requestClear();
