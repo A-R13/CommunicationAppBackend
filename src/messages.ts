@@ -53,12 +53,16 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
   return { dmId: length };
 }
 
-// let user0 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number};    // uid = 0
-// let user1 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};    // uid = 1
-// let user2 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};     // uid = 2
-// let user3 = authRegisterV2('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number};     // uid = 3
+/**
+ * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
+ * @param {string} token - unique token of the 'authorising' user
+ * @param {number[]} uIds - Array of uIds to which the dm is addressed to
+ *
+ * @returns { {dmId: number} } - The dmId of the newly created dm
+ */
 
-// console.log(getUId(0));
+ export function messageSendV1 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
 
-// console.log(dmCreateV1(user0.token, [1,2,3]));
-// console.log(getData().dms[0].members);
+}
+
+
