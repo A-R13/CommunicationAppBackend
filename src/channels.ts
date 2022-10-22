@@ -3,7 +3,7 @@ import { getToken } from './other';
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
- * @param {number} authUserId - unique ID of the user
+ * @param {string} token - unique ID of the user
  * @param {string} name - Name of the channel to be created
  * @param {boolean} isPublic - To determine whether the channel will be public (true) or private (false)
  *
