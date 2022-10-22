@@ -106,3 +106,8 @@ export function messageSendV1 (token: string, channelId: number, message: string
 
   return { messageId: messageid };
 }
+
+export function messageEditV1(token: string, messageId: number, message: string) {
+
+
+}

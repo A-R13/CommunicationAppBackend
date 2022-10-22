@@ -84,3 +84,49 @@ describe(('Message Send tests'), () => {
     expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(msgFull);
   });
 });
+
+describe(('Message edit tests'), () => {
+  let user0: newUser;
+  let user1: newUser;
+  let channel0: newChannel;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+    channel0 = requestChannelsCreate(user0.token, 'Channel1', true) as { channelId: number };
+
+  });
+
+
+  test(('Error returns'), () => {
+
+  expect(requestChannelMessages("RANDOMTOKEN ", 2, "Hello").messages).toContainEqual({error: expect.any(String)});
+  expect(requestChannelMessages(user0.token, 2, "message").messages).toContainEqual({error: expect.any(String)});
+  expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual({error: expect.any(String)});
+
+  });
+  test(('Correct returns'), () => {
+    requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, 0, "Message change");
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
+      {
+        message: 'Message change',
+        messageId: msg1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+      }
+    );
+    });
+
+    test(('Correct returns, deletes if message is nothing'), () => {
+      requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+      requestMessageEdit(user0.token, 0, "");
+      expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
+        {}
+      );
+      });
+
+
+
+});

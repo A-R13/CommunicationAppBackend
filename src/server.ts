@@ -120,6 +120,13 @@ app.post('/message/send/v1', (req: Request, res: Response, next) => {
   res.json(messageSendV1(token, channelId, message));
 });
 
+app.put('/message/edit/v1', (req: Request, res: Response, next) => {
+  const { token, messageId, message } = req.body;
+
+  res.json(messageEditV1(token, messageId, message));
+});
+
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
