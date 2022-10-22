@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { getUId, getToken, getChannel } from './other';
+import { dmType, getUId, getToken, getChannel } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -38,9 +38,17 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
   const nameArray = uIdArray.map(user => user.userHandle).sort();
   const nameString = nameArray.join(', ');
 
-  const membersArray = uIdArray.map(user => { return { authUserId: user.authUserId, handleStr: user.userHandle }; });
+  const membersArray = uIdArray.map(user => {
+    return {
+      uId: user.authUserId,
+      email: user.email,
+      nameFirst: user.nameFirst,
+      nameLast: user.nameFirst,
+      handleStr: user.userHandle
+    };
+  });
 
-  const dm = {
+  const dm: dmType = {
     name: nameString,
     dmId: length,
     members: membersArray
@@ -62,15 +70,14 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
  */
 
 export function messageSendV1 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
-
-  const channel = getChannel(channelId);
+  let channel = getChannel(channelId);
   const user = getToken(token);
 
   if (channel === undefined) {
     // If channel is undefined
     return { error: `Channel with channelId '${channel}' does not exist!` };
   } else if (message.length < 1 || message.length > 1000) {
-    return { error: `The message is either too short (< 1) or too long (> 1000).` };
+    return { error: 'The message is either too short (< 1) or too long (> 1000).' };
   } else if (user === undefined) {
     // If user doesn't exist at all, return an error
     return { error: `User with token '${token}' does not exist!` };
@@ -87,17 +94,15 @@ export function messageSendV1 (token: string, channelId: number, message: string
   const msgg = {
     messageId: messageid,
     uId: user.authUserId,
-    message: message, 
+    message: message,
     timeSent: Math.floor(Date.now() / 1000),
-  }
-  
+  };
+
   const data = getData();
   channel = data.channels.find(c => c === channel);
   channel.messages.unshift(msgg);
 
-  setData();
+  setData(data);
 
   return { messageId: messageid };
 }
-
-

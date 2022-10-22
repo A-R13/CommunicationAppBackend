@@ -1,4 +1,4 @@
-import { requestHelper, requestClear } from './other';
+import { newUser, requestHelper, requestClear } from './other';
 
 import { requestAuthRegister } from './auth.test';
 
@@ -7,9 +7,9 @@ export function requestUserProfile (token: string, uId: number) {
 }
 
 describe('Testing for userProfileV2', () => {
-  let user1;
-  let user2;
-  let user3;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
@@ -60,6 +60,6 @@ describe('Testing for userProfileV2', () => {
   });
 
   test('AuthuserId is invalid', () => {
-    expect(requestUserProfile('Randomstring', user2.authuserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: 'error' });
   });
 });

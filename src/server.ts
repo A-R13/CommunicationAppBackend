@@ -63,7 +63,8 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
 });
 
 app.get('/user/profile/v2', (req: Request, res: Response, next) => {
-  const { token, uId } = req.query;
+  const token = req.query.token as string;
+  const uId = req.query.uId as string;
 
   res.json(userProfileV2(token, parseInt(uId)));
 });
@@ -118,7 +119,6 @@ app.post('/message/send/v1', (req: Request, res: Response, next) => {
 
   res.json(messageSendV1(token, channelId, message));
 });
-
 
 // start server
 const server = app.listen(PORT, HOST, () => {
