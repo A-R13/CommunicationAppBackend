@@ -136,6 +136,8 @@ export function messageEditV1(token: string, messageId: number, message: string)
     }
   }
 
+  // CHECK FOR DMS AS WELL WHEN I CAN AND DENNIS FINISHES/UPDATES
+
   for (const i in data.channels) {
 
       // Checks if valid messageId in channel
@@ -163,7 +165,7 @@ export function messageEditV1(token: string, messageId: number, message: string)
               } else {
                 data.channels[i].messages[k] = {
                   messageId: messageId,
-                  uId: userIdentity,
+                  uId: data.channels[channel].messages[k].uId,
                   message: message,
                   timeSent: Math.floor(Date.now() / 1000),
                 }

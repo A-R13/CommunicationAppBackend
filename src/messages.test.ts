@@ -136,7 +136,7 @@ describe(('Message edit tests'), () => {
     requestChannelJoin(user1.token, channel0.channelId);
     const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
     requestMessageEdit(user0.token, msg1.messageId, "OWNER PERMISIONS ARE THE BEST MESSAGE");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual(
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
       {
         message: 'OWNER PERMISIONS ARE THE BEST MESSAGE',
         messageId: msg1.messageId,
@@ -154,14 +154,13 @@ describe(('Message edit tests'), () => {
     const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
     const msg4 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 4');
     requestMessageEdit(user1.token, msg3.messageId, "RANDOM MESSAGE BY SECOND USER.");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 3).messages).toStrictEqual([
+    expect(requestChannelMessages(user0.token, channel0.channelId, 3).messages).toContainEqual(
       {
         message: 'RANDOM MESSAGE BY SECOND USER.',
         messageId: msg3.messageId,
         uId: user1.authUserId,
         timeSent: expect.any(Number),
       }
-    ]
     );
     });
 
