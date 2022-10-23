@@ -118,5 +118,12 @@ describe(('DM remove tests'), () => {
     expect(requestDmRemove(user0.token, 0)).toStrictEqual({})
   });
 
+  test(('For multiple dm, owner removes it'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    requestDmCreate(user1.token, [0, 2, 3]);
+    requestDmCreate(user3.token, [1]);
+    expect(requestDmRemove(user1.token, 2)).toStrictEqual({})
+  });
+
 
 });

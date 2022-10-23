@@ -108,5 +108,46 @@ export function messageSendV1 (token: string, channelId: number, message: string
 }
 
 export function dmRemoveV1(token : string, dmId: number) {
+  const data = getData();
 
+  // checks if token is valid
+  if (getToken(token) === undefined) {
+    return { error: 'error' };
+  }  
+
+  if (data.dms.find(a => a.dmId === dmId) === undefined) {
+    return {
+      error: 'error'
+    }
+  }
+
+  // add code to error test.
+
+  for (const i in data.dms) {
+    if (data.dms[i].dmId === dmId) {
+      data.dms.splice(parseInt(i), 1);
+      return {};
+    }
+  }
+  
 }
+
+const data = getData();
+
+import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
+import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
+import { userProfileV2 } from './users';
+
+/*
+let user0 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
+let user1 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+let user2 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+let user3 = authRegisterV2('example3@gmail.com', 'ABCD1234', 'joff', 'Doe') as {token: string, authUserId: number}; // uid = 3
+
+dmCreateV1(data.users[0].sessions[0], [1, 2, 3]);
+dmCreateV1(data.users[1].sessions[0], [0]);
+dmCreateV1(data.users[3].sessions[0], [1]);
+dmRemoveV1(data.users[3].sessions[0], 2)
+console.log(data.dms)
+*/
