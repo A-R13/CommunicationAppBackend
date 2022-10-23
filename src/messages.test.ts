@@ -104,7 +104,7 @@ describe('Dm Messages tests', () => {
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
 
     dm0 = requestDmCreate(user0.token, [0, 1]);
-    // dm1 = requestDmCreate(user0.token, [0, 1]);
+    dm1 = requestDmCreate(user0.token, [0, 1, 2]);
   });
 
   test('Error Returns', () => {
@@ -112,10 +112,10 @@ describe('Dm Messages tests', () => {
     expect(requestDmMessages(user0.token, 69, 0)).toStrictEqual({ error: expect.any(String) });
 
     // start is greater than no of messages in channel
-    expect(requestDmMessages(user0.token, dm1.dmId, 50)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmMessages(user0.token, dm0.dmId, 50)).toStrictEqual({ error: expect.any(String) });
 
-    // channelid is valid but user is not member of that channel
-    expect(requestDmMessages(user2.token, dm1.dmId, 0)).toStrictEqual({ error: expect.any(String) });
+    // dmId is valid but user is not member of that channel
+    expect(requestDmMessages(user2.token, dm0.dmId, 0)).toStrictEqual({ error: expect.any(String) });
 
     // authuserid is invalid
     expect(requestDmMessages('abc', dm1.dmId, 0)).toStrictEqual({ error: expect.any(String) });
@@ -124,5 +124,7 @@ describe('Dm Messages tests', () => {
   test('Correct Return', () => {
     // start is 0, should return empty messages array.
     expect(requestDmMessages(user0.token, dm1.dmId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
+
+    // Add more tests when dm message send is done. 
   });
 });

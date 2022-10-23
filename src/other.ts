@@ -49,6 +49,7 @@ export interface dmType {
   name: string,
   dmId: number,
   members: userShort[],
+  messages: message[]
 }
 
 export interface dataa {
@@ -129,6 +130,17 @@ export function getToken(token: string) {
   const data = getData();
   return data.users.find(a => a.sessions.includes(token) === true);
 }
+
+/**
+ * <Description: Returns the object in users array which corresponds with inputted uId. >
+ * @param {string} token
+ * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
+ */
+ export function getDm(dmId: number) {
+  const data = getData();
+  return data.dms.find(d => d.dmId === dmId);
+}
+
 
 // From wk5 Labs
 export function requestHelper(method: HttpVerb, path: string, payload: object) {
