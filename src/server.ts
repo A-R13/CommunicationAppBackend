@@ -7,7 +7,7 @@ import cors from 'cors';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { dmCreateV1, messageSendV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmRemoveV1 } from './messages';
 import { userProfileV2 } from './users';
 import { clearV1 } from './other';
 
@@ -124,6 +124,13 @@ app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
   const { token } = req.body;
 
   res.json(authLogoutV1(token));
+});
+
+app.delete('/dm/remove/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const dmId = req.query.dmId as string;
+
+  res.json(dmRemoveV1(token, parseInt(dmId)));
 });
 
 // start server

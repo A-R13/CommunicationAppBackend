@@ -106,3 +106,7 @@ export function messageSendV1 (token: string, channelId: number, message: string
 
   return { messageId: messageid };
 }
+
+export function dmRemoveV1(token : string, dmId: number) {
+
+}
