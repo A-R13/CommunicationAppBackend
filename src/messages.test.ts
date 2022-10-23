@@ -15,7 +15,6 @@ export function requestDmMessages(token : string, dmId : number, start: number) 
   return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
 }
 
-
 requestClear();
 
 describe(('DM Create tests'), () => {
@@ -92,7 +91,7 @@ describe(('Message Send tests'), () => {
 
 describe('Dm Messages tests', () => {
   let user0: newUser;
-  let user1: newUser;
+  // let user1: newUser;
   let user2: newUser;
   let dm0: newDm;
   let dm1: newDm;
@@ -100,7 +99,7 @@ describe('Dm Messages tests', () => {
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
-    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    // user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
 
     dm0 = requestDmCreate(user0.token, [0, 1]);
@@ -125,6 +124,6 @@ describe('Dm Messages tests', () => {
     // start is 0, should return empty messages array.
     expect(requestDmMessages(user0.token, dm1.dmId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
 
-    // Add more tests when dm message send is done. 
+    // Add more tests when dm message send is done.
   });
 });

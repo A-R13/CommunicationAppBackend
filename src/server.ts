@@ -132,9 +132,7 @@ app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
   const start = req.query.start as string;
 
   res.json(dmMessagesV1(token, parseInt(dmId), parseInt(start)));
-})
-
-
+});
 
 // start server
 const server = app.listen(PORT, HOST, () => {

@@ -136,11 +136,10 @@ export function getToken(token: string) {
  * @param {string} token
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
  */
- export function getDm(dmId: number) {
+export function getDm(dmId: number) {
   const data = getData();
   return data.dms.find(d => d.dmId === dmId);
 }
-
 
 // From wk5 Labs
 export function requestHelper(method: HttpVerb, path: string, payload: object) {

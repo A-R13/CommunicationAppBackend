@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { message, dmType, getUId, getToken, getChannel, getDm } from './other';
+import { userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
