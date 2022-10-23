@@ -1,4 +1,4 @@
-import { newUser, newChannel, requestHelper, requestClear } from './other';
+import { newUser, newChannel, newDm, requestHelper, requestClear } from './other';
 import { requestAuthRegister } from './auth.test';
 import { requestChannelsCreate } from './channels.test';
 import { requestChannelMessages } from './channel.test';
@@ -10,6 +10,11 @@ export function requestDmCreate(token: string, uIds: number[]) {
 export function requestMessageSend(token: string, channelId: number, message: string) {
   return requestHelper('POST', '/message/send/v1', { token, channelId, message });
 }
+
+export function requestDmMessages(token : string, dmId : number, start: number) {
+  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
+}
+
 
 requestClear();
 
@@ -54,10 +59,10 @@ describe(('Message Send tests'), () => {
 
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
-    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+    user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
 
-    channel0 = requestChannelsCreate(user0.token, 'Channel1', true) as { channelId: number };
+    channel0 = requestChannelsCreate(user0.token, 'Channel1', true);
   });
 
   test(('Error returns'), () => {
@@ -82,5 +87,42 @@ describe(('Message Send tests'), () => {
     };
 
     expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(msgFull);
+  });
+});
+
+describe('Dm Messages tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: newDm;
+  let dm1: newDm;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+
+    dm0 = requestDmCreate(user0.token, [0, 1]);
+    // dm1 = requestDmCreate(user0.token, [0, 1]);
+  });
+
+  test('Error Returns', () => {
+    // dmId does not refer to an existing Dm
+    expect(requestDmMessages(user0.token, 69, 0)).toStrictEqual({ error: expect.any(String) });
+
+    // start is greater than no of messages in channel
+    expect(requestDmMessages(user0.token, dm1.dmId, 50)).toStrictEqual({ error: expect.any(String) });
+
+    // channelid is valid but user is not member of that channel
+    expect(requestDmMessages(user2.token, dm1.dmId, 0)).toStrictEqual({ error: expect.any(String) });
+
+    // authuserid is invalid
+    expect(requestDmMessages('abc', dm1.dmId, 0)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Correct Return', () => {
+    // start is 0, should return empty messages array.
+    expect(requestDmMessages(user0.token, dm1.dmId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
   });
 });

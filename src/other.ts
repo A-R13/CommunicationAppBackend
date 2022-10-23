@@ -66,6 +66,10 @@ export interface newChannel {
   channelId: number
 }
 
+export interface newDm {
+  dmId: number
+}
+
 /**
  * <description: Resets the dataStore to its intial state. 'Clearing' away any additional added objects. >
  * @param {} - None

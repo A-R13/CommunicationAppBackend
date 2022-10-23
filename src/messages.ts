@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { dmType, getUId, getToken, getChannel } from './other';
+import { message, dmType, getUId, getToken, getChannel } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -106,3 +106,15 @@ export function messageSendV1 (token: string, channelId: number, message: string
 
   return { messageId: messageid };
 }
+
+/**
+ * <Description: Returns the first 50 messages from a specified dm, given a starting index and given that the accessing user is a member of said dm.
+ * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
+
+ * @param {string} token
+ * @param {number} dmId
+ * @param {number} start
+ * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
+ */
+
+export function dmMessagesV1 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {}
