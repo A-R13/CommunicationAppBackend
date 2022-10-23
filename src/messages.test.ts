@@ -1,7 +1,7 @@
 import { newUser, newChannel, requestHelper, requestClear } from './other';
 import { requestAuthRegister } from './auth.test';
 import { requestChannelsCreate } from './channels.test';
-import { requestChannelMessages } from './channel.test';
+import { requestChannelMessages, requestChannelJoin } from './channel.test';
 
 export function requestDmCreate(token: string, uIds: number[]) {
   return requestHelper('POST', '/dm/create/v1', { token, uIds });
@@ -9,6 +9,10 @@ export function requestDmCreate(token: string, uIds: number[]) {
 
 export function requestMessageSend(token: string, channelId: number, message: string) {
   return requestHelper('POST', '/message/send/v1', { token, channelId, message });
+}
+
+export function requestMessageEdit(token: string, messageId: number, message: string) {
+  return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
 }
 
 requestClear();
@@ -100,15 +104,16 @@ describe(('Message edit tests'), () => {
 
 
   test(('Error returns'), () => {
-
-  expect(requestChannelMessages("RANDOMTOKEN ", 2, "Hello").messages).toContainEqual({error: expect.any(String)});
-  expect(requestChannelMessages(user0.token, 2, "message").messages).toContainEqual({error: expect.any(String)});
-  expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual({error: expect.any(String)});
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+  expect(requestMessageEdit("RANDOMTOKEN ", msg1.messageId, "Hello")).toStrictEqual({ error: expect.any(String) } );
+  expect(requestMessageEdit(user0.token, 0, "message")).toStrictEqual({error: expect.any(String)});
+  expect(requestMessageEdit(user1.token, msg1.messageId, "asdjasjdks")).toStrictEqual({error: expect.any(String)});
 
   });
+  
   test(('Correct returns'), () => {
-    requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    requestMessageEdit(user0.token, 0, "Message change");
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, "Message change");
     expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
       {
         message: 'Message change',
@@ -119,13 +124,46 @@ describe(('Message edit tests'), () => {
     );
     });
 
-    test(('Correct returns, deletes if message is nothing'), () => {
-      requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-      requestMessageEdit(user0.token, 0, "");
-      expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
-        {}
-      );
-      });
+  test(('Correct returns, deletes if message is nothing'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, "");
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual(
+      []
+    );
+    });
+
+  test(('Correct returns, owner edits another persons message'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, "OWNER PERMISIONS ARE THE BEST MESSAGE");
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual(
+      {
+        message: 'OWNER PERMISIONS ARE THE BEST MESSAGE',
+        messageId: msg1.messageId,
+        uId: user1.authUserId, // SHOUlD THIS BE THE PERSON WHO EDITED OR THE PERSON WHO SENT IT INITIALLY
+        timeSent: expect.any(Number),
+      }
+    );
+    });
+
+
+  test(('Correct returns, Multiple messages'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
+    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 2');
+    const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
+    const msg4 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 4');
+    requestMessageEdit(user1.token, msg3.messageId, "RANDOM MESSAGE BY SECOND USER.");
+    expect(requestChannelMessages(user0.token, channel0.channelId, 3).messages).toStrictEqual([
+      {
+        message: 'RANDOM MESSAGE BY SECOND USER.',
+        messageId: msg3.messageId,
+        uId: user1.authUserId,
+        timeSent: expect.any(Number),
+      }
+    ]
+    );
+    });
 
 
 

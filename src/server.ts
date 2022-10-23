@@ -7,7 +7,7 @@ import cors from 'cors';
 import { authRegisterV2, authLoginV2 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { dmCreateV1, messageSendV1 } from './messages';
+import { dmCreateV1, messageSendV1, messageEditV1 } from './messages';
 import { userProfileV2 } from './users';
 import { clearV1 } from './other';
 
