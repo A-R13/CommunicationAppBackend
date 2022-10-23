@@ -1,5 +1,4 @@
 import { requestHelper, requestClear } from './other';
-
 // Function Wrappers using above function
 
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
@@ -10,6 +9,9 @@ export function requestAuthLogin(email: string, password: string) {
   return requestHelper('POST', '/auth/login/v2', { email, password });
 }
 
+export function requestAuthLogout(token: string) {
+  return requestHelper('POST', '/auth/logout/v1', { token });
+}
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
 
 describe('Testing authRegister function', () => {
@@ -117,5 +119,35 @@ describe('Testing authLogin function', () => {
     requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('csesoc@gmail.com', 'ABCD1234');
     expect(login).toStrictEqual({ error: expect.any(String) });
+  });
+});
+
+describe('Testing authlogout function', () => {
+  beforeEach(() => {
+    requestClear();
+  });
+
+  test('Successful logout (one token)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+  });
+
+  test('Successful logout (multiple tokens)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    const login = requestAuthLogin('example@gmail.com', 'ABCD1234');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+    expect(requestAuthLogout(login.token)).toStrictEqual({});
+  });
+
+  test('Failed logout (invalid token)', () => {
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    expect(requestAuthLogout('wrongToken')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(' 1 Successful logout and 1 failed (multiple tokens)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    requestAuthLogin('example@gmail.com', 'ABCD1234');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+    expect(requestAuthLogout('wrongToken')).toStrictEqual({ error: expect.any(String) });
   });
 });
