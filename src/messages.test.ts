@@ -108,8 +108,16 @@ describe(('Message edit tests'), () => {
   expect(requestMessageEdit("RANDOMTOKEN ", msg1.messageId, "Hello")).toStrictEqual({ error: expect.any(String) } );
   expect(requestMessageEdit(user0.token, 0, "message")).toStrictEqual({error: expect.any(String)});
   expect(requestMessageEdit(user1.token, msg1.messageId, "asdjasjdks")).toStrictEqual({error: expect.any(String)});
+  });
+
+  test(('error, no owner perms and change other messages'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    const msg2 = requestMessageSend(user1.token, channel0.channelId, 'Fake text message');
+    requestChannelJoin(user1.token, channel0.channelId);
+    expect(requestMessageEdit(user1.token, msg1.messageId, "Change message when not owner")).toStrictEqual({error: expect.any(String)});
 
   });
+  
   
   test(('Correct returns'), () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
