@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { dmType, getUId, getToken, getChannel } from './other';
+import { userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -51,7 +51,8 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
   const dm: dmType = {
     name: nameString,
     dmId: length,
-    members: membersArray
+    members: membersArray,
+    messages: [],
   };
 
   data.dms.push(dm);
@@ -107,31 +108,53 @@ export function messageSendV1 (token: string, channelId: number, message: string
   return { messageId: messageid };
 }
 
+/**
+ * <description:  Removes a dm when given a dmId >
+ * @param {string} token - unique token of the 'authorising' user
+ * @param {number} dmId - an Id used to identify a dm channel
+ *
+ * @returns {} - nothing
+ */
+
 export function dmRemoveV1(token : string, dmId: number) {
   const data = getData();
 
   // checks if token is valid
   if (getToken(token) === undefined) {
     return { error: 'error' };
-  }  
-
+  }
+  // dm doesnt exist
   if (data.dms.find(a => a.dmId === dmId) === undefined) {
     return {
       error: 'error'
-    }
+    };
   }
 
-  // add code to error test.
+  let userIdentity;
+  // finds auth user id if token is valid
+  for (const i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
+  // checks if the user is an owner. (first user is owner)
+  if (data.dms[dmId].members[0].uId !== userIdentity) {
+    return {
+      error: 'error'
+    };
+  }
 
+  // deletes the dm
   for (const i in data.dms) {
     if (data.dms[i].dmId === dmId) {
       data.dms.splice(parseInt(i), 1);
-      return {};
     }
   }
-  
-}
 
+  setData(data);
+  return {};
+}
+/*
 const data = getData();
 
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
@@ -139,7 +162,6 @@ import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, ch
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 import { userProfileV2 } from './users';
 
-/*
 let user0 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
 let user1 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
 let user2 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
@@ -151,3 +173,53 @@ dmCreateV1(data.users[3].sessions[0], [1]);
 dmRemoveV1(data.users[3].sessions[0], 2)
 console.log(data.dms)
 */
+
+/**
+ * <Description: Returns the first 50 messages from a specified dm, given a starting index and given that the accessing user is a member of said dm.
+ * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
+
+ * @param {string} token
+ * @param {number} dmId
+ * @param {number} start
+ * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
+ */
+
+export function dmMessagesV1 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
+  const userToken = getToken(token);
+  const dm: dmType = getDm(dmId);
+
+  if (dm === undefined) {
+    // If dm is undefined
+    return { error: `dm with dmId '${dmId}' does not exist!` };
+  } else if (start > dm.messages.length) {
+    // If the provided start is greater than the total messages in the dm, an error will be returned
+    return { error: `Start '${start}' is greater than the total number of messages in the specified dm` };
+  }
+
+  if (userToken === undefined) {
+    // If user doesn't exist at all, return an error
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  const userInDm = dm.members.find((a: userShort) => a.uId === userToken.authUserId);
+  if (userInDm === undefined) {
+    // If user is not a member of the target channel, return an error
+    return { error: `User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!` };
+  }
+
+  if ((start + 50) > dm.messages.length) {
+    // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
+    return {
+      messages: dm.messages.slice(start, dm.messages.length),
+      start: start,
+      end: -1,
+    };
+  } else {
+    return {
+      // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
+      messages: dm.messages.slice(start, (start + 50)),
+      start: start,
+      end: (start + 50),
+    };
+  }
+}
