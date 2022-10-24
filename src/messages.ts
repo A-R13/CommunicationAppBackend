@@ -43,7 +43,7 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
       uId: user.authUserId,
       email: user.email,
       nameFirst: user.nameFirst,
-      nameLast: user.nameFirst,
+      nameLast: user.nameLast,
       handleStr: user.userHandle
     };
   });
@@ -203,4 +203,36 @@ export function dmMessagesV1 (token: string, dmId: number, start: number): { mes
       end: (start + 50),
     };
   }
+}
+/**
+ * <Description: Given a valid DmId by a member thats within the dm, this function will return the name and members of that Dm.
+
+ * @param {string} token
+ * @param {number} dmId
+ *
+ * @returns { name: string, members: [users]}
+ */
+
+export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[]}| { error: string} {
+  // check if token and dmId are valid
+  const checkToken = getToken(token);
+  const checkDM: dmType = getDm(dmId);
+
+  if (checkToken === undefined) {
+    return { error: 'Invalid Token.' };
+  }
+  if (checkDM === undefined) {
+    return { error: 'Invalid DmId' };
+  }
+  // check if user is a member of the Dm
+  const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
+  if (userInDm === undefined) {
+    // If user is not a member of the target channel, return an error
+    return { error: 'User is not a member of this dm' };
+  }
+
+  return {
+    name: checkDM.name,
+    members: checkDM.members
+  };
 }
