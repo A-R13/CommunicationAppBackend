@@ -1,4 +1,4 @@
-import { newUser, newChannel, newDm, requestHelper, requestClear } from './other';
+import { newUser, newChannel, newDm, requestHelper, requestClear, dmType } from './other';
 import { requestAuthRegister } from './auth.test';
 import { requestChannelsCreate } from './channels.test';
 import { requestChannelMessages } from './channel.test';
@@ -19,6 +19,9 @@ export function requestDmMessages(token : string, dmId : number, start: number) 
   return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
 }
 
+export function requestDmDetails(token: string, dmId: number) {
+  return requestHelper('GET', '/dm/details/v1', { token, dmId });
+}
 requestClear();
 
 describe(('DM Create tests'), () => {
@@ -166,5 +169,53 @@ describe('Dm Messages tests', () => {
     expect(requestDmMessages(user1.token, dm1.dmId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
 
     // Add more tests when dm message send is done.
+  });
+});
+
+describe('Dm details tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: dmType;
+
+  const memberCheck = [
+    {
+      email: 'example1@gmail.com',
+      handleStr: 'johndoe',
+      nameFirst: 'John',
+      nameLast: 'Doe',
+      uId: 0,
+    },
+    {
+      email: 'example2@gmail.com',
+      handleStr: 'bobdoe',
+      nameFirst: 'Bob',
+      nameLast: 'Doe',
+      uId: 1,
+    }
+  ];
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test('Error (Invalid token)', () => {
+    expect(requestDmDetails('invalid Token', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Error (Invalid dmId)', () => {
+    expect(requestDmDetails(user0.token, 67)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Error (user is not member of DM)', () => {
+    expect(requestDmDetails(user2.token, dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Successful return', () => {
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
   });
 });
