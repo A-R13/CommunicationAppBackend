@@ -22,6 +22,11 @@ export function requestDmMessages(token : string, dmId : number, start: number) 
 export function requestDmDetails(token: string, dmId: number) {
   return requestHelper('GET', '/dm/details/v1', { token, dmId });
 }
+
+export function requestDmLeave(token: string, dmId: number) {
+    return requestHelper('POST', '/dm/leave/v1', {token, dmId});
+
+}
 requestClear();
 
 describe(('DM Create tests'), () => {
@@ -219,3 +224,33 @@ describe('Dm details tests', () => {
     expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
   });
 });
+
+describe('dmLeave tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: newDm;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe')//uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe')//uid = 1
+    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe')//uid = 2
+    dm0 = requestDmCreate(user0.token, [1]);
+
+  });
+
+  test('Error returns', () => {
+    //invalid dmId
+    expect(requestDmLeave(user0.token, '99')).toStrictEqual({ error: expect.any(String) });
+
+    //user is not a member of the DM
+    expect(requestDmLeave(user2.token, dm0.dmId))
+
+    //invalid token
+    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  })
+
+
+
+})
