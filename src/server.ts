@@ -4,10 +4,10 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 
-import { authRegisterV2, authLoginV2 } from './auth';
+import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { dmCreateV1, messageSendV1, messageEditV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmMessagesV1, messageEditV1 } from './messages';
 import { userProfileV2 } from './users';
 import { clearV1 } from './other';
 
@@ -124,6 +124,20 @@ app.put('/message/edit/v1', (req: Request, res: Response, next) => {
   const { token, messageId, message } = req.body;
 
   res.json(messageEditV1(token, messageId, message));
+});
+
+app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
+  const { token } = req.body;
+
+  res.json(authLogoutV1(token));
+});
+
+app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const dmId = req.query.dmId as string;
+  const start = req.query.start as string;
+
+  res.json(dmMessagesV1(token, parseInt(dmId), parseInt(start)));
 });
 
 

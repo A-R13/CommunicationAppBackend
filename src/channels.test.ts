@@ -66,7 +66,7 @@ describe('channelsCreate tests', () => {
 });
 
 describe('ChannelsListAll tests', () => {
-  let token;
+  let token: string;
   // User needs to be created in order test this function
   beforeEach(() => {
     requestClear();

@@ -1,5 +1,6 @@
 import { getData, setData } from './dataStore';
-import { dmType, getUId, getToken, getChannel, clearV1 } from './other';
+
+import { userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -51,7 +52,8 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
   const dm: dmType = {
     name: nameString,
     dmId: length,
-    members: membersArray
+    members: membersArray,
+    messages: [],
   };
 
   data.dms.push(dm);
@@ -252,3 +254,53 @@ console.log(data.channels[0].messages)
 
 
 console.log(messageEditV1(data.users[1].sessions[0], data.channels[0].messages[1].messageId, "SECOND EDIT")); */
+
+/**
+ * <Description: Returns the first 50 messages from a specified dm, given a starting index and given that the accessing user is a member of said dm.
+ * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
+
+ * @param {string} token
+ * @param {number} dmId
+ * @param {number} start
+ * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
+ */
+
+export function dmMessagesV1 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
+  const userToken = getToken(token);
+  const dm: dmType = getDm(dmId);
+
+  if (dm === undefined) {
+    // If dm is undefined
+    return { error: `dm with dmId '${dmId}' does not exist!` };
+  } else if (start > dm.messages.length) {
+    // If the provided start is greater than the total messages in the dm, an error will be returned
+    return { error: `Start '${start}' is greater than the total number of messages in the specified dm` };
+  }
+
+  if (userToken === undefined) {
+    // If user doesn't exist at all, return an error
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  const userInDm = dm.members.find((a: userShort) => a.uId === userToken.authUserId);
+  if (userInDm === undefined) {
+    // If user is not a member of the target channel, return an error
+    return { error: `User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!` };
+  }
+
+  if ((start + 50) > dm.messages.length) {
+    // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
+    return {
+      messages: dm.messages.slice(start, dm.messages.length),
+      start: start,
+      end: -1,
+    };
+  } else {
+    return {
+      // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
+      messages: dm.messages.slice(start, (start + 50)),
+      start: start,
+      end: (start + 50),
+    };
+  }
+}
