@@ -120,12 +120,11 @@ export function messageSendV1 (token: string, channelId: number, message: string
 
 export function dmMessagesV1 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
   const userToken = getToken(token);
-  // const userId = userToken.authUserId;
   const dm: dmType = getDm(dmId);
 
   if (dm === undefined) {
     // If dm is undefined
-    return { error: `dm with channelId '${dm}' does not exist!` };
+    return { error: `dm with dmId '${dmId}' does not exist!` };
   } else if (start > dm.messages.length) {
     // If the provided start is greater than the total messages in the dm, an error will be returned
     return { error: `Start '${start}' is greater than the total number of messages in the specified dm` };
