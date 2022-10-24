@@ -109,6 +109,53 @@ export function messageSendV1 (token: string, channelId: number, message: string
 }
 
 /**
+ * <description:  Removes a dm when given a dmId >
+ * @param {string} token - unique token of the 'authorising' user
+ * @param {number} dmId - an Id used to identify a dm channel
+ *
+ * @returns {} - nothing
+ */
+
+export function dmRemoveV1(token : string, dmId: number) {
+  const data = getData();
+
+  // checks if token is valid
+  if (getToken(token) === undefined) {
+    return { error: 'error' };
+  }
+  // dm doesnt exist
+  if (data.dms.find(a => a.dmId === dmId) === undefined) {
+    return {
+      error: 'error'
+    };
+  }
+
+  let userIdentity;
+  // finds auth user id if token is valid
+  for (const i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
+  // checks if the user is an owner. (first user is owner)
+  if (data.dms[dmId].members[0].uId !== userIdentity) {
+    return {
+      error: 'error'
+    };
+  }
+
+  // deletes the dm
+  for (const i in data.dms) {
+    if (data.dms[i].dmId === dmId) {
+      data.dms.splice(parseInt(i), 1);
+    }
+  }
+
+  setData(data);
+  return {};
+}
+
+/**
  * <Description: Returns the first 50 messages from a specified dm, given a starting index and given that the accessing user is a member of said dm.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
 

@@ -11,6 +11,10 @@ export function requestMessageSend(token: string, channelId: number, message: st
   return requestHelper('POST', '/message/send/v1', { token, channelId, message });
 }
 
+export function requestDmRemove(token: string, dmId: number) {
+  return requestHelper('DELETE', '/dm/remove/v1', { token, dmId });
+}
+
 export function requestDmMessages(token : string, dmId : number, start: number) {
   return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
 }
@@ -86,6 +90,43 @@ describe(('Message Send tests'), () => {
     };
 
     expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(msgFull);
+  });
+});
+
+describe(('DM remove tests'), () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+    user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
+  });
+
+  test(('Error returns'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user0.token, 1)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user2.token, 0)).toStrictEqual({ error: expect.any(String) });
+    // Do one for dm leave
+  });
+
+  test(('For one dm, owner removes it'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    expect(requestDmRemove(user0.token, 0)).toStrictEqual({});
+  });
+
+  test(('For multiple dm, owner removes it'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    requestDmCreate(user1.token, [0, 2, 3]);
+    requestDmCreate(user3.token, [1]);
+    expect(requestDmRemove(user1.token, 1)).toStrictEqual({});
   });
 });
 
