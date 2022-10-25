@@ -236,7 +236,8 @@ describe('dmLeave tests', () => {
     user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe')//uid = 0
     user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe')//uid = 1
     user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe')//uid = 2
-    dm0 = requestDmCreate(user0.token, [1]);
+    user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe')//uid = 3
+    dm0 = requestDmCreate(user0.token, [1, 2]);
 
   });
 
@@ -245,12 +246,19 @@ describe('dmLeave tests', () => {
     expect(requestDmLeave(user0.token, '99')).toStrictEqual({ error: expect.any(String) });
 
     //user is not a member of the DM
-    expect(requestDmLeave(user2.token, dm0.dmId))
+    expect(requestDmLeave(user3.token, dm0.dmId))
 
     //invalid token
     expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
   })
 
+  test('remove member', () => {
+    expect(requestDmLeave(user1.token, 1)).toStrictEqual({});
 
+  })
+
+  test('remove owner', () => {
+    expect(requestDmLeave(user0.token, 0)).toStrictEqual({});
+  })
 
 })
