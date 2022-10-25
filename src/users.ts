@@ -48,11 +48,9 @@ export function usersAllV1 (token: string) {
   const user = getToken(token);
 
   if (user === undefined) {
-    return { error: `The inputted token '${token}' is invalid`};
+    return { error: `The inputted token '${token}' is invalid` };
   }
-  const userArray = data.users
-  const detailsArray = [];
-
+  const userArray = data.users;
   const detailsArray = userArray.map(user => {
     return {
       uId: user.authUserId,
@@ -66,6 +64,4 @@ export function usersAllV1 (token: string) {
   return {
     users: detailsArray,
   };
-
-
 }

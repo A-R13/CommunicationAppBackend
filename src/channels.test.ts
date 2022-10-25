@@ -1,7 +1,6 @@
 import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList } from './wrapperFunctions';
 import { newUser } from './other';
 
-
 requestClear();
 
 describe('channelsCreate tests', () => {
@@ -177,4 +176,3 @@ describe('channelsListV1 tests', () => {
     });
   });
 });
-

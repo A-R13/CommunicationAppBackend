@@ -1,7 +1,6 @@
 import { newUser } from './other';
 import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll } from './wrapperFunctions';
 
-
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
   let user2: newUser;
@@ -60,26 +59,20 @@ describe('Testing for userProfileV2', () => {
   });
 });
 
-
 describe('usersAllv1 tests', () => {
   let user0: newUser;
-  let user1: newUser;
-  let user2: newUser;
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith'); //uid = 0
-
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');// uid = 0
   });
 
   afterEach(() => {
     requestClear();
-
   });
 
   test('Error return', () => {
     expect(requestUsersAll('abcd')).toStrictEqual({ error: expect.any(String) });
-
-  })
+  });
 
   test('show user details when given a valid token', () => {
     expect(requestUsersAll(user0.token)).toStrictEqual({
@@ -93,7 +86,7 @@ describe('usersAllv1 tests', () => {
         }
       ]
     });
-    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
+    requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
     expect(requestUsersAll(user0.token)).toStrictEqual({
       users: [
         {
@@ -113,7 +106,7 @@ describe('usersAllv1 tests', () => {
       ]
 
     });
-    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
+    requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
     expect(requestUsersAll(user0.token)).toStrictEqual({
       users: [
         {
@@ -140,5 +133,4 @@ describe('usersAllv1 tests', () => {
       ]
     });
   });
-
 });

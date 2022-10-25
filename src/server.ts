@@ -157,7 +157,7 @@ app.get('/dm/list/v1', (req: Request, res: Response, next) => {
 });
 
 app.get('/users/all/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string
+  const token = req.query.token as string;
 
   res.json(usersAllV1(token));
 });
