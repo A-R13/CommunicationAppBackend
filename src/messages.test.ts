@@ -1,31 +1,8 @@
-import { newUser, newChannel, newDm, requestHelper, requestClear, dmType } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-import { requestChannelMessages } from './channel.test';
+import { newUser, newChannel, newDm, dmType } from './other';
 
-export function requestDmCreate(token: string, uIds: number[]) {
-  return requestHelper('POST', '/dm/create/v1', { token, uIds });
-}
+import { requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages, 
+  requestDmDetails, requestDmList } from './wrapperFunctions';
 
-export function requestMessageSend(token: string, channelId: number, message: string) {
-  return requestHelper('POST', '/message/send/v1', { token, channelId, message });
-}
-
-export function requestDmRemove(token: string, dmId: number) {
-  return requestHelper('DELETE', '/dm/remove/v1', { token, dmId });
-}
-
-export function requestDmMessages(token : string, dmId : number, start: number) {
-  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
-}
-
-export function requestDmDetails(token: string, dmId: number) {
-  return requestHelper('GET', '/dm/details/v1', { token, dmId });
-}
-
-export function requestDmList(token: string) {
-  return requestHelper('GET', '/dm/list/v1', { token });
-}
 
 requestClear();
 
