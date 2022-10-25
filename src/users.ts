@@ -43,14 +43,9 @@ export function userProfileV2 (token : string, uId : number) : any {
   }
 }
 
-export function userSetName (token: string, nameFirst: string, nameLast: string) {
+export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
   authUserToken = getToken(token);
-  // ERROR CASES
-  // length of nameFirst is not between 1-50 characters inclusive
-
-  // length of nameLast is not bewteen 1-50 characters inclusive
-
-  // token is invalid
+  userArray = data.users;
 
   // invalid parameters
   if (authUserToken === undefined || nameFirst.length < 1 || nameFirst.length > 50
@@ -58,5 +53,11 @@ export function userSetName (token: string, nameFirst: string, nameLast: string)
     return { error: 'invalid parameters'};
   }
   
-  // SUCCESS CASE - redefine user first name, user last name and push
+  // SUCCESS CASE - re-initialise user first name, user last name
+  // is it meant to be c.authUserToken or c.authUserId??? 
+  const userIndex = data.users.findIndex(c => c.authUserToken === authUserToken);
+  userArray[userIndex].nameFirst = nameFirst;
+  userArray[userIndex].nameLast = nameLast;
+  
+  return {};
 }
