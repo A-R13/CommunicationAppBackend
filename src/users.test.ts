@@ -1,5 +1,7 @@
 import { newUser } from './other';
-import { requestClear, requestAuthRegister, requestUserProfile } from './wrapperFunctions';
+import { requestClear, requestAuthRegister, requestUserProfile, requestUserSetName } from './wrapperFunctions';
+
+
 
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
@@ -42,7 +44,7 @@ describe('Testing for userProfileV2', () => {
     );
   });
 
-  test('uId doesnt refer to valid  user', () => {
+  test('uId doesnt refer to valid user', () => {
     expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: 'error' });
   });
 
@@ -57,4 +59,55 @@ describe('Testing for userProfileV2', () => {
   test('AuthuserId is invalid', () => {
     expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: 'error' });
   });
+});
+
+describe('Testing for userSetNameV1', () => {
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
+
+  beforeEach(() => {
+    requestClear();
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'geoff', 'Doe');
+  });
+
+  // successfully reset first name, last name
+  test('successfully reset names', () => {
+    expect(requestUserSetName(user1.token, 'geoffrey', 'mok')).toStrictEqual({});
+    expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual({
+      uId: 0,
+      email: 'example1@gmail.com',
+      nameFirst: 'geoffrey',
+      nameLast: 'mok',
+      handleStr: 'nicoledoe'
+    })
+  });
+
+  // token is invalid
+  test('throw error if invalid token', () => {
+    expect(requestUserSetName('a', 'geoffrey', 'mok')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // length of first name is not less than 50 characters
+  test('throw error if first name is too long', () => {
+    expect(requestUserSetName(user1.token, 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz', 'mok')).toStrictEqual({ error: expect.any(String) });
+  }); 
+  
+  // length of first name is not 1 character or greater (blank)
+  test('throw error if first name is blank', () => {
+    expect(requestUserSetName(user1.token, '', 'mok')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // length of last name is not less than 50 characters
+  test('throw error if last name is too long', () => {
+    expect(requestUserSetName(user1.token, 'geoffrey', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // length of last name is not 1 character or greater (blank)
+  test('throw error if last name is blank', () => {
+    expect(requestUserSetName(user1.token, 'mok', '')).toStrictEqual({ error: expect.any(String) });
+  });
+  
 });
