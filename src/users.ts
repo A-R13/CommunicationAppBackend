@@ -63,10 +63,8 @@ export function usersAllV1 (token: string) {
     };
   });
 
-  setData(data);
-
   return {
-    users = detailsArray,
+    users: detailsArray,
   };
 
 
