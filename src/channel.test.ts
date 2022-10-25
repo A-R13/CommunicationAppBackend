@@ -18,6 +18,10 @@ export function requestChannelInvite(token : string, channelId: number, uId: num
   return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
 }
 
+export function requestRemoveOwner(token : string, channelId: number, uId: number) {
+    return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
+}
+
 requestClear();
 
 afterEach(() => {
@@ -394,4 +398,74 @@ describe('Channel Invite tests', () => {
       { error: expect.any(String) }
     );
   });
+});
+
+describe('removeOwner tests', () => {
+    let nicole;
+    let dennis;
+    let channel;
+
+    beforeEach(() => {
+        requestClear();
+        nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+        dennis = requestAuthRegister('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
+        channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
+      });
+    
+    // channelId does not refer to a valid channel
+    test('invalid channelId', () => {
+        //requestAddOwner() - add dennis as an owner
+        expect(requestRemoveOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual({});
+        expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+            {
+                name: 'funChannelName',
+                isPublic: true,
+                ownerMembers: [{
+                  uId: 0,
+                  email: 'nicole.jiang@gmail.com',
+                  nameFirst: 'nicole',
+                  nameLast: 'jiang',
+                  handleStr: 'nicolejiang'
+                }],
+                allMembers: [{
+                  uId: 0,
+                  email: 'nicole.jiang@gmail.com',
+                  nameFirst: 'nicole',
+                  nameLast: 'jiang',
+                  handleStr: 'nicolejiang'
+                }, {
+                  uId: 1,
+                  email: 'dennis.pulickal@gmail.com',
+                  nameFirst: 'dennis',
+                  nameLast: 'pulickal',
+                  handleStr: 'dennispulickal'
+                }],
+              }
+        )
+    });
+
+    // uId does not refer to a valid user
+    test('invalid uId', () => {
+    });
+
+    // token is invalid
+    test('invalid token', () => {
+    });
+
+    // uId refers to a user who is not an owner of the channel
+    test('uId is not an owner', () => {
+    });
+
+    // uId refers to a user who is currently the only owner of the channel
+    test('uId is the only owner', () => {
+    });
+
+    // channelId is valid and the authorised user does not have owner permissions in the channel
+    test('authorised user does not have owner perms', () => {
+    });
+
+    // success case
+    test('successfully removed owner', () => {
+    });
+
 });
