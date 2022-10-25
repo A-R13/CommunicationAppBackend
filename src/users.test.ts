@@ -1,9 +1,5 @@
 import { newUser } from './other';
-import { requestClear, requestAuthRegister, requestUserProfile } from './wrapperFunctions';
-
-export function requestUsersAll(token: string) {
-  return requestHelper('GET', '/users/all/v1', { token });
-}
+import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll } from './wrapperFunctions';
 
 
 describe('Testing for userProfileV2', () => {
@@ -66,9 +62,9 @@ describe('Testing for userProfileV2', () => {
 
 
 describe('usersAllv1 tests', () => {
-  let user0;
-  let user1;
-  let user2;
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith'); //uid = 0

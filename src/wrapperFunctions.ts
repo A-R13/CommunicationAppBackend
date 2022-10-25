@@ -91,3 +91,7 @@ export function requestDmDetails(token: string, dmId: number) {
 export function requestDmList(token: string) {
   return requestHelper('GET', '/dm/list/v1', { token });
 }
+
+export function requestUsersAll(token: string) {
+  return requestHelper('GET', '/users/all/v1', { token });
+}
