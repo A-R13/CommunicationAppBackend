@@ -1,44 +1,24 @@
-import { newUser, newChannel, newDm, requestHelper, requestClear, dmType } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-import { requestChannelMessages } from './channel.test';
+import { newUser, newChannel, newDm, dmType } from './other';
 
-export function requestDmCreate(token: string, uIds: number[]) {
-  return requestHelper('POST', '/dm/create/v1', { token, uIds });
-}
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
+  requestDmDetails, requestDmList
+} from './wrapperFunctions';
 
-export function requestMessageSend(token: string, channelId: number, message: string) {
-  return requestHelper('POST', '/message/send/v1', { token, channelId, message });
-}
-
-export function requestDmRemove(token: string, dmId: number) {
-  return requestHelper('DELETE', '/dm/remove/v1', { token, dmId });
-}
-
-export function requestDmMessages(token : string, dmId : number, start: number) {
-  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
-}
-
-export function requestDmDetails(token: string, dmId: number) {
-  return requestHelper('GET', '/dm/details/v1', { token, dmId });
-}
 requestClear();
 
 describe(('DM Create tests'), () => {
   let user0: newUser;
-  //   let user1: newUser;
-  //   let user2: newUser;
-  //   let user3: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
-    // user1 =
-    requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
-    // user2 =
-    requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
-    // user3 =
-    requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+    user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
   });
 
   test(('Error returns'), () => {
@@ -48,13 +28,17 @@ describe(('DM Create tests'), () => {
   });
 
   test(('Correct returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2, 3])).toStrictEqual({ dmId: expect.any(Number) });
+    expect(requestDmCreate(user0.token, [1, 2])).toStrictEqual({ dmId: expect.any(Number) });
 
-    // requestDmCreate(user0.token, [0,1]);
-    // expect(requestDmDetails(user0.token)) ==> should include only 2 dms
-    // expect(requestDmDetails(user1.token)) ==> should include only 2 dms
-    // expect(requestDmDetails(user2.token)) ==> should include only 1 dm
-    // expect(requestDmDetails(user3.token)) ==> should not include any dms
+    requestDmCreate(user0.token, [1]);
+
+    const expectedDms2 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }, { dmId: expect.any(Number), name: expect.any(String) }] };
+    const expectedDms1 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }] };
+
+    expect(requestDmList(user0.token)).toMatchObject(expectedDms2);
+    expect(requestDmList(user1.token)).toMatchObject(expectedDms2);
+    expect(requestDmList(user2.token)).toMatchObject(expectedDms1);
+    expect(requestDmList(user3.token)).toMatchObject({ dms: [] });
   });
 });
 
@@ -217,5 +201,44 @@ describe('Dm details tests', () => {
 
   test('Successful return', () => {
     expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
+  });
+});
+
+describe('Dm List Tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: dmType;
+
+  beforeEach(() => {
+    requestClear();
+
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test('Error Returns', () => {
+    // user doesnt exist
+    expect(requestDmList('abc')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Correct Returns', () => {
+    expect(requestDmList(user0.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
+
+    expect(requestDmList(user1.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
+
+    const dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
+    const user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number}; // uid = 3
+    const dm2 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+
+    expect(requestDmList(user0.token)).toStrictEqual({
+      dms: [
+        { dmId: dm0.dmId, name: 'bobdoe, johndoe' },
+        { dmId: dm1.dmId, name: 'bobdoe, jeffdoe, johndoe' },
+        { dmId: dm2.dmId, name: 'bobdoe, jeffdoe, johndoe, stevedoe' },
+      ]
+    });
   });
 });

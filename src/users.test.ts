@@ -1,10 +1,5 @@
-import { newUser, requestHelper, requestClear } from './other';
-
-import { requestAuthRegister } from './auth.test';
-
-export function requestUserProfile (token: string, uId: number) {
-  return requestHelper('GET', '/user/profile/v2', { token, uId });
-}
+import { newUser } from './other';
+import { requestClear, requestAuthRegister, requestUserProfile } from './wrapperFunctions';
 
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
