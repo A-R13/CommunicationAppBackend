@@ -1,20 +1,5 @@
-import { requestAuthRegister } from './auth.test';
-import { requestchannelDetails } from './channel.test';
-import { requestHelper, requestClear, newUser } from './other';
-
-// Type errors in this file are all to do with the channelsListAll tests
-
-export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
-  return requestHelper('POST', '/channels/create/v2', { token, name, isPublic });
-}
-
-export function requestChannelsListAll (token: string) {
-  return requestHelper('GET', '/channels/listall/v2', { token });
-}
-
-export function requestChannelsList (token: string) {
-  return requestHelper('GET', '/channels/list/v2', { token });
-}
+import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList } from './wrapperFunctions';
+import { newUser } from './other';
 
 requestClear();
 
