@@ -42,3 +42,4 @@ export function userProfileV2 (token : string, uId : number) : any {
     return { error: 'error' };
   }
 }
+
