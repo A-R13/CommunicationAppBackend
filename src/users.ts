@@ -57,6 +57,6 @@ export function userSetName (token: string, nameFirst: string, nameLast: string)
   || nameLast.length < 1 || nameLast.length > 50) {
     return { error: 'invalid parameters'};
   }
-
+  
   // SUCCESS CASE - redefine user first name, user last name and push
 }
