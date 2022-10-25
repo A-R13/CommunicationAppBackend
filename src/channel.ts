@@ -103,7 +103,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   const userArray = data.users;
   const channelArray = data.channels;
 
-  const channel = data.channels.find(c => c.channelId === channelId);
+  const channel = getChannel(channelId);
   const user = getUId(uId);
   const authUserToken = getToken(token);
 
@@ -203,3 +203,54 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
     };
   }
 }
+
+/**
+ * <Description: Remove user with user id uId as an owner of the channel.>
+ * 
+ * @param {string} token
+ * @param {number} channelId
+ * @param {number} uId
+ * @returns {{}}
+ */
+
+export function removeOwnerV1 (token: string, channelId: number, uId: number) {
+  // ERROR CASES
+ 
+  const channel = getChannel(channelId);
+  const user = getUId(uId);
+  const authUserToken = getToken(token);
+
+  // checking for invalid channelId, invalid uId, invalid token
+  if (channel === undefined || user === undefined || authUserToken === undefined) {
+    return { error: 'invalid parameters' };
+  }
+
+  // uid is not not an owner of the channel
+  const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
+  
+  // method 1
+  if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
+    return { error: 'uId is not an owner of the channel' };
+  }
+  // method 2
+  if (data.channels[channelIndex].ownerMembers.includes(uId) === false) {
+    return { error: 'uId is not an owner of the channel' };
+  }
+
+  // uid is the only owner of the channel
+  const userIndex = data.channels[channelIndex].ownerMembers.findIndex(x => x.uId === uId);
+  if (userIndex === 0) {
+    return { error: 'uId is the only owner of the channel'};
+  }
+
+  // authUser which the token belongs to, is not an owner
+  const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
+  if (userIsOwner === undefined) {
+    return { error: `User with authUserId '${authUserToken.authUserId}' is not an owner of channel with channelId '${channel}'!` };
+  }
+
+  // SUCCESS CASE
+  // remove uid from ownerMembers array 
+  data.channels[channelIndex].ownerMembers.splice(userIndex, 1);
+}
+ 
