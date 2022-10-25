@@ -149,6 +149,12 @@ app.get('/dm/details/v1', (req: Request, res: Response, next) => {
 
   res.json(dmDetailsV1(token, parseInt(dmId)));
 });
+
+app.get('/users/all/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string
+
+  res.json(usersAllV1(token));
+})
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE

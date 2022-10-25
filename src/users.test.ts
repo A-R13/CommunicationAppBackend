@@ -7,7 +7,7 @@ export function requestUserProfile (token: string, uId: number) {
 }
 
 export function requestUsersAll(token: string) {
-  return requestHelper('GET', '/channels/users/all/v2', { token });
+  return requestHelper('GET', '/users/all/v1', { token });
 }
 
 
@@ -91,8 +91,6 @@ describe('usersAllv1 tests', () => {
   })
 
   test('show user details when given a valid token', () => {
-    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
-    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
     expect(requestUsersAll(user0.token)).toStrictEqual({
       userDetails: [
         {
@@ -104,8 +102,8 @@ describe('usersAllv1 tests', () => {
         }
       ]
     });
-
-    expect(requestUsersAll(user0.token, user1.token)).toStrictEqual({
+    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
+    expect(requestUsersAll(user0.token)).toStrictEqual({
       userDetails: [
         {
           uid: 0,
@@ -124,8 +122,8 @@ describe('usersAllv1 tests', () => {
       ]
 
     });
-
-    expect(requestUsersAll(user0.token, user1.token, user2.token)).toStrictEqual({
+    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
+    expect(requestUsersAll(user0.token)).toStrictEqual({
       userDetails: [
         {
           uid: 0,

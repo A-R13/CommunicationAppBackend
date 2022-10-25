@@ -16,9 +16,6 @@ export function requestChannelsList (token: string) {
   return requestHelper('GET', '/channels/list/v2', { token });
 }
 
-export function requestUsersAll(token: string) {
-  return requestHelper('GET', '/channels/users/all/v2', { token });
-}
 
 requestClear();
 
@@ -196,26 +193,3 @@ describe('channelsListV1 tests', () => {
   });
 });
 
-
-
-describe('usersAllv1 tests', () => {
-
-  beforeEach(() => {
-    requestClearV1();
-    let user = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith')
-
-  });
-
-  afterEach(() => {
-    requestClear();
-
-  });
-
-  test('Error return', () => {
-    expect(requestusersAll('abcd')).toStrictEqual({ error: expect.any(String) });
-
-  })
-
-
-
-})
