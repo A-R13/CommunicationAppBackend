@@ -225,13 +225,13 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
     return { error: 'invalid parameters' };
   }
 
-  // uid is not not an owner of the channel
+  // uid is not an owner of the channel
   const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
-  
+  /*  
   // method 1
   if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
     return { error: 'uId is not an owner of the channel' };
-  }
+  } */
   // method 2
   if (data.channels[channelIndex].ownerMembers.includes(uId) === false) {
     return { error: 'uId is not an owner of the channel' };
@@ -252,5 +252,7 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   // SUCCESS CASE
   // remove uid from ownerMembers array 
   data.channels[channelIndex].ownerMembers.splice(userIndex, 1);
+
+  return {};
 }
  
