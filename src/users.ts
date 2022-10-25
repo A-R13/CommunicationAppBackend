@@ -42,3 +42,21 @@ export function userProfileV2 (token : string, uId : number) : any {
     return { error: 'error' };
   }
 }
+
+export function userSetName (token: string, nameFirst: string, nameLast: string) {
+  authUserToken = getToken(token);
+  // ERROR CASES
+  // length of nameFirst is not between 1-50 characters inclusive
+
+  // length of nameLast is not bewteen 1-50 characters inclusive
+
+  // token is invalid
+
+  // invalid parameters
+  if (authUserToken === undefined || nameFirst.length < 1 || nameFirst.length > 50
+  || nameLast.length < 1 || nameLast.length > 50) {
+    return { error: 'invalid parameters'};
+  }
+
+  // SUCCESS CASE - redefine user first name, user last name and push
+}
