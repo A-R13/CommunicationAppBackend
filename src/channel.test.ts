@@ -392,7 +392,7 @@ describe('Channel Invite tests', () => {
 
   test('throw error when authUserId is not a member', () => {
     requestChannelInvite(nicole.token, channel.channelId, dennis.authUserId);
-    // in thise case, dennis is already a member as well
+    // in this case, dennis is already a member as well
     expect(requestChannelInvite(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual(
       { error: expect.any(String) }
     );
