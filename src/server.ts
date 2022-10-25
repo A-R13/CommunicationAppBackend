@@ -156,7 +156,6 @@ app.get('/dm/list/v1', (req: Request, res: Response, next) => {
   res.json(dmListV1(token));
 });
 
-
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
