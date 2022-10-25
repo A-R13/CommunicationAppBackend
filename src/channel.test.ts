@@ -26,7 +26,6 @@ export function requestRemoveOwner(token : string, channelId: number, uId: numbe
   return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
 }
 
-
 requestClear();
 
 afterEach(() => {
@@ -422,7 +421,7 @@ describe('addOwner tests', () => {
 	// success case
 	test('successfully added owner', () => {
 		requestChannelJoin(dennis.token, channel.channelId);
-		expect(requestAddOwner(nicole.token, channelId.channelId, dennis.authUserId)).toStrictEqual({});
+		expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual({});
 		expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
 			{
         name: 'funChannelName',
@@ -460,13 +459,13 @@ describe('addOwner tests', () => {
 	// channelId does not refer to a valid channel
 	test('throw error if invalid channelId', () => {
 		requestChannelJoin(dennis.token, channel.channelId);
-		expect(requestAddOwner(nicole.token, 'a', dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+		expect(requestAddOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
 	})
 
 	// uId does not refer to a valid user
 	test('throw error if invalid uId', () => {
 		requestChannelJoin(dennis.token, channel.channelId);
-		expect(requestAddOwner(nicole.token, channel.channelId, 'a')).toStrictEqual({ error: expect.any(String) });
+		expect(requestAddOwner(nicole.token, channel.channelId, 100000)).toStrictEqual({ error: expect.any(String) });
 	})
 
 	// uId refers to a user who is not a member of the channel
@@ -550,13 +549,13 @@ describe('removeOwner tests', () => {
 	// channelId does not refer to a valid channel
 	test('invalid channelId', () => {
 		requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-		expect(requestRemoveOwner(nicole.token, 'a', dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+		expect(requestRemoveOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
 	});
 
   // uId does not refer to a valid user
   test('invalid uId', () => {
 		requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-		expect(requestRemoveOwner(nicole.token, channel.channelId, 'a')).toStrictEqual({ error: expect.any(String) });
+		expect(requestRemoveOwner(nicole.token, channel.channelId, 100000)).toStrictEqual({ error: expect.any(String) });
   });
 
   // token is invalid
