@@ -1,7 +1,6 @@
 import { newUser } from './other';
 import { requestClear, requestAuthRegister, requestUserProfile } from './wrapperFunctions';
 
-
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
   let user2: newUser;

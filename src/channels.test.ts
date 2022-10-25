@@ -1,6 +1,5 @@
-import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList, } from './wrapperFunctions';
+import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList } from './wrapperFunctions';
 import { newUser } from './other';
-
 
 requestClear();
 

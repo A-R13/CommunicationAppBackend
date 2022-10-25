@@ -1,7 +1,8 @@
 import { newUser, newChannel } from './other';
-import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin, 
-  requestChannelInvite, requestChannelLeave } from './wrapperFunctions';
-
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
+  requestChannelInvite, requestChannelLeave
+} from './wrapperFunctions';
 
 requestClear();
 

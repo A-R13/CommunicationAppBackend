@@ -1,8 +1,9 @@
 import { newUser, newChannel, newDm, dmType } from './other';
 
-import { requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages, 
-  requestDmDetails, requestDmList } from './wrapperFunctions';
-
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
+  requestDmDetails, requestDmList
+} from './wrapperFunctions';
 
 requestClear();
 
