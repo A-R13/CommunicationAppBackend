@@ -91,3 +91,7 @@ export function requestDmDetails(token: string, dmId: number) {
 export function requestDmList(token: string) {
   return requestHelper('GET', '/dm/list/v1', { token });
 }
+
+export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {
+  return requestHelper('PUT', '/user/profile/setname/v1', { token, nameFirst, nameLast });
+}
