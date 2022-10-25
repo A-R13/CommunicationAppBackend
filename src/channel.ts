@@ -220,7 +220,6 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   const authUserToken = getToken(token);
 
   // ERROR CASES
-
   // checking for invalid channelId, invalid uId, invalid token
   if (channel === undefined || user === undefined || authUserToken === undefined) {
     return { error: 'invalid parameters' };
