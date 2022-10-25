@@ -83,9 +83,9 @@ describe('usersAllv1 tests', () => {
 
   test('show user details when given a valid token', () => {
     expect(requestUsersAll(user0.token)).toStrictEqual({
-      userDetails: [
+      users: [
         {
-          uid: 0,
+          uId: 0,
           email: 'example1@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Smith',
@@ -95,43 +95,43 @@ describe('usersAllv1 tests', () => {
     });
     user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
     expect(requestUsersAll(user0.token)).toStrictEqual({
-      userDetails: [
+      users: [
         {
-          uid: 0,
-          email: 'example2@gmail.com',
+          uId: 0,
+          email: 'example1@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Smith',
-          handlestr: 'bobsmith'
+          handleStr: 'bobsmith'
         },
         {
-          uid: 1,
-          email: 'example3@gmail.com',
+          uId: 1,
+          email: 'example2@gmail.com',
           nameFirst: 'Jake',
           nameLast: 'Doe',
-          handlestr: 'jakedoe',
+          handleStr: 'jakedoe',
         }
       ]
 
     });
     user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
     expect(requestUsersAll(user0.token)).toStrictEqual({
-      userDetails: [
+      users: [
         {
-          uid: 0,
+          uId: 0,
           email: 'example1@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
         },
         {
-          uid: 1,
+          uId: 1,
           email: 'example2@gmail.com',
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
         },
         {
-          uid: 2,
+          uId: 2,
           email: 'example3@gmail.com',
           nameFirst: 'Jacob',
           nameLast: 'Doe',
@@ -142,4 +142,3 @@ describe('usersAllv1 tests', () => {
   });
 
 });
-//tes remveed user
