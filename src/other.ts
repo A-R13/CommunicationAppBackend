@@ -45,7 +45,7 @@ export function getAuthUserId(authUserId) {
 
 /**
  * <Description: Returns the object in users array which corresponds with inputted uId. >
- * @param {number} authUserId
+ * @param {number} uId
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
  */
 export function getUId(uId) {
