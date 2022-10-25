@@ -1,5 +1,6 @@
 import { getData, setData } from './dataStore';
-import { userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
+import { newUser, userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
+import { authRegisterV2 } from './auth';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -245,6 +246,44 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
  * @returns { dms: dmType[] } dms 
  */
 
-export function dmListV1 (token: string): { dms: dmType[] } | { error: string } {
+export function dmListV1 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
+  let user = getToken(token);
+  const data = getData();
+  const dmArray = data.dms;
 
+  if (user === undefined) {
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  // let dmList: { dmId: number, name: string }[] = [];
+
+  const userSh: userShort = {
+    uId: user.authUserId,
+    email: user.email,
+    nameFirst: user.nameFirst,
+    nameLast: user.nameLast,
+    handleStr: user.userHandle,
+  };
+
+  console.log(userSh);
+
+  
+  const returns = dmArray.filter((a: dmType) => a.members.some(element => element.uId === user.authUserId));
+
+  console.log(returns);
+
+  console.log(returns.map(dm => { return { dmId: dm.dmId, name: dm.name } }));
+
+
+  let dmList = [];
+  //  dmArray.filter((a: dmType) => a.members.includes(userSh));
+
+  return { dms: dmList };
 }
+
+let user0 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};
+let user1 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 1
+let user2 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 2
+let dm0 = dmCreateV1(user0.token, [1, 2]);
+
+console.log(dmListV1(user0.token));
