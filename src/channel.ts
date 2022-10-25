@@ -231,7 +231,8 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   // method 1
   if (!data.channels[channelIndex].allMembers.find(x => x.uId === uId)) {
     return { error: 'uId is not an owner of the channel' };
-  } */
+  }
+  */
   // method 2
   if (data.channels[channelIndex].allMembers.includes(uId) === false) {
     return { error: 'uId is not a member of the channel' };
