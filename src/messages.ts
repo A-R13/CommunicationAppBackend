@@ -268,22 +268,20 @@ export function dmListV1 (token: string): { dms: { dmId: number, name: string }[
   console.log(userSh);
 
   
-  const returns = dmArray.filter((a: dmType) => a.members.some(element => element.uId === user.authUserId));
-
-  console.log(returns);
-
-  console.log(returns.map(dm => { return { dmId: dm.dmId, name: dm.name } }));
-
+  const listArray = dmArray.filter((a: dmType) => a.members.some(element => element.uId === user.authUserId));
 
   let dmList = [];
+  dmList = listArray.map(dm => { return { dmId: dm.dmId, name: dm.name } });
+
   //  dmArray.filter((a: dmType) => a.members.includes(userSh));
 
   return { dms: dmList };
 }
 
-let user0 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};
-let user1 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 1
-let user2 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 2
-let dm0 = dmCreateV1(user0.token, [1, 2]);
+// let user0 = authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};
+// let user1 = authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 1
+// let user2 = authRegisterV2('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 2
+// let dm0 = dmCreateV1(user0.token, [1, 2]);
+// let dm1 = dmCreateV1(user0.token, [1]);
 
-console.log(dmListV1(user0.token));
+// console.log(dmListV1(user0.token));

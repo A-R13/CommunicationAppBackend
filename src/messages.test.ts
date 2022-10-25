@@ -250,19 +250,19 @@ describe('Dm List Tests', () => {
 
   test('Correct Returns', () => {
 
-    expect(requestDmList(user0.token)).toStrictEqual([{ dmId: dm0, name: 'johndoe, bobdoe' }]);
+    expect(requestDmList(user0.token)).toStrictEqual({dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }]});
 
-    expect(requestDmList(user1.token)).toStrictEqual([{ dmId: dm0, name: 'johndoe, bobdoe' }]);
+    expect(requestDmList(user1.token)).toStrictEqual({dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }]});
 
     const dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
     const user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number}; // uid = 3
     const dm2 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
 
-    expect(requestDmList(user0.token)).toStrictEqual([
-      { dmId: dm0.dmId, name: 'johndoe, bobdoe' }, 
-      { dmId: dm1.dmId, name: 'johndoe, bobdoe, jeffdoe' },
-      { dmId: dm2.dmId, name: 'johndoe, bobdoe, jeffdoe, stevedoe' },
-    ]);
+    expect(requestDmList(user0.token)).toStrictEqual({dms: [
+      { dmId: dm0.dmId, name: 'bobdoe, johndoe' }, 
+      { dmId: dm1.dmId, name: 'bobdoe, jeffdoe, johndoe' },
+      { dmId: dm2.dmId, name: 'bobdoe, jeffdoe, johndoe, stevedoe' },
+    ]});
   });
 
 })
