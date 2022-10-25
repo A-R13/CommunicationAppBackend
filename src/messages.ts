@@ -236,3 +236,30 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
     members: checkDM.members
   };
 }
+
+/**
+ * <description: The function provides a list of all the dms the authorised user is part of>
+
+ * @param {string} token
+ *
+ * @returns { dms: dmType[] } dms
+ */
+
+export function dmListV1 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
+  const user = getToken(token);
+  const data = getData();
+  const dmArray = data.dms;
+
+  if (user === undefined) {
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  let dmList: { dmId: number, name: string }[] = [];
+
+  const listArray = dmArray.filter((a: dmType) => a.members.some(element => element.uId === user.authUserId));
+  //  Iterates through dms, and pushes onto listArray whenever the dm.members has a user with specified user.authUserId
+
+  dmList = listArray.map(dm => { return { dmId: dm.dmId, name: dm.name }; });
+
+  return { dms: dmList };
+}

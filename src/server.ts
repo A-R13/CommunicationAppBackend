@@ -8,7 +8,7 @@ import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1 } from './messages';
 
 import { userProfileV2 } from './users';
 import { clearV1 } from './other';
@@ -150,11 +150,12 @@ app.get('/dm/details/v1', (req: Request, res: Response, next) => {
   res.json(dmDetailsV1(token, parseInt(dmId)));
 });
 
-app.get('/users/all/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string
+app.get('/dm/list/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
 
-  res.json(usersAllV1(token));
-})
+  res.json(dmListV1(token));
+});
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE

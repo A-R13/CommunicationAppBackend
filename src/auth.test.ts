@@ -1,17 +1,6 @@
-import { requestHelper, requestClear } from './other';
+import { requestClear, requestAuthRegister, requestAuthLogin, requestAuthLogout } from './wrapperFunctions';
 // Function Wrappers using above function
 
-export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
-  return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
-}
-
-export function requestAuthLogin(email: string, password: string) {
-  return requestHelper('POST', '/auth/login/v2', { email, password });
-}
-
-export function requestAuthLogout(token: string) {
-  return requestHelper('POST', '/auth/logout/v1', { token });
-}
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
 
 describe('Testing authRegister function', () => {
