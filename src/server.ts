@@ -10,7 +10,7 @@ import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels'
 
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1 } from './messages';
 
-import { userProfileV2 } from './users';
+import { userProfileV2, userSetNameV1 } from './users';
 import { clearV1 } from './other';
 
 // Set up web app
