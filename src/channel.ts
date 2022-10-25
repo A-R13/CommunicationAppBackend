@@ -249,7 +249,6 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   }
 
   // SUCCESS CASE - add user an owner of the channel
-
   // finding the right index uid belongs to in user array
   const userArray = data.users;
   for (const num in userArray) {
@@ -258,7 +257,7 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
     }
   }
 
-  // initiatlising keys specific to uid
+  // initialising keys specific to uid
   const userData = {
     uId: userArray[index].authUserId,
     email: userArray[index].email,
