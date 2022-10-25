@@ -400,6 +400,38 @@ describe('Channel Invite tests', () => {
   });
 });
 
+describe('addOwner tests', () => {
+	let nicole;
+	let dennis;
+	let geoffrey;
+	let channel;
+
+	beforeEach(() => {
+    requestClear();
+    nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+    dennis = requestAuthRegister('dennis.pulickal@gmail.com', 'password2', 'dennis', 'pulickal');
+		geoffrey = requestAuthRegister('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
+    channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
+  });
+
+	// success case
+	test ('succesfully added owner', () => {
+
+	});
+
+	// channelId does not refer to a valid channel
+
+	// uId does not refer to a valid user
+
+	// uId refers to a user who is not a member of the channel
+
+	// uId refers to a user who is already an owner of the channel
+
+	// channelId is valid and the authorised user does not have owner permissions
+
+	// token is invalid
+});
+
 describe('removeOwner tests', () => {
   let nicole;
   let dennis;
