@@ -156,6 +156,15 @@ app.get('/dm/list/v1', (req: Request, res: Response, next) => {
   res.json(dmListV1(token));
 });
 
+app.put('/user/profile/setname/v1', (req: Request, res: Response, next) => {
+  const { token, nameFirst, nameLast } = req.body;
+
+  res.json(userSetNameV1(token, nameFirst, nameLast));
+});
+
+
+
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
