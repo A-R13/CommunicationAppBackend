@@ -238,25 +238,3 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
 }
 
 
-
-export function dmLeaveV1(token: string, dmId: number) {
-  const userToken = getToken(token);
-  const dm: dmType = getDm(dmId);
-
-  // if dmId is invalid
-  if (dm === undefined) {
-      return { error: `${dmId} is invalid`};
-  }
-  // if token is invalid
-  if (userToken === undefined) {
-      return { error: `${token} is invalid`};
-  }
-  //if user is not a memeber of the Dm
-  const userInDm = dm.members.find((a: userShort) => a.uid === userToken.authUserId);
-  if (checkDm === undefined) {
-    return { error: `${userToken.authUserId} is not a member of this dm`}
-  }
-
-  return {};
-
-}
