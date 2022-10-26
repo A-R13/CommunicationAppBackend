@@ -164,22 +164,27 @@ describe(('Message edit tests'), () => {
 
   test(('Correct returns, Multiple messages'), () => {
     requestChannelJoin(user1.token, channel0.channelId);
-    const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
-    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 2');
+    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Random text');
     const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
-    const msg4 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 4');
+
     requestMessageEdit(user1.token, msg3.messageId, "RANDOM MESSAGE BY SECOND USER.");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 3).messages).toContainEqual(
+    expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
       {
         message: 'RANDOM MESSAGE BY SECOND USER.',
         messageId: msg3.messageId,
         uId: user1.authUserId,
         timeSent: expect.any(Number),
+      }, 
+      {
+        message: 'Random text',
+        messageId: msg2.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
       }
+    ]
     );
+
     });
-
-
 
 });
 
