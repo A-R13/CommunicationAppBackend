@@ -180,6 +180,16 @@ describe('Dm details tests', () => {
     }
   ];
 
+  const ownerCheck = [
+    {
+      email: 'example1@gmail.com',
+      handleStr: 'johndoe',
+      nameFirst: 'John',
+      nameLast: 'Doe',
+      uId: 0,
+    }
+  ];
+
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
@@ -201,7 +211,7 @@ describe('Dm details tests', () => {
   });
 
   test('Successful return', () => {
-    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck, owners: ownerCheck });
   });
 });
 
@@ -260,8 +270,8 @@ describe('Dm List Tests', () => {
 });
 
 describe('Message Edit', () => {
-  let user0;
-  let user1;
+  let user0: newUser;
+  let user1: newUser;
   /*
   let user2;
 
@@ -269,7 +279,7 @@ describe('Message Edit', () => {
   let dm1;
   */
 
-  let channel0;
+  let channel0: newChannel;
 
   beforeEach(() => {
     requestClear();
