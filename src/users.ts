@@ -61,3 +61,27 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
   
   return {};
 }
+
+export function usersAllV1 (token: string) {
+  const data = getData();
+  const user = getToken(token);
+
+  if (user === undefined) {
+    return { error: `The inputted token '${token}' is invalid` };
+  }
+  const userArray = data.users;
+  const detailsArray = userArray.map(user => {
+    return {
+      uId: user.authUserId,
+      email: user.email,
+      nameFirst: user.nameFirst,
+      nameLast: user.nameLast,
+      handleStr: user.userHandle
+    };
+  });
+
+  return {
+    users: detailsArray,
+  };
+
+}

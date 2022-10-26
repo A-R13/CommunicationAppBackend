@@ -95,3 +95,11 @@ export function requestDmList(token: string) {
 export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {
   return requestHelper('PUT', '/user/profile/setname/v1', { token, nameFirst, nameLast });
 }
+
+export function requestMessageEdit(token: string, messageId: number, message: string) {
+  return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
+}
+export function requestUsersAll(token: string) {
+  return requestHelper('GET', '/users/all/v1', { token });
+}
+
