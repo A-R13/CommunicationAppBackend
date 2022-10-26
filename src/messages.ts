@@ -2,7 +2,7 @@ import { getData, setData } from './dataStore';
 
 import {
   userShort, message, dmType, getUId, getToken, getChannel, getDm,
-  getAuthUserIdFromToken, CheckValidMessageDms, CheckValidMessageChannels
+  CheckValidMessageDms, CheckValidMessageChannels
 } from './other';
 
 /**
@@ -123,8 +123,6 @@ export function messageEditV1(token: string, messageId: number, message: string)
     return { error: 'error' };
   }
 
-  const userIdentity = getAuthUserIdFromToken(token);
-
   // check if valid messages
 
   const channelIndex = CheckValidMessageChannels(messageId);
@@ -138,22 +136,22 @@ export function messageEditV1(token: string, messageId: number, message: string)
     // channel exists.
     channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
     // check if owner
-    if (data.channels[channelIndex].ownerMembers.find(member => member.uId === userIdentity)) {
+    if (data.channels[channelIndex].ownerMembers.find(member => member.uId === userToken.authUserId)) {
       Isowner = true;
     }
     // check if same user
-    if (data.channels[channelIndex].messages[channelMessageIndex].uId === userIdentity) {
+    if (data.channels[channelIndex].messages[channelMessageIndex].uId === userToken.authUserId) {
       sameUser = true;
     }
   } else {
     // Dm exists
     dmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
     // check if owner, DEnnis might need to add some more functionality. ADd this code when done.
-    if (data.dms[DmIndex].members[0].uId === userIdentity) {
+    if (data.dms[DmIndex].members[0].uId === userToken.authUserId) {
       Isowner = true;
     }
     // check if same user
-    if (data.dms[DmIndex].messages[dmMessageIndex].uId === userIdentity) {
+    if (data.dms[DmIndex].messages[dmMessageIndex].uId === userToken.authUserId) {
       sameUser = true;
     }
   }
