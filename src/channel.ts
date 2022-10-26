@@ -204,7 +204,7 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
  */
 
 export function addOwnerV1 (token: string, channelId: number, uId: number) {
-  
+  const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
   const authUserToken = getToken(token);
@@ -217,21 +217,28 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
 
   // uId refers to a user who is not a member of the channel
   const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
-  /*  
+  
   // method 1
   if (!data.channels[channelIndex].allMembers.find(x => x.uId === uId)) {
     return { error: 'uId is not an owner of the channel' };
   }
-  */
+  /*
   // method 2
   if (data.channels[channelIndex].allMembers.includes(uId) === false) {
     return { error: 'uId is not a member of the channel' };
-  }
+  } */
+
 
   // uId refers to a user who is already an owner of the channel
+
+  
   if (data.channels[channelIndex].ownerMembers.includes(uId) === true) {
     return { error: 'uId is already an owner of the channel' };
-  }
+  } 
+  /*
+  if (data.channels[channelIndex].ownerMember.find(a => a.uId === uId)) {
+    return { error: 'uId is already an owner of the channel' };
+  } */
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
@@ -245,7 +252,7 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   const userArray = data.users;
   for (const num in userArray) {
     if (userArray[num].authUserId === uId) {
-      index = num;
+      const index = num;
     }
   }
 
