@@ -363,7 +363,7 @@ describe('Message Send Dm', () => {
   let user1: newUser;
   let user2: newUser;
   let dm0: dmType;
-
+  
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
