@@ -158,8 +158,10 @@ export function messageEditV1(token: string, messageId: number, message: string)
 
   if (sameUser === true || (sameUser === false && Isowner === true)) {
     // if message is empty, delete message
-    if (message === '') {
+    if (message === '' && DmIndex === -1) {
       data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
+    } else if (message === '' && channelIndex === -1) {
+      data.dms[DmIndex].messages.splice(dmMessageIndex, 1);
     } else if (DmIndex === -1) {
       data.channels[channelIndex].messages[channelMessageIndex].message = message;
     } else if (channelIndex === -1) {
