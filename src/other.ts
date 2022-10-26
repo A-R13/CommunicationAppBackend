@@ -152,19 +152,6 @@ export function userConvert(user: userType): userShort {
   };
 }
 
-export function getAuthUserIdFromToken(token: string) {
-  const data = getData();
-
-  let userIdentity;
-  // finds auth user id if token is valid
-  for (const i in data.users) {
-    if (data.users[i].sessions.includes(token) === true) {
-      userIdentity = data.users[i].authUserId;
-    }
-  }
-  return userIdentity;
-}
-
 export function CheckValidMessageDms(messageId: number) {
   const data = getData();
   let validMessage = -1;
