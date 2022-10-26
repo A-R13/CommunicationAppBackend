@@ -456,13 +456,13 @@ describe('removeOwner tests', () => {
 	// channelId does not refer to a valid channel
 	test('invalid channelId', () => {
 		requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-		expect(requestRemoveOwner(nicole.token, 'a', dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+		expect(requestRemoveOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
 	});
 
   // uId does not refer to a valid user
   test('invalid uId', () => {
 		requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-		expect(requestRemoveOwner(nicole.token, channel.channelId, 'a')).toStrictEqual({ error: expect.any(String) });
+		expect(requestRemoveOwner(nicole.token, channel.channelId, 100000)).toStrictEqual({ error: expect.any(String) });
   });
 
   // token is invalid
