@@ -172,7 +172,7 @@ app.post('/message/senddm/v1', (req: Request, res: Response, next) => {
   const { token, dmId, message } = req.body;
 
   res.json(messageSendDmV1(token, parseInt(dmId), message));
-})
+});
 
 // start server
 const server = app.listen(PORT, HOST, () => {

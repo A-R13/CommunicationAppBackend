@@ -364,16 +364,15 @@ export function dmListV1 (token: string): { dms: { dmId: number, name: string }[
 }
 
 /**
- * 
  * <description: Given a valid token, dmId, message it will push that message into that dm's message array and return a unique messageId>
- * @param {string} token 
- * @param {Number} dmId 
- * @param {sring} message 
+ * @param {string} token
+ * @param {Number} dmId
+ * @param {sring} message
  * @returns {Number} messageId
  */
-export function messageSendDmV1 (token: string, dmId: number, message: string): { messageId: number} | {error: string}{
+export function messageSendDmV1 (token: string, dmId: number, message: string): { messageId: number} | {error: string} {
   const data = getData();
-  
+
   const checkToken = getToken(token);
   const checkDM: dmType = getDm(dmId);
 
@@ -384,8 +383,8 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
     return { error: 'Invalid DmId' };
   }
 
-  if (message.length < 1 || message.length > 1000){
-    return { error: 'Invalid Message length'}
+  if (message.length < 1 || message.length > 1000) {
+    return { error: 'Invalid Message length' };
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
@@ -395,14 +394,14 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
 
   const messageid = Math.floor(Math.random() * 10000);
 
-  for (const dm of data.dms){
-    if (dm.dmId === checkDM.dmId){
+  for (const dm of data.dms) {
+    if (dm.dmId === checkDM.dmId) {
       dm.messages.push({
         messageId: messageid,
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
-      })
+      });
       break;
     }
   }

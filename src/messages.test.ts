@@ -373,7 +373,6 @@ describe('Message Send Dm Tests', () => {
   });
 
   test(('Error returns (Invalid Message Length)'), () => {
-
     expect(requestMessageSendDm(user0.token, dm0.dmId, '')).toStrictEqual({ error: expect.any(String) });
   });
 
