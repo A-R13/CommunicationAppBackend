@@ -1,26 +1,8 @@
-import { requestHelper, requestClear, newUser, newChannel } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-
-export function requestchannelDetails(token : string, channelId : number) {
-  return requestHelper('GET', '/channel/details/v2', { token, channelId });
-}
-
-export function requestChannelMessages(token : string, channelId : number, start: number) {
-  return requestHelper('GET', '/channel/messages/v2', { token, channelId, start });
-}
-
-export function requestChannelJoin(token : string, channelId: number) {
-  return requestHelper('POST', '/channel/join/v2', { token, channelId });
-}
-
-export function requestChannelInvite(token : string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
-}
-
-export function requestChannelLeave(token : string, channelId: number) {
-  return requestHelper('POST', '/channel/leave/v1', { token, channelId });
-}
+import { newUser, newChannel } from './other';
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
+  requestChannelInvite, requestChannelLeave
+} from './wrapperFunctions';
 
 requestClear();
 

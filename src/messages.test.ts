@@ -1,43 +1,25 @@
-import { newUser, newChannel, newDm, requestHelper, requestClear } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-import { requestChannelMessages, requestChannelJoin } from './channel.test';
 
-export function requestDmCreate(token: string, uIds: number[]) {
-  return requestHelper('POST', '/dm/create/v1', { token, uIds });
-}
+import { newUser, newChannel, newDm, dmType } from './other';
 
-export function requestMessageSend(token: string, channelId: number, message: string) {
-  return requestHelper('POST', '/message/send/v1', { token, channelId, message });
-}
-
-
-export function requestMessageEdit(token: string, messageId: number, message: string) {
-  return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
-}
-
-export function requestDmMessages(token : string, dmId : number, start: number) {
-  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
-
-}
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
+  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin
+} from './wrapperFunctions';
 
 requestClear();
 
 describe(('DM Create tests'), () => {
   let user0: newUser;
-  //   let user1: newUser;
-  //   let user2: newUser;
-  //   let user3: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
-    // user1 =
-    requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
-    // user2 =
-    requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
-    // user3 =
-    requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+    user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
   });
 
   test(('Error returns'), () => {
@@ -47,13 +29,17 @@ describe(('DM Create tests'), () => {
   });
 
   test(('Correct returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2, 3])).toStrictEqual({ dmId: expect.any(Number) });
+    expect(requestDmCreate(user0.token, [1, 2])).toStrictEqual({ dmId: expect.any(Number) });
 
-    // requestDmCreate(user0.token, [0,1]);
-    // expect(requestDmDetails(user0.token)) ==> should include only 2 dms
-    // expect(requestDmDetails(user1.token)) ==> should include only 2 dms
-    // expect(requestDmDetails(user2.token)) ==> should include only 1 dm
-    // expect(requestDmDetails(user3.token)) ==> should not include any dms
+    requestDmCreate(user0.token, [1]);
+
+    const expectedDms2 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }, { dmId: expect.any(Number), name: expect.any(String) }] };
+    const expectedDms1 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }] };
+
+    expect(requestDmList(user0.token)).toMatchObject(expectedDms2);
+    expect(requestDmList(user1.token)).toMatchObject(expectedDms2);
+    expect(requestDmList(user2.token)).toMatchObject(expectedDms1);
+    expect(requestDmList(user3.token)).toMatchObject({ dms: [] });
   });
 });
 
@@ -95,97 +81,42 @@ describe(('Message Send tests'), () => {
   });
 });
 
-
-describe(('Message edit tests'), () => {
+describe(('DM remove tests'), () => {
   let user0: newUser;
   let user1: newUser;
-  let channel0: newChannel;
+  let user2: newUser;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe') as {token: string, authUserId: number}; // uid = 0
     user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
-    channel0 = requestChannelsCreate(user0.token, 'Channel1', true) as { channelId: number };
 
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+    user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
   });
-
 
   test(('Error returns'), () => {
-    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-  expect(requestMessageEdit("RANDOMTOKEN ", msg1.messageId, "Hello")).toStrictEqual({ error: expect.any(String) } );
-  expect(requestMessageEdit(user0.token, 0, "message")).toStrictEqual({error: expect.any(String)});
-  expect(requestMessageEdit(user1.token, msg1.messageId, "asdjasjdks")).toStrictEqual({error: expect.any(String)});
+    requestDmCreate(user0.token, [1, 2, 3]);
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user0.token, 1)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user2.token, 0)).toStrictEqual({ error: expect.any(String) });
+    // Do one for dm leave
   });
 
-  test(('error, no owner perms and change other messages'), () => {
-    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    const msg2 = requestMessageSend(user1.token, channel0.channelId, 'Fake text message');
-    requestChannelJoin(user1.token, channel0.channelId);
-    expect(requestMessageEdit(user1.token, msg1.messageId, "Change message when not owner")).toStrictEqual({error: expect.any(String)});
-
+  test(('For one dm, owner removes it'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    expect(requestDmRemove(user0.token, 0)).toStrictEqual({});
   });
-  
-  
-  test(('Correct returns'), () => {
-    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    requestMessageEdit(user0.token, msg1.messageId, "Message change");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
-      {
-        message: 'Message change',
-        messageId: msg1.messageId,
-        uId: user0.authUserId,
-        timeSent: expect.any(Number),
-      }
-    );
-    });
 
-  test(('Correct returns, deletes if message is nothing'), () => {
-    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    requestMessageEdit(user0.token, msg1.messageId, "");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual(
-      []
-    );
-    });
-
-  test(('Correct returns, owner edits another persons message'), () => {
-    requestChannelJoin(user1.token, channel0.channelId);
-    const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
-    requestMessageEdit(user0.token, msg1.messageId, "OWNER PERMISIONS ARE THE BEST MESSAGE");
-    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
-      {
-        message: 'OWNER PERMISIONS ARE THE BEST MESSAGE',
-        messageId: msg1.messageId,
-        uId: user1.authUserId, // SHOUlD THIS BE THE PERSON WHO EDITED OR THE PERSON WHO SENT IT INITIALLY
-        timeSent: expect.any(Number),
-      }
-    );
-    });
-
-
-  test(('Correct returns, Multiple messages'), () => {
-    requestChannelJoin(user1.token, channel0.channelId);
-    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Random text');
-    const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
-
-    requestMessageEdit(user1.token, msg3.messageId, "RANDOM MESSAGE BY SECOND USER.");
-    expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
-      {
-        message: 'RANDOM MESSAGE BY SECOND USER.',
-        messageId: msg3.messageId,
-        uId: user1.authUserId,
-        timeSent: expect.any(Number),
-      }, 
-      {
-        message: 'Random text',
-        messageId: msg2.messageId,
-        uId: user0.authUserId,
-        timeSent: expect.any(Number),
-      }
-    ]
-    );
-
-    });
-
+  test(('For multiple dm, owner removes it'), () => {
+    requestDmCreate(user0.token, [1, 2, 3]);
+    requestDmCreate(user1.token, [0, 2, 3]);
+    requestDmCreate(user3.token, [1]);
+    expect(requestDmRemove(user1.token, 1)).toStrictEqual({});
+  });
 });
 
 describe('Dm Messages tests', () => {
@@ -225,4 +156,204 @@ describe('Dm Messages tests', () => {
 
     // Add more tests when dm message send is done.
   });
+});
+
+describe('Dm details tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: dmType;
+
+  const memberCheck = [
+    {
+      email: 'example1@gmail.com',
+      handleStr: 'johndoe',
+      nameFirst: 'John',
+      nameLast: 'Doe',
+      uId: 0,
+    },
+    {
+      email: 'example2@gmail.com',
+      handleStr: 'bobdoe',
+      nameFirst: 'Bob',
+      nameLast: 'Doe',
+      uId: 1,
+    }
+  ];
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test('Error (Invalid token)', () => {
+    expect(requestDmDetails('invalid Token', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Error (Invalid dmId)', () => {
+    expect(requestDmDetails(user0.token, 67)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Error (user is not member of DM)', () => {
+    expect(requestDmDetails(user2.token, dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Successful return', () => {
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
+  });
+});
+
+describe('Dm List Tests', () => {
+  let user0: newUser;
+
+  let user1: newUser;
+
+  let user2: newUser;
+
+  let dm0: dmType;
+
+  beforeEach(() => {
+    requestClear();
+
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test('Error Returns', () => {
+    // user doesnt exist
+
+    expect(requestDmList('abc')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Correct Returns', () => {
+    expect(requestDmList(user0.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
+
+    expect(requestDmList(user1.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
+
+    const dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
+
+    const user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number}; // uid = 3
+
+    const dm2 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+
+    expect(requestDmList(user0.token)).toStrictEqual({
+
+      dms: [
+
+        { dmId: dm0.dmId, name: 'bobdoe, johndoe' },
+
+        { dmId: dm1.dmId, name: 'bobdoe, jeffdoe, johndoe' },
+
+        { dmId: dm2.dmId, name: 'bobdoe, jeffdoe, johndoe, stevedoe' },
+
+      ]
+
+    });
+  });
+});
+
+describe('Message Edit', () => {
+  let user0;
+  let user1;
+  /*
+  let user2;
+
+  let dm0;
+  let dm1;
+  */
+
+  let channel0;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    /*
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+
+    dm0 = requestDmCreate(user0.token, [1]);
+    dm1 = requestDmCreate(user0.token, [1, 2]);
+    */
+    channel0 = requestChannelsCreate(user0.token, 'Channel 1', true);
+  });
+
+  test(('Error returns'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'Hello')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user0.token, 0, 'message')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'asdjasjdks')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('error, no owner perms and change other messages'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestChannelJoin(user1.token, channel0.channelId);
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'Change message when not owner')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Correct returns'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, 'Message change');
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
+      {
+        message: 'Message change',
+        messageId: msg1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+      }
+    );
+  });
+
+  test(('Correct returns, deletes if message is nothing'), () => {
+    const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, '');
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual(
+      []
+    );
+  });
+
+  test(('Correct returns, owner edits another persons message'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg1 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 1');
+    requestMessageEdit(user0.token, msg1.messageId, 'OWNER PERMISIONS ARE THE BEST MESSAGE');
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(
+      {
+        message: 'OWNER PERMISIONS ARE THE BEST MESSAGE',
+        messageId: msg1.messageId,
+        uId: user1.authUserId, // SHOUlD THIS BE THE PERSON WHO EDITED OR THE PERSON WHO SENT IT INITIALLY
+        timeSent: expect.any(Number),
+      }
+    );
+  });
+
+  test(('Correct returns, Multiple messages'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Random text');
+    const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
+
+    requestMessageEdit(user1.token, msg3.messageId, 'RANDOM MESSAGE BY SECOND USER.');
+    expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'RANDOM MESSAGE BY SECOND USER.',
+        messageId: msg3.messageId,
+        uId: user1.authUserId,
+        timeSent: expect.any(Number),
+      },
+      {
+        message: 'Random text',
+        messageId: msg2.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+      }
+    ]
+    );
+  });
+  // FOR DMS NOW when message send avaliable
 });

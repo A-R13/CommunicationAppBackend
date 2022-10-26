@@ -176,9 +176,7 @@ export function CheckValidMessageChannels(messageId: number) {
     }
   }
   return validMessage;
-
 }
-
 
 // From wk5 Labs
 export function requestHelper(method: HttpVerb, path: string, payload: object) {

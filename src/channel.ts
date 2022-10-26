@@ -23,7 +23,7 @@ export function channelDetailsV2(token : string, channelId : number) {
   const userIdentity = getAuthUserIdFromToken(token);
   // checks if channel is valid and if user is in channel
   if (getChannel(channelId) === undefined) {
-    return { error: 'error'};
+    return { error: 'error' };
   } else {
     if (data.channels[channelId].allMembers.find(user => user.uId === userIdentity)) {
       checkInChannel = true;
@@ -210,7 +210,7 @@ export function channelleaveV1(token : string, channelId : number) {
 
   // finds userId from token
   const userIdentity = getAuthUserIdFromToken(token);
-  
+
   // Checks if valid channelId and if the user is in the channel
   if (data.channels.find(channels => channels.channelId === channelId)) {
     checkChannelId = true;
@@ -218,15 +218,13 @@ export function channelleaveV1(token : string, channelId : number) {
     if (data.channels[channelId].allMembers.find(user => user.uId === userIdentity)) {
       checkInChannel = true;
     }
-
   }
   // If not in channel or channel isnt real, return error. Else, remove the member from channel.
   if (checkChannelId === false || checkInChannel === false) {
     return { error: 'Error from false channelId or not in channel' };
   } else {
-      data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userIdentity);
-      data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userIdentity);
-
+    data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userIdentity);
+    data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userIdentity);
   }
   // set data and return nothing
   setData(data);
