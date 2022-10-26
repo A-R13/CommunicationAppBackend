@@ -8,7 +8,7 @@ import { getToken } from './other';
  * @returns {user}
  */
 
-export function userProfileV2 (token : string, uId : number) : any {
+export function userProfileV2 (token : string, uId : number) {
   const data = getData();
   let checkToken = false;
   let checkUId = false;
@@ -44,8 +44,9 @@ export function userProfileV2 (token : string, uId : number) : any {
 }
 
 export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
-  authUserToken = getToken(token);
-  userArray = data.users;
+  const data = getData();
+  const authUserToken = getToken(token);
+  const userArray = data.users;
 
   // invalid parameters
   if (authUserToken === undefined || nameFirst.length < 1 || nameFirst.length > 50
@@ -55,10 +56,17 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
   
   // SUCCESS CASE - re-initialise user first name, user last name
   // is it meant to be c.authUserToken or c.authUserId??? 
-  const userIndex = data.users.findIndex(c => c.authUserToken === authUserToken);
+/*  const userIndex = data.users.findIndex(c => c.authUserToken === authUserToken);
   userArray[userIndex].nameFirst = nameFirst;
-  userArray[userIndex].nameLast = nameLast;
-  
+  userArray[userIndex].nameLast = nameLast; */
+
+  for (const tokenFinder of userArray) {
+    if (tokenFinder.authUserId === authUserToken.authUserId) {
+      tokenFinder.nameFirst = nameFirst;
+      tokenFinder.nameLast = nameLast;
+    }
+  }
+
   return {};
 }
 
