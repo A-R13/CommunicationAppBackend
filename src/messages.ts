@@ -1,5 +1,9 @@
 import { getData, setData } from './dataStore';
-import { userShort, message, dmType, getUId, getToken, getChannel, getDm } from './other';
+
+import {
+  userShort, message, dmType, getUId, getToken, getChannel, getDm,
+  getAuthUserIdFromToken, CheckValidMessageDms, CheckValidMessageChannels
+} from './other';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -107,6 +111,101 @@ export function messageSendV1 (token: string, channelId: number, message: string
 
   return { messageId: messageid };
 }
+
+export function messageEditV1(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
+  const data = getData();
+  const userToken = getToken(token);
+  let sameUser = false;
+  let Isowner = false;
+
+  // checks if token is valid
+  if (userToken === undefined || message.length > 1000) {
+    return { error: 'error' };
+  }
+
+  const userIdentity = getAuthUserIdFromToken(token);
+
+  // check if valid messages
+
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const DmIndex = CheckValidMessageDms(messageId);
+  let dmMessageIndex = 0;
+  let channelMessageIndex = 0;
+
+  if (DmIndex === -1 && channelIndex === -1) {
+    return { error: 'error' };
+  } else if (DmIndex === -1 && channelIndex !== -1) {
+    // channel exists.
+    channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+    // check if owner
+    if (data.channels[channelIndex].ownerMembers.find(member => member.uId === userIdentity)) {
+      Isowner = true;
+    }
+    // check if same user
+    if (data.channels[channelIndex].messages[channelMessageIndex].uId === userIdentity) {
+      sameUser = true;
+    }
+  } else {
+    // Dm exists
+    dmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+    // check if owner, DEnnis might need to add some more functionality. ADd this code when done.
+    if (data.dms[DmIndex].members[0].uId === userIdentity) {
+      Isowner = true;
+    }
+    // check if same user
+    if (data.dms[DmIndex].messages[dmMessageIndex].uId === userIdentity) {
+      sameUser = true;
+    }
+  }
+
+  if (sameUser === true || (sameUser === false && Isowner === true)) {
+    // if message is empty, delete message
+    if (message === '') {
+      data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
+    } else if (DmIndex === -1) {
+      data.channels[channelIndex].messages[channelMessageIndex].message = message;
+    } else if (channelIndex === -1) {
+      data.dms[DmIndex].messages[dmMessageIndex].message = message;
+    }
+  }
+
+  if ((sameUser === false && Isowner === false)) {
+    return {
+      error: 'error'
+    };
+  } else {
+    setData(data);
+    return {};
+  }
+}
+/*
+import { authRegisterV2, authLoginV2 } from './auth';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
+import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
+import { userProfileV2 } from './users';
+
+let data = getData();
+
+authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
+// user2 =
+authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
+// user3 =
+authRegisterV2('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
+
+channelsCreateV2(data.users[0].sessions[0], 'Channel1', true);
+
+messageSendV1(data.users[0].sessions[0], 0, 'Test Message 1')
+messageSendV1(data.users[0].sessions[0], 0, 'Test Message 2')
+messageSendV1(data.users[0].sessions[0], 0, 'Test Message 3')
+console.log(data.channels[0].messages)
+
+console.log(messageEditV1(data.users[0].sessions[0], data.channels[0].messages[1].messageId, "HELLO"));
+
+console.log(data.channels[0].messages)
+
+console.log(messageEditV1(data.users[0].sessions[0], data.channels[0].messages[2].messageId, "SECOND EDIT"));
+console.log(data.channels[0].messages)
+*/
 
 /**
  * <description:  Removes a dm when given a dmId >
@@ -237,4 +336,29 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
   };
 }
 
+/**
+ * <description: The function provides a list of all the dms the authorised user is part of>
 
+ * @param {string} token
+ *
+ * @returns { dms: dmType[] } dms
+ */
+
+export function dmListV1 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
+  const user = getToken(token);
+  const data = getData();
+  const dmArray = data.dms;
+
+  if (user === undefined) {
+    return { error: `User with token '${token}' does not exist!` };
+  }
+
+  let dmList: { dmId: number, name: string }[] = [];
+
+  const listArray = dmArray.filter((a: dmType) => a.members.some(element => element.uId === user.authUserId));
+  //  Iterates through dms, and pushes onto listArray whenever the dm.members has a user with specified user.authUserId
+
+  dmList = listArray.map(dm => { return { dmId: dm.dmId, name: dm.name }; });
+
+  return { dms: dmList };
+}

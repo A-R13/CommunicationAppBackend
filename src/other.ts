@@ -141,6 +141,43 @@ export function getDm(dmId: number) {
   return data.dms.find(d => d.dmId === dmId);
 }
 
+export function getAuthUserIdFromToken(token: string) {
+  const data = getData();
+
+  let userIdentity;
+  // finds auth user id if token is valid
+  for (const i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
+  return userIdentity;
+}
+
+export function CheckValidMessageDms(messageId: number) {
+  const data = getData();
+  let validMessage = -1;
+  for (const m in data.dms) {
+    // checks if valid message
+    if (data.dms[m].messages.find(message => message.messageId === messageId)) {
+      validMessage = parseInt(m);
+    }
+  }
+  return validMessage;
+}
+
+export function CheckValidMessageChannels(messageId: number) {
+  const data = getData();
+  let validMessage = -1;
+  for (const m in data.channels) {
+    // checks if valid message
+    if (data.channels[m].messages.find(message => message.messageId === messageId)) {
+      validMessage = parseInt(m);
+    }
+  }
+  return validMessage;
+}
+
 // From wk5 Labs
 export function requestHelper(method: HttpVerb, path: string, payload: object) {
   let qs = {};
