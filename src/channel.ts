@@ -215,7 +215,7 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
 
 export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   // ERROR CASES
- 
+  const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
   const authUserToken = getToken(token);
