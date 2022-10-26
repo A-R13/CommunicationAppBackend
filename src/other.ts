@@ -53,7 +53,7 @@ export interface dmType {
   messages: message[]
 }
 
-export interface dataa {
+export interface storedData {
   users: userType[],
   channels: channelType[],
   dms: dmType[],
@@ -80,7 +80,7 @@ export interface newDm {
  */
 
 export function clearV1 () {
-  const clearedData: dataa = {
+  const clearedData: storedData = {
     users: [],
     channels: [],
     dms: [],
