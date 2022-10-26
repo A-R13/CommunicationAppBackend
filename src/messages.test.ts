@@ -1,43 +1,10 @@
-<<<<<<< HEAD
-import { newUser, newChannel, newDm, requestHelper, requestClear, dmType } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-import { requestChannelMessages } from './channel.test';
-
-export function requestDmCreate(token: string, uIds: number[]) {
-  return requestHelper('POST', '/dm/create/v1', { token, uIds });
-}
-
-export function requestMessageSend(token: string, channelId: number, message: string) {
-  return requestHelper('POST', '/message/send/v1', { token, channelId, message });
-}
-
-export function requestDmRemove(token: string, dmId: number) {
-  return requestHelper('DELETE', '/dm/remove/v1', { token, dmId });
-}
-
-export function requestDmMessages(token : string, dmId : number, start: number) {
-  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
-}
-
-export function requestDmDetails(token: string, dmId: number) {
-  return requestHelper('GET', '/dm/details/v1', { token, dmId });
-}
-
-export function requestDmLeave(token: string, dmId: number) {
-    return requestHelper('POST', '/dm/leave/v1', {token, dmId});
-
-}
-=======
-
 import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
-  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin
+  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestDmLeave
 } from './wrapperFunctions';
 
->>>>>>> master
 requestClear();
 
 describe(('DM Create tests'), () => {
@@ -390,3 +357,53 @@ describe('Message Edit', () => {
   // FOR DMS NOW when message send avaliable
 });
 
+describe('dmLeave tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: newDm;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe')//uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe')//uid = 1
+    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe')//uid = 2
+    user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe')//uid = 3
+    dm0 = requestDmCreate(user0.token, [1, 2]);
+
+  });
+
+  test('Error returns', () => {
+    //invalid dmId
+    expect(requestDmLeave(user0.token, '99')).toStrictEqual({ error: expect.any(String) });
+
+    //user is not a member of the DM
+    expect(requestDmLeave(user3.token, dm0.dmId))
+
+    //invalid token
+    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('remove member', () => {
+    expect(requestDmLeave(user1.token, 1)).toStrictEqual({});
+
+  })
+
+  test ('multiple users in DM', () => {
+    requestDmLeave(user1.token, dm0.dmId);
+    requestDmLeave(user2.token, dm0.dmId);
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual({
+
+    })
+
+  });
+
+  test('Dm when owner leaves', () => {
+    requestDmLeave(user0.token, dm0.dmId);
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({
+
+    })
+  })
+
+
+})
