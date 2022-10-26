@@ -8,7 +8,7 @@ import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1 } from './messages';
 
 import { userProfileV2, usersAllV1 } from './users';
 import { clearV1 } from './other';
@@ -120,6 +120,12 @@ app.post('/message/send/v1', (req: Request, res: Response, next) => {
   const { token, channelId, message } = req.body;
 
   res.json(messageSendV1(token, channelId, message));
+});
+
+app.put('/message/edit/v1', (req: Request, res: Response, next) => {
+  const { token, messageId, message } = req.body;
+
+  res.json(messageEditV1(token, messageId, message));
 });
 
 app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
