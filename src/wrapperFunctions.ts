@@ -98,3 +98,7 @@ export function requestMessageEdit(token: string, messageId: number, message: st
 export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
 }
+
+export function requestAddOwner(token: string, channelId: number, uId: number) {
+  return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
+}
