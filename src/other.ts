@@ -49,6 +49,7 @@ export interface dmType {
   name: string,
   dmId: number,
   members: userShort[],
+  owners: userShort[],
   messages: message[]
 }
 
@@ -141,6 +142,32 @@ export function getDm(dmId: number) {
   return data.dms.find(d => d.dmId === dmId);
 }
 
+<<<<<<< src/other.ts
+=======
+export function userConvert(user: userType): userShort {
+  return {
+    uId: user.authUserId,
+    email: user.email,
+    nameFirst: user.nameFirst,
+    nameLast: user.nameLast,
+    handleStr: user.userHandle
+  };
+}
+
+export function getAuthUserIdFromToken(token: string) {
+  const data = getData();
+
+  let userIdentity;
+  // finds auth user id if token is valid
+  for (const i in data.users) {
+    if (data.users[i].sessions.includes(token) === true) {
+      userIdentity = data.users[i].authUserId;
+    }
+  }
+  return userIdentity;
+}
+
+>>>>>>> src/other.ts
 export function CheckValidMessageDms(messageId: number) {
   const data = getData();
   let validMessage = -1;
