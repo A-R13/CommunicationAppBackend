@@ -361,6 +361,7 @@ describe('dmLeave tests', () => {
   let user0: newUser;
   let user1: newUser;
   let user2: newUser;
+  let user3: newUser;
   let dm0: newDm;
 
   beforeEach(() => {
@@ -375,7 +376,7 @@ describe('dmLeave tests', () => {
 
   test('Error returns', () => {
     //invalid dmId
-    expect(requestDmLeave(user0.token, '99')).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmLeave(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
 
     //user is not a member of the DM
     expect(requestDmLeave(user3.token, dm0.dmId))
@@ -385,25 +386,50 @@ describe('dmLeave tests', () => {
   });
 
   test('remove member', () => {
-    expect(requestDmLeave(user1.token, 1)).toStrictEqual({});
+    expect(requestDmLeave(user1.token, dm0.dmId)).toStrictEqual({});
 
   })
 
-  test ('multiple users in DM', () => {
+  test ('multiple users leave DM', () => {
     requestDmLeave(user1.token, dm0.dmId);
     requestDmLeave(user2.token, dm0.dmId);
-    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual({
-
-    })
+    expect(requestDmDetails(user0.token, dm0.dmId).members).toStrictEqual([
+      {
+        uId: 0,
+        email: 'example1@gmail.com',
+        nameFirst: 'Jake',
+        nameLast: 'Doe',
+        handleStr: 'jakedoe',
+      }
+    ]);
 
   });
 
   test('Dm when owner leaves', () => {
     requestDmLeave(user0.token, dm0.dmId);
-    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({
+    expect(requestDmDetails(user1.token, dm0.dmId).members).toStrictEqual([
+      {
+        uId: 1,
+        email: 'example2@gmail.com',
+        nameFirst: 'John',
+        nameLast: 'Doe',
+        handleStr: 'johndoe',
+      },
+      {
+        uid: 2,
+        email: 'example3@gmail.com',
+        nameFirst: 'Bob',
+        nameLast: 'Doe',
+        handleStr: 'bobdoe',
+      }
+    ]);
+  });
 
-    })
-  })
-
+  test('if user is not in dm anymore', () => {
+    requestDmLeave(user0.token, dm0.dmId);
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
+      { error: expect.any(String) }
+    );
+  });
 
 })

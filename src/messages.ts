@@ -373,17 +373,23 @@ export function dmLeaveV1 (token: string, dmId: number) {
       return { error: `Inputted token '${token}' is invalid`};
     }
     //invalid dmID
-    if (data.dms.find(a => a.dmId === dmId) === undefined) {
+    if (checkInDm === undefined) {
       return { error: 'Dm ID not found' };
     }
-    //user is not a member of the DM
+    let userId;
+    for (const user in data.users) {
+      if (data.users[user].sessions.includes(token) === true) {
+        userId = data.users[users].authUserId;
+      }
+    }
+
+    //error if user is not a member of the DM, else remove user from DM
     const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
     if (userInDm === undefined) {
       return { error: 'Inputted user is not a member of this DM' };
-    }
-    else {
-      data.dms.members = data.dms.members.filter()
+    } else {
+      data.dms[dmId].members = data.dms[dmId].members.filter(m => m.dmId !== userId);
     }
 
-
+    return {};
 }
