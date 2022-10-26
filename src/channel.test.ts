@@ -1,7 +1,7 @@
 import { newUser, newChannel } from './other';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
-  requestChannelInvite, requestChannelLeave
+  requestChannelInvite, requestChannelLeave, requestChannelsList
 } from './wrapperFunctions';
 
 requestClear();
@@ -214,12 +214,28 @@ describe('channelJoin tests', () => {
 
   test('Correct Returns', () => {
     user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe');
-
     // user joining a public channel
+    expect(requestChannelsList(user3.token)).toStrictEqual({ channels: [] });
+    
     expect(requestChannelJoin(user3.token, channel2.channelId)).toStrictEqual({});
 
+    expect(requestChannelsList(user3.token)).toStrictEqual({ 
+      channels: [{ channelId: channel2.channelId, name: 'Channel2', }] 
+    });
+
     // global owner joining a private channel
+    expect(requestChannelsList(user1.token)).toStrictEqual({ 
+      channels: [{ channelId: channel1.channelId, name: 'Channel1', }] 
+    });
+
     expect(requestChannelJoin(user1.token, channel3.channelId)).toStrictEqual({});
+
+    expect(requestChannelsList(user1.token)).toStrictEqual({ 
+      channels: [
+        { channelId: channel1.channelId, name: 'Channel1'},
+        { channelId: channel3.channelId, name: 'Channel3'},
+    ] 
+    });
   });
 });
 

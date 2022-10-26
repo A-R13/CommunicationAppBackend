@@ -119,7 +119,7 @@ describe('ChannelsListAll tests', () => {
   });
 });
 
-describe('channelsListV1 tests', () => {
+describe('channelsList tests', () => {
   let user: newUser;
 
   beforeEach(() => {
@@ -156,6 +156,7 @@ describe('channelsListV1 tests', () => {
         },
       ]
     });
+
   });
 
   test('testing channel owner in channel', () => {
