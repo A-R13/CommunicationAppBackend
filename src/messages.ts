@@ -2,7 +2,7 @@ import { getData, setData } from './dataStore';
 
 import {
   userType, userShort, message, dmType, getUId, getToken, getChannel, getDm,
-userConvert, CheckValidMessageDms, CheckValidMessageChannels
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels
 } from './other';
 
 /**
