@@ -49,6 +49,7 @@ export interface dmType {
   name: string,
   dmId: number,
   members: userShort[],
+  owners: userShort[],
   messages: message[]
 }
 
@@ -139,6 +140,16 @@ export function getToken(token: string) {
 export function getDm(dmId: number) {
   const data = getData();
   return data.dms.find(d => d.dmId === dmId);
+}
+
+export function userConvert(user: userType): userShort {
+  return {
+    uId: user.authUserId,
+    email: user.email,
+    nameFirst: user.nameFirst,
+    nameLast: user.nameLast,
+    handleStr: user.userHandle
+  };
 }
 
 export function getAuthUserIdFromToken(token: string) {
