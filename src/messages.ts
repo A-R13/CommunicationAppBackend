@@ -1,8 +1,8 @@
 import { getData, setData } from './dataStore';
 
 import {
-  userShort, message, dmType, getUId, getToken, getChannel, getDm,
-  getAuthUserIdFromToken, CheckValidMessageDms, CheckValidMessageChannels
+  userType, userShort, message, dmType, getUId, getToken, getChannel, getDm,
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels
 } from './other';
 
 /**
@@ -15,6 +15,8 @@ import {
 
 export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {error: string} {
   const data = getData();
+
+  const user: userType = getToken(token);
 
   let uIdArray;
 
@@ -30,32 +32,32 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
     return { error: "There are duplicate uId's in the input uIds" };
   }
 
-  if (getToken(token) === undefined) {
+  if (user === undefined) {
     return { error: `User with token '${token}' does not exist!` };
   }
 
   const length = data.dms.length;
 
   uIdArray = uIdArray.map(uId => getUId(uId));
-  uIdArray.unshift(getToken(token));
+
+  uIdArray.unshift(user);
+
+  const ownersArray: userShort[] = [];
+
+  const convertedUser: userShort = userConvert(user);
+
+  ownersArray.push(convertedUser);
 
   const nameArray = uIdArray.map(user => user.userHandle).sort();
   const nameString = nameArray.join(', ');
 
-  const membersArray = uIdArray.map(user => {
-    return {
-      uId: user.authUserId,
-      email: user.email,
-      nameFirst: user.nameFirst,
-      nameLast: user.nameLast,
-      handleStr: user.userHandle
-    };
-  });
+  const membersArray = uIdArray.map(user => userConvert(user));
 
   const dm: dmType = {
     name: nameString,
     dmId: length,
     members: membersArray,
+    owners: ownersArray,
     messages: [],
   };
 
@@ -112,6 +114,13 @@ export function messageSendV1 (token: string, channelId: number, message: string
   return { messageId: messageid };
 }
 
+/**
+ * <Description: Edits a message on a given channel or Dm>
+ * @param {string} token - Unique token of the 'authorising' user
+ * @param {number} messageId - Unique ID for a message
+ * @returns {}
+ */
+
 export function messageEditV1(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
   const data = getData();
   const userToken = getToken(token);
@@ -122,8 +131,6 @@ export function messageEditV1(token: string, messageId: number, message: string)
   if (userToken === undefined || message.length > 1000) {
     return { error: 'error' };
   }
-
-  const userIdentity = getAuthUserIdFromToken(token);
 
   // check if valid messages
 
@@ -138,29 +145,31 @@ export function messageEditV1(token: string, messageId: number, message: string)
     // channel exists.
     channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
     // check if owner
-    if (data.channels[channelIndex].ownerMembers.find(member => member.uId === userIdentity)) {
+    if (data.channels[channelIndex].ownerMembers.find(member => member.uId === userToken.authUserId)) {
       Isowner = true;
     }
     // check if same user
-    if (data.channels[channelIndex].messages[channelMessageIndex].uId === userIdentity) {
+    if (data.channels[channelIndex].messages[channelMessageIndex].uId === userToken.authUserId) {
       sameUser = true;
     }
   } else {
     // Dm exists
     dmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
     // check if owner, DEnnis might need to add some more functionality. ADd this code when done.
-    if (data.dms[DmIndex].members[0].uId === userIdentity) {
+    if (data.dms[DmIndex].owners.find(member => member.uId === userToken.authUserId)) {
       Isowner = true;
     }
     // check if same user
-    if (data.dms[DmIndex].messages[dmMessageIndex].uId === userIdentity) {
+    if (data.dms[DmIndex].messages[dmMessageIndex].uId === userToken.authUserId) {
       sameUser = true;
     }
   }
 
   if (sameUser === true || (sameUser === false && Isowner === true)) {
     // if message is empty, delete message
-    if (message === '') {
+    if (message === '' && channelIndex === -1) {
+      data.dms[DmIndex].messages.splice(dmMessageIndex, 1);
+    } else if (message === '' && DmIndex === -1) {
       data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
     } else if (DmIndex === -1) {
       data.channels[channelIndex].messages[channelMessageIndex].message = message;
@@ -178,34 +187,6 @@ export function messageEditV1(token: string, messageId: number, message: string)
     return {};
   }
 }
-/*
-import { authRegisterV2, authLoginV2 } from './auth';
-import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
-import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { userProfileV2 } from './users';
-
-let data = getData();
-
-authRegisterV2('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number}; // uid = 1
-// user2 =
-authRegisterV2('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 2
-// user3 =
-authRegisterV2('example3@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number}; // uid = 3
-
-channelsCreateV2(data.users[0].sessions[0], 'Channel1', true);
-
-messageSendV1(data.users[0].sessions[0], 0, 'Test Message 1')
-messageSendV1(data.users[0].sessions[0], 0, 'Test Message 2')
-messageSendV1(data.users[0].sessions[0], 0, 'Test Message 3')
-console.log(data.channels[0].messages)
-
-console.log(messageEditV1(data.users[0].sessions[0], data.channels[0].messages[1].messageId, "HELLO"));
-
-console.log(data.channels[0].messages)
-
-console.log(messageEditV1(data.users[0].sessions[0], data.channels[0].messages[2].messageId, "SECOND EDIT"));
-console.log(data.channels[0].messages)
-*/
 
 /**
  * <description:  Removes a dm when given a dmId >
@@ -218,28 +199,30 @@ console.log(data.channels[0].messages)
 export function dmRemoveV1(token : string, dmId: number) {
   const data = getData();
 
+  const user = getToken(token);
+  const dm = getDm(dmId);
+
   // checks if token is valid
-  if (getToken(token) === undefined) {
-    return { error: 'error' };
+  if (user === undefined) {
+    return { error: 'error 1' };
   }
   // dm doesnt exist
-  if (data.dms.find(a => a.dmId === dmId) === undefined) {
+  if (dm === undefined) {
     return {
-      error: 'error'
+      error: 'error 2'
     };
   }
 
-  let userIdentity;
+  const userIdentity = user.authUserId;
   // finds auth user id if token is valid
-  for (const i in data.users) {
-    if (data.users[i].sessions.includes(token) === true) {
-      userIdentity = data.users[i].authUserId;
-    }
-  }
-  // checks if the user is an owner. (first user is owner)
-  if (data.dms[dmId].members[0].uId !== userIdentity) {
+
+  const convertedUser: userShort = userConvert(user);
+  const owner: userShort = dm.owners.find(member => member.uId === userIdentity);
+
+  // checks if the user is an owner.
+  if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
     return {
-      error: 'error'
+      error: 'error 3'
     };
   }
 
@@ -312,7 +295,7 @@ export function dmMessagesV1 (token: string, dmId: number, start: number): { mes
  * @returns { name: string, members: [users]}
  */
 
-export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[]}| { error: string} {
+export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[], owners: userShort[]} | { error: string} {
   // check if token and dmId are valid
   const checkToken = getToken(token);
   const checkDM: dmType = getDm(dmId);
@@ -332,7 +315,8 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
 
   return {
     name: checkDM.name,
-    members: checkDM.members
+    members: checkDM.members,
+    owners: checkDM.owners,
   };
 }
 
@@ -361,52 +345,4 @@ export function dmListV1 (token: string): { dms: { dmId: number, name: string }[
   dmList = listArray.map(dm => { return { dmId: dm.dmId, name: dm.name }; });
 
   return { dms: dmList };
-}
-
-/**
- * <description: Given a valid token, dmId, message it will push that message into that dm's message array and return a unique messageId>
- * @param {string} token
- * @param {Number} dmId
- * @param {sring} message
- * @returns {Number} messageId
- */
-export function messageSendDmV1 (token: string, dmId: number, message: string): { messageId: number} | {error: string} {
-  const data = getData();
-
-  const checkToken = getToken(token);
-  const checkDM: dmType = getDm(dmId);
-
-  if (checkToken === undefined) {
-    return { error: 'Invalid Token.' };
-  }
-  if (checkDM === undefined) {
-    return { error: 'Invalid DmId' };
-  }
-
-  if (message.length < 1 || message.length > 1000) {
-    return { error: 'Invalid Message length' };
-  }
-  // check if user is a member of the Dm
-  const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
-  if (userInDm === undefined) {
-    return { error: 'User is not a member of this dm' };
-  }
-
-  const messageid = Math.floor(Math.random() * 10000);
-
-  for (const dm of data.dms) {
-    if (dm.dmId === checkDM.dmId) {
-      dm.messages.push({
-        messageId: messageid,
-        uId: checkToken.authUserId,
-        message: message,
-        timeSent: Math.floor(Date.now() / 1000),
-      });
-      break;
-    }
-  }
-
-  setData(data);
-
-  return { messageId: messageid };
 }

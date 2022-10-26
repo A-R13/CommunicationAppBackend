@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { channelType, userShort, message, getChannel, getUId, getToken, getAuthUserIdFromToken } from './other';
+import { channelType, userShort, message, getChannel, getUId, getToken } from './other';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -20,12 +20,11 @@ export function channelDetailsV2(token : string, channelId : number) {
     return { error: 'error' };
   }
 
-  const userIdentity = getAuthUserIdFromToken(token);
   // checks if channel is valid and if user is in channel
   if (getChannel(channelId) === undefined) {
     return { error: 'error' };
   } else {
-    if (data.channels[channelId].allMembers.find(user => user.uId === userIdentity)) {
+    if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
       checkInChannel = true;
     }
   }
@@ -208,14 +207,11 @@ export function channelleaveV1(token : string, channelId : number) {
     return { error: 'error from invalid token' };
   }
 
-  // finds userId from token
-  const userIdentity = getAuthUserIdFromToken(token);
-
   // Checks if valid channelId and if the user is in the channel
   if (data.channels.find(channels => channels.channelId === channelId)) {
     checkChannelId = true;
 
-    if (data.channels[channelId].allMembers.find(user => user.uId === userIdentity)) {
+    if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
       checkInChannel = true;
     }
   }
@@ -223,8 +219,8 @@ export function channelleaveV1(token : string, channelId : number) {
   if (checkChannelId === false || checkInChannel === false) {
     return { error: 'Error from false channelId or not in channel' };
   } else {
-    data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userIdentity);
-    data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userIdentity);
+    data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
+    data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
   }
   // set data and return nothing
   setData(data);
