@@ -80,7 +80,7 @@ describe('Testing for userSetNameV1', () => {
       nameFirst: 'geoffrey',
       nameLast: 'mok',
       handleStr: 'nicoledoe'
-    })
+    }) 
   });
 
   // token is invalid
