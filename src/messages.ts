@@ -147,9 +147,10 @@ export function messageEditV1(token: string, messageId: number, message: string)
     // Dm exists
     dmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
     // check if owner, DEnnis might need to add some more functionality. ADd this code when done.
-    if (data.dms[DmIndex].members[0].uId === userToken.authUserId) {
+    if (data.dms[DmIndex].owners.find(member => member.uId === userToken.authUserId)) {
       Isowner = true;
     }
+
     // check if same user
     if (data.dms[DmIndex].messages[dmMessageIndex].uId === userToken.authUserId) {
       sameUser = true;
