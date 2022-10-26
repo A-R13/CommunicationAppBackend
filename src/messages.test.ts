@@ -357,3 +357,46 @@ describe('Message Edit', () => {
   });
   // FOR DMS NOW when message send avaliable
 });
+
+describe('Message Send Dm', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: dmType;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test(('Error returns (Invalid Message Length)'), () => {
+    expect(requestMessagesSendDm(user0.token, dm0.dmId, '')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (Invalid user token)'), () => {
+    expect(requestMessagesSendDm('Invalid Token', dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (Invalid DmId)'), () => {
+    expect(requestMessagesSendDm(user0.token, 1888, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (token refers to user that is not a member of Dm)'), () => {
+    expect(requestMessagesSendDm(user2.token, dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Succesful return'), () => {
+    expect(requestMessagesSendDm(user0.token, dm0.dmId, 'Test Message')).toStrictEqual({ messageId: expect.any(Number) });
+  });
+
+  test(('Succesful return unique Id'), () => {
+    const message = requestMessagesSendDm(user0.token, dm0.dmId, 'Test Message');
+    const message2 = requestMessagesSendDm(user0.token, dm0.dmId, 'Test Message 2');
+    expect(message).toStrictEqual({ messageId: expect.any(Number) });
+    expect(message2).toStrictEqual({ messageId: expect.any(Number) });
+    expect(message).not.toBe(message2);
+  });
+});
