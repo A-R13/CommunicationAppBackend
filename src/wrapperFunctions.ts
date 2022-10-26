@@ -98,3 +98,7 @@ export function requestMessageEdit(token: string, messageId: number, message: st
 export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
 }
+
+export function requestMessageRemove(token: string) {
+    return requestHelper('GET', '/message/remove/v1', { token });
+}
