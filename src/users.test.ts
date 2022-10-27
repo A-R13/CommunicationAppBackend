@@ -146,9 +146,8 @@ describe('userSetHandleV1 tests', () => {
   });
 
   // successfully changed the handle of user
-  test('sucessfully changed the handle of user', () => {
+  test('sucessfully changed the handle of user case 1', () => {
     expect(requestUserSetHandle(user0.token, 'bettyboop')).toStrictEqual({});
-    expect(requestUserSetHandle(user1.token, 'tonybrown')).toStrictEqual({});
     expect(requestUserProfile(user0.token, user0.authUserId)).toStrictEqual(
       {
         user: {
@@ -160,6 +159,12 @@ describe('userSetHandleV1 tests', () => {
         }
       }
     );
+  });
+
+  // successfully changed to a previously existing handle of another user (that has been changed)
+  test('successfully changed the handle of user case 2', () => {
+    requestUserSetHandle(user0.token, 'bettyboop');
+    expect(requestUserSetHandle(user1.token, 'bobsmith')).toStrictEqual({});
     expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual(
       {
         user: {
@@ -167,7 +172,7 @@ describe('userSetHandleV1 tests', () => {
           email: 'example2@gmail.com',
           nameFirst: 'Carl',
           nameLast: 'White',
-          handleStr: 'tonybrown',
+          handleStr: 'bobsmith',
         }
       }
     );
