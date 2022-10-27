@@ -520,6 +520,13 @@ describe('Channel leave function', () => {
           nameLast: 'jiang',
           handleStr: 'nicolejiang'
         }],
+        allMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
       }
     );
   });
