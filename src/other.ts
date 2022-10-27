@@ -193,4 +193,3 @@ export function requestHelper(method: HttpVerb, path: string, payload: object) {
 export function requestClear() {
   return requestHelper('DELETE', '/clear/v1', {});
 }
-

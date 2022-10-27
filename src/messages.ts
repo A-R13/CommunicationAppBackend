@@ -347,20 +347,69 @@ export function dmListV1 (token: string): { dms: { dmId: number, name: string }[
   return { dms: dmList };
 }
 
+export function messageSendDmV1 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
+  const data = getData();
+  const checkToken = getToken(token);
+  const checkDM: dmType = getDm(dmId);
+
+  if (checkToken === undefined) {
+    return { error: 'Invalid Token.' };
+  }
+  if (checkDM === undefined) {
+    return { error: 'Invalid DmId' };
+  }
+
+  if (message.length < 1 || message.length > 1000) {
+    return { error: 'Invalid Message length' };
+  }
+  // check if user is a member of the Dm
+  const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
+  if (userInDm === undefined) {
+    return { error: 'User is not a member of this dm' };
+  }
+
+  const messageid = Math.floor(Math.random() * 10000);
+
+  for (const dm of data.dms) {
+    if (dm.dmId === checkDM.dmId) {
+      dm.messages.push({
+        messageId: messageid,
+        uId: checkToken.authUserId,
+        message: message,
+        timeSent: Math.floor(Date.now() / 1000),
+      });
+      break;
+    }
+  }
+
+  setData(data);
+
+  return { messageId: messageid };
+}
+
+/**
+ * <description: The function removes the user as a member of the given DM >
+
+ * @param {string} token
+ * @param {number} dmId
+ *
+ * @returns {}
+ */
+
 export function dmLeaveV1 (token: string, dmId: number) {
   const data = getData();
   const userToken = getToken(token);
   const checkInDm: dmType = getDm(dmId);
-  //invalid token
-  if(userToken === undefined) {
-    return { error: `Inputted token '${token}' is invalid`};
+  // invalid token
+  if (userToken === undefined) {
+    return { error: `Inputted token '${token}' is invalid` };
   }
-  //invalid dmID
+  // nvalid dmID
   if (checkInDm === undefined) {
     return { error: 'Dm ID not found' };
   }
 
-  let userId = userToken.authUserId;
+  const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInDm === undefined) {
@@ -368,8 +417,7 @@ export function dmLeaveV1 (token: string, dmId: number) {
   } else {
     data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
-
   }
 
-  return{};
+  return {};
 }

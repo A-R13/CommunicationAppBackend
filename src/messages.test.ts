@@ -2,7 +2,7 @@ import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
-  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestDmLeave
+  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave
 } from './wrapperFunctions';
 
 requestClear();
@@ -367,6 +367,49 @@ describe('Message Edit', () => {
   // FOR DMS NOW when message send avaliable
 });
 
+describe('Message Send Dm Tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm0: dmType;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+  });
+
+  test(('Error returns (Invalid Message Length)'), () => {
+    expect(requestMessageSendDm(user0.token, dm0.dmId, '')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (Invalid user token)'), () => {
+    expect(requestMessageSendDm('Invalid Token', dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (Invalid DmId)'), () => {
+    expect(requestMessageSendDm(user0.token, 1888, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Error returns (token refers to user that is not a member of Dm)'), () => {
+    expect(requestMessageSendDm(user2.token, dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test(('Succesful return'), () => {
+    expect(requestMessageSendDm(user0.token, dm0.dmId, 'Test Message')).toStrictEqual({ messageId: expect.any(Number) });
+  });
+
+  test(('Succesful return unique Id'), () => {
+    const message = requestMessageSendDm(user0.token, dm0.dmId, 'Test Message');
+    const message2 = requestMessageSendDm(user0.token, dm0.dmId, 'Test Message 2');
+    expect(message).toStrictEqual({ messageId: expect.any(Number) });
+    expect(message2).toStrictEqual({ messageId: expect.any(Number) });
+    expect(message).not.toBe(message2);
+  });
+});
+
 describe('dmLeave tests', () => {
   let user0: newUser;
   let user1: newUser;
@@ -376,31 +419,27 @@ describe('dmLeave tests', () => {
 
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe')//uid = 0
-    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe')//uid = 1
-    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe')//uid = 2
-    user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe')//uid = 3
+    user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe'); // uid = 2
+    user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe'); // uid = 3
     dm0 = requestDmCreate(user0.token, [1, 2]);
-
   });
 
   test('Error returns', () => {
-    //invalid dmId
+    // invalid dmId
     expect(requestDmLeave(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
-
-    //user is not a member of the DM
-    expect(requestDmLeave(user3.token, dm0.dmId))
-
-    //invalid token
+    // user is not a member of the DM
+    expect(requestDmLeave(user3.token, dm0.dmId));
+    // invalid token
     expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('remove member', () => {
     expect(requestDmLeave(user1.token, dm0.dmId)).toStrictEqual({});
+  });
 
-  })
-
-  test ('multiple users leave DM', () => {
+  test('multiple users leave DM', () => {
     requestDmLeave(user1.token, dm0.dmId);
     requestDmLeave(user2.token, dm0.dmId);
     expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
@@ -422,7 +461,6 @@ describe('dmLeave tests', () => {
         }],
       }
     );
-
   });
 
   test('Dm when owner leaves', () => {
@@ -446,8 +484,7 @@ describe('dmLeave tests', () => {
           }],
         name: 'bobdoe, jakedoe, johndoe',
         owners: [],
-      },
-
+      }
     );
   });
 
@@ -457,5 +494,4 @@ describe('dmLeave tests', () => {
       { error: expect.any(String) }
     );
   });
-
 });
