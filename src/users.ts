@@ -65,3 +65,23 @@ export function usersAllV1 (token: string) {
     users: detailsArray,
   };
 }
+
+export function userSetHandleV1 (token: string, handleStr: string) {
+  const data = getData();
+  const user = getToken(token);
+
+  // error checking
+  if (handleStr.length < 3 || handleStr.length > 20) {
+    return { error: 'handle is the incorrect length' };
+  } else if (handleStr.match(/^[0-9A-Za-z]+$/) === null) {
+    return { error: 'handle contains non-alphanumeric characters' };
+  } else if (data.users.find(users => users.userHandle === handleStr)) {
+    return { error: 'handle already exists' };
+  } else if (user === undefined) {
+    return { error: 'invalid token' };
+  }
+
+  user.userHandle = handleStr;
+  
+  return {};
+}
