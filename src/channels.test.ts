@@ -156,7 +156,6 @@ describe('channelsList tests', () => {
         },
       ]
     });
-
   });
 
   test('testing channel owner in channel', () => {

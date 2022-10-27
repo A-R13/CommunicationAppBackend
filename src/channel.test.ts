@@ -216,25 +216,25 @@ describe('channelJoin tests', () => {
     user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe');
     // user joining a public channel
     expect(requestChannelsList(user3.token)).toStrictEqual({ channels: [] });
-    
+
     expect(requestChannelJoin(user3.token, channel2.channelId)).toStrictEqual({});
 
-    expect(requestChannelsList(user3.token)).toStrictEqual({ 
-      channels: [{ channelId: channel2.channelId, name: 'Channel2', }] 
+    expect(requestChannelsList(user3.token)).toStrictEqual({
+      channels: [{ channelId: channel2.channelId, name: 'Channel2' }]
     });
 
     // global owner joining a private channel
-    expect(requestChannelsList(user1.token)).toStrictEqual({ 
-      channels: [{ channelId: channel1.channelId, name: 'Channel1', }] 
+    expect(requestChannelsList(user1.token)).toStrictEqual({
+      channels: [{ channelId: channel1.channelId, name: 'Channel1' }]
     });
 
     expect(requestChannelJoin(user1.token, channel3.channelId)).toStrictEqual({});
 
-    expect(requestChannelsList(user1.token)).toStrictEqual({ 
+    expect(requestChannelsList(user1.token)).toStrictEqual({
       channels: [
-        { channelId: channel1.channelId, name: 'Channel1'},
-        { channelId: channel3.channelId, name: 'Channel3'},
-    ] 
+        { channelId: channel1.channelId, name: 'Channel1' },
+        { channelId: channel3.channelId, name: 'Channel3' },
+      ]
     });
   });
 });

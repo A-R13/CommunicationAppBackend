@@ -48,16 +48,16 @@ app.delete('/wipe/v1', (req: Request, res: Response) => {
 app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   const { email, password } = req.body;
 
-  readData();
+  // readData();
   res.json(authLoginV2(email, password));
 });
 
 app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
-  readData();
+  // readData();
   res.json(authRegisterV2(email, password, nameFirst, nameLast));
-  saveData();  
+  // saveData();
 });
 
 app.post('/channels/create/v2', (req: Request, res: Response, next) => {

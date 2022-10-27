@@ -89,21 +89,21 @@ const readData = () => {
   if (fs.existsSync('src/dataBase.json')) {
     const dataStr = fs.readFileSync('src/dataBase.json');
     data = JSON.parse(String(dataStr));
-  }  
-}
+  }
+};
 
 // NEED TO ADD THIS FUNCTION TO ALL RELEVANT ROUTES, maybe add a wipe route/function see post #1408
 const saveData = () => {
   const jsonStr = JSON.stringify(data);
   fs.writeFileSync('src/dataBase.json', jsonStr);
-}
+};
 
 const wipeData = () => {
-  const cleanData: storedData = { users: [], channels: [], dms: [],};
+  const cleanData: storedData = { users: [], channels: [], dms: [] };
   setData(cleanData);
   fs.writeFileSync('src/dataBase.json', JSON.stringify(cleanData));
-  
+
   return {};
-}
+};
 
 export { getData, setData, readData, saveData, wipeData };

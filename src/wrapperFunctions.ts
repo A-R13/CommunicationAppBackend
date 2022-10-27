@@ -1,7 +1,5 @@
 import { port, url } from './config.json';
 
-import { saveData } from './dataStore';
-
 import request, { HttpVerb } from 'sync-request';
 const SERVER_URL = `${url}:${port}`;
 
@@ -113,8 +111,3 @@ export function requestMessageSendDm(token: string, dmId: number, message: strin
 export function requestDmLeave(token: string, dmId: number) {
   return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
-
-
-let user = requestAuthRegister('example4@gmail.com', 'ABCD1234', 'Aditya2', 'Rana');
-console.log(requestUsersAll(user.token));
-requestWipe();
