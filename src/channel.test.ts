@@ -1,16 +1,8 @@
 import { newUser, newChannel } from './other';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
-  requestChannelInvite, requestChannelLeave
+  requestChannelInvite, requestChannelLeave, requestRemoveOwner
 } from './wrapperFunctions';
-
-export function requestAddOwner(token: string, channelId: number, uId: number) {
-	return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
-}
-
-export function requestRemoveOwner(token : string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
-}
 
 
 requestClear();
