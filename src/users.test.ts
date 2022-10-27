@@ -144,7 +144,7 @@ describe('userSetEmailV1 tests', () => {
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');
     user1 = requestAuthRegister('example2@gmail.com', 'EFGH5678', 'Carl', 'White');
   });
-  
+
   // successfully changed email
   test('succesfully changed email', () => {
     expect(requestUserSetEmail(user0.token, 'example0@gmail.com')).toStrictEqual({});
@@ -171,7 +171,7 @@ describe('userSetEmailV1 tests', () => {
   test('throw error if no email has been inputted', () => {
     expect(requestUserSetEmail(user0.token, '')).toStrictEqual({ error: expect.any(String) });
   });
-  
+
   // invalid token
   test('throw error if the token is invalid', () => {
     expect(requestUserSetEmail('a', 'example0@gmail.com')).toStrictEqual({ error: expect.any(String) });
@@ -186,5 +186,4 @@ describe('userSetEmailV1 tests', () => {
   test('throw error if the new email has not been changed', () => {
     expect(requestUserSetEmail(user0.token, 'example1@gmail.com')).toStrictEqual({ error: expect.any(String) });
   });
-
 });

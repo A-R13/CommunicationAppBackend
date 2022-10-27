@@ -77,7 +77,7 @@ export function userSetEmailV1 (token: string, email: string) {
     return { error: 'token is invalid' };
   } else if (data.users.find(users => users.email === email)) {
     return { error: 'email already exists' };
-  } 
+  }
 
   user.email = email;
 
