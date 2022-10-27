@@ -417,6 +417,8 @@ describe('message remove tests', () =>{
   let user0;
   let user1;
   let channel1;
+  let dm0;
+  let dm1;
 
   beforeEach(() => {
     requestClear();
@@ -424,30 +426,42 @@ describe('message remove tests', () =>{
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');// uid: 1
 
     channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
+
+    dm0 = requestDmCreate(user0.token, [1]);
   });
 
   test('Error returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Test Message');
-    //invalid token
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const dmMessage = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
+    // invalid token
     expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
-    //invalid messageId
+    // invalid messageId
     expect(requestMessageRemove(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
-    //if user is not the original sender of the message
+    // if user is not the original sender of the message
     expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
 
   });
 
   test('User with no owner permissions', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Test Message');
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
+
     requestChannelJoin(user1.token, channel1.channelId);
-    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) }); // message in channel
+    expect(requestMessageRemove(user1.token, dmMessage1.messageId)).toStrictEqual({ error: expect.any(String) }); // message in dm
   });
 
   test('Correct returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Test Message');
-    requestMessageRemove(user0.token, msg1.messageId);
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
+    requestMessageRemove(user0.token, msg1.messageId);  // for channel
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
     expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual(
+      []
+    );
+    requestMessageRemove(user0.token, dmMessage1.messageId); // for dm
+    expect(requestMessageRemove(user0.token, dmMessage1.messageId)).toStrictEqual({});
+    expect(requestdmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual(
       []
     );
   });
@@ -455,9 +469,15 @@ describe('message remove tests', () =>{
   test('Owner removes users message', () => {
     requestChannelJoin(user1.token, channel1.channelId);
     const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner');
-    requestMessageRemove(user0.token, msg1.messageId);
+    const dmMessage1 = requestMessageSend(user1.token, dm0.dmId, 'Random Message');
+    requestMessageRemove(user0.token, msg1.messageId);  // for channel
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
-    expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual(
+    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual(
+      []
+    );
+    requestMessageRemove(user0.token, dmMessage1.messageId); // for dm
+    expect(requestMessageRemove(user0.token, dmMessage1.messageId)).toStrictEqual({});
+    expect(requestdmMessages(user1.token, dm0.channelId, 0).messages).toStrictEqual(
       []
     );
   });
@@ -466,17 +486,30 @@ describe('message remove tests', () =>{
     requestChannelJoin(user1.token, channel1.channelId);
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two');
+    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Random Message from owner');
+    const dmMessage2 = requestMessageSend(user1.token, dm0.dmId, 'Random Message');
 
     requestMessageRemove(user1.token, msg2.messageId);
-    expect(requestChannnelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
+    expect(requestChannnelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([  // for channel
+      [],
       {
         message: 'Message One',
         messageId: msg1.messageId,
-        uId: user1.authUserId,
+        uId: user0.authUserId,
         timeSent: expect.any(Number),
       },
-      []
     ]);
-  })
+
+    requestMessageRemove(user1.token, dmMessage2.messageId);
+    expect(requestdmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([    //for dm
+      [],
+      {
+        message: 'Random Message from owner',
+        messageId: dmMessage1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+      }
+    ])
+  });
 
 });
