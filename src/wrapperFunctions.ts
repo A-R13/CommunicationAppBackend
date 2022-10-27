@@ -99,6 +99,6 @@ export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
 }
 
-export function requestMessageRemove(token: string) {
-    return requestHelper('GET', '/message/remove/v1', { token });
+export function requestMessageSendDm(token: string, dmId: number, message: string) {
+  return requestHelper('POST', '/message/senddm/v1', { token, dmId, message });
 }
