@@ -1,6 +1,6 @@
 import { getData } from './dataStore';
 import { getToken } from './other';
-
+import validator from 'validator';
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
  * @param {number} channelId - unique ID for a channel
@@ -64,4 +64,22 @@ export function usersAllV1 (token: string) {
   return {
     users: detailsArray,
   };
+}
+
+export function userSetEmailV1 (token: string, email: string) {
+  const data = getData();
+  const user = getToken(token);
+
+  // error checking
+  if (!validator.isEmail(email)) {
+    return { error: 'email is invalid' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  } else if (data.users.find(users => users.email === email)) {
+    return { error: 'email already exists' };
+  } 
+
+  user.email = email;
+
+  return {};
 }
