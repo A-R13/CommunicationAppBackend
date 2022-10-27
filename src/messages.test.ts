@@ -403,36 +403,52 @@ describe('dmLeave tests', () => {
   test ('multiple users leave DM', () => {
     requestDmLeave(user1.token, dm0.dmId);
     requestDmLeave(user2.token, dm0.dmId);
-    expect(requestDmDetails(user0.token, dm0.dmId).members).toStrictEqual([
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
       {
-        uId: 0,
-        email: 'example1@gmail.com',
-        nameFirst: 'Jake',
-        nameLast: 'Doe',
-        handleStr: 'jakedoe',
+        members: [{
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        }],
+        name: 'bobdoe, jakedoe, johndoe',
+        owners: [{
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        }],
       }
-    ]);
+    );
 
   });
 
   test('Dm when owner leaves', () => {
     requestDmLeave(user0.token, dm0.dmId);
-    expect(requestDmDetails(user1.token, dm0.dmId).members).toStrictEqual([
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual(
       {
-        uId: 1,
-        email: 'example2@gmail.com',
-        nameFirst: 'John',
-        nameLast: 'Doe',
-        handleStr: 'johndoe',
+        members: [
+          {
+            uId: 1,
+            email: 'example2@gmail.com',
+            nameFirst: 'John',
+            nameLast: 'Doe',
+            handleStr: 'johndoe',
+          },
+          {
+            uId: 2,
+            email: 'example3@gmail.com',
+            nameFirst: 'Bob',
+            nameLast: 'Doe',
+            handleStr: 'bobdoe',
+          }],
+        name: 'bobdoe, jakedoe, johndoe',
+        owners: [],
       },
-      {
-        uid: 2,
-        email: 'example3@gmail.com',
-        nameFirst: 'Bob',
-        nameLast: 'Doe',
-        handleStr: 'bobdoe',
-      }
-    ]);
+
+    );
   });
 
   test('if user is not in dm anymore', () => {
@@ -442,24 +458,4 @@ describe('dmLeave tests', () => {
     );
   });
 
-  /*
-  test('Dm name remains unchanged when user leaves', () => {
-    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual({
-      dms: [
-        {
-          name: 'bobdoe, jakedoe, johndoe',
-        }
-      ]
-    });
-
-    requestDmLeave(user0.token, dm0.dmId);
-    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({
-      dms: [
-        {
-          name: 'bobdoe, jakedoe, johndoe',
-        }
-      ]
-    });
-  });
-*/
 });

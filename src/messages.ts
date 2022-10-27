@@ -362,19 +362,14 @@ export function dmLeaveV1 (token: string, dmId: number) {
 
   let userId = userToken.authUserId;
 
-  // for (const user in data.users) {
-  //   if (data.users[user].sessions.includes(token) === true) {
-  //     userId = data.users[users].authUserId;
-  //   }                    // Here is where it broke it was users not user.
-  // }
-  
-  //error if user is not a member of the DM, else remove user from DM
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInDm === undefined) {
     return { error: 'Inputted user is not a member of this DM' };
   } else {
+    data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
+
   }
 
-  return {};
+  return{};
 }
