@@ -1,5 +1,5 @@
 import { newUser } from './other';
-import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll } from './wrapperFunctions';
+import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetEmail } from './wrapperFunctions';
 
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
@@ -133,4 +133,58 @@ describe('usersAllv1 tests', () => {
       ]
     });
   });
+});
+
+describe('userSetEmailV1 tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');
+    user1 = requestAuthRegister('example2@gmail.com', 'EFGH5678', 'Carl', 'White');
+  });
+  
+  // successfully changed email
+  test('succesfully changed email', () => {
+    expect(requestUserSetEmail(user0.token, 'example0@gmail.com')).toStrictEqual({});
+    expect(requestUserProfile(user0.token, user0.authUserId)).toStrictEqual(
+      {
+        user:
+          {
+            uId: 0,
+            email: 'example0@gmail.com',
+            nameFirst: 'Bob',
+            nameLast: 'Smith',
+            handleStr: 'bobsmith',
+          }
+      }
+    );
+  });
+
+  // email is in the invalid format
+  test('throw error if email is in the invalid format', () => {
+    expect(requestUserSetEmail(user0.token, 'example@gmail...com')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // no email has been inputted
+  test('throw error if no email has been inputted', () => {
+    expect(requestUserSetEmail(user0.token, '')).toStrictEqual({ error: expect.any(String) });
+  });
+  
+  // invalid token
+  test('throw error if the token is invalid', () => {
+    expect(requestUserSetEmail('a', 'example0@gmail.com')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // email already exists
+  test('throw error if no email is already in use', () => {
+    expect(requestUserSetEmail(user0.token, 'example2@gmail.com')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  // email isn't being changed (sub-category)
+  test('throw error if the new email has not been changed', () => {
+    expect(requestUserSetEmail(user0.token, 'example1@gmail.com')).toStrictEqual({ error: expect.any(String) });
+  });
+
 });
