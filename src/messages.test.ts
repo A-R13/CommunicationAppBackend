@@ -272,25 +272,14 @@ describe('Dm List Tests', () => {
 describe('Message Edit', () => {
   let user0: newUser;
   let user1: newUser;
-  /*
-  let user2;
-
-  let dm0;
-  let dm1;
-  */
-
   let channel0: newChannel;
+  let dm0: dmType;
 
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
-    /*
-    user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
-
     dm0 = requestDmCreate(user0.token, [1]);
-    dm1 = requestDmCreate(user0.token, [1, 2]);
-    */
     channel0 = requestChannelsCreate(user0.token, 'Channel 1', true);
   });
 
@@ -336,7 +325,7 @@ describe('Message Edit', () => {
       {
         message: 'OWNER PERMISIONS ARE THE BEST MESSAGE',
         messageId: msg1.messageId,
-        uId: user1.authUserId, // SHOUlD THIS BE THE PERSON WHO EDITED OR THE PERSON WHO SENT IT INITIALLY
+        uId: user1.authUserId,
         timeSent: expect.any(Number),
       }
     );
@@ -365,6 +354,31 @@ describe('Message Edit', () => {
     );
   });
   // FOR DMS NOW when message send avaliable
+
+  test(('Correct returns, for dms'), () => {
+    const msg2 = requestMessageSendDm(user0.token, 0, 'Random text');
+    const msg3 = requestMessageSendDm(user1.token, 0, 'Test Message 3');
+
+    requestMessageEdit(user1.token, msg3.messageId, 'RANDOM MESSAGE BY SECOND USER.');
+    expect(requestDmMessages(user0.token, dm0.dmId, 0)).toStrictEqual({
+      messages: [
+        {
+          message: 'Random text',
+          messageId: msg2.messageId,
+          timeSent: expect.any(Number),
+          uId: 0,
+        },
+        {
+          message: 'RANDOM MESSAGE BY SECOND USER.',
+          messageId: msg3.messageId,
+          timeSent: expect.any(Number),
+          uId: 1,
+        }
+      ],
+      start: 0,
+      end: -1
+    });
+  });
 });
 
 describe('Message Send Dm Tests', () => {
