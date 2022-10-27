@@ -386,3 +386,38 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
 
   return { messageId: messageid };
 }
+
+/**
+ * <description: The function removes the user as a member of the given DM >
+
+ * @param {string} token
+ * @param {number} dmId
+ *
+ * @returns {}
+ */
+
+export function dmLeaveV1 (token: string, dmId: number) {
+  const data = getData();
+  const userToken = getToken(token);
+  const checkInDm: dmType = getDm(dmId);
+  // invalid token
+  if (userToken === undefined) {
+    return { error: `Inputted token '${token}' is invalid` };
+  }
+  // nvalid dmID
+  if (checkInDm === undefined) {
+    return { error: 'Dm ID not found' };
+  }
+
+  const userId = userToken.authUserId;
+
+  const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
+  if (userInDm === undefined) {
+    return { error: 'Inputted user is not a member of this DM' };
+  } else {
+    data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
+    data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
+  }
+
+  return {};
+}

@@ -1,9 +1,8 @@
-
 import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
-  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm
+  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave
 } from './wrapperFunctions';
 
 requestClear();
@@ -408,5 +407,91 @@ describe('Message Send Dm Tests', () => {
     expect(message).toStrictEqual({ messageId: expect.any(Number) });
     expect(message2).toStrictEqual({ messageId: expect.any(Number) });
     expect(message).not.toBe(message2);
+  });
+});
+
+describe('dmLeave tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
+  let dm0: newDm;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Jake', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe'); // uid = 1
+    user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe'); // uid = 2
+    user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe'); // uid = 3
+    dm0 = requestDmCreate(user0.token, [1, 2]);
+  });
+
+  test('Error returns', () => {
+    // invalid dmId
+    expect(requestDmLeave(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
+    // user is not a member of the DM
+    expect(requestDmLeave(user3.token, dm0.dmId));
+    // invalid token
+    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('remove member', () => {
+    expect(requestDmLeave(user1.token, dm0.dmId)).toStrictEqual({});
+  });
+
+  test('multiple users leave DM', () => {
+    requestDmLeave(user1.token, dm0.dmId);
+    requestDmLeave(user2.token, dm0.dmId);
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
+      {
+        members: [{
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        }],
+        name: 'bobdoe, jakedoe, johndoe',
+        owners: [{
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        }],
+      }
+    );
+  });
+
+  test('Dm when owner leaves', () => {
+    requestDmLeave(user0.token, dm0.dmId);
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual(
+      {
+        members: [
+          {
+            uId: 1,
+            email: 'example2@gmail.com',
+            nameFirst: 'John',
+            nameLast: 'Doe',
+            handleStr: 'johndoe',
+          },
+          {
+            uId: 2,
+            email: 'example3@gmail.com',
+            nameFirst: 'Bob',
+            nameLast: 'Doe',
+            handleStr: 'bobdoe',
+          }],
+        name: 'bobdoe, jakedoe, johndoe',
+        owners: [],
+      }
+    );
+  });
+
+  test('if user is not in dm anymore', () => {
+    requestDmLeave(user0.token, dm0.dmId);
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
+      { error: expect.any(String) }
+    );
   });
 });

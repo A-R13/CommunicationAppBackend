@@ -95,9 +95,15 @@ export function requestDmList(token: string) {
 export function requestMessageEdit(token: string, messageId: number, message: string) {
   return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
 }
+
 export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
 }
+
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
   return requestHelper('POST', '/message/senddm/v1', { token, dmId, message });
+}
+
+export function requestDmLeave(token: string, dmId: number) {
+  return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
