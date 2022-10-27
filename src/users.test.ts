@@ -74,13 +74,17 @@ describe('Testing for userSetNameV1', () => {
   // successfully reset first name, last name
   test('successfully reset names', () => {
     expect(requestUserSetName(user1.token, 'geoffrey', 'mok')).toStrictEqual({});
-    expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual({
-      uId: 0,
-      email: 'example1@gmail.com',
-      nameFirst: 'geoffrey',
-      nameLast: 'mok',
-      handleStr: 'nicoledoe'
-    }) 
+    expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual(
+      {
+        user: {
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'geoffrey',
+          nameLast: 'mok',
+          handleStr: 'nicoledoe'
+        }
+      }
+    ); 
   });
 
   // token is invalid
