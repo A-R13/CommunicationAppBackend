@@ -44,7 +44,6 @@ export function userProfileV2 (token : string, uId : number) {
 }
 
 export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
-  const data = getData();
   const user = getToken(token);
 
   // error checking
@@ -61,7 +60,6 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
 
   return {};
 }
-
 
 export function usersAllV1 (token: string) {
   const data = getData();
@@ -84,5 +82,4 @@ export function usersAllV1 (token: string) {
   return {
     users: detailsArray,
   };
-
 }
