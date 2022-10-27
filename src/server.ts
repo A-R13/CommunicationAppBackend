@@ -9,7 +9,7 @@ import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, ch
 
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
 
 import { userProfileV2, usersAllV1 } from './users';
 import { clearV1 } from './other';
@@ -173,6 +173,18 @@ app.get('/users/all/v1', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(usersAllV1(token));
+});
+
+app.post('/message/senddm/v1', (req: Request, res: Response, next) => {
+  const { token, dmId, message } = req.body;
+
+  res.json(messageSendDmV1(token, parseInt(dmId), message));
+});
+
+app.post('/dm/leave/v1', (req: Request, res: Response, next) => {
+  const { token, dmId } = req.body;
+
+  res.json(dmLeaveV1(token, parseInt(dmId)));
 });
 
 // start server
