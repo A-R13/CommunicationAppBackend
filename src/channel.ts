@@ -222,23 +222,11 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   if (!data.channels[channelIndex].allMembers.find(x => x.uId === uId)) {
     return { error: 'uId is not an owner of the channel' };
   }
-  /*
-  // method 2
-  if (data.channels[channelIndex].allMembers.includes(uId) === false) {
-    return { error: 'uId is not a member of the channel' };
-  } */
-
 
   // uId refers to a user who is already an owner of the channel
-
-  
-  if (data.channels[channelIndex].ownerMembers.includes(uId) === true) {
+  if (data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
     return { error: 'uId is already an owner of the channel' };
   } 
-  /*
-  if (data.channels[channelIndex].ownerMember.find(a => a.uId === uId)) {
-    return { error: 'uId is already an owner of the channel' };
-  } */
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
