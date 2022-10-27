@@ -43,7 +43,6 @@ export function userProfileV2 (token : string, uId : number) : any {
   }
 }
 
-
 export function usersAllV1 (token: string) {
   const data = getData();
   const user = getToken(token);
@@ -66,4 +65,3 @@ export function usersAllV1 (token: string) {
     users: detailsArray,
   };
 }
-
