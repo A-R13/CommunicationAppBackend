@@ -442,4 +442,23 @@ describe('dmLeave tests', () => {
     );
   });
 
-})
+  test('Dm name remains unchanged when user leaves', () => {
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual({
+      dms: [
+        {
+          name: 'bobdoe, jakedoe, johndoe',
+        }
+      ]
+    });
+
+    requestDmLeave(user0.token, dm0.dmId);
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({
+      dms: [
+        {
+          name: 'bobdoe, jakedoe, johndoe',
+        }
+      ]
+    });
+  });
+
+});
