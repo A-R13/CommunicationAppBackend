@@ -45,30 +45,23 @@ export function userProfileV2 (token : string, uId : number) {
 
 export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
   const data = getData();
-  const authUserToken = getToken(token);
-  const userArray = data.users;
+  const user = getToken(token);
 
-  // invalid parameters
-  if (authUserToken === undefined || nameFirst.length < 1 || nameFirst.length > 50
-  || nameLast.length < 1 || nameLast.length > 50) {
-    return { error: 'invalid parameters'};
+  // error checking
+  if (nameFirst === '' || nameFirst.length > 50) {
+    return { error: 'first name is not of the correct length' };
+  } else if (nameLast === '' || nameLast.length > 50) {
+    return { error: 'last name is not of the correct length' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
   }
-  
-  // SUCCESS CASE - re-initialise user first name, user last name
-  // is it meant to be c.authUserToken or c.authUserId??? 
-/*  const userIndex = data.users.findIndex(c => c.authUserToken === authUserToken);
-  userArray[userIndex].nameFirst = nameFirst;
-  userArray[userIndex].nameLast = nameLast; */
 
-  for (const tokenFinder of userArray) {
-    if (tokenFinder.authUserId === authUserToken.authUserId) {
-      tokenFinder.nameFirst = nameFirst;
-      tokenFinder.nameLast = nameLast;
-    }
-  }
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
 
   return {};
 }
+
 
 export function usersAllV1 (token: string) {
   const data = getData();
