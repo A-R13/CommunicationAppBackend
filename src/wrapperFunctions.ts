@@ -1,5 +1,7 @@
 import { port, url } from './config.json';
 
+import { saveData } from './dataStore';
+
 import request, { HttpVerb } from 'sync-request';
 const SERVER_URL = `${url}:${port}`;
 
@@ -18,6 +20,10 @@ export function requestHelper(method: HttpVerb, path: string, payload: object) {
 
 export function requestClear() {
   return requestHelper('DELETE', '/clear/v1', {});
+}
+
+export function requestWipe() {
+  return requestHelper('DELETE', '/wipe/v1', {});
 }
 
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
@@ -107,3 +113,8 @@ export function requestMessageSendDm(token: string, dmId: number, message: strin
 export function requestDmLeave(token: string, dmId: number) {
   return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
+
+
+let user = requestAuthRegister('example4@gmail.com', 'ABCD1234', 'Aditya2', 'Rana');
+console.log(requestUsersAll(user.token));
+requestWipe();

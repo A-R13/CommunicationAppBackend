@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 
-import { saveData } from './dataStore';
+import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
@@ -41,16 +41,23 @@ app.delete('/clear/v1', (req: Request, res: Response) => {
   res.json(clearV1());
 });
 
+app.delete('/wipe/v1', (req: Request, res: Response) => {
+  res.json(wipeData());
+});
+
 app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   const { email, password } = req.body;
 
+  readData();
   res.json(authLoginV2(email, password));
 });
 
 app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
+  readData();
   res.json(authRegisterV2(email, password, nameFirst, nameLast));
+  saveData();  
 });
 
 app.post('/channels/create/v2', (req: Request, res: Response, next) => {

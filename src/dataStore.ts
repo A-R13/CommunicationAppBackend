@@ -81,18 +81,29 @@ function getData() {
 }
 
 // Use set(newData) to pass in the entire data object, with modifications made
-function setData(newData: dataa) {
+function setData(newData: storedData) {
   data = newData;
 }
 
-if (fs.existsSync('./dataBase.json')) {
-  const dataStr = fs.readFileSync('./dataBase.json');
-  setData(JSON.parse(dataStr));
-}
-// NEED TO ADD THIS FUNCTION TO ALL RELEVANT ROUTES, maybe add a wipe route/function see post #1408
-const saveData = () => {
-  const jsonStr = JSON.stringify(getData());
-  fs.writeFileSync('./dataBase.json', jsonStr);
+const readData = () => {
+  if (fs.existsSync('src/dataBase.json')) {
+    const dataStr = fs.readFileSync('src/dataBase.json');
+    data = JSON.parse(String(dataStr));
+  }  
 }
 
-export { getData, setData, saveData };
+// NEED TO ADD THIS FUNCTION TO ALL RELEVANT ROUTES, maybe add a wipe route/function see post #1408
+const saveData = () => {
+  const jsonStr = JSON.stringify(data);
+  fs.writeFileSync('src/dataBase.json', jsonStr);
+}
+
+const wipeData = () => {
+  const cleanData: storedData = { users: [], channels: [], dms: [],};
+  setData(cleanData);
+  fs.writeFileSync('src/dataBase.json', JSON.stringify(cleanData));
+  
+  return {};
+}
+
+export { getData, setData, readData, saveData, wipeData };
