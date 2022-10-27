@@ -1,10 +1,10 @@
 import { getData, setData } from './dataStore';
-import { getChannel, getUId, getToken } from './other';
+import { channelType, userShort, message, getChannel, getUId, getToken } from './other';
 
 /**
  * <Description: function gives the channel details for a existing channel>
  * @param {number} channelId - unique ID for a channel
- * @param {number} authUserId - unique ID for a user
+ * @param {string} token - unique sesssion token for a user
  * @returns {name: name, isPublic: isPublic, ownerMembers:
  * [{ uId, email, nameFirst, nameLast, handleStr}],
  * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}
@@ -12,34 +12,24 @@ import { getChannel, getUId, getToken } from './other';
 
 export function channelDetailsV2(token : string, channelId : number) {
   const data = getData();
-  let checkChannelId = false;
   let checkInChannel = false;
 
   const userToken = getToken(token);
-
+  // checks if token is valid
   if (userToken === undefined) {
     return { error: 'error' };
   }
 
-  let userIdentity;
-
-  for (const i in data.users) {
-    if (data.users[i].sessions.includes(token) === true) {
-      userIdentity = data.users[i].authUserId;
+  // checks if channel is valid and if user is in channel
+  if (getChannel(channelId) === undefined) {
+    return { error: 'error' };
+  } else {
+    if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
+      checkInChannel = true;
     }
   }
 
-  if (data.channels.find(channels => channels.channelId === channelId)) {
-    checkChannelId = true;
-
-    for (const j in data.channels[channelId].allMembers) {
-      if (data.channels[channelId].allMembers[j].uId === userIdentity) {
-        checkInChannel = true;
-      }
-    }
-  }
-
-  if (checkChannelId === false || checkInChannel === false) {
+  if (checkInChannel === false) {
     return { error: 'error' };
   }
 
@@ -116,7 +106,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   let i = 0;
   for (const num1 in channelArray) {
     if (channelArray[num1].channelId === channelId) {
-      i = num1; // channelId in loops below would be replaced by i;
+      i = parseInt(num1); // channelId in loops below would be replaced by i;
     }
   }
 
@@ -138,7 +128,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   let j = 0;
   for (const num3 in userArray) {
     if (userArray[num3].authUserId === uId) {
-      j = num3;
+      j = parseInt(num3);
     }
   }
   const userData = {
@@ -157,16 +147,16 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
  * <Description: Returns the first 50 messages from a specified channel, given a starting index and given that the accessing user is a member of said channel.
  * If there are less than (start + 50) messages the 'end' value will be -1, to show that there are no more messages to show.
 
- * @param {number} authUserId
+ * @param {string} token
  * @param {number} channelId
  * @param {number} start
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function channelMessagesV2 (token: string, channelId: number, start: number) {
+export function channelMessagesV2 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
   const userToken = getToken(token);
   // const userId = userToken.authUserId;
-  const channel = getChannel(channelId);
+  const channel: channelType = getChannel(channelId);
 
   if (channel === undefined) {
     // If channel is undefined
@@ -181,7 +171,7 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
     return { error: `User with token '${token}' does not exist!` };
   }
 
-  const userInChannel = channel.allMembers.find(a => a.uId === userToken.authUserId);
+  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
     return { error: `User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
@@ -256,3 +246,37 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   return {};
 }
  
+
+export function channelleaveV1(token : string, channelId : number) {
+  const data = getData();
+
+  let checkChannelId = false;
+  let checkInChannel = false;
+
+  const userToken = getToken(token);
+
+  // Checks if token is valid
+  if (userToken === undefined) {
+    return { error: 'error from invalid token' };
+  }
+
+  // Checks if valid channelId and if the user is in the channel
+  if (data.channels.find(channels => channels.channelId === channelId)) {
+    checkChannelId = true;
+
+    if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
+      checkInChannel = true;
+    }
+  }
+  // If not in channel or channel isnt real, return error. Else, remove the member from channel.
+  if (checkChannelId === false || checkInChannel === false) {
+    return { error: 'Error from false channelId or not in channel' };
+  } else {
+    data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
+    data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
+  }
+  // set data and return nothing
+  setData(data);
+
+  return {};
+}

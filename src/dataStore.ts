@@ -1,7 +1,10 @@
+import { dataa } from './other';
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
-let data = {
+let data: dataa = {
   users: [],
   channels: [],
+  dms: [],
 };
 
 /* The manner in which users and channels should be stored.
@@ -69,7 +72,7 @@ function getData() {
 }
 
 // Use set(newData) to pass in the entire data object, with modifications made
-function setData(newData) {
+function setData(newData: dataa) {
   data = newData;
 }
 

@@ -4,10 +4,15 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 
-import { authRegisterV2, authLoginV2 } from './auth';
-import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, removeOwnerV1 } from './channel';
+
+import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, removeOwnerV1 } from './channel';
+
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { userProfileV2 } from './users';
+
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
+
+import { userProfileV2, usersAllV1 } from './users';
 import { clearV1 } from './other';
 
 // Set up web app
@@ -62,7 +67,8 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
 });
 
 app.get('/user/profile/v2', (req: Request, res: Response, next) => {
-  const { token, uId } = req.query;
+  const token = req.query.token as string;
+  const uId = req.query.uId as string;
 
   res.json(userProfileV2(token, parseInt(uId)));
 });
@@ -104,6 +110,82 @@ app.get('/channels/list/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(channelsListV2(token));
+});
+
+app.post('/channel/leave/v1', (req: Request, res: Response, next) => {
+  const { token, channelId } = req.body;
+
+  res.json(channelleaveV1(token, channelId));
+});
+
+app.post('/dm/create/v1', (req: Request, res: Response, next) => {
+  const { token, uIds } = req.body;
+
+  res.json(dmCreateV1(token, uIds));
+});
+
+app.post('/message/send/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, message } = req.body;
+
+  res.json(messageSendV1(token, channelId, message));
+});
+
+app.put('/message/edit/v1', (req: Request, res: Response, next) => {
+  const { token, messageId, message } = req.body;
+
+  res.json(messageEditV1(token, messageId, message));
+});
+
+app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
+  const { token } = req.body;
+
+  res.json(authLogoutV1(token));
+});
+
+app.delete('/dm/remove/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const dmId = req.query.dmId as string;
+
+  res.json(dmRemoveV1(token, parseInt(dmId)));
+});
+
+app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const dmId = req.query.dmId as string;
+  const start = req.query.start as string;
+
+  res.json(dmMessagesV1(token, parseInt(dmId), parseInt(start)));
+});
+
+app.get('/dm/details/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const dmId = req.query.dmId as string;
+
+  res.json(dmDetailsV1(token, parseInt(dmId)));
+});
+
+app.get('/dm/list/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+
+  res.json(dmListV1(token));
+});
+
+app.get('/users/all/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+
+  res.json(usersAllV1(token));
+});
+
+app.post('/message/senddm/v1', (req: Request, res: Response, next) => {
+  const { token, dmId, message } = req.body;
+
+  res.json(messageSendDmV1(token, parseInt(dmId), message));
+});
+
+app.post('/dm/leave/v1', (req: Request, res: Response, next) => {
+  const { token, dmId } = req.body;
+
+  res.json(dmLeaveV1(token, parseInt(dmId)));
 });
 
 

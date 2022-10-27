@@ -1,22 +1,8 @@
-import { requestHelper, requestClear } from './other';
-import { requestAuthRegister } from './auth.test';
-import { requestChannelsCreate } from './channels.test';
-
-export function requestchannelDetails(token : string, channelId : number) {
-  return requestHelper('GET', '/channel/details/v2', { token, channelId });
-}
-
-export function requestChannelMessages(token : string, channelId : number, start: number) {
-  return requestHelper('GET', '/channel/messages/v2', { token, channelId, start });
-}
-
-export function requestChannelJoin(token : string, channelId: number) {
-  return requestHelper('POST', '/channel/join/v2', { token, channelId });
-}
-
-export function requestChannelInvite(token : string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
-}
+import { newUser, newChannel } from './other';
+import {
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
+  requestChannelInvite, requestChannelLeave
+} from './wrapperFunctions';
 
 export function requestAddOwner(token: string, channelId: number, uId: number) {
 	return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
@@ -34,18 +20,18 @@ afterEach(() => {
 });
 
 describe('Channel Messages tests', () => {
-  let user1;
-  let user2;
-  let channel1;
-  let channel2;
+  let user1: newUser;
+  let user2: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
 
   beforeEach(() => {
     requestClear();
-    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as {token: string, authUserId: number};
-    channel1 = requestChannelsCreate(user1.token, 'Channel1', true) as { channelId: number };
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
 
-    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};
-    channel2 = requestChannelsCreate(user2.token, 'Channel2', true) as { channelId: number };
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
   });
 
   test('Error Returns', () => {
@@ -69,12 +55,12 @@ describe('Channel Messages tests', () => {
 });
 
 describe('Channel details testing', () => {
-  let user1;
-  let user2;
-  let user3;
-  let channel1;
-  let channel2;
-  let channel3;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
+  let channel3: newChannel;
 
   beforeEach(() => {
     requestClear();
@@ -202,23 +188,23 @@ describe('Channel details testing', () => {
 });
 
 describe('channelJoin tests', () => {
-  let user1;
-  let user2;
-  let channel1;
-  let channel2;
-  let channel3;
+  let user1: newUser;
+  let user2: newUser;
+  let channel1: newChannel;
+  let channel2: newChannel;
+  let channel3: newChannel;
 
-  let user3;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
 
-    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe') as {token: string, authUserId: number};
-    channel1 = requestChannelsCreate(user1.token, 'Channel1', false) as { channelId: number };
+    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
 
-    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as {token: string, authUserId: number};
-    channel2 = requestChannelsCreate(user2.token, 'Channel2', true) as { channelId: number };
-    channel3 = requestChannelsCreate(user2.token, 'Channel3', false) as { channelId: number };
+    user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    channel2 = requestChannelsCreate(user2.token, 'Channel2', true);
+    channel3 = requestChannelsCreate(user2.token, 'Channel3', false);
   });
 
   test('error returns', () => {
@@ -247,10 +233,10 @@ describe('channelJoin tests', () => {
 });
 
 describe('Channel Invite tests', () => {
-  let nicole;
-  let dennis;
-  let geoffrey;
-  let channel;
+  let nicole: newUser;
+  let dennis: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
 
   beforeEach(() => {
     requestClear();
@@ -405,7 +391,6 @@ describe('Channel Invite tests', () => {
   });
 });
 
-
 describe('removeOwner tests', () => {
   let nicole;
   let dennis;
@@ -489,3 +474,76 @@ describe('removeOwner tests', () => {
   });
 
 });
+
+
+describe('Channel leave function', () => {
+  let nicole: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
+
+  beforeEach(() => {
+    requestClear();
+    nicole = requestAuthRegister('nicole.jiang@gmail.com', 'password1', 'nicole', 'jiang');
+    geoffrey = requestAuthRegister('geoffrey.mok@gmail.com', 'password3', 'geoffrey', 'mok');
+    channel = requestChannelsCreate(nicole.token, 'funChannelName', true);
+  });
+
+  test('Errors', () => {
+    expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Works for one person in a channel. return error as user not in channel anymore', () => {
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      { error: expect.any(String) }
+    )
+  });
+
+  test('Works for two person in a channel, not a owner', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestChannelLeave(geoffrey.token, channel.channelId);
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+        allMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+      }
+    );
+  });
+
+  test('Works for two person in a channel, Is an owner but removes other', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestChannelLeave(nicole.token, channel.channelId);
+    expect(requestchannelDetails(geoffrey.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [],
+        allMembers: [{
+          uId: 1,
+          email: 'geoffrey.mok@gmail.com',
+          nameFirst: 'geoffrey',
+          nameLast: 'mok',
+          handleStr: 'geoffreymok'
+        }],
+      }
+    );
+  });
+  
+});
+

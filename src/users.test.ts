@@ -1,15 +1,10 @@
-import { requestHelper, requestClear } from './other';
-
-import { requestAuthRegister } from './auth.test';
-
-export function requestUserProfile (token: string, uId: number) {
-  return requestHelper('GET', '/user/profile/v2', { token, uId });
-}
+import { newUser } from './other';
+import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll } from './wrapperFunctions';
 
 describe('Testing for userProfileV2', () => {
-  let user1;
-  let user2;
-  let user3;
+  let user1: newUser;
+  let user2: newUser;
+  let user3: newUser;
 
   beforeEach(() => {
     requestClear();
@@ -60,6 +55,82 @@ describe('Testing for userProfileV2', () => {
   });
 
   test('AuthuserId is invalid', () => {
-    expect(requestUserProfile('Randomstring', user2.authuserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: 'error' });
+  });
+});
+
+describe('usersAllv1 tests', () => {
+  let user0: newUser;
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');// uid = 0
+  });
+
+  afterEach(() => {
+    requestClear();
+  });
+
+  test('Error return', () => {
+    expect(requestUsersAll('abcd')).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('show user details when given a valid token', () => {
+    expect(requestUsersAll(user0.token)).toStrictEqual({
+      users: [
+        {
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Bob',
+          nameLast: 'Smith',
+          handleStr: 'bobsmith',
+        }
+      ]
+    });
+    requestAuthRegister('example2@gmail.com', 'Abcd1234', 'Jake', 'Doe');
+    expect(requestUsersAll(user0.token)).toStrictEqual({
+      users: [
+        {
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Bob',
+          nameLast: 'Smith',
+          handleStr: 'bobsmith'
+        },
+        {
+          uId: 1,
+          email: 'example2@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        }
+      ]
+
+    });
+    requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Jacob', 'Doe');
+    expect(requestUsersAll(user0.token)).toStrictEqual({
+      users: [
+        {
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Bob',
+          nameLast: 'Smith',
+          handleStr: 'bobsmith',
+        },
+        {
+          uId: 1,
+          email: 'example2@gmail.com',
+          nameFirst: 'Jake',
+          nameLast: 'Doe',
+          handleStr: 'jakedoe',
+        },
+        {
+          uId: 2,
+          email: 'example3@gmail.com',
+          nameFirst: 'Jacob',
+          nameLast: 'Doe',
+          handleStr: 'jacobdoe',
+        },
+      ]
+    });
   });
 });

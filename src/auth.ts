@@ -1,6 +1,7 @@
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 import { getData, setData } from './dataStore';
+import { getToken } from './other';
 
 /**
  * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>
@@ -94,4 +95,29 @@ export function authLoginV2(email: string, password: string): {token: string, au
     }
   }
   return { error: 'error' };
+}
+
+/**
+ * <Description: Given a valid token it logout that particular user's correspondingsession>
+ * @param {string} token
+ */
+
+export function authLogoutV1(token: string): Record<string, never> | {error: string} {
+  const data = getData();
+  const user = getToken(token);
+
+  if (user === undefined) {
+    return { error: 'Invalid Token' };
+  }
+
+  const index = user.sessions.indexOf(token);
+
+  for (const users of data.users) {
+    if (users.authUserId === user.authUserId) {
+      users.sessions.splice(index, 1);
+    }
+  }
+  setData(data);
+
+  return {};
 }
