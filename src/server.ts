@@ -184,7 +184,7 @@ app.put('/user/profile/sethandle/v1', (req: Request, res: Response, next) => {
   const { token, handleStr } = req.body;
 
   res.json(userSetHandleV1(token, handleStr));
-})
+});
 
 // start server
 const server = app.listen(PORT, HOST, () => {

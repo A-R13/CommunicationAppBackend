@@ -148,14 +148,26 @@ describe('userSetHandleV1 tests', () => {
   // successfully changed the handle of user
   test('sucessfully changed the handle of user', () => {
     expect(requestUserSetHandle(user0.token, 'bettyboop')).toStrictEqual({});
+    expect(requestUserSetHandle(user1.token, 'tonybrown')).toStrictEqual({});
     expect(requestUserProfile(user0.token, user0.authUserId)).toStrictEqual(
       {
         user: {
-            uId: 0,
-            email: 'example1@gmail.com',
-            nameFirst: 'Bob',
-            nameLast: 'Smith',
-            handleStr: 'bettyboop',        
+          uId: 0,
+          email: 'example1@gmail.com',
+          nameFirst: 'Bob',
+          nameLast: 'Smith',
+          handleStr: 'bettyboop',
+        }
+      }
+    );
+    expect(requestUserProfile(user1.token, user1.authUserId)).toStrictEqual(
+      {
+        user: {
+          uId: 1,
+          email: 'example2@gmail.com',
+          nameFirst: 'Carl',
+          nameLast: 'White',
+          handleStr: 'tonybrown',
         }
       }
     );
@@ -163,28 +175,26 @@ describe('userSetHandleV1 tests', () => {
 
   // handle string length is too short
   test('throw error if handle is too short', () => {
-    expect(requestUserSetHandle(user0.token, 'hi')).toStrictEqual({ error: expect.any(String)});
+    expect(requestUserSetHandle(user0.token, 'hi')).toStrictEqual({ error: expect.any(String) });
   });
 
-  // handle string length is too long 
+  // handle string length is too long
   test('throw error if handle is too long', () => {
-    expect(requestUserSetHandle(user0.token, 'abcdefghijklmnopqrstuvwxyz')).toStrictEqual({ error: expect.any(String)});
+    expect(requestUserSetHandle(user0.token, 'abcdefghijklmnopqrstuvwxyz')).toStrictEqual({ error: expect.any(String) });
   });
 
-  // handle string contains non-alphanumeric characters 
+  // handle string contains non-alphanumeric characters
   test('throw error if handle contains non-alphanumeric characters', () => {
-    expect(requestUserSetHandle(user0.token, 'carlwhite!')).toStrictEqual({ error: expect.any(String)});
+    expect(requestUserSetHandle(user0.token, 'carlwhite!')).toStrictEqual({ error: expect.any(String) });
   });
 
-  // handle string already exists 
+  // handle string already exists
   test('throw error if handle already exists', () => {
-    expect(requestUserSetHandle(user0.token, 'carlwhite')).toStrictEqual({ error: expect.any(String)});
+    expect(requestUserSetHandle(user0.token, 'carlwhite')).toStrictEqual({ error: expect.any(String) });
   });
 
-  // token is invalid 
+  // token is invalid
   test('throw error if token is invalid', () => {
-    expect(requestUserSetHandle('a', 'bettyboop')).toStrictEqual({ error: expect.any(String)});
+    expect(requestUserSetHandle('a', 'bettyboop')).toStrictEqual({ error: expect.any(String) });
   });
-
-
 });

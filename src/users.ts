@@ -82,6 +82,6 @@ export function userSetHandleV1 (token: string, handleStr: string) {
   }
 
   user.userHandle = handleStr;
-  
+
   return {};
 }
