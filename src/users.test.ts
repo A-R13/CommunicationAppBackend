@@ -146,8 +146,26 @@ describe('userSetEmailV1 tests', () => {
   });
 
   // successfully changed email
-  test('succesfully changed email', () => {
+  test('successfully changed emails case 1', () => {
     expect(requestUserSetEmail(user0.token, 'example0@gmail.com')).toStrictEqual({});
+    expect(requestUserProfile(user0.token, user0.authUserId)).toStrictEqual(
+      {
+        user:
+          {
+            uId: 0,
+            email: 'example0@gmail.com',
+            nameFirst: 'Bob',
+            nameLast: 'Smith',
+            handleStr: 'bobsmith',
+          }
+      }
+    );
+  });
+
+  // successfully changed emails to a previously existing email (has changed)
+  test('successfully changed emails case 2', () => {
+    expect(requestUserSetEmail(user0.token, 'example0@gmail.com')).toStrictEqual({});
+    expect(requestUserSetEmail(user1.token, 'example1@gmail.com')).toStrictEqual({});
     expect(requestUserProfile(user0.token, user0.authUserId)).toStrictEqual(
       {
         user:
