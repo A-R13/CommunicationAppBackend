@@ -124,7 +124,7 @@ describe('channelsList tests', () => {
     requestClear();
     user = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith');
   });
-  
+
   test('Testing error return', () => {
     expect(requestChannelsList('abcd')).toStrictEqual({ error: expect.any(String) });
   });

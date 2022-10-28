@@ -10,7 +10,6 @@ beforeEach(() => {
 });
 
 describe('Testing authRegister function', () => {
-
   test('Testing successful registration', () => {
     const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(user).toStrictEqual(
@@ -115,7 +114,6 @@ describe('Testing authLogin function', () => {
 });
 
 describe('Testing authlogout function', () => {
-
   test('Successful logout (one token)', () => {
     const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(requestAuthLogout(user.token)).toStrictEqual({});

@@ -85,7 +85,6 @@ app.get('/channel/details/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   const channelId = req.query.channelId as string;
 
-
   res.json(channelDetailsV2(token, parseInt(channelId)));
 });
 
@@ -93,7 +92,6 @@ app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   const channelId = req.query.channelId as string;
   const start = req.query.start as string;
-
 
   res.json(channelMessagesV2(token, parseInt(channelId), parseInt(start)));
 });
@@ -108,14 +106,12 @@ app.post('/channel/join/v2', (req: Request, res: Response, next) => {
 app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
 
-
   res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
   saveData();
 });
 
 app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
-
 
   res.json(removeOwnerV1(token, parseInt(channelId), parseInt(uId)));
   saveData();
