@@ -1,6 +1,6 @@
 import { getData } from './dataStore';
 import { getToken } from './other';
-
+import validator from 'validator';
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
  * @param {number} channelId - unique ID for a channel
@@ -8,7 +8,7 @@ import { getToken } from './other';
  * @returns {user}
  */
 
-export function userProfileV2 (token : string, uId : number) : any {
+export function userProfileV2 (token : string, uId : number) {
   const data = getData();
   let checkToken = false;
   let checkUId = false;
@@ -41,6 +41,24 @@ export function userProfileV2 (token : string, uId : number) : any {
   if (checkToken === false || checkUId === false) {
     return { error: 'error' };
   }
+}
+
+export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
+  const user = getToken(token);
+
+  // error checking
+  if (nameFirst === '' || nameFirst.length > 50) {
+    return { error: 'first name is not of the correct length' };
+  } else if (nameLast === '' || nameLast.length > 50) {
+    return { error: 'last name is not of the correct length' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  }
+
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
+  return {};
 }
 
 export function usersAllV1 (token: string) {
@@ -82,6 +100,23 @@ export function userSetHandleV1 (token: string, handleStr: string) {
   }
 
   user.userHandle = handleStr;
+
+  return {};
+}
+
+export function userSetEmailV1 (token: string, email: string) {
+  const data = getData();
+  const user = getToken(token);
+
+  if (!validator.isEmail(email)) {
+    return { error: 'email is invalid' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  } else if (data.users.find(users => users.email === email)) {
+    return { error: 'email already exists' };
+  }
+
+  user.email = email;
 
   return {};
 }

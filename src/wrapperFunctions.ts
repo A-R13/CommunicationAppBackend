@@ -92,12 +92,20 @@ export function requestDmList(token: string) {
   return requestHelper('GET', '/dm/list/v1', { token });
 }
 
+export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {
+  return requestHelper('PUT', '/user/profile/setname/v1', { token, nameFirst, nameLast });
+}
+
 export function requestMessageEdit(token: string, messageId: number, message: string) {
   return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
 }
 
 export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
+}
+
+export function requestAddOwner(token: string, channelId: number, uId: number) {
+  return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
 }
 
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
@@ -110,4 +118,8 @@ export function requestDmLeave(token: string, dmId: number) {
 
 export function requestUserSetHandle(token: string, handleStr: string) {
   return requestHelper('PUT', '/user/profile/sethandle/v1', { token, handleStr });
+}
+
+export function requestUserSetEmail(token: string, email: string) {
+  return requestHelper('PUT', '/user/profile/setemail/v1', { token, email });
 }
