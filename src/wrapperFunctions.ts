@@ -107,3 +107,7 @@ export function requestMessageSendDm(token: string, dmId: number, message: strin
 export function requestDmLeave(token: string, dmId: number) {
   return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
+
+export function requestMessageRemove(token: string, messageId: number) {
+  return requestHelper('DELETE', '/message/remove/v1', { token, messageId });
+}

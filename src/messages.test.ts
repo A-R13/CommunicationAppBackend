@@ -511,11 +511,10 @@ describe('dmLeave tests', () => {
 });
 
 describe('message remove tests', () =>{
-  let user0;
-  let user1;
-  let channel1;
-  let dm0;
-  let dm1;
+  let user0: newUser;
+  let user1: newUser;
+  let channel1: newChannel;
+  let dm0: dmType;
 
   beforeEach(() => {
     requestClear();
@@ -529,7 +528,6 @@ describe('message remove tests', () =>{
 
   test('Error returns', () => {
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
-    const dmMessage = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
     // invalid token
     expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
     // invalid messageId
@@ -541,24 +539,15 @@ describe('message remove tests', () =>{
 
   test('User with no owner permissions', () => {
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
-    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
-
     requestChannelJoin(user1.token, channel1.channelId);
-    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) }); // message in channel
-    expect(requestMessageRemove(user1.token, dmMessage1.messageId)).toStrictEqual({ error: expect.any(String) }); // message in dm
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Correct returns', () => {
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
-    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Message in DM');
-    requestMessageRemove(user0.token, msg1.messageId);  // for channel
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    requestMessageRemove(user0.token, msg1.messageId);
     expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual(
-      []
-    );
-    requestMessageRemove(user0.token, dmMessage1.messageId); // for dm
-    expect(requestMessageRemove(user0.token, dmMessage1.messageId)).toStrictEqual({});
-    expect(requestdmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual(
       []
     );
   });
@@ -566,15 +555,9 @@ describe('message remove tests', () =>{
   test('Owner removes users message', () => {
     requestChannelJoin(user1.token, channel1.channelId);
     const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner');
-    const dmMessage1 = requestMessageSend(user1.token, dm0.dmId, 'Random Message');
-    requestMessageRemove(user0.token, msg1.messageId);  // for channel
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    requestMessageRemove(user0.token, msg1.messageId);
     expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual(
-      []
-    );
-    requestMessageRemove(user0.token, dmMessage1.messageId); // for dm
-    expect(requestMessageRemove(user0.token, dmMessage1.messageId)).toStrictEqual({});
-    expect(requestdmMessages(user1.token, dm0.channelId, 0).messages).toStrictEqual(
       []
     );
   });
@@ -583,11 +566,9 @@ describe('message remove tests', () =>{
     requestChannelJoin(user1.token, channel1.channelId);
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two');
-    const dmMessage1 = requestMessageSend(user0.token, dm0.dmId, 'Random Message from owner');
-    const dmMessage2 = requestMessageSend(user1.token, dm0.dmId, 'Random Message');
-
+    expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
     requestMessageRemove(user1.token, msg2.messageId);
-    expect(requestChannnelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([  // for channel
+    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
       [],
       {
         message: 'Message One',
@@ -596,17 +577,30 @@ describe('message remove tests', () =>{
         timeSent: expect.any(Number),
       },
     ]);
-
-    requestMessageRemove(user1.token, dmMessage2.messageId);
-    expect(requestdmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([    //for dm
-      [],
-      {
-        message: 'Random Message from owner',
-        messageId: dmMessage1.messageId,
-        uId: user0.authUserId,
-        timeSent: expect.any(Number),
-      }
-    ])
   });
 
+  test('owner removes in dm', () => {
+    const msg1 = requestMessageSend(user1.token, dm0.dmId, 'I am not an owner');
+    expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    requestMessageRemove(user0.token, msg1.messageId);
+    expect(requestDmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([
+      [],
+    ]);
+  });
+
+  test('multiple messages in dms', () => {
+    const msg1 = requestMessageSend(user0.token, dm0.dmId, 'Message One in DMs');
+    const msg2 = requestMessageSend(user1.token, dm0.dmId, 'Message two in DMs');
+    expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
+    requestMessageRemove(user1.token, msg2.messageId);
+    expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual([
+      [],
+      {
+        message: 'Message One in DMs',
+        messageId: msg1.messageId,
+        uId: 0,
+        timesent: expect.any(Number),
+      },
+    ]);
+  });
 });

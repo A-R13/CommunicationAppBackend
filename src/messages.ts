@@ -402,3 +402,51 @@ export function dmLeaveV1 (token: string, dmId: number) {
 
   return {};
 }
+
+/**
+ * <Description: Removes a message from a channel or Dm>
+
+ * @param {string} token - Unique token of an authorised user
+ * @param {number} messageId - Unique ID for a message
+
+ * @returns {}
+ */
+
+export function messageRemoveV1 (token: string, messageId: number) {
+  const data = getData(data);
+  const userToken = getToken(token);
+
+  // Invalid token
+  if (userToken === undefined) {
+    return { error: 'Token is invalid' };
+  }
+
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const dmIndex = CheckValidMessageDms(messageId);
+
+  if (channelIndex === -1 && dmIndex === -1) {
+    return { error: 'Channel/Dm is invalid' };
+  }
+
+// checks if it is owner and same user
+if (CheckMessageUser(userToken.authUserId, messageId) === false) {
+  return {
+    error: 'error'
+  };
+}
+
+if (channelIndex === -1 ) {
+  const dmMessage = data.dms[dmIndex].messages.findIndex(m => message.messageId === messageId);
+  if (message === 'STRING') {
+    data.dms[dmIndex].messages.splice(dmMessage, 1);
+  }
+} else {
+  const channelMessage = data.channels[channelIndex].messages.findIndex(m => m.messageId === messageId);
+  if (message === 'STRING') {
+    data.channels[channelIndex].messages.splice(channelMessage, 1);
+  }
+}
+
+setData(data);
+return {};
+}
