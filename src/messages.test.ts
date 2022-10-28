@@ -518,16 +518,16 @@ describe('message remove tests', () =>{
 
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');// uid: 0
-    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');// uid: 1
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as { token: string, authUserId: number, };// uid: 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as { token: string, authUserId: number, };// uid: 1
 
-    channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
+    channel1 = requestChannelsCreate(user0.token, 'Channel1', true)  as { channelId: number };
 
     dm0 = requestDmCreate(user0.token, [1]);
   });
 
   test('Error returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
     // invalid token
     expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
     // invalid messageId
@@ -538,38 +538,30 @@ describe('message remove tests', () =>{
   });
 
   test('User with no owner permissions', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
     requestChannelJoin(user1.token, channel1.channelId);
     expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Correct returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
-    requestMessageRemove(user0.token, msg1.messageId);
-    expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual(
-      []
-    );
+    expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual( [] );
   });
 
   test('Owner removes users message', () => {
     requestChannelJoin(user1.token, channel1.channelId);
-    const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner');
+    const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner') as {messageId: number};
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
-    requestMessageRemove(user0.token, msg1.messageId);
-    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual(
-      []
-    );
+    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual( [] );
   });
 
   test('Removing multiple messages', () => {
     requestChannelJoin(user1.token, channel1.channelId);
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
-    const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two');
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
+    const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two') as {messageId: number};
     expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
-    requestMessageRemove(user1.token, msg2.messageId);
     expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
-      [],
       {
         message: 'Message One',
         messageId: msg1.messageId,
@@ -580,26 +572,21 @@ describe('message remove tests', () =>{
   });
 
   test('owner removes in dm', () => {
-    const msg1 = requestMessageSend(user1.token, dm0.dmId, 'I am not an owner');
+    const msg1 = requestMessageSendDm(user1.token, dm0.dmId, 'I am not an owner') as {messageId: number};
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
-    requestMessageRemove(user0.token, msg1.messageId);
-    expect(requestDmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([
-      [],
-    ]);
+    expect(requestDmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual( [] );
   });
 
   test('multiple messages in dms', () => {
-    const msg1 = requestMessageSend(user0.token, dm0.dmId, 'Message One in DMs');
-    const msg2 = requestMessageSend(user1.token, dm0.dmId, 'Message two in DMs');
+    const msg1 = requestMessageSendDm(user0.token, dm0.dmId, 'Message One in DMs') as {messageId: number};
+    const msg2 = requestMessageSendDm(user1.token, dm0.dmId, 'Message two in DMs') as {messageId: number};
     expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
-    requestMessageRemove(user1.token, msg2.messageId);
     expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual([
-      [],
       {
         message: 'Message One in DMs',
         messageId: msg1.messageId,
         uId: 0,
-        timesent: expect.any(Number),
+        timeSent: expect.any(Number),
       },
     ]);
   });

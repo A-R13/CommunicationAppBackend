@@ -5,6 +5,7 @@ import {
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser
 } from './other';
 
+
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
  * @param {string} token - unique token of the 'authorising' user
@@ -413,40 +414,39 @@ export function dmLeaveV1 (token: string, dmId: number) {
  */
 
 export function messageRemoveV1 (token: string, messageId: number) {
-  const data = getData(data);
+  const data = getData();
   const userToken = getToken(token);
 
-  // Invalid token
+  // checks if token is valid
   if (userToken === undefined) {
     return { error: 'Token is invalid' };
   }
 
-  const channelIndex = CheckValidMessageChannels(messageId);
-  const dmIndex = CheckValidMessageDms(messageId);
+  // check if valid messages
 
-  if (channelIndex === -1 && dmIndex === -1) {
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const DmIndex = CheckValidMessageDms(messageId);
+
+  if (channelIndex === -1 && DmIndex === -1) {
     return { error: 'Channel/Dm is invalid' };
   }
 
-// checks if it is owner and same user
-if (CheckMessageUser(userToken.authUserId, messageId) === false) {
-  return {
-    error: 'error'
-  };
-}
-
-if (channelIndex === -1 ) {
-  const dmMessage = data.dms[dmIndex].messages.findIndex(m => message.messageId === messageId);
-  if (message === 'STRING') {
-    data.dms[dmIndex].messages.splice(dmMessage, 1);
+  // checks if it is owner and same user
+  if (CheckMessageUser(userToken.authUserId, messageId) === false) {
+    return {
+      error: 'User is not an owner or user is not the creator of the message'
+    };
   }
-} else {
-  const channelMessage = data.channels[channelIndex].messages.findIndex(m => m.messageId === messageId);
-  if (message === 'STRING') {
-    data.channels[channelIndex].messages.splice(channelMessage, 1);
-  }
-}
 
-setData(data);
-return {};
-}
+  // In dms
+  if (channelIndex === -1) {
+    const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+    data.dms[DmIndex].messages.splice(DmMessageIndex, 1);
+  } else {
+    const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+    data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
+  }
+
+  setData(data);
+  return {};
+} 

@@ -184,7 +184,7 @@ app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   const messageId = req.query.messageId as string;
 
-  res.json(messageRemoveV1(token, messageId));
+  res.json(messageRemoveV1(token, parseInt(messageId)));
 })
 
 // start server
