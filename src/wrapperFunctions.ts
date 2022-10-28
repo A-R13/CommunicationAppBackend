@@ -100,6 +100,10 @@ export function requestUsersAll(token: string) {
   return requestHelper('GET', '/users/all/v1', { token });
 }
 
+export function requestAddOwner(token: string, channelId: number, uId: number) {
+  return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
+}
+
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
   return requestHelper('POST', '/message/senddm/v1', { token, dmId, message });
 }

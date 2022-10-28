@@ -93,7 +93,7 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   const userArray = data.users;
   const channelArray = data.channels;
 
-  const channel = data.channels.find(c => c.channelId === channelId);
+  const channel = getChannel(channelId);
   const user = getUId(uId);
   const authUserToken = getToken(token);
 
@@ -192,6 +192,72 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
       end: (start + 50),
     };
   }
+}
+
+/**
+ * <Description: Make user with user id uId an owner of the channel.>
+ *
+ * @param {string} token
+ * @param {number} channelId
+ * @param {number} uId
+ * @return {{}}
+ */
+
+export function addOwnerV1 (token: string, channelId: number, uId: number) {
+  const data = getData();
+  const channel = getChannel(channelId);
+  const user = getUId(uId);
+  const authUserToken = getToken(token);
+
+  // ERROR CASES
+  // checking for invalid channelId, invalid uId, invalid token
+  if (channel === undefined || user === undefined || authUserToken === undefined) {
+    return { error: 'invalid parameters' };
+  }
+
+  // uId refers to a user who is not a member of the channel
+  const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
+
+  // method 1
+  if (!data.channels[channelIndex].allMembers.find(x => x.uId === uId)) {
+    return { error: 'uId is not an owner of the channel' };
+  }
+
+  // uId refers to a user who is already an owner of the channel
+  if (data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
+    return { error: 'uId is already an owner of the channel' };
+  }
+
+  // authorised user does not have owner permissions in the channel
+  const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
+  if (userIsOwner === undefined) {
+    return { error: `User with authUserId '${authUserToken.authUserId}' is not an owner of channel with channelId '${channel}'!` };
+  }
+
+  // SUCCESS CASE - add user an owner of the channel
+
+  // finding the right index uid belongs to in user array
+  const userArray = data.users;
+  let index;
+  for (const num in userArray) {
+    if (userArray[num].authUserId === uId) {
+      index = num;
+    }
+  }
+
+  // initiatlising keys specific to uid
+  const userData = {
+    uId: userArray[index].authUserId,
+    email: userArray[index].email,
+    nameFirst: userArray[index].nameFirst,
+    nameLast: userArray[index].nameLast,
+    handleStr: userArray[index].userHandle,
+  };
+
+  // push the data
+  data.channels[channelIndex].ownerMembers.push(userData);
+
+  return {};
 }
 
 export function channelleaveV1(token : string, channelId : number) {
