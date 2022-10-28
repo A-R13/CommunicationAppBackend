@@ -2,7 +2,7 @@ import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
-  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave
+  requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave, requestMessageRemove
 } from './wrapperFunctions';
 
 requestClear();
@@ -59,6 +59,7 @@ describe(('Message Send tests'), () => {
     expect(requestMessageSend(user0.token, 500, 'Test Message')).toStrictEqual({ error: expect.any(String) });
     expect(requestMessageSend(user0.token, 0, '')).toStrictEqual({ error: expect.any(String) });
 
+    /*eslint-disable */     // Lint returns "error  Multiline support is limited to browsers supporting ES5 only"
     const bigMessage: string = 'gsDYqv5lnOVTHwiqmzVRWqc6Acxu4t9JAyFW8aVKfGRS4urnbM2xy70bfznynOxgCUVdwqckCtMOq31IoiV\
     IZznF3m7lU5bGXdPoJrukmxajudHvSdVwpn1uL1vQBZXUe1yB56aLVKfVA1PzQPU1BNAzCrePCAAPHSE6lXCENn5yISjabwFbXi0A84hCfJqFAJ\
     wSZCD74oWhtdykrfqLT3qQhPil8s7WUslBErHLaYyzFcuWyAIHxXPTHDYA9hK24F1Fez6r7tx2Nw5n5jZb6tOqOJIWMUPVV6280uZqYeomn07Rp\
@@ -69,6 +70,7 @@ describe(('Message Send tests'), () => {
     x1H6z0ldvBtluEdxMVMQ2jzOEPtcoFRDhWQrc9cn4IepW1tfxPlbv5dyK8ZUlPDlBzEUnxgagwEGoQA9SmVSeY0wXzrkoxxzkO7PwNfqHCiz7be\
     5LuopMDND8mwakQqa6oSvMd8JlCdECf67t3pIIQ0eGYYtYH4WzEGtv6l6US1yuY9GBuDO0mWgjCZO3Z9SNyByNY8mvCBsTKj1ntaHNoz4cJN7nh\
     ZtKu5Kd7iJ3LVOuYGNN71QVjaxnE4Q';
+    /* eslint-enable */
 
     expect(requestMessageSend(user0.token, 0, bigMessage)).toStrictEqual({ error: expect.any(String) });
     expect(requestMessageSend('Random user token', 0, 'Test Message')).toStrictEqual({ error: expect.any(String) });
@@ -504,5 +506,86 @@ describe('dmLeave tests', () => {
     expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
       { error: expect.any(String) }
     );
+  });
+});
+
+describe('message remove tests', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let channel1: newChannel;
+  let dm0: dmType;
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');// uid: 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');// uid: 1
+
+    channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
+
+    dm0 = requestDmCreate(user0.token, [1]);
+  });
+
+  test('Error returns', () => {
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    // invalid token
+    expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+    // invalid messageId
+    expect(requestMessageRemove(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
+    // if user is not the original sender of the message
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('User with no owner permissions', () => {
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    requestChannelJoin(user1.token, channel1.channelId);
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('Correct returns', () => {
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual([]);
+  });
+
+  test('Owner removes users message', () => {
+    requestChannelJoin(user1.token, channel1.channelId);
+    const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner');
+    expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([]);
+  });
+
+  test('Removing multiple messages', () => {
+    requestChannelJoin(user1.token, channel1.channelId);
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two');
+    expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
+    expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'Message One',
+        messageId: msg1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+      },
+    ]);
+  });
+
+  test('owner removes in dm', () => {
+    const msg1 = requestMessageSendDm(user1.token, dm0.dmId, 'I am not an owner');
+    expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
+    expect(requestDmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([]);
+  });
+
+  test('multiple messages in dms', () => {
+    const msg1 = requestMessageSendDm(user0.token, dm0.dmId, 'Message One in DMs');
+    const msg2 = requestMessageSendDm(user1.token, dm0.dmId, 'Message two in DMs');
+    expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
+    expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual([
+      {
+        message: 'Message One in DMs',
+        messageId: msg1.messageId,
+        uId: 0,
+        timeSent: expect.any(Number),
+      },
+    ]);
   });
 });
