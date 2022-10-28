@@ -305,6 +305,14 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   return {};
 }
 
+/**
+ * <Description: Removes a user from a channel.>
+ *
+ * @param {string} token
+ * @param {number} channelId
+ * @returns {{}}
+ */
+
 export function channelleaveV1(token : string, channelId : number) {
   const data = getData();
 
