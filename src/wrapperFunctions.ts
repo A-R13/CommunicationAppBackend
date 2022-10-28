@@ -116,6 +116,10 @@ export function requestDmLeave(token: string, dmId: number) {
   return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
 
+export function requestUserSetHandle(token: string, handleStr: string) {
+  return requestHelper('PUT', '/user/profile/sethandle/v1', { token, handleStr });
+}
+
 export function requestUserSetEmail(token: string, email: string) {
   return requestHelper('PUT', '/user/profile/setemail/v1', { token, email });
 }
