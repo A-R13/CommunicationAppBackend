@@ -1,5 +1,13 @@
 import { newUser } from './other';
-import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
+import { requestClear, requestWipe, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
+
+requestClear();
+requestWipe();
+
+afterEach(() => {
+  requestClear();
+  requestWipe();
+});
 
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
@@ -114,10 +122,6 @@ describe('usersAllv1 tests', () => {
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');// uid = 0
-  });
-
-  afterEach(() => {
-    requestClear();
   });
 
   test('Error return', () => {

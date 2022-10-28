@@ -1,7 +1,13 @@
-import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList } from './wrapperFunctions';
+import { requestClear, requestWipe, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelsListAll, requestChannelsList } from './wrapperFunctions';
 import { newUser } from './other';
 
 requestClear();
+requestWipe();
+
+afterEach(() => {
+  requestClear();
+  requestWipe();
+});
 
 describe('channelsCreate tests', () => {
   let user: newUser;
@@ -9,10 +15,6 @@ describe('channelsCreate tests', () => {
   beforeEach(() => {
     requestClear();
     user = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
-  });
-
-  afterEach(() => {
-    requestClear();
   });
 
   test('Error Returns', () => {
@@ -56,10 +58,6 @@ describe('ChannelsListAll tests', () => {
   beforeEach(() => {
     requestClear();
     token = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana').token;
-  });
-
-  afterEach(() => {
-    requestClear();
   });
 
   test('Testing successful channelsListAll (Private and Public)', () => {
@@ -126,11 +124,7 @@ describe('channelsList tests', () => {
     requestClear();
     user = requestAuthRegister('example1@gmail.com', 'Abcd1234', 'Luke', 'Smith');
   });
-
-  afterEach(() => {
-    requestClear();
-  });
-
+  
   test('Testing error return', () => {
     expect(requestChannelsList('abcd')).toStrictEqual({ error: expect.any(String) });
   });
