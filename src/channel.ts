@@ -196,13 +196,11 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
 
 /**
  * <Description: Make user with user id uId an owner of the channel.>
- *
  * @param {string} token
  * @param {number} channelId
  * @param {number} uId
- * @return {{}}
+ * @returns {{}}
  */
-
 export function addOwnerV1 (token: string, channelId: number, uId: number) {
   const data = getData();
   const channel = getChannel(channelId);
@@ -235,7 +233,6 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   }
 
   // SUCCESS CASE - add user an owner of the channel
-
   // finding the right index uid belongs to in user array
   const userArray = data.users;
   let index;
@@ -245,7 +242,7 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
     }
   }
 
-  // initiatlising keys specific to uid
+  // initialising keys specific to uid
   const userData = {
     uId: userArray[index].authUserId,
     email: userArray[index].email,
@@ -256,6 +253,54 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
 
   // push the data
   data.channels[channelIndex].ownerMembers.push(userData);
+
+  return {};
+}
+
+/**
+ * <Description: Remove user with user id uId as an owner of the channel.>
+ *
+ * @param {string} token
+ * @param {number} channelId
+ * @param {number} uId
+ * @returns {{}}
+ */
+
+export function removeOwnerV1 (token: string, channelId: number, uId: number) {
+  const data = getData();
+  const channel = getChannel(channelId);
+  const user = getUId(uId);
+  const authUserToken = getToken(token);
+
+  // ERROR CASES
+
+  // checking for invalid channelId, invalid uId, invalid token
+  if (channel === undefined || user === undefined || authUserToken === undefined) {
+    return { error: 'invalid parameters' };
+  }
+
+  // uid is not an owner of the channel
+  const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
+
+  if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
+    return { error: 'uId is not an owner of the channel' };
+  }
+
+  // uid is the only owner of the channel
+  const userIndex = data.channels[channelIndex].ownerMembers.findIndex(x => x.uId === uId);
+  if (userIndex === 0) {
+    return { error: 'uId is the only owner of the channel' };
+  }
+
+  // authUser which the token belongs to, is not an owner
+  const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
+  if (userIsOwner === undefined) {
+    return { error: `User with authUserId '${authUserToken.authUserId}' is not an owner of channel with channelId '${channel}'!` };
+  }
+
+  // SUCCESS CASE
+  // remove uid from ownerMembers array
+  data.channels[channelIndex].ownerMembers.splice(userIndex, 1);
 
   return {};
 }

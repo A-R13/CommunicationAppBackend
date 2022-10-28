@@ -116,6 +116,10 @@ export function requestDmLeave(token: string, dmId: number) {
   return requestHelper('POST', '/dm/leave/v1', { token, dmId });
 }
 
+export function requestRemoveOwner(token: string, channelId: number, uId: number) {
+  return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
+}
+
 export function requestUserSetHandle(token: string, handleStr: string) {
   return requestHelper('PUT', '/user/profile/sethandle/v1', { token, handleStr });
 }

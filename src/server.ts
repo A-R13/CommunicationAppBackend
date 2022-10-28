@@ -5,7 +5,7 @@ import config from './config.json';
 import cors from 'cors';
 
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
-import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1 } from './channel';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
@@ -94,6 +94,12 @@ app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
 
   res.json(channelInviteV2(token, parseInt(channelId), parseInt(uId)));
+});
+
+app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, uId } = req.body;
+
+  res.json(removeOwnerV1(token, parseInt(channelId), parseInt(uId)));
 });
 
 app.post('/channel/addowner/v1', (req: Request, res: Response, next) => {
