@@ -9,8 +9,10 @@ import { wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
-import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
+
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
+
 import { clearV1 } from './other';
 
 // Set up web app
@@ -215,6 +217,13 @@ app.put('/user/profile/setemail/v1', (req: Request, res: Response, next) => {
   const { token, email } = req.body;
 
   res.json(userSetEmailV1(token, email));
+});
+
+app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const messageId = req.query.messageId as string;
+
+  res.json(messageRemoveV1(token, parseInt(messageId)));
 });
 
 // start server

@@ -131,3 +131,7 @@ export function requestUserSetHandle(token: string, handleStr: string) {
 export function requestUserSetEmail(token: string, email: string) {
   return requestHelper('PUT', '/user/profile/setemail/v1', { token, email });
 }
+
+export function requestMessageRemove(token: string, messageId: number) {
+  return requestHelper('DELETE', '/message/remove/v1', { token, messageId });
+}
