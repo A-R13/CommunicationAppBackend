@@ -28,15 +28,15 @@ describe(('DM Create tests'), () => {
   });
 
   test(('Error returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2, 3, 4])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate(user0.token, [1, 1])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate('token1', [1, 2])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId, 4])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user1.authUserId])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate('token1', [user1.authUserId, user2.authUserId])).toStrictEqual({ error: expect.any(String) });
   });
 
   test(('Correct returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2])).toStrictEqual({ dmId: expect.any(Number) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId])).toStrictEqual({ dmId: expect.any(Number) });
 
-    requestDmCreate(user0.token, [1]);
+    requestDmCreate(user0.token, [user1.authUserId]);
 
     const expectedDms2 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }, { dmId: expect.any(Number), name: expect.any(String) }] };
     const expectedDms1 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }] };
@@ -116,7 +116,7 @@ describe(('DM remove tests'), () => {
   });
 
   test(('Error returns'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
+    requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
     expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
     expect(requestDmRemove(user0.token, 1)).toStrictEqual({ error: expect.any(String) });
     expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual({ error: expect.any(String) });
@@ -126,15 +126,15 @@ describe(('DM remove tests'), () => {
   });
 
   test(('For one dm, owner removes it'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
-    expect(requestDmRemove(user0.token, 0)).toStrictEqual({});
+    const dm0: newDm = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+    expect(requestDmRemove(user0.token, dm0.dmId)).toStrictEqual({});
   });
 
   test(('For multiple dm, owner removes it'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
-    requestDmCreate(user1.token, [0, 2, 3]);
-    requestDmCreate(user3.token, [1]);
-    expect(requestDmRemove(user1.token, 1)).toStrictEqual({});
+    requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+    const dm1: newDm = requestDmCreate(user1.token, [user0.authUserId, user2.authUserId, user3.authUserId]);
+    requestDmCreate(user3.token, [user1.authUserId]);
+    expect(requestDmRemove(user1.token, dm1.dmId)).toStrictEqual({});
   });
 });
 
@@ -151,8 +151,8 @@ describe('Dm Messages tests', () => {
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
 
-    dm0 = requestDmCreate(user0.token, [1]);
-    dm1 = requestDmCreate(user0.token, [1, 2]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+    dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
   });
 
   test('Error Returns', () => {
@@ -247,9 +247,11 @@ describe('Dm List Tests', () => {
   test('Correct Returns', () => {
     expect(requestDmList(user0.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
     expect(requestDmList(user1.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
+
     const dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
     const user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number}; // uid = 3
     const dm2 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+
     expect(requestDmList(user0.token)).toStrictEqual({
       dms: [
         { dmId: dm0.dmId, name: 'bobdoe, johndoe' },
@@ -270,7 +272,7 @@ describe('Message Edit', () => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
-    dm0 = requestDmCreate(user0.token, [1]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
     channel0 = requestChannelsCreate(user0.token, 'Channel 1', true);
   });
 
@@ -432,7 +434,7 @@ describe('dmLeave tests', () => {
     user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe'); // uid = 2
     user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe'); // uid = 3
-    dm0 = requestDmCreate(user0.token, [1, 2]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
   });
 
   test('Error returns', () => {
@@ -510,7 +512,7 @@ describe('message remove tests', () => {
 
     channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
 
-    dm0 = requestDmCreate(user0.token, [1]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
   });
 
   test('Error returns', () => {
