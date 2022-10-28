@@ -110,7 +110,6 @@ app.post('/channel/addowner/v1', (req: Request, res: Response, next) => {
   const { token, channelId, uId } = req.body;
 
   res.json(addOwnerV1(token, parseInt(channelId), parseInt(uId)));
-
 });
 
 app.get('/channels/list/v2', (req: Request, res: Response, next) => {
