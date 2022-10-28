@@ -92,6 +92,10 @@ export function requestDmList(token: string) {
   return requestHelper('GET', '/dm/list/v1', { token });
 }
 
+export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {
+  return requestHelper('PUT', '/user/profile/setname/v1', { token, nameFirst, nameLast });
+}
+
 export function requestMessageEdit(token: string, messageId: number, message: string) {
   return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
 }

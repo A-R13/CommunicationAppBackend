@@ -11,7 +11,7 @@ import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels'
 
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
 
-import { userProfileV2, usersAllV1 } from './users';
+import { userProfileV2, userSetNameV1, usersAllV1 } from './users';
 import { clearV1 } from './other';
 
 // Set up web app
@@ -167,6 +167,12 @@ app.get('/dm/list/v1', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
 
   res.json(dmListV1(token));
+});
+
+app.put('/user/profile/setname/v1', (req: Request, res: Response, next) => {
+  const { token, nameFirst, nameLast } = req.body;
+
+  res.json(userSetNameV1(token, nameFirst, nameLast));
 });
 
 app.get('/users/all/v1', (req: Request, res: Response, next) => {

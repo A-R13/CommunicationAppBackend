@@ -8,7 +8,7 @@ import { getToken } from './other';
  * @returns {user}
  */
 
-export function userProfileV2 (token : string, uId : number) : any {
+export function userProfileV2 (token : string, uId : number) {
   const data = getData();
   let checkToken = false;
   let checkUId = false;
@@ -41,6 +41,24 @@ export function userProfileV2 (token : string, uId : number) : any {
   if (checkToken === false || checkUId === false) {
     return { error: 'error' };
   }
+}
+
+export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
+  const user = getToken(token);
+
+  // error checking
+  if (nameFirst === '' || nameFirst.length > 50) {
+    return { error: 'first name is not of the correct length' };
+  } else if (nameLast === '' || nameLast.length > 50) {
+    return { error: 'last name is not of the correct length' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  }
+
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
+  return {};
 }
 
 export function usersAllV1 (token: string) {
