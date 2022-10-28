@@ -203,7 +203,7 @@ export function dmRemoveV1(token : string, dmId: number) {
   // checks if the user is an owner.
   if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
     return {
-      error: 'error 3'
+      error: 'User isnt an owner'
     };
   }
 
