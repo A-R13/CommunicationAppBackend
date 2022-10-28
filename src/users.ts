@@ -33,15 +33,22 @@ export function userProfileV2 (token : string, uId : number) {
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
         }
-
       };
     }
   }
 
   if (checkToken === false || checkUId === false) {
-    return { error: 'error' };
+    return { error: 'Token is invalid or the uId isnt correct' };
   }
 }
+
+/**
+ * <Description: Lists all users and their associated details>
+ *
+ * @param {string} token - session Id for authorised users
+ *
+ * @returns {Array of objects}
+ */
 
 export function usersAllV1 (token: string) {
   const data = getData();
@@ -51,6 +58,7 @@ export function usersAllV1 (token: string) {
     return { error: `The inputted token '${token}' is invalid` };
   }
   const userArray = data.users;
+  // modifies stored users array to only return what's needed
   const detailsArray = userArray.map(user => {
     return {
       uId: user.authUserId,

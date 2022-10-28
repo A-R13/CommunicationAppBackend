@@ -1,11 +1,17 @@
 import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
+  requestClear, requestWipe, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
   requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave, requestMessageRemove
 } from './wrapperFunctions';
 
 requestClear();
+requestWipe();
+
+afterEach(() => {
+  requestClear();
+  requestWipe();
+});
 
 describe(('DM Create tests'), () => {
   let user0: newUser;
@@ -22,15 +28,15 @@ describe(('DM Create tests'), () => {
   });
 
   test(('Error returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2, 3, 4])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate(user0.token, [1, 1])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate('token1', [1, 2])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId, 4])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user1.authUserId])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate('token1', [user1.authUserId, user2.authUserId])).toStrictEqual({ error: expect.any(String) });
   });
 
   test(('Correct returns'), () => {
-    expect(requestDmCreate(user0.token, [1, 2])).toStrictEqual({ dmId: expect.any(Number) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId])).toStrictEqual({ dmId: expect.any(Number) });
 
-    requestDmCreate(user0.token, [1]);
+    requestDmCreate(user0.token, [user1.authUserId]);
 
     const expectedDms2 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }, { dmId: expect.any(Number), name: expect.any(String) }] };
     const expectedDms1 = { dms: [{ dmId: expect.any(Number), name: expect.any(String) }] };
@@ -58,7 +64,21 @@ describe(('Message Send tests'), () => {
   test(('Error returns'), () => {
     expect(requestMessageSend(user0.token, 500, 'Test Message')).toStrictEqual({ error: expect.any(String) });
     expect(requestMessageSend(user0.token, 0, '')).toStrictEqual({ error: expect.any(String) });
-    // Message with over 1000 characters expect(requestMessageSend(user0.token, 0, '')).toStrictEqual({ error: expect.any(String) });
+
+    /*eslint-disable */     // Lint returns "error  Multiline support is limited to browsers supporting ES5 only"
+    const bigMessage: string = 'gsDYqv5lnOVTHwiqmzVRWqc6Acxu4t9JAyFW8aVKfGRS4urnbM2xy70bfznynOxgCUVdwqckCtMOq31IoiV\
+    IZznF3m7lU5bGXdPoJrukmxajudHvSdVwpn1uL1vQBZXUe1yB56aLVKfVA1PzQPU1BNAzCrePCAAPHSE6lXCENn5yISjabwFbXi0A84hCfJqFAJ\
+    wSZCD74oWhtdykrfqLT3qQhPil8s7WUslBErHLaYyzFcuWyAIHxXPTHDYA9hK24F1Fez6r7tx2Nw5n5jZb6tOqOJIWMUPVV6280uZqYeomn07Rp\
+    9koabGH1dqLFpj6Xlh5if9Grmy3q78BUvnffRtzsz9ifJt8CW0DQWFpwuW4uU514FNPF0kmSMVWpJSGV5BCt0uCgf4mIowtGlEV8Joe8WjjTaDG\
+    Lo9ssUI0zLaeiTaU5iIMWc1ky1ihtylnhy6XJYzHdmRdib0EVTBSGmjvZYHa85iSYzO5oD0lPCzwkz8hjURz51omlmPhGoWtgsJAebVag11FAAz\
+    yTH0hX0VjPygBd2WNV4fnMz1BxwFb58vo6E1OXjQbabo1HA4sbfbZpHyzMtJUowdaelZLE0SUVHZigKMA8CaYT4vuvP5BakTdytYq3L2RhzyerP\
+    SpZRYxcsRLo78IhDVzzm7SVVwZ1kUOcS5vyGnB1NtCylieNSGqWCN1YBtXmSNOoH8JS2eaYy4PYgGivOGrL05hQxrmPaWrnKT8tP0b1wHZGABAK\
+    x1H6z0ldvBtluEdxMVMQ2jzOEPtcoFRDhWQrc9cn4IepW1tfxPlbv5dyK8ZUlPDlBzEUnxgagwEGoQA9SmVSeY0wXzrkoxxzkO7PwNfqHCiz7be\
+    5LuopMDND8mwakQqa6oSvMd8JlCdECf67t3pIIQ0eGYYtYH4WzEGtv6l6US1yuY9GBuDO0mWgjCZO3Z9SNyByNY8mvCBsTKj1ntaHNoz4cJN7nh\
+    ZtKu5Kd7iJ3LVOuYGNN71QVjaxnE4Q';
+    /* eslint-enable */
+
+    expect(requestMessageSend(user0.token, 0, bigMessage)).toStrictEqual({ error: expect.any(String) });
     expect(requestMessageSend('Random user token', 0, 'Test Message')).toStrictEqual({ error: expect.any(String) });
     expect(requestMessageSend(user1.token, 0, 'Test Message')).toStrictEqual({ error: expect.any(String) });
   });
@@ -96,7 +116,7 @@ describe(('DM remove tests'), () => {
   });
 
   test(('Error returns'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
+    requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
     expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
     expect(requestDmRemove(user0.token, 1)).toStrictEqual({ error: expect.any(String) });
     expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual({ error: expect.any(String) });
@@ -106,15 +126,15 @@ describe(('DM remove tests'), () => {
   });
 
   test(('For one dm, owner removes it'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
-    expect(requestDmRemove(user0.token, 0)).toStrictEqual({});
+    const dm0: newDm = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+    expect(requestDmRemove(user0.token, dm0.dmId)).toStrictEqual({});
   });
 
   test(('For multiple dm, owner removes it'), () => {
-    requestDmCreate(user0.token, [1, 2, 3]);
-    requestDmCreate(user1.token, [0, 2, 3]);
-    requestDmCreate(user3.token, [1]);
-    expect(requestDmRemove(user1.token, 1)).toStrictEqual({});
+    requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
+    const dm1: newDm = requestDmCreate(user1.token, [user0.authUserId, user2.authUserId, user3.authUserId]);
+    requestDmCreate(user3.token, [user1.authUserId]);
+    expect(requestDmRemove(user1.token, dm1.dmId)).toStrictEqual({});
   });
 });
 
@@ -131,8 +151,8 @@ describe('Dm Messages tests', () => {
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
 
-    dm0 = requestDmCreate(user0.token, [1]);
-    dm1 = requestDmCreate(user0.token, [1, 2]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+    dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
   });
 
   test('Error Returns', () => {
@@ -180,16 +200,6 @@ describe('Dm details tests', () => {
     }
   ];
 
-  const ownerCheck = [
-    {
-      email: 'example1@gmail.com',
-      handleStr: 'johndoe',
-      nameFirst: 'John',
-      nameLast: 'Doe',
-      uId: 0,
-    }
-  ];
-
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
@@ -211,60 +221,43 @@ describe('Dm details tests', () => {
   });
 
   test('Successful return', () => {
-    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck, owners: ownerCheck });
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
   });
 });
 
 describe('Dm List Tests', () => {
   let user0: newUser;
-
   let user1: newUser;
-
   let user2: newUser;
-
   let dm0: dmType;
 
   beforeEach(() => {
     requestClear();
-
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
-
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
-
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
-
     dm0 = requestDmCreate(user0.token, [user1.authUserId]);
   });
 
   test('Error Returns', () => {
     // user doesnt exist
-
     expect(requestDmList('abc')).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Correct Returns', () => {
     expect(requestDmList(user0.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
-
     expect(requestDmList(user1.token)).toStrictEqual({ dms: [{ dmId: dm0.dmId, name: 'bobdoe, johndoe' }] });
 
     const dm1 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
-
     const user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Steve', 'Doe') as {token: string, authUserId: number}; // uid = 3
-
     const dm2 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
 
     expect(requestDmList(user0.token)).toStrictEqual({
-
       dms: [
-
         { dmId: dm0.dmId, name: 'bobdoe, johndoe' },
-
         { dmId: dm1.dmId, name: 'bobdoe, jeffdoe, johndoe' },
-
         { dmId: dm2.dmId, name: 'bobdoe, jeffdoe, johndoe, stevedoe' },
-
       ]
-
     });
   });
 });
@@ -279,15 +272,19 @@ describe('Message Edit', () => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
-    dm0 = requestDmCreate(user0.token, [1]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
     channel0 = requestChannelsCreate(user0.token, 'Channel 1', true);
   });
 
   test(('Error returns'), () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'Hello')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user0.token, 0, 'message')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user1.token, msg1.messageId, 'asdjasjdks')).toStrictEqual({ error: expect.any(String) });
+    const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Sending Dm');
+    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRECT MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit('RANDOMTOKEN ', msg2.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRCET MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg2.messageId, ' NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
   });
 
   test(('error, no owner perms and change other messages'), () => {
@@ -437,7 +434,7 @@ describe('dmLeave tests', () => {
     user1 = requestAuthRegister('example2@gmail.com', 'Abcd1234', 'John', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example3@gmail.com', 'Abcd1234', 'Bob', 'Doe'); // uid = 2
     user3 = requestAuthRegister('example4@gmail.com', 'Abcd1234', 'Jeff', 'Doe'); // uid = 3
-    dm0 = requestDmCreate(user0.token, [1, 2]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId, user2.authUserId]);
   });
 
   test('Error returns', () => {
@@ -466,13 +463,6 @@ describe('dmLeave tests', () => {
           handleStr: 'jakedoe',
         }],
         name: 'bobdoe, jakedoe, johndoe',
-        owners: [{
-          uId: 0,
-          email: 'example1@gmail.com',
-          nameFirst: 'Jake',
-          nameLast: 'Doe',
-          handleStr: 'jakedoe',
-        }],
       }
     );
   });
@@ -497,7 +487,6 @@ describe('dmLeave tests', () => {
             handleStr: 'bobdoe',
           }],
         name: 'bobdoe, jakedoe, johndoe',
-        owners: [],
       }
     );
   });
@@ -518,16 +507,16 @@ describe('message remove tests', () => {
 
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe') as { token: string, authUserId: number, };// uid: 0
-    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe') as { token: string, authUserId: number, };// uid: 1
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');// uid: 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');// uid: 1
 
-    channel1 = requestChannelsCreate(user0.token, 'Channel1', true) as { channelId: number };
+    channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
 
-    dm0 = requestDmCreate(user0.token, [1]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
   });
 
   test('Error returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     // invalid token
     expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
     // invalid messageId
@@ -537,28 +526,28 @@ describe('message remove tests', () => {
   });
 
   test('User with no owner permissions', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     requestChannelJoin(user1.token, channel1.channelId);
     expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Correct returns', () => {
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
     expect(requestChannelMessages(user0.token, channel1.channelId, 0).messages).toStrictEqual([]);
   });
 
   test('Owner removes users message', () => {
     requestChannelJoin(user1.token, channel1.channelId);
-    const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner') as {messageId: number};
+    const msg1 = requestMessageSend(user1.token, channel1.channelId, 'I am not an owner');
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
     expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([]);
   });
 
   test('Removing multiple messages', () => {
     requestChannelJoin(user1.token, channel1.channelId);
-    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One') as {messageId: number};
-    const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two') as {messageId: number};
+    const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
+    const msg2 = requestMessageSend(user1.token, channel1.channelId, 'Message Two');
     expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
     expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
       {
@@ -571,14 +560,14 @@ describe('message remove tests', () => {
   });
 
   test('owner removes in dm', () => {
-    const msg1 = requestMessageSendDm(user1.token, dm0.dmId, 'I am not an owner') as {messageId: number};
+    const msg1 = requestMessageSendDm(user1.token, dm0.dmId, 'I am not an owner');
     expect(requestMessageRemove(user0.token, msg1.messageId)).toStrictEqual({});
     expect(requestDmMessages(user1.token, dm0.dmId, 0).messages).toStrictEqual([]);
   });
 
   test('multiple messages in dms', () => {
-    const msg1 = requestMessageSendDm(user0.token, dm0.dmId, 'Message One in DMs') as {messageId: number};
-    const msg2 = requestMessageSendDm(user1.token, dm0.dmId, 'Message two in DMs') as {messageId: number};
+    const msg1 = requestMessageSendDm(user0.token, dm0.dmId, 'Message One in DMs');
+    const msg2 = requestMessageSendDm(user1.token, dm0.dmId, 'Message two in DMs');
     expect(requestMessageRemove(user1.token, msg2.messageId)).toStrictEqual({});
     expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toStrictEqual([
       {

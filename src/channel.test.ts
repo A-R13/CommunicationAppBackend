@@ -1,13 +1,15 @@
 import { newUser, newChannel } from './other';
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
-  requestChannelInvite, requestChannelLeave, requestAddOwner, requestRemoveOwner
+  requestClear, requestWipe, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
+  requestChannelInvite, requestChannelLeave, requestAddOwner, requestRemoveOwner, requestChannelsList
 } from './wrapperFunctions';
 
 requestClear();
+requestWipe();
 
 afterEach(() => {
   requestClear();
+  requestWipe();
 });
 
 describe('Channel Messages tests', () => {
@@ -69,13 +71,13 @@ describe('Channel details testing', () => {
 
   test('Error testing', () => {
     // Channel ID is invalid
-    expect(requestchannelDetails(user1.token, 4)).toStrictEqual({ error: 'error' });
+    expect(requestchannelDetails(user1.token, 4)).toStrictEqual({ error: expect.any(String) });
 
     // authUserID is invalid
-    expect(requestchannelDetails('Randomtoken', channel1.channelId)).toStrictEqual({ error: 'error' });
+    expect(requestchannelDetails('Randomtoken', channel1.channelId)).toStrictEqual({ error: expect.any(String) });
 
     // Channel ID is valid but authUserID is not in the channel
-    expect(requestchannelDetails(user1.token, channel2.channelId)).toStrictEqual({ error: 'error' });
+    expect(requestchannelDetails(user1.token, channel2.channelId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Testing base case', () => {
@@ -214,12 +216,28 @@ describe('channelJoin tests', () => {
 
   test('Correct Returns', () => {
     user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jake', 'Doe');
-
     // user joining a public channel
+    expect(requestChannelsList(user3.token)).toStrictEqual({ channels: [] });
+
     expect(requestChannelJoin(user3.token, channel2.channelId)).toStrictEqual({});
 
+    expect(requestChannelsList(user3.token)).toStrictEqual({
+      channels: [{ channelId: channel2.channelId, name: 'Channel2' }]
+    });
+
     // global owner joining a private channel
+    expect(requestChannelsList(user1.token)).toStrictEqual({
+      channels: [{ channelId: channel1.channelId, name: 'Channel1' }]
+    });
+
     expect(requestChannelJoin(user1.token, channel3.channelId)).toStrictEqual({});
+
+    expect(requestChannelsList(user1.token)).toStrictEqual({
+      channels: [
+        { channelId: channel1.channelId, name: 'Channel1' },
+        { channelId: channel3.channelId, name: 'Channel3' },
+      ]
+    });
   });
 });
 
@@ -383,10 +401,10 @@ describe('Channel Invite tests', () => {
 });
 
 describe('removeOwner tests', () => {
-  let nicole;
-  let dennis;
-  let geoffrey;
-  let channel;
+  let nicole: newUser;
+  let dennis: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
 
   beforeEach(() => {
     requestClear();
@@ -460,16 +478,16 @@ describe('removeOwner tests', () => {
   // channelId is valid and the authorised user does not have owner permissions in the channel
   test('authorised user does not have owner perms', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
-    requestAddOwner(nicole.token, channel.channelId, dennis.token);
-    expect(requestRemoveOwner(geoffrey.token, channel.channelId, dennis.token)).toStrictEqual({ error: expect.any(String) });
+    requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
+    expect(requestRemoveOwner(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
   });
 });
 
 describe('addOwner tests', () => {
-  let nicole;
-  let dennis;
-  let geoffrey;
-  let channel;
+  let nicole: newUser;
+  let dennis: newUser;
+  let geoffrey: newUser;
+  let channel: newChannel;
 
   beforeEach(() => {
     requestClear();

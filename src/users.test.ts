@@ -1,5 +1,13 @@
 import { newUser } from './other';
-import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
+import { requestClear, requestWipe, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
+
+requestClear();
+requestWipe();
+
+afterEach(() => {
+  requestClear();
+  requestWipe();
+});
 
 describe('Testing for userProfileV2', () => {
   let user1: newUser;
@@ -43,19 +51,19 @@ describe('Testing for userProfileV2', () => {
   });
 
   test('uId doesnt refer to valid user', () => {
-    expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('authUserId is invalid test', () => {
-    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('uID isnt valid', () => {
-    expect(requestUserProfile(user2.token, 5)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile(user2.token, 5)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('AuthuserId is invalid', () => {
-    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: expect.any(String) });
   });
 });
 
@@ -114,10 +122,6 @@ describe('usersAllv1 tests', () => {
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Smith');// uid = 0
-  });
-
-  afterEach(() => {
-    requestClear();
   });
 
   test('Error return', () => {

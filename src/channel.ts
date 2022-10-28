@@ -17,12 +17,12 @@ export function channelDetailsV2(token : string, channelId : number) {
   const userToken = getToken(token);
   // checks if token is valid
   if (userToken === undefined) {
-    return { error: 'error' };
+    return { error: 'Invalid Token' };
   }
 
   // checks if channel is valid and if user is in channel
   if (getChannel(channelId) === undefined) {
-    return { error: 'error' };
+    return { error: 'Channel doesnt exit' };
   } else {
     if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
       checkInChannel = true;
@@ -30,7 +30,7 @@ export function channelDetailsV2(token : string, channelId : number) {
   }
 
   if (checkInChannel === false) {
-    return { error: 'error' };
+    return { error: 'User isnt in channel' };
   }
 
   return {
@@ -304,6 +304,14 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
 
   return {};
 }
+
+/**
+ * <Description: Removes a user from a channel.>
+ *
+ * @param {string} token
+ * @param {number} channelId
+ * @returns {{}}
+ */
 
 export function channelleaveV1(token : string, channelId : number) {
   const data = getData();

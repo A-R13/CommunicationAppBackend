@@ -100,6 +100,7 @@ export function authLoginV2(email: string, password: string): {token: string, au
 /**
  * <Description: Given a valid token it logout that particular user's correspondingsession>
  * @param {string} token
+ * @returns {}
  */
 
 export function authLogoutV1(token: string): Record<string, never> | {error: string} {
@@ -109,7 +110,7 @@ export function authLogoutV1(token: string): Record<string, never> | {error: str
   if (user === undefined) {
     return { error: 'Invalid Token' };
   }
-
+  // Get index of token in order to remove it
   const index = user.sessions.indexOf(token);
 
   for (const users of data.users) {

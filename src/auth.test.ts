@@ -1,13 +1,15 @@
-import { requestClear, requestAuthRegister, requestAuthLogin, requestAuthLogout } from './wrapperFunctions';
+import { requestClear, requestWipe, requestAuthRegister, requestAuthLogin, requestAuthLogout } from './wrapperFunctions';
 // Function Wrappers using above function
 
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
+requestWipe();
+
+beforeEach(() => {
+  requestClear();
+  requestWipe();
+});
 
 describe('Testing authRegister function', () => {
-  beforeEach(() => {
-    requestClear();
-  });
-
   test('Testing successful registration', () => {
     const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(user).toStrictEqual(
@@ -112,10 +114,6 @@ describe('Testing authLogin function', () => {
 });
 
 describe('Testing authlogout function', () => {
-  beforeEach(() => {
-    requestClear();
-  });
-
   test('Successful logout (one token)', () => {
     const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(requestAuthLogout(user.token)).toStrictEqual({});
