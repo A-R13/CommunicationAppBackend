@@ -76,14 +76,12 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
 
   for (const channel of data.channels) {
     if (channel.allMembers.find(a => a.uId === user.authUserId) || channel.ownerMembers.find(a => a.uId === user.authUserId)) {
-      if (channel.isPublic === true) {
-        listChannels.push(
-          {
-            channelId: channel.channelId,
-            name: channel.channelName,
-          }
-        );
-      }
+      listChannels.push(
+        {
+          channelId: channel.channelId,
+          name: channel.channelName,
+        }
+      );
     }
   }
   return {

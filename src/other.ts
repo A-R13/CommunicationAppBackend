@@ -176,6 +176,47 @@ export function CheckValidMessageChannels(messageId: number) {
   return validMessage;
 }
 
+export function CheckMessageUser(authUserId : number, messageId : number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if the user is the same
+      if (data.dms[checkInDm].messages[DmMessageIndex].uId === authUserId) {
+        return true;
+      } else {
+        // if not the same, check if user is owner
+        if (data.dms[checkInDm].owners.find(member => member.uId === authUserId)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // Is the same user
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].uId === authUserId) {
+      return true;
+    } else {
+    // check if user is member
+      for (const member of data.channels[CheckInChannel].ownerMembers) {
+        if (member.uId === authUserId) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+}
+
 // From wk5 Labs
 export function requestHelper(method: HttpVerb, path: string, payload: object) {
   let qs = {};
