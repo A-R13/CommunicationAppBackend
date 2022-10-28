@@ -152,6 +152,12 @@ export function userConvert(user: userType): userShort {
   };
 }
 
+/**
+ * <Description: Checks if the messageId is in Dms. >
+ * @param {number} messageId - MessageId
+ * @returns { number }- either -1 if not in Dms or an index if in Dms
+ */
+
 export function CheckValidMessageDms(messageId: number) {
   const data = getData();
   let validMessage = -1;
@@ -164,6 +170,13 @@ export function CheckValidMessageDms(messageId: number) {
   return validMessage;
 }
 
+/**
+ * <Description: Checks if the messageId is in Channels. >
+ * @param {number} messageId - messageId
+ * 
+ * @returns { number } - either -1 if not in channels or an index if in channel
+ */
+
 export function CheckValidMessageChannels(messageId: number) {
   const data = getData();
   let validMessage = -1;
@@ -175,6 +188,14 @@ export function CheckValidMessageChannels(messageId: number) {
   }
   return validMessage;
 }
+
+/**
+ * <Description: Checks if the User is the same user or if they are an owner >
+ * @param {number} authUserid - An authenticated user
+ * @param {number} messageId - messageId
+ * 
+ * @returns { number }
+ */
 
 export function CheckMessageUser(authUserId : number, messageId : number) : boolean {
   const data = getData();
