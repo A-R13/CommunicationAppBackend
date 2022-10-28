@@ -58,6 +58,7 @@ export function usersAllV1 (token: string) {
     return { error: `The inputted token '${token}' is invalid` };
   }
   const userArray = data.users;
+  // modifies stored users array to only return what's needed
   const detailsArray = userArray.map(user => {
     return {
       uId: user.authUserId,
