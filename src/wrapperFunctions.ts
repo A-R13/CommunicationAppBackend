@@ -119,3 +119,7 @@ export function requestDmLeave(token: string, dmId: number) {
 export function requestRemoveOwner(token: string, channelId: number, uId: number) {
   return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
 }
+
+export function requestUserSetEmail(token: string, email: string) {
+  return requestHelper('PUT', '/user/profile/setemail/v1', { token, email });
+}
