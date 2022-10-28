@@ -194,16 +194,6 @@ describe('Dm details tests', () => {
     }
   ];
 
-  const ownerCheck = [
-    {
-      email: 'example1@gmail.com',
-      handleStr: 'johndoe',
-      nameFirst: 'John',
-      nameLast: 'Doe',
-      uId: 0,
-    }
-  ];
-
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
@@ -225,7 +215,7 @@ describe('Dm details tests', () => {
   });
 
   test('Successful return', () => {
-    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck, owners: ownerCheck });
+    expect(requestDmDetails(user1.token, dm0.dmId)).toStrictEqual({ name: 'bobdoe, johndoe', members: memberCheck });
   });
 });
 
@@ -465,13 +455,6 @@ describe('dmLeave tests', () => {
           handleStr: 'jakedoe',
         }],
         name: 'bobdoe, jakedoe, johndoe',
-        owners: [{
-          uId: 0,
-          email: 'example1@gmail.com',
-          nameFirst: 'Jake',
-          nameLast: 'Doe',
-          handleStr: 'jakedoe',
-        }],
       }
     );
   });
@@ -496,7 +479,6 @@ describe('dmLeave tests', () => {
             handleStr: 'bobdoe',
           }],
         name: 'bobdoe, jakedoe, johndoe',
-        owners: [],
       }
     );
   });

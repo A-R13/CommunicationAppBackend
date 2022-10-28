@@ -297,7 +297,6 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
   return {
     name: checkDM.name,
     members: checkDM.members,
-    owners: checkDM.owners,
   };
 }
 
