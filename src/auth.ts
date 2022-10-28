@@ -100,6 +100,7 @@ export function authLoginV2(email: string, password: string): {token: string, au
 /**
  * <Description: Given a valid token it logout that particular user's correspondingsession>
  * @param {string} token
+ * @returns {}  
  */
 
 export function authLogoutV1(token: string): Record<string, never> | {error: string} {
