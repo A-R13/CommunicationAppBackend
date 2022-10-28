@@ -127,7 +127,7 @@ export function messageEditV1(token: string, messageId: number, message: string)
 
   // checks if token is valid
   if (userToken === undefined || message.length > 1000) {
-    return { error: 'error' };
+    return { error: 'Token Is invalid or the message length is > 1000' };
   }
 
   // check if valid messages
@@ -137,14 +137,14 @@ export function messageEditV1(token: string, messageId: number, message: string)
 
   if (channelIndex === -1 && DmIndex === -1) {
     return {
-      error: 'error'
+      error: 'Message doenst exist in both Dms and Channel'
     };
   }
 
   // checks if it is owner and same user
   if (CheckMessageUser(userToken.authUserId, messageId) === false) {
     return {
-      error: 'error'
+      error: 'User is not an owner and the original sender'
     };
   }
 

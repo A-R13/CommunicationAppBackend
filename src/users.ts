@@ -33,13 +33,12 @@ export function userProfileV2 (token : string, uId : number) {
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
         }
-
       };
     }
   }
 
   if (checkToken === false || checkUId === false) {
-    return { error: 'error' };
+    return { error: 'Token is invalid or the uId isnt correct' };
   }
 }
 
