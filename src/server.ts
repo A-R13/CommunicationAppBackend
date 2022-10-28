@@ -11,7 +11,6 @@ import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels'
 
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1 } from './messages';
 
-
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1 } from './users';
 
 import { clearV1 } from './other';
