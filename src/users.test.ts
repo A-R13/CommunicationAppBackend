@@ -43,19 +43,19 @@ describe('Testing for userProfileV2', () => {
   });
 
   test('uId doesnt refer to valid user', () => {
-    expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('authUserId is invalid test', () => {
-    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('uID isnt valid', () => {
-    expect(requestUserProfile(user2.token, 5)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile(user2.token, 5)).toStrictEqual({ error: expect.any(String) });
   });
 
   test('AuthuserId is invalid', () => {
-    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: 'error' });
+    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: expect.any(String) });
   });
 });
 

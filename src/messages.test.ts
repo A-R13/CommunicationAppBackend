@@ -266,9 +266,13 @@ describe('Message Edit', () => {
 
   test(('Error returns'), () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
-    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'Hello')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user0.token, 0, 'message')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user1.token, msg1.messageId, 'asdjasjdks')).toStrictEqual({ error: expect.any(String) });
+    const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Sending Dm');
+    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRECT MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit('RANDOMTOKEN ', msg2.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRCET MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg2.messageId, ' NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
   });
 
   test(('error, no owner perms and change other messages'), () => {

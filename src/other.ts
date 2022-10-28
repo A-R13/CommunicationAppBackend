@@ -173,7 +173,6 @@ export function CheckValidMessageDms(messageId: number) {
 /**
  * <Description: Checks if the messageId is in Channels. >
  * @param {number} messageId - messageId
- * 
  * @returns { number } - either -1 if not in channels or an index if in channel
  */
 
@@ -193,7 +192,6 @@ export function CheckValidMessageChannels(messageId: number) {
  * <Description: Checks if the User is the same user or if they are an owner >
  * @param {number} authUserid - An authenticated user
  * @param {number} messageId - messageId
- * 
  * @returns { number }
  */
 
