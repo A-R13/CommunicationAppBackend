@@ -5,7 +5,6 @@ import {
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser
 } from './other';
 
-
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
  * @param {string} token - unique token of the 'authorising' user
@@ -449,4 +448,4 @@ export function messageRemoveV1 (token: string, messageId: number) {
 
   setData(data);
   return {};
-} 
+}
