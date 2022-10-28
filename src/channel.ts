@@ -267,11 +267,12 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
  */
 
 export function removeOwnerV1 (token: string, channelId: number, uId: number) {
-  // ERROR CASES
   const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
   const authUserToken = getToken(token);
+
+  // ERROR CASES
 
   // checking for invalid channelId, invalid uId, invalid token
   if (channel === undefined || user === undefined || authUserToken === undefined) {
@@ -280,13 +281,8 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
 
   // uid is not an owner of the channel
   const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
-  /*
-  // method 1
+
   if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
-    return { error: 'uId is not an owner of the channel' };
-  } */
-  // method 2
-  if (data.channels[channelIndex].ownerMembers.includes(uId) === false) {
     return { error: 'uId is not an owner of the channel' };
   }
 
