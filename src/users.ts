@@ -42,6 +42,14 @@ export function userProfileV2 (token : string, uId : number) {
   }
 }
 
+/**
+ * <Description: Lists all users and their associated details>
+ *
+ * @param {string} token - session Id for authorised users
+ *
+ * @returns {Array of objects}
+ */
+
 export function usersAllV1 (token: string) {
   const data = getData();
   const user = getToken(token);
