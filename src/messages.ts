@@ -185,12 +185,12 @@ export function dmRemoveV1(token : string, dmId: number) {
 
   // checks if token is valid
   if (user === undefined) {
-    return { error: 'error 1' };
+    return { error: 'Token is invalid' };
   }
   // dm doesnt exist
   if (dm === undefined) {
     return {
-      error: 'error 2'
+      error: 'dm doesnt exist'
     };
   }
 
