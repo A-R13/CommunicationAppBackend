@@ -276,7 +276,7 @@ export function dmMessagesV1 (token: string, dmId: number, start: number): { mes
  * @returns { name: string, members: [users]}
  */
 
-export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[], owners: userShort[]} | { error: string} {
+export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
   // check if token and dmId are valid
   const checkToken = getToken(token);
   const checkDM: dmType = getDm(dmId);
