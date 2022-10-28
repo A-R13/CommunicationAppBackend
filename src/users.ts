@@ -43,24 +43,6 @@ export function userProfileV2 (token : string, uId : number) {
   }
 }
 
-export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
-  const user = getToken(token);
-
-  // error checking
-  if (nameFirst === '' || nameFirst.length > 50) {
-    return { error: 'first name is not of the correct length' };
-  } else if (nameLast === '' || nameLast.length > 50) {
-    return { error: 'last name is not of the correct length' };
-  } else if (user === undefined) {
-    return { error: 'token is invalid' };
-  }
-
-  user.nameFirst = nameFirst;
-  user.nameLast = nameLast;
-
-  return {};
-}
-
 export function usersAllV1 (token: string) {
   const data = getData();
   const user = getToken(token);
@@ -84,6 +66,61 @@ export function usersAllV1 (token: string) {
   };
 }
 
+/**
+ * < Description: Update the authorised user's first and last name.>
+ * @param {string} token
+ * @param {string} nameFirst
+ * @param {string} nameLast
+ * @returns {{}}
+ */
+
+export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
+  const user = getToken(token);
+
+  // error checking
+  if (nameFirst === '' || nameFirst.length > 50) {
+    return { error: 'first name is not of the correct length' };
+  } else if (nameLast === '' || nameLast.length > 50) {
+    return { error: 'last name is not of the correct length' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  }
+
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
+  return {};
+}
+
+/**
+ * <Description: Update the authorised user's email address.>
+ * @param {string} token
+ * @param {string} email
+ * @returns {{}}
+ */
+export function userSetEmailV1 (token: string, email: string) {
+  const data = getData();
+  const user = getToken(token);
+
+  if (!validator.isEmail(email)) {
+    return { error: 'email is invalid' };
+  } else if (user === undefined) {
+    return { error: 'token is invalid' };
+  } else if (data.users.find(users => users.email === email)) {
+    return { error: 'email already exists' };
+  }
+
+  user.email = email;
+
+  return {};
+}
+
+/**
+ * <Description: Update the authorised user's handle (ie. display name).>
+ * @param {string} token
+ * @param {string} handleStr
+ * @returns {{}}
+ */
 export function userSetHandleV1 (token: string, handleStr: string) {
   const data = getData();
   const user = getToken(token);
@@ -100,23 +137,6 @@ export function userSetHandleV1 (token: string, handleStr: string) {
   }
 
   user.userHandle = handleStr;
-
-  return {};
-}
-
-export function userSetEmailV1 (token: string, email: string) {
-  const data = getData();
-  const user = getToken(token);
-
-  if (!validator.isEmail(email)) {
-    return { error: 'email is invalid' };
-  } else if (user === undefined) {
-    return { error: 'token is invalid' };
-  } else if (data.users.find(users => users.email === email)) {
-    return { error: 'email already exists' };
-  }
-
-  user.email = email;
 
   return {};
 }
