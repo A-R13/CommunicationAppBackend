@@ -1,12 +1,11 @@
-import { requestClear, requestWipe, requestAuthRegister, requestAuthLogin, requestAuthLogout } from './wrapperFunctions';
+import { requestClear, requestAuthRegister, requestAuthLogin, requestAuthLogout } from './wrapperFunctions';
 // Function Wrappers using above function
 
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
-requestWipe();
 
 beforeEach(() => {
   requestClear();
-  requestWipe();
+
 });
 
 describe('Testing authRegister function', () => {
