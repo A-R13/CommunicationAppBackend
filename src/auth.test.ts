@@ -5,7 +5,6 @@ requestClear(); // Need to call it here before calling it in the beforeEach for 
 
 beforeEach(() => {
   requestClear();
-
 });
 
 describe('Testing authRegister function', () => {

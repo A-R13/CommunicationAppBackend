@@ -42,7 +42,6 @@ app.delete('/clear/v1', (req: Request, res: Response) => {
   res.json(clearV1());
 });
 
-
 app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   const { email, password } = req.body;
 
