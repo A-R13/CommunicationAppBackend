@@ -3,6 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
@@ -33,6 +34,9 @@ app.get('/echo', (req: Request, res: Response, next) => {
     next(err);
   }
 });
+
+// handles errors nicely
+app.use(errorHandler());
 
 // for logging errors (print to terminal)
 app.use(morgan('dev'));

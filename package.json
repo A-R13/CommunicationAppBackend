@@ -6,6 +6,7 @@
         "lint": "eslint src/**/*.{ts,js}",
         "lint-fix": "eslint --fix src/**/*.{ts,js}",
         "start": "ts-node -T src/server.ts",
+        "ts-node-coverage": "nyc --reporter=text --reporter=lcov ts-node -T src/server.ts",
         "ts-node": "ts-node",
         "posttest": "pkill -f 'node_modules/sync-rpc/lib/worker.js' > /dev/null 2>&1"
     },
@@ -14,6 +15,11 @@
         "express": "^4.18.0",
         "morgan": "^1.10.0",
         "rewire": "^6.0.0",
+        "ts-node": "^10.7.0",
+        "typescript": "^4.6.3",
+        "validator": "^13.7.0",
+        "http-errors": "^2.0.0",
+        "middleware-http-errors": "^0.1.1",
         "uuid": "^9.0.0",
         "validator": "^13.7.0"
     },
@@ -32,6 +38,13 @@
         "eslint-plugin-jest": "^26.1.5",
         "jest": "^28.1.0",
         "sync-request": "^6.1.0",
+        "ts-jest": "^28.0.2",
+        "nyc": "^15.1.0"
+    },
+    "nyc": {
+        "exclude": [
+            "echo.*"
+        ],
         "ts-jest": "^28.0.8",
         "ts-node": "^10.9.1",
         "typescript": "^4.8.4"
