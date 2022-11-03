@@ -1,16 +1,14 @@
 import { newUser, newChannel, newDm, dmType } from './other';
 
 import {
-  requestClear, requestWipe, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
+  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmRemove, requestDmMessages,
   requestDmDetails, requestDmList, requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestDmLeave, requestMessageRemove
 } from './wrapperFunctions';
 
 requestClear();
-requestWipe();
 
 afterEach(() => {
   requestClear();
-  requestWipe();
 });
 
 describe(('DM Create tests'), () => {

@@ -1,12 +1,10 @@
 import { newUser } from './other';
-import { requestClear, requestWipe, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
+import { requestClear, requestAuthRegister, requestUserProfile, requestUsersAll, requestUserSetName, requestUserSetEmail, requestUserSetHandle } from './wrapperFunctions';
 
 requestClear();
-requestWipe();
 
 afterEach(() => {
   requestClear();
-  requestWipe();
 });
 
 describe('Testing for userProfileV2', () => {

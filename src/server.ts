@@ -42,17 +42,13 @@ app.use(errorHandler());
 app.use(morgan('dev'));
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
+  wipeData();
   res.json(clearV1());
-});
-
-app.delete('/wipe/v1', (req: Request, res: Response) => {
-  res.json(wipeData());
 });
 
 app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   const { email, password } = req.body;
 
-  readData();
   res.json(authLoginV2(email, password));
   saveData();
 });
@@ -60,7 +56,6 @@ app.post('/auth/login/v2', (req: Request, res: Response, next) => {
 app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
-  readData();
   res.json(authRegisterV2(email, password, nameFirst, nameLast));
   saveData();
 });
@@ -250,6 +245,7 @@ app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
+  readData();
   console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
 });
 

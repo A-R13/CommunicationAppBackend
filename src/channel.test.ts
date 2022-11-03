@@ -1,15 +1,13 @@
 import { newUser, newChannel } from './other';
 import {
-  requestClear, requestWipe, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
   requestChannelInvite, requestChannelLeave, requestAddOwner, requestRemoveOwner, requestChannelsList
 } from './wrapperFunctions';
 
 requestClear();
-requestWipe();
 
 afterEach(() => {
   requestClear();
-  requestWipe();
 });
 
 describe('Channel Messages tests', () => {
