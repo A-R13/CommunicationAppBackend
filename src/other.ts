@@ -1,8 +1,4 @@
 import { getData, setData } from './dataStore';
-import { port, url } from './config.json';
-
-import request, { HttpVerb } from 'sync-request';
-const SERVER_URL = `${url}:${port}`;
 
 // Exported types
 
@@ -235,4 +231,3 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
     }
   }
 }
-

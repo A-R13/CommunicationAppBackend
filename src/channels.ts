@@ -1,3 +1,5 @@
+import HTTPError from 'http-errors';
+
 import { getData, setData } from './dataStore';
 import { channelType, channelShort, getToken } from './other';
 
@@ -10,12 +12,12 @@ import { channelType, channelShort, getToken } from './other';
  * @returns { {channelId: number} } - The channelId of the newly created channel
  */
 
-export function channelsCreateV2 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
+export function channelsCreateV3 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
   const data = getData();
   const user = getToken(token);
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `User with token '${token}' does not exist!`);
   }
 
   if (name.length >= 1 && name.length <= 20) {
@@ -54,7 +56,7 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
 
     return { channelId: channelID };
   } else {
-    return { error: 'Channel name does not meet the required standards standard' };
+    throw HTTPError(400, 'Channel name does not meet the required stadards.');
   }
 }
 

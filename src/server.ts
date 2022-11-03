@@ -8,12 +8,15 @@ import errorHandler from 'middleware-http-errors';
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
-import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
+import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
 
 import { clearV1 } from './other';
+
+const PORT: number = parseInt(process.env.PORT || config.port);
+const HOST: string = process.env.IP || 'localhost';
 
 // Set up web app
 const app = express();
@@ -21,9 +24,8 @@ const app = express();
 app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
-
-const PORT: number = parseInt(process.env.PORT || config.port);
-const HOST: string = process.env.IP || 'localhost';
+// for logging errors (print to terminal)
+app.use(morgan('dev'));
 
 // Example get request
 app.get('/echo', (req: Request, res: Response, next) => {
@@ -35,19 +37,12 @@ app.get('/echo', (req: Request, res: Response, next) => {
   }
 });
 
-// handles errors nicely
-app.use(errorHandler());
-
-// for logging errors (print to terminal)
-app.use(morgan('dev'));
-
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   readData();
   console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
 });
-
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
@@ -68,11 +63,16 @@ app.post('/auth/register/v2', (req: Request, res: Response, next) => {
   saveData();
 });
 
-app.post('/channels/create/v2', (req: Request, res: Response, next) => {
-  const { token, name, isPublic } = req.body;
+app.post('/channels/create/v3', (req: Request, res: Response, next) => {
+  try {
+    const { name, isPublic } = req.body;
+    const token = req.header('token');
 
-  res.json(channelsCreateV2(token, name, isPublic));
-  saveData();
+    saveData();
+    return res.json(channelsCreateV3(token, name, isPublic));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
@@ -250,7 +250,8 @@ app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
   saveData();
 });
 
-
+// handles errors nicely
+app.use(errorHandler());
 
 // For coverage, handle Ctrl+C gracefully
 process.on('SIGINT', () => {

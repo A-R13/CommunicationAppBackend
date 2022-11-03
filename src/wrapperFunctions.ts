@@ -3,7 +3,7 @@ import { port, url } from './config.json';
 import request, { HttpVerb } from 'sync-request';
 const SERVER_URL = `${url}:${port}`;
 
-export function requestHelper(method: HttpVerb, path: string, payload: object) {
+export function requestHelper(method: HttpVerb, path: string, payload: object, header?: string) {
   let qs = {};
   let json = {};
   if (['GET', 'DELETE'].includes(method)) {
@@ -12,7 +12,20 @@ export function requestHelper(method: HttpVerb, path: string, payload: object) {
     // PUT/POST
     json = payload;
   }
-  const res = request(method, SERVER_URL + path, { qs, json });
+  let headers = {};
+  if (header !== undefined) {
+    headers = {
+      token: header
+    };
+  }
+  const res = request(method, SERVER_URL + path, { qs, json, headers });
+
+  if (res.statusCode !== 200) {
+    // Return error code number instead of object in case of error.
+    // (just for convenience)
+    return res.statusCode;
+  }
+
   return JSON.parse(res.getBody('utf-8'));
 }
 
@@ -37,7 +50,7 @@ export function requestAuthLogout(token: string) {
 }
 
 export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
-  return requestHelper('POST', '/channels/create/v2', { token, name, isPublic });
+  return requestHelper('POST', '/channels/create/v3', { name, isPublic }, token);
 }
 
 export function requestChannelsListAll (token: string) {

@@ -16,9 +16,9 @@ describe('channelsCreate tests', () => {
   });
 
   test('Error Returns', () => {
-    expect(requestChannelsCreate(user.token, '', true)).toStrictEqual({ error: expect.any(String) });
-    expect(requestChannelsCreate(user.token, 'Thisisaverylongchannelname', true)).toStrictEqual({ error: expect.any(String) });
-    expect(requestChannelsCreate('abc', 'Channel1', true)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelsCreate(user.token, '', true)).toEqual(400);
+    expect(requestChannelsCreate(user.token, 'Thisisaverylongchannelname', true)).toEqual(400);
+    expect(requestChannelsCreate('abc', 'Channel1', true)).toEqual(403);
   });
 
   test('Correct Return', () => {
