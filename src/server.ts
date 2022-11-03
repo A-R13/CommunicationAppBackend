@@ -41,6 +41,14 @@ app.use(errorHandler());
 // for logging errors (print to terminal)
 app.use(morgan('dev'));
 
+// start server
+const server = app.listen(PORT, HOST, () => {
+  // DO NOT CHANGE THIS LINE
+  readData();
+  console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
+});
+
+
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
   res.json(clearV1());
@@ -242,12 +250,7 @@ app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
   saveData();
 });
 
-// start server
-const server = app.listen(PORT, HOST, () => {
-  // DO NOT CHANGE THIS LINE
-  readData();
-  console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
-});
+
 
 // For coverage, handle Ctrl+C gracefully
 process.on('SIGINT', () => {
