@@ -236,20 +236,3 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
   }
 }
 
-// From wk5 Labs
-export function requestHelper(method: HttpVerb, path: string, payload: object) {
-  let qs = {};
-  let json = {};
-  if (['GET', 'DELETE'].includes(method)) {
-    qs = payload;
-  } else {
-    // PUT/POST
-    json = payload;
-  }
-  const res = request(method, SERVER_URL + path, { qs, json });
-  return JSON.parse(res.getBody('utf-8'));
-}
-
-export function requestClear() {
-  return requestHelper('DELETE', '/clear/v1', {});
-}
