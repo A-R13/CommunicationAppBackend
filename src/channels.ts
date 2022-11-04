@@ -17,7 +17,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
   const user = getToken(token);
 
   if (user === undefined) {
-    throw HTTPError(403, `User with token '${token}' does not exist!`);
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   if (name.length >= 1 && name.length <= 20) {
@@ -56,7 +56,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
 
     return { channelId: channelID };
   } else {
-    throw HTTPError(400, 'Channel name does not meet the required stadards.');
+    throw HTTPError(400, 'Error: Channel name does not meet the required stadards.');
   }
 }
 

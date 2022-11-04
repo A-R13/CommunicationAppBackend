@@ -7,7 +7,7 @@ import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
-import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
+import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV3, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
 import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
@@ -95,12 +95,16 @@ app.get('/channel/details/v2', (req: Request, res: Response, next) => {
   res.json(channelDetailsV2(token, parseInt(channelId)));
 });
 
-app.get('/channel/messages/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const channelId = req.query.channelId as string;
-  const start = req.query.start as string;
+app.get('/channel/messages/v3', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const channelId = req.query.channelId as string;
+    const start = req.query.start as string;
 
-  res.json(channelMessagesV2(token, parseInt(channelId), parseInt(start)));
+    return res.json(channelMessagesV3(token, parseInt(channelId), parseInt(start)));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post('/channel/join/v2', (req: Request, res: Response, next) => {

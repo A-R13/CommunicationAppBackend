@@ -1,3 +1,5 @@
+import HTTPError from 'http-errors';
+
 import { getData, setData } from './dataStore';
 
 import {

@@ -27,16 +27,16 @@ describe('Channel Messages tests', () => {
 
   test('Error Returns', () => {
     // channelid does not refer to an existing channel
-    expect(requestChannelMessages(user1.token, 69, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelMessages(user1.token, 69, 0)).toStrictEqual(400);
 
     // start is greater than no of messages in channel
-    expect(requestChannelMessages(user1.token, channel1.channelId, 50)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelMessages(user1.token, channel1.channelId, 50)).toStrictEqual(400);
 
     // channelid is valid but user is not member of that channel
-    expect(requestChannelMessages(user1.token, channel2.channelId, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelMessages(user1.token, channel2.channelId, 0)).toStrictEqual(403);
 
     // authuserid is invalid
-    expect(requestChannelMessages('abc', channel1.channelId, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelMessages('abc', channel1.channelId, 0)).toStrictEqual(403);
   });
 
   test('Correct Return with no messages', () => {

@@ -1,3 +1,5 @@
+import HTTPError from 'http-errors';
+
 import { getData, setData } from './dataStore';
 import { channelType, userShort, message, getChannel, getUId, getToken } from './other';
 
@@ -153,27 +155,27 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function channelMessagesV2 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
+export function channelMessagesV3 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
   const userToken = getToken(token);
   const channel: channelType = getChannel(channelId);
 
   if (channel === undefined) {
     // If channel is undefined
-    return { error: `Channel with channelId '${channel}' does not exist!` };
+    throw HTTPError(400, `Error: Channel with channelId '${channel}' does not exist!`);
   } else if (start > channel.messages.length) {
     // If the provided start is greater than the total messages in the channel, an error will be returned
-    return { error: `Start '${start}' is greater than the total number of messages in the specified channel` };
+    throw HTTPError(400, `Error: Start '${start}' is greater than the total number of messages in the specified channel`);
   }
 
   if (userToken === undefined) {
     // If user doesn't exist at all, return an error
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: `User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
+    throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!`);
   }
 
   if ((start + 50) > channel.messages.length) {

@@ -1,5 +1,7 @@
 import validator from 'validator';
+import HTTPError from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
+
 import { getData, setData } from './dataStore';
 import { getToken } from './other';
 

@@ -66,7 +66,7 @@ export function requestchannelDetails(token : string, channelId : number) {
 }
 
 export function requestChannelMessages(token : string, channelId : number, start: number) {
-  return requestHelper('GET', '/channel/messages/v2', { token, channelId, start });
+  return requestHelper('GET', '/channel/messages/v3', { channelId, start }, token);
 }
 
 export function requestChannelJoin(token : string, channelId: number) {

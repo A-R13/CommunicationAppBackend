@@ -1,6 +1,9 @@
+import HTTPError from 'http-errors';
+import validator from 'validator';
+
 import { getData } from './dataStore';
 import { getToken } from './other';
-import validator from 'validator';
+
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
  * @param {number} channelId - unique ID for a channel
