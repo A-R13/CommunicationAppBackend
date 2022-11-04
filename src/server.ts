@@ -10,7 +10,7 @@ import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV3, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV2, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
+import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV1, dmDetailsV1, dmListV2, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
 
 import { clearV1 } from './other';
@@ -160,11 +160,16 @@ app.post('/dm/create/v2', (req: Request, res: Response, next) => {
   }
 });
 
-app.post('/message/send/v1', (req: Request, res: Response, next) => {
-  const { token, channelId, message } = req.body;
+app.post('/message/send/v2', (req: Request, res: Response, next) => {
+  try {
+    const { channelId, message } = req.body;
+    const token = req.header('token');
 
-  res.json(messageSendV1(token, channelId, message));
-  saveData();
+    saveData();
+    return res.json(messageSendV2(token, channelId, message));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.put('/message/edit/v1', (req: Request, res: Response, next) => {
@@ -189,12 +194,17 @@ app.delete('/dm/remove/v1', (req: Request, res: Response, next) => {
   saveData();
 });
 
-app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const dmId = req.query.dmId as string;
-  const start = req.query.start as string;
+app.get('/dm/messages/v2', (req: Request, res: Response, next) => {
+  try {
+    const dmId = req.query.dmId as string;
+    const start = req.query.start as string;
+    const token = req.header('token');
 
-  res.json(dmMessagesV1(token, parseInt(dmId), parseInt(start)));
+    saveData();
+    return res.json(dmMessagesV2(token, parseInt(dmId), parseInt(start)));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/dm/details/v1', (req: Request, res: Response, next) => {
@@ -204,10 +214,14 @@ app.get('/dm/details/v1', (req: Request, res: Response, next) => {
   res.json(dmDetailsV1(token, parseInt(dmId)));
 });
 
-app.get('/dm/list/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
+app.get('/dm/list/v2', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
 
-  res.json(dmListV1(token));
+    return res.json(dmListV2(token));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.put('/user/profile/setname/v1', (req: Request, res: Response, next) => {

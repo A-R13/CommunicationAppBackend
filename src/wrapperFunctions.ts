@@ -86,7 +86,7 @@ export function requestDmCreate(token: string, uIds: number[]) {
 }
 
 export function requestMessageSend(token: string, channelId: number, message: string) {
-  return requestHelper('POST', '/message/send/v1', { token, channelId, message });
+  return requestHelper('POST', '/message/send/v2', { channelId, message }, token);
 }
 
 export function requestDmRemove(token: string, dmId: number) {
@@ -94,7 +94,7 @@ export function requestDmRemove(token: string, dmId: number) {
 }
 
 export function requestDmMessages(token : string, dmId : number, start: number) {
-  return requestHelper('GET', '/dm/messages/v1', { token, dmId, start });
+  return requestHelper('GET', '/dm/messages/v2', { dmId, start }, token);
 }
 
 export function requestDmDetails(token: string, dmId: number) {
@@ -102,7 +102,7 @@ export function requestDmDetails(token: string, dmId: number) {
 }
 
 export function requestDmList(token: string) {
-  return requestHelper('GET', '/dm/list/v1', { token });
+  return requestHelper('GET', '/dm/list/v2', {}, token);
 }
 
 export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {

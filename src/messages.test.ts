@@ -60,8 +60,8 @@ describe(('Message Send tests'), () => {
   });
 
   test(('Error returns'), () => {
-    expect(requestMessageSend(user0.token, 500, 'Test Message')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageSend(user0.token, 0, '')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSend(user0.token, 500, 'Test Message')).toStrictEqual(400);
+    expect(requestMessageSend(user0.token, 0, '')).toStrictEqual(400);
 
     /*eslint-disable */     // Lint returns "error  Multiline support is limited to browsers supporting ES5 only"
     const bigMessage: string = 'gsDYqv5lnOVTHwiqmzVRWqc6Acxu4t9JAyFW8aVKfGRS4urnbM2xy70bfznynOxgCUVdwqckCtMOq31IoiV\
@@ -76,9 +76,9 @@ describe(('Message Send tests'), () => {
     ZtKu5Kd7iJ3LVOuYGNN71QVjaxnE4Q';
     /* eslint-enable */
 
-    expect(requestMessageSend(user0.token, 0, bigMessage)).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageSend('Random user token', 0, 'Test Message')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageSend(user1.token, 0, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSend(user0.token, 0, bigMessage)).toStrictEqual(400);
+    expect(requestMessageSend('Random user token', 0, 'Test Message')).toStrictEqual(403);
+    expect(requestMessageSend(user1.token, 0, 'Test Message')).toStrictEqual(403);
   });
 
   test(('Correct returns'), () => {
@@ -155,16 +155,16 @@ describe('Dm Messages tests', () => {
 
   test('Error Returns', () => {
     // dmId does not refer to an existing Dm
-    expect(requestDmMessages(user0.token, 69, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmMessages(user0.token, 69, 0)).toStrictEqual(400);
 
     // start is greater than no of messages in channel
-    expect(requestDmMessages(user0.token, dm0.dmId, 50)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmMessages(user0.token, dm0.dmId, 50)).toStrictEqual(400);
 
     // dmId is valid but user is not member of that channel
-    expect(requestDmMessages(user2.token, dm0.dmId, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmMessages(user2.token, dm0.dmId, 0)).toStrictEqual(403);
 
     // authuserid is invalid
-    expect(requestDmMessages('abc', dm1.dmId, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmMessages('abc', dm1.dmId, 0)).toStrictEqual(403);
   });
 
   test('Correct Return', () => {
@@ -292,7 +292,7 @@ describe('Dm List Tests', () => {
 
   test('Error Returns', () => {
     // user doesnt exist
-    expect(requestDmList('abc')).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmList('abc')).toStrictEqual(403);
   });
 
   test('Correct Returns', () => {
