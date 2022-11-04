@@ -33,10 +33,6 @@ export function requestClear() {
   return requestHelper('DELETE', '/clear/v1', {});
 }
 
-export function requestWipe() {
-  return requestHelper('DELETE', '/wipe/v1', {});
-}
-
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
 }
@@ -86,7 +82,7 @@ export function requestUserProfile (token: string, uId: number) {
 }
 
 export function requestDmCreate(token: string, uIds: number[]) {
-  return requestHelper('POST', '/dm/create/v1', { token, uIds });
+  return requestHelper('POST', '/dm/create/v2', { uIds }, token);
 }
 
 export function requestMessageSend(token: string, channelId: number, message: string) {

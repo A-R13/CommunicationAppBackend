@@ -26,9 +26,9 @@ describe(('DM Create tests'), () => {
   });
 
   test(('Error returns'), () => {
-    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId, 4])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate(user0.token, [user1.authUserId, user1.authUserId])).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmCreate('token1', [user1.authUserId, user2.authUserId])).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId, 4])).toStrictEqual(400);
+    expect(requestDmCreate(user0.token, [user1.authUserId, user1.authUserId])).toStrictEqual(400);
+    expect(requestDmCreate('token1', [user1.authUserId, user2.authUserId])).toStrictEqual(403);
   });
 
   test(('Correct returns'), () => {

@@ -15,7 +15,7 @@ import {
  * @returns { {dmId: number} } - The dmId of the newly created dm
  */
 
-export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {error: string} {
+export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {error: string} {
   const data = getData();
 
   const user: userType = getToken(token);
@@ -25,17 +25,17 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
   uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
 
   if (JSON.stringify(uIdArray) !== JSON.stringify(uIds)) {
-    return { error: 'A uId in the input is not valid' };
+    throw HTTPError(400, 'Error: A uId in the input is not valid.');
   }
 
   const uIdset = Array.from(new Set(uIdArray));
 
   if (uIdset.length !== uIds.length) {
-    return { error: "There are duplicate uId's in the input uIds" };
+    throw HTTPError(400, "Error: There are duplicate uId's in the input uIds.");
   }
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does no t exist!`);
   }
 
   const length = data.dms.length;
