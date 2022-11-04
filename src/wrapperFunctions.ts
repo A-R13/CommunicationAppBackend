@@ -20,10 +20,6 @@ export function requestClear() {
   return requestHelper('DELETE', '/clear/v1', {});
 }
 
-export function requestWipe() {
-  return requestHelper('DELETE', '/wipe/v1', {});
-}
-
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
 }
