@@ -53,12 +53,12 @@ export function userProfileV2 (token : string, uId : number) {
  * @returns {Array of objects}
  */
 
-export function usersAllV1 (token: string) {
+export function usersAllV2 (token: string) {
   const data = getData();
   const user = getToken(token);
 
   if (user === undefined) {
-    return { error: `The inputted token '${token}' is invalid` };
+    throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
   }
   const userArray = data.users;
   // modifies stored users array to only return what's needed

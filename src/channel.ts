@@ -50,26 +50,26 @@ export function channelDetailsV2(token : string, channelId : number) {
  * @returns does not return anything
  */
 
-export function channelJoinV2 (token: string, channelId: number) {
+export function channelJoinV3 (token: string, channelId: number) {
   const data = getData();
 
   const user = getToken(token);
   const channel = getChannel(channelId);
 
   if (!channel) {
-    return { error: `${channelId} does not refer to a valid channel ` };
+    throw HTTPError(400,`Error: '${channelId}' does not refer to a valid channel`);
   }
 
   if (user === undefined) {
-    return { error: `${token} is invalid` };
+    throw HTTPError(403, `Erorr: '${token}' is invalid`);
   }
 
   if (channel.allMembers.find(a => a.uId === user.authUserId)) {
-    return { error: `${token} is already a member of the channel` };
+    throw HTTPError(400, `Error: '${token}' is already a member of the channel`);
   }
 
   if (channel.isPublic === false && data.users[0] !== user) { // User 0 is a global owner by default, thus can join any channel
-    return { error: `${channelId} is private, you cannot join this channel` };
+    throw HTTPError(403,`Error: '${channelId}' is private, you cannot join this channel`);
   }
 
   channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });

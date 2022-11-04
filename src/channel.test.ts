@@ -255,16 +255,16 @@ describe('channelJoin tests', () => {
 
   test('error returns', () => {
     // invalid channel
-    expect(requestChannelJoin(user1.token, 99)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelJoin(user1.token, 99)).toStrictEqual(400);
 
     // user is already in channel
-    expect(requestChannelJoin(user1.token, channel1.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelJoin(user1.token, channel1.channelId)).toStrictEqual(400);
 
     // channel is private and user is not already a channel member or a global owner
-    expect(requestChannelJoin(user2.token, channel1.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelJoin(user2.token, channel1.channelId)).toStrictEqual(403);
 
     // invalid user
-    expect(requestChannelJoin('abcde', channel1.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelJoin('abcde', channel1.channelId)).toStrictEqual(403);
   });
 
   test('Correct Returns', () => {

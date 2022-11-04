@@ -378,24 +378,24 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
  * @returns {}
  */
 
-export function dmLeaveV1 (token: string, dmId: number) {
+export function dmLeaveV2 (token: string, dmId: number) {
   const data = getData();
   const userToken = getToken(token);
   const checkInDm: dmType = getDm(dmId);
   // invalid token
   if (userToken === undefined) {
-    return { error: `Inputted token '${token}' is invalid` };
+    throw HTTPError(403, 'Error: User token does not exist!');
   }
-  // nvalid dmID
+  // Invalid dmID
   if (checkInDm === undefined) {
-    return { error: 'Dm ID not found' };
+    throw HTTPError(400 ,'Error: DmId is not valid!');
   }
 
   const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInDm === undefined) {
-    return { error: 'Inputted user is not a member of this DM' };
+    throw HTTPError(403, 'Error: User is not a member of the dm');
   } else {
     data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
@@ -413,13 +413,13 @@ export function dmLeaveV1 (token: string, dmId: number) {
  * @returns {}
  */
 
-export function messageRemoveV1 (token: string, messageId: number) {
+export function messageRemoveV2 (token: string, messageId: number) {
   const data = getData();
   const userToken = getToken(token);
 
   // checks if token is valid
   if (userToken === undefined) {
-    return { error: 'Token is invalid' };
+    throw HTTPError(403, 'Error, User token does not exist!');
   }
 
   // check if valid messages
@@ -428,14 +428,12 @@ export function messageRemoveV1 (token: string, messageId: number) {
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    return { error: 'Channel/Dm is invalid' };
+    throw HTTPError(400, 'Error: Message does not exist in channel/dm');
   }
 
   // checks if it is owner and same user
   if (CheckMessageUser(userToken.authUserId, messageId) === false) {
-    return {
-      error: 'User is not an owner or user is not the creator of the message'
-    };
+    throw HTTPError(403, 'Error: User is not an owner or user is not the creator of the message');
   }
 
   // In dms

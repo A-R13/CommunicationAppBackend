@@ -66,7 +66,7 @@ export function requestChannelMessages(token : string, channelId : number, start
 }
 
 export function requestChannelJoin(token : string, channelId: number) {
-  return requestHelper('POST', '/channel/join/v2', { token, channelId });
+  return requestHelper('POST', '/channel/join/v3', { channelId }, token);
 }
 
 export function requestChannelInvite(token : string, channelId: number, uId: number) {
@@ -114,7 +114,7 @@ export function requestMessageEdit(token: string, messageId: number, message: st
 }
 
 export function requestUsersAll(token: string) {
-  return requestHelper('GET', '/users/all/v1', { token });
+  return requestHelper('GET', '/users/all/v2', { }, token);
 }
 
 export function requestAddOwner(token: string, channelId: number, uId: number) {
@@ -126,7 +126,7 @@ export function requestMessageSendDm(token: string, dmId: number, message: strin
 }
 
 export function requestDmLeave(token: string, dmId: number) {
-  return requestHelper('POST', '/dm/leave/v1', { token, dmId });
+  return requestHelper('POST', '/dm/leave/v2', { dmId }, token);
 }
 
 export function requestRemoveOwner(token: string, channelId: number, uId: number) {
@@ -142,5 +142,5 @@ export function requestUserSetEmail(token: string, email: string) {
 }
 
 export function requestMessageRemove(token: string, messageId: number) {
-  return requestHelper('DELETE', '/message/remove/v1', { token, messageId });
+  return requestHelper('DELETE', '/message/remove/v2', { messageId }, token);
 }

@@ -490,11 +490,11 @@ describe('dmLeave tests', () => {
 
   test('Error returns', () => {
     // invalid dmId
-    expect(requestDmLeave(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmLeave(user0.token, 99)).toStrictEqual(400);
     // user is not a member of the DM
-    expect(requestDmLeave(user3.token, dm0.dmId));
+    expect(requestDmLeave(user3.token, dm0.dmId)).toStrictEqual(403)
     // invalid token
-    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual(403)
   });
 
   test('remove member', () => {
@@ -569,17 +569,17 @@ describe('message remove tests', () => {
   test('Error returns', () => {
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     // invalid token
-    expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageRemove('INVALIDTOKEN', msg1.messageId)).toStrictEqual(403);
     // invalid messageId
-    expect(requestMessageRemove(user0.token, 99)).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageRemove(user0.token, 99)).toStrictEqual(400);
     // if user is not the original sender of the message
-    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual(403);
   });
 
   test('User with no owner permissions', () => {
     const msg1 = requestMessageSend(user0.token, channel1.channelId, 'Message One');
     requestChannelJoin(user1.token, channel1.channelId);
-    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageRemove(user1.token, msg1.messageId)).toStrictEqual(403);
   });
 
   test('Correct returns', () => {

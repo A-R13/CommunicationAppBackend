@@ -123,7 +123,7 @@ describe('usersAllv1 tests', () => {
   });
 
   test('Error return', () => {
-    expect(requestUsersAll('abcd')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUsersAll('abcd')).toStrictEqual(403);
   });
 
   test('show user details when given a valid token', () => {
