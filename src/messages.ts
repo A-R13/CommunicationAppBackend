@@ -254,14 +254,14 @@ export function dmMessagesV1 (token: string, dmId: number, start: number): { mes
   if ((start + 50) > dm.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
-      messages: dm.messages.slice(start, dm.messages.length),
+      messages: dm.messages.slice(0, dm.messages.length),
       start: start,
       end: -1,
     };
   } else {
     return {
       // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
-      messages: dm.messages.slice(start, (start + 50)),
+      messages: dm.messages.slice(0, (start + 50)),
       start: start,
       end: (start + 50),
     };
@@ -352,7 +352,7 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
 
   for (const dm of data.dms) {
     if (dm.dmId === checkDM.dmId) {
-      dm.messages.push({
+      dm.messages.unshift({
         messageId: messageid,
         uId: checkToken.authUserId,
         message: message,

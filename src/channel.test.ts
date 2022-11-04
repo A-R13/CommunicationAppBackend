@@ -1,7 +1,7 @@
 import { newUser, newChannel } from './other';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelMessages, requestChannelJoin,
-  requestChannelInvite, requestChannelLeave, requestAddOwner, requestRemoveOwner, requestChannelsList
+  requestChannelInvite, requestChannelLeave, requestAddOwner, requestRemoveOwner, requestChannelsList, requestMessageSend
 } from './wrapperFunctions';
 
 requestClear();
@@ -39,9 +39,64 @@ describe('Channel Messages tests', () => {
     expect(requestChannelMessages('abc', channel1.channelId, 0)).toStrictEqual({ error: expect.any(String) });
   });
 
-  test('Correct Return', () => {
+  test('Correct Return with no messages', () => {
     // start is 0, should return empty messages array.
     expect(requestChannelMessages(user1.token, channel1.channelId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
+  });
+
+  test('Correct Return with 2 messages', () => {
+    requestMessageSend(user2.token, channel2.channelId, 'Message 0');
+    requestMessageSend(user2.token, channel2.channelId, 'Message 1');
+
+    // start is 0, messages array should have 2 entires.
+    expect(requestChannelMessages(user2.token, channel2.channelId, 0)).toStrictEqual({
+      start: 0,
+      end: -1,
+      messages: [
+        {
+          messageId: expect.any(Number),
+          uId: user2.authUserId,
+          message: 'Message 1',
+          timeSent: expect.any(Number),
+        },
+        {
+          messageId: expect.any(Number),
+          uId: user2.authUserId,
+          message: 'Message 0',
+          timeSent: expect.any(Number),
+        }
+      ]
+    });
+  });
+
+  test('Correct Return with 53 messages', () => {
+    for (let i = 0; i < 53; i++) {
+      requestMessageSend(user2.token, channel2.channelId, `Message ${i}`);
+    }
+
+    expect(requestChannelMessages(user2.token, channel2.channelId, 2).start).toStrictEqual(2);
+    expect(requestChannelMessages(user2.token, channel2.channelId, 2).end).toStrictEqual(52);
+
+    expect(requestChannelMessages(user2.token, channel2.channelId, 2).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user2.authUserId,
+      message: 'Message 5',
+      timeSent: expect.any(Number),
+    });
+
+    expect(requestChannelMessages(user2.token, channel2.channelId, 2).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user2.authUserId,
+      message: 'Message 51',
+      timeSent: expect.any(Number),
+    });
+
+    expect(requestChannelMessages(user2.token, channel2.channelId, 2).messages).not.toContain({
+      messageId: expect.any(Number),
+      uId: user2.authUserId,
+      message: 'Message 0',
+      timeSent: expect.any(Number),
+    });
   });
 });
 

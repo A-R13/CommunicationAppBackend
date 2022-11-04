@@ -155,7 +155,6 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
 
 export function channelMessagesV2 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
   const userToken = getToken(token);
-  // const userId = userToken.authUserId;
   const channel: channelType = getChannel(channelId);
 
   if (channel === undefined) {
@@ -180,14 +179,14 @@ export function channelMessagesV2 (token: string, channelId: number, start: numb
   if ((start + 50) > channel.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
-      messages: channel.messages.slice(start, channel.messages.length),
+      messages: channel.messages.slice(0, channel.messages.length),
       start: start,
       end: -1,
     };
   } else {
     return {
       // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
-      messages: channel.messages.slice(start, (start + 50)),
+      messages: channel.messages.slice(0, (start + 50)),
       start: start,
       end: (start + 50),
     };

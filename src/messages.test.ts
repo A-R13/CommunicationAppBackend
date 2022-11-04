@@ -170,8 +170,61 @@ describe('Dm Messages tests', () => {
   test('Correct Return', () => {
     // start is 0, should return empty messages array.
     expect(requestDmMessages(user1.token, dm1.dmId, 0)).toStrictEqual({ messages: [], start: 0, end: -1 });
+  });
 
-    // Add more tests when dm message send is done.
+  test('Correct Return with 2 messages', () => {
+    requestMessageSendDm(user0.token, dm0.dmId, 'Message 0');
+    requestMessageSendDm(user0.token, dm0.dmId, 'Message 1');
+
+    // start is 0, messages array should have 2 entires.
+    expect(requestDmMessages(user0.token, dm0.dmId, 0)).toStrictEqual({
+      start: 0,
+      end: -1,
+      messages: [
+        {
+          messageId: expect.any(Number),
+          uId: user0.authUserId,
+          message: 'Message 1',
+          timeSent: expect.any(Number),
+        },
+        {
+          messageId: expect.any(Number),
+          uId: user0.authUserId,
+          message: 'Message 0',
+          timeSent: expect.any(Number),
+        }
+      ]
+    });
+  });
+
+  test('Correct Return with 54 messages', () => {
+    for (let i = 0; i < 54; i++) {
+      requestMessageSendDm(user0.token, dm0.dmId, `Message ${i}`);
+    }
+
+    expect(requestDmMessages(user0.token, dm0.dmId, 3).start).toStrictEqual(3);
+    expect(requestDmMessages(user0.token, dm0.dmId, 3).end).toStrictEqual(53);
+
+    expect(requestDmMessages(user0.token, dm0.dmId, 3).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user0.authUserId,
+      message: 'Message 5',
+      timeSent: expect.any(Number),
+    });
+
+    expect(requestDmMessages(user0.token, dm0.dmId, 2).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user0.authUserId,
+      message: 'Message 52',
+      timeSent: expect.any(Number),
+    });
+
+    expect(requestDmMessages(user0.token, dm0.dmId, 2).messages).not.toContain({
+      messageId: expect.any(Number),
+      uId: user0.authUserId,
+      message: 'Message 1',
+      timeSent: expect.any(Number),
+    });
   });
 });
 
@@ -358,16 +411,16 @@ describe('Message Edit', () => {
     expect(requestDmMessages(user0.token, dm0.dmId, 0)).toStrictEqual({
       messages: [
         {
-          message: 'Random text',
-          messageId: msg2.messageId,
-          timeSent: expect.any(Number),
-          uId: 0,
-        },
-        {
           message: 'RANDOM MESSAGE BY SECOND USER.',
           messageId: msg3.messageId,
           timeSent: expect.any(Number),
           uId: 1,
+        },
+        {
+          message: 'Random text',
+          messageId: msg2.messageId,
+          timeSent: expect.any(Number),
+          uId: 0,
         }
       ],
       start: 0,

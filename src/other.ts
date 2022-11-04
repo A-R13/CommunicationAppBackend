@@ -99,16 +99,6 @@ export function getChannel(channelId: number) {
 }
 
 /**
- * <Description: Returns the object in users array which corresponds with inputted authUserId. >
- * @param {number} authUserId
- * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
- */
-export function getAuthUserId(authUserId: number) {
-  const data = getData();
-  return data.users.find(a => a.authUserId === authUserId);
-}
-
-/**
  * <Description: Returns the object in users array which corresponds with inputted uId. >
  * @param {number} uId
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
