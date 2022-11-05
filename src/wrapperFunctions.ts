@@ -98,7 +98,7 @@ export function requestDmMessages(token : string, dmId : number, start: number) 
 }
 
 export function requestDmDetails(token: string, dmId: number) {
-  return requestHelper('GET', '/dm/details/v1', { token, dmId });
+  return requestHelper('GET', '/dm/details/v2', { dmId }, token);
 }
 
 export function requestDmList(token: string) {
@@ -122,7 +122,7 @@ export function requestAddOwner(token: string, channelId: number, uId: number) {
 }
 
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
-  return requestHelper('POST', '/message/senddm/v1', { token, dmId, message });
+  return requestHelper('POST', '/message/senddm/v2', {dmId, message }, token);
 }
 
 export function requestDmLeave(token: string, dmId: number) {

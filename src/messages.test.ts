@@ -260,15 +260,15 @@ describe('Dm details tests', () => {
   });
 
   test('Error (Invalid token)', () => {
-    expect(requestDmDetails('invalid Token', dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmDetails('invalid Token', dm0.dmId)).toStrictEqual(403);
   });
 
   test('Error (Invalid dmId)', () => {
-    expect(requestDmDetails(user0.token, 67)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmDetails(user0.token, 67)).toStrictEqual(400);
   });
 
   test('Error (user is not member of DM)', () => {
-    expect(requestDmDetails(user2.token, dm0.dmId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmDetails(user2.token, dm0.dmId)).toStrictEqual(403);
   });
 
   test('Successful return', () => {
@@ -463,19 +463,19 @@ describe('Message Send Dm Tests', () => {
   });
 
   test(('Error returns (Invalid Message Length)'), () => {
-    expect(requestMessageSendDm(user0.token, dm0.dmId, '')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSendDm(user0.token, dm0.dmId, '')).toStrictEqual(400);
   });
 
   test(('Error returns (Invalid user token)'), () => {
-    expect(requestMessageSendDm('Invalid Token', dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSendDm('Invalid Token', dm0.dmId, 'Test Message')).toStrictEqual(403);
   });
 
   test(('Error returns (Invalid DmId)'), () => {
-    expect(requestMessageSendDm(user0.token, 1888, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSendDm(user0.token, 1888, 'Test Message')).toStrictEqual(400);
   });
 
   test(('Error returns (token refers to user that is not a member of Dm)'), () => {
-    expect(requestMessageSendDm(user2.token, dm0.dmId, 'Test Message')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageSendDm(user2.token, dm0.dmId, 'Test Message')).toStrictEqual(403);
   });
 
   test(('Succesful return'), () => {
@@ -563,9 +563,7 @@ describe('dmLeave tests', () => {
 
   test('if user is not in dm anymore', () => {
     requestDmLeave(user0.token, dm0.dmId);
-    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestDmDetails(user0.token, dm0.dmId)).toStrictEqual(403);
   });
 });
 
