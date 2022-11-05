@@ -124,13 +124,13 @@ describe('Channel details testing', () => {
 
   test('Error testing', () => {
     // Channel ID is invalid
-    expect(requestchannelDetails(user1.token, 4)).toStrictEqual({ error: expect.any(String) });
+    expect(requestchannelDetails(user1.token, 4)).toStrictEqual(400);
 
     // authUserID is invalid
-    expect(requestchannelDetails('Randomtoken', channel1.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestchannelDetails('Randomtoken', channel1.channelId)).toStrictEqual(403);
 
     // Channel ID is valid but authUserID is not in the channel
-    expect(requestchannelDetails(user1.token, channel2.channelId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestchannelDetails(user1.token, channel2.channelId)).toStrictEqual(403);
   });
 
   test('Testing base case', () => {

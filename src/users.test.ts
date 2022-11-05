@@ -7,7 +7,7 @@ afterEach(() => {
   requestClear();
 });
 
-describe('Testing for userProfileV2', () => {
+describe('Testing for userProfileV3', () => {
   let user1: newUser;
   let user2: newUser;
   let user3: newUser;
@@ -49,19 +49,19 @@ describe('Testing for userProfileV2', () => {
   });
 
   test('uId doesnt refer to valid user', () => {
-    expect(requestUserProfile(user1.token, 4)).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserProfile(user1.token, 4)).toStrictEqual(400);
   });
 
   test('authUserId is invalid test', () => {
-    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserProfile('randomstring', user1.authUserId)).toStrictEqual(403);
   });
 
   test('uID isnt valid', () => {
-    expect(requestUserProfile(user2.token, 5)).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserProfile(user2.token, 5)).toStrictEqual(400);
   });
 
   test('AuthuserId is invalid', () => {
-    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual(403);
   });
 });
 

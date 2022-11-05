@@ -12,19 +12,19 @@ import { channelType, userShort, message, getChannel, getUId, getToken } from '.
  * allMembers: [{uId, email, nameFirst, nameLast, handleStr}]}
  */
 
-export function channelDetailsV2(token : string, channelId : number) {
+export function channelDetailsV3(token : string, channelId : number) {
   const data = getData();
   let checkInChannel = false;
 
   const userToken = getToken(token);
   // checks if token is valid
   if (userToken === undefined) {
-    return { error: 'Invalid Token' };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   // checks if channel is valid and if user is in channel
   if (getChannel(channelId) === undefined) {
-    return { error: 'Channel doesnt exit' };
+    throw HTTPError(400, `Error: Channel Doesnt Exist!`);
   } else {
     if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
       checkInChannel = true;
@@ -32,7 +32,7 @@ export function channelDetailsV2(token : string, channelId : number) {
   }
 
   if (checkInChannel === false) {
-    return { error: 'User isnt in channel' };
+    throw HTTPError(403, `Error: User is not in the channel requested!`);
   }
 
   return {

@@ -7,11 +7,11 @@ import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
-import { channelDetailsV2, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
+import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV1, dmDetailsV1, dmListV2, messageEditV1, messageSendDmV1, dmLeaveV2, messageRemoveV2 } from './messages';
-import { userProfileV2, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
+import { userProfileV3, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
 
 import { clearV1 } from './other';
 
@@ -81,18 +81,24 @@ app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
   res.json(channelsListAllV2(token));
 });
 
-app.get('/user/profile/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const uId = req.query.uId as string;
-
-  res.json(userProfileV2(token, parseInt(uId)));
+app.get('/user/profile/v3', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const uId = req.query.uId as string;
+    return res.json(userProfileV3(token, parseInt(uId)));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/channel/details/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const channelId = req.query.channelId as string;
-
-  res.json(channelDetailsV2(token, parseInt(channelId)));
+app.get('/channel/details/v3', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const channelId = req.query.channelId as string;
+    return res.json(channelDetailsV3(token, parseInt(channelId)));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/channel/messages/v3', (req: Request, res: Response, next) => {

@@ -11,7 +11,7 @@ import { getToken } from './other';
  * @returns {user}
  */
 
-export function userProfileV2 (token : string, uId : number) {
+export function userProfileV3 (token : string, uId : number) {
   const data = getData();
   let checkToken = false;
   let checkUId = false;
@@ -40,8 +40,12 @@ export function userProfileV2 (token : string, uId : number) {
     }
   }
 
-  if (checkToken === false || checkUId === false) {
-    return { error: 'Token is invalid or the uId isnt correct' };
+  if (checkToken === false) {
+    throw HTTPError(403, `Erorr: '${token}' is invalid`);
+  }
+  
+  if (checkUId === false) {
+    throw HTTPError(400, `Erorr: uID is not correct!`);
   }
 }
 

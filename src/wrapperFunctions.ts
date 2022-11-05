@@ -58,7 +58,7 @@ export function requestChannelsList (token: string) {
 }
 
 export function requestchannelDetails(token : string, channelId : number) {
-  return requestHelper('GET', '/channel/details/v2', { token, channelId });
+  return requestHelper('GET', '/channel/details/v3', { channelId }, token);
 }
 
 export function requestChannelMessages(token : string, channelId : number, start: number) {
@@ -78,7 +78,7 @@ export function requestChannelLeave(token : string, channelId: number) {
 }
 
 export function requestUserProfile (token: string, uId: number) {
-  return requestHelper('GET', '/user/profile/v2', { token, uId });
+  return requestHelper('GET', '/user/profile/v3', { uId }, token);
 }
 
 export function requestDmCreate(token: string, uIds: number[]) {
