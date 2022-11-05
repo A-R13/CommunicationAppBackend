@@ -63,6 +63,10 @@ describe('Testing for userProfileV3', () => {
   test('AuthuserId is invalid', () => {
     expect(requestUserProfile('Randomstring', user2.authUserId)).toStrictEqual(403);
   });
+
+  test('uID isnt valid', () => {
+    expect(requestUserProfile(user2.token, 5)).toStrictEqual(400);
+  });
 });
 
 describe('Testing for userSetNameV1', () => {

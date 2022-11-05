@@ -635,6 +635,7 @@ describe('Channel leave function', () => {
   let nicole: newUser;
   let geoffrey: newUser;
   let channel: newChannel;
+  let channel2: newChannel;
 
   beforeEach(() => {
     requestClear();
@@ -644,9 +645,11 @@ describe('Channel leave function', () => {
   });
 
   test('Errors', () => {
+    channel2 = requestChannelsCreate(nicole.token, 'CHANNEL2', true);
     expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual(403);
     expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual(403);
     expect(requestChannelLeave(nicole.token, 4)).toStrictEqual(400);
+    expect(requestChannelLeave(geoffrey.token, channel2.channelId)).toStrictEqual(403);
   });
 
   test('Works for one person in a channel. return error as user not in channel anymore', () => {

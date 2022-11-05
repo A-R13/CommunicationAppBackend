@@ -18,16 +18,16 @@ export function userProfileV3 (token : string, uId : number) {
 
   const userToken = getToken(token);
 
-  if (userToken !== undefined) {
-    checkToken = true;
+  if (userToken === undefined) {
+    throw HTTPError(403, `Erorr: '${token}' is invalid`);
   }
 
-  if (data.users.find(users => users.authUserId === uId)) {
-    checkUId = true;
+  if (data.users.find(users => users.authUserId === uId) === undefined) {
+    throw HTTPError(400, 'Erorr: uID is not correct!');
   }
 
   for (const tokenFinder of data.users) {
-    if (checkToken === true && checkUId === true && uId === tokenFinder.authUserId) {
+    if (uId === tokenFinder.authUserId) {
       return {
         user: {
           uId: tokenFinder.authUserId,
@@ -39,15 +39,7 @@ export function userProfileV3 (token : string, uId : number) {
       };
     }
   }
-
-  if (checkToken === false) {
-    throw HTTPError(403, `Erorr: '${token}' is invalid`);
-  }
-
-  if (checkUId === false) {
-    throw HTTPError(400, 'Erorr: uID is not correct!');
-  }
-}
+} 
 
 /**
  * <Description: Lists all users and their associated details>

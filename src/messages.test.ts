@@ -427,6 +427,25 @@ describe('Message Edit', () => {
       end: -1
     });
   });
+
+  test(('Correct returns, for dms'), () => {
+    const msg2 = requestMessageSendDm(user0.token, 0, 'Random text');
+    const msg3 = requestMessageSendDm(user1.token, 0, 'Test Message 3');
+
+    requestMessageEdit(user1.token, msg3.messageId, '');
+    expect(requestDmMessages(user0.token, dm0.dmId, 0)).toStrictEqual({
+      messages: [
+        {
+          message: 'Random text',
+          messageId: msg2.messageId,
+          timeSent: expect.any(Number),
+          uId: 0,
+        }
+      ],
+      start: 0,
+      end: -1
+    });
+  });
 });
 
 describe('Message Send Dm Tests', () => {
