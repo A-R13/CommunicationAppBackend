@@ -6,7 +6,7 @@ import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
-import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
+import { authRegisterV3, authLoginV2, authLogoutV2 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV2, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
@@ -56,11 +56,15 @@ app.post('/auth/login/v2', (req: Request, res: Response, next) => {
   saveData();
 });
 
-app.post('/auth/register/v2', (req: Request, res: Response, next) => {
-  const { email, password, nameFirst, nameLast } = req.body;
+app.post('/auth/register/v3', (req: Request, res: Response, next) => {
+  try {
+    const { email, password, nameFirst, nameLast } = req.body;
+    saveData();
+    return res.json(authRegisterV3(email, password, nameFirst, nameLast));
 
-  res.json(authRegisterV2(email, password, nameFirst, nameLast));
-  saveData();
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post('/channels/create/v3', (req: Request, res: Response, next) => {
@@ -200,11 +204,15 @@ app.put('/message/edit/v2', (req: Request, res: Response, next) => {
   }
 });
 
-app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
-  const { token } = req.body;
-
-  res.json(authLogoutV1(token));
-  saveData();
+app.post('/auth/logout/v2', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    saveData();
+    
+    return res.json(authLogoutV2(token));
+  } catch(err){
+    next(err);
+  }
 });
 
 app.delete('/dm/remove/v2', (req: Request, res: Response, next) => {

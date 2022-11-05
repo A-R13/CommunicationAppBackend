@@ -34,7 +34,7 @@ export function requestClear() {
 }
 
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
-  return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
+  return requestHelper('POST', '/auth/register/v3', { email, password, nameFirst, nameLast });
 }
 
 export function requestAuthLogin(email: string, password: string) {
@@ -42,7 +42,7 @@ export function requestAuthLogin(email: string, password: string) {
 }
 
 export function requestAuthLogout(token: string) {
-  return requestHelper('POST', '/auth/logout/v1', { token });
+  return requestHelper('POST', '/auth/logout/v2', {} ,token);
 }
 
 export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
