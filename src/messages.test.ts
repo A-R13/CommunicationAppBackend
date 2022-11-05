@@ -115,11 +115,11 @@ describe(('DM remove tests'), () => {
 
   test(('Error returns'), () => {
     requestDmCreate(user0.token, [user1.authUserId, user2.authUserId, user3.authUserId]);
-    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmRemove(user0.token, 1)).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmRemove(user1.token, 0)).toStrictEqual({ error: expect.any(String) });
-    expect(requestDmRemove(user2.token, 0)).toStrictEqual({ error: expect.any(String) });
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual(403);
+    expect(requestDmRemove(user0.token, 1)).toStrictEqual(400);
+    expect(requestDmRemove('RANDOM TOKEN', 0)).toStrictEqual(403);
+    expect(requestDmRemove(user1.token, 0)).toStrictEqual(403);
+    expect(requestDmRemove(user2.token, 0)).toStrictEqual(403);
     // Do one for dm leave
   });
 
@@ -330,18 +330,18 @@ describe('Message Edit', () => {
   test(('Error returns'), () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
     const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Sending Dm');
-    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRECT MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user1.token, msg1.messageId, 'NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit('RANDOMTOKEN ', msg2.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRCET MESSAGE ID')).toStrictEqual({ error: expect.any(String) });
-    expect(requestMessageEdit(user1.token, msg2.messageId, ' NOT THE CORRECT USER')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit('RANDOMTOKEN ', msg1.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual(403);
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRECT MESSAGE ID')).toStrictEqual(400);
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'NOT THE CORRECT USER')).toStrictEqual(403);
+    expect(requestMessageEdit('RANDOMTOKEN ', msg2.messageId, 'NOT THE CORRECT TOKEN')).toStrictEqual(403);
+    expect(requestMessageEdit(user0.token, 0, 'NOT THE CORRCET MESSAGE ID')).toStrictEqual(400);
+    expect(requestMessageEdit(user1.token, msg2.messageId, ' NOT THE CORRECT USER')).toStrictEqual(403);
   });
 
   test(('error, no owner perms and change other messages'), () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Test Message 1');
     requestChannelJoin(user1.token, channel0.channelId);
-    expect(requestMessageEdit(user1.token, msg1.messageId, 'Change message when not owner')).toStrictEqual({ error: expect.any(String) });
+    expect(requestMessageEdit(user1.token, msg1.messageId, 'Change message when not owner')).toStrictEqual(403);
   });
 
   test(('Correct returns'), () => {
@@ -492,9 +492,9 @@ describe('dmLeave tests', () => {
     // invalid dmId
     expect(requestDmLeave(user0.token, 99)).toStrictEqual(400);
     // user is not a member of the DM
-    expect(requestDmLeave(user3.token, dm0.dmId)).toStrictEqual(403)
+    expect(requestDmLeave(user3.token, dm0.dmId)).toStrictEqual(403);
     // invalid token
-    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual(403)
+    expect(requestDmLeave('RandomToken', dm0.dmId)).toStrictEqual(403);
   });
 
   test('remove member', () => {

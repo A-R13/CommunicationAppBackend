@@ -43,9 +43,9 @@ export function userProfileV3 (token : string, uId : number) {
   if (checkToken === false) {
     throw HTTPError(403, `Erorr: '${token}' is invalid`);
   }
-  
+
   if (checkUId === false) {
-    throw HTTPError(400, `Erorr: uID is not correct!`);
+    throw HTTPError(400, 'Erorr: uID is not correct!');
   }
 }
 

@@ -644,16 +644,14 @@ describe('Channel leave function', () => {
   });
 
   test('Errors', () => {
-    expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual({ error: expect.any(String) });
-    expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual({ error: expect.any(String) });
-    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelLeave('RANDOMSTRING', channel.channelId)).toStrictEqual(403);
+    expect(requestChannelLeave('RANDOMSTRING', 3)).toStrictEqual(403);
+    expect(requestChannelLeave(nicole.token, 4)).toStrictEqual(400);
   });
 
   test('Works for one person in a channel. return error as user not in channel anymore', () => {
     requestChannelLeave(nicole.token, channel.channelId);
-    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(403);
   });
 
   test('Works for two person in a channel, not a owner', () => {

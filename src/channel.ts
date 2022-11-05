@@ -24,7 +24,7 @@ export function channelDetailsV3(token : string, channelId : number) {
 
   // checks if channel is valid and if user is in channel
   if (getChannel(channelId) === undefined) {
-    throw HTTPError(400, `Error: Channel Doesnt Exist!`);
+    throw HTTPError(400, 'Error: Channel Doesnt Exist!');
   } else {
     if (data.channels[channelId].allMembers.find(user => user.uId === userToken.authUserId)) {
       checkInChannel = true;
@@ -32,7 +32,7 @@ export function channelDetailsV3(token : string, channelId : number) {
   }
 
   if (checkInChannel === false) {
-    throw HTTPError(403, `Error: User is not in the channel requested!`);
+    throw HTTPError(403, 'Error: User is not in the channel requested!');
   }
 
   return {
@@ -57,7 +57,7 @@ export function channelJoinV3 (token: string, channelId: number) {
   const channel = getChannel(channelId);
 
   if (!channel) {
-    throw HTTPError(400,`Error: '${channelId}' does not refer to a valid channel`);
+    throw HTTPError(400, `Error: '${channelId}' does not refer to a valid channel`);
   }
 
   if (user === undefined) {
@@ -69,7 +69,7 @@ export function channelJoinV3 (token: string, channelId: number) {
   }
 
   if (channel.isPublic === false && data.users[0] !== user) { // User 0 is a global owner by default, thus can join any channel
-    throw HTTPError(403,`Error: '${channelId}' is private, you cannot join this channel`);
+    throw HTTPError(403, `Error: '${channelId}' is private, you cannot join this channel`);
   }
 
   channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
@@ -314,7 +314,7 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
  * @returns {{}}
  */
 
-export function channelleaveV1(token : string, channelId : number) {
+export function channelleaveV2(token : string, channelId : number) {
   const data = getData();
 
   let checkChannelId = false;
@@ -324,7 +324,7 @@ export function channelleaveV1(token : string, channelId : number) {
 
   // Checks if token is valid
   if (userToken === undefined) {
-    return { error: 'error from invalid token' };
+    throw HTTPError(403, 'Error: The token is undefined');
   }
 
   // Checks if valid channelId and if the user is in the channel
@@ -336,12 +336,16 @@ export function channelleaveV1(token : string, channelId : number) {
     }
   }
   // If not in channel or channel isnt real, return error. Else, remove the member from channel.
-  if (checkChannelId === false || checkInChannel === false) {
-    return { error: 'Error from false channelId or not in channel' };
-  } else {
-    data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
-    data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
+  if (checkChannelId === false) {
+    throw HTTPError(400, 'Error: Channel doesnt exist!');
   }
+
+  if (checkInChannel === false) {
+    throw HTTPError(403, 'Error: User is not in the requested channel!');
+  }
+
+  data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
+  data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
   // set data and return nothing
   setData(data);
 

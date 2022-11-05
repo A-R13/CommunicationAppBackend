@@ -123,13 +123,17 @@ export function messageSendV2 (token: string, channelId: number, message: string
  * @returns {}
  */
 
-export function messageEditV1(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
+export function messageEditV2(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
   const data = getData();
   const userToken = getToken(token);
 
   // checks if token is valid
-  if (userToken === undefined || message.length > 1000) {
-    return { error: 'Token Is invalid or the message length is > 1000' };
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is invalid');
+  }
+
+  if (message.length > 1000) {
+    throw HTTPError(400, 'Error: Message length cannot be greater than 1000 characters');
   }
 
   // check if valid messages
@@ -138,16 +142,12 @@ export function messageEditV1(token: string, messageId: number, message: string)
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    return {
-      error: 'Message doenst exist in both Dms and Channel'
-    };
+    throw HTTPError(400, 'Error: Dm doesnt exist!');
   }
 
   // checks if it is owner and same user
   if (CheckMessageUser(userToken.authUserId, messageId) === false) {
-    return {
-      error: 'User is not an owner and the original sender'
-    };
+    throw HTTPError(403, 'Error: Not the same user and not an owner!');
   }
 
   // In dms
@@ -179,7 +179,7 @@ export function messageEditV1(token: string, messageId: number, message: string)
  * @returns {} - nothing
  */
 
-export function dmRemoveV1(token : string, dmId: number) {
+export function dmRemoveV2(token : string, dmId: number) {
   const data = getData();
 
   const user = getToken(token);
@@ -187,13 +187,11 @@ export function dmRemoveV1(token : string, dmId: number) {
 
   // checks if token is valid
   if (user === undefined) {
-    return { error: 'Token is invalid' };
+    throw HTTPError(403, 'Error: Token doesnt exist');
   }
   // dm doesnt exist
   if (dm === undefined) {
-    return {
-      error: 'dm doesnt exist'
-    };
+    throw HTTPError(400, 'Error: Dm doesnt exist');
   }
 
   const userIdentity = user.authUserId;
@@ -204,9 +202,7 @@ export function dmRemoveV1(token : string, dmId: number) {
 
   // checks if the user is an owner.
   if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
-    return {
-      error: 'User isnt an owner'
-    };
+    throw HTTPError(403, 'Error: Not an owner');
   }
 
   // deletes the dm
@@ -388,7 +384,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
   }
   // Invalid dmID
   if (checkInDm === undefined) {
-    throw HTTPError(400 ,'Error: DmId is not valid!');
+    throw HTTPError(400, 'Error: DmId is not valid!');
   }
 
   const userId = userToken.authUserId;

@@ -7,10 +7,10 @@ import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
-import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
+import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV2, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV1, dmDetailsV1, dmListV2, messageEditV1, messageSendDmV1, dmLeaveV2, messageRemoveV2 } from './messages';
+import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV1, dmListV2, messageEditV2, messageSendDmV1, dmLeaveV2, messageRemoveV2 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
 
 import { clearV1 } from './other';
@@ -152,11 +152,16 @@ app.get('/channels/list/v2', (req: Request, res: Response, next) => {
   res.json(channelsListV2(token));
 });
 
-app.post('/channel/leave/v1', (req: Request, res: Response, next) => {
-  const { token, channelId } = req.body;
+app.post('/channel/leave/v2', (req: Request, res: Response, next) => {
+  try {
+    const { channelId } = req.body;
+    const token = req.header('token');
 
-  res.json(channelleaveV1(token, channelId));
-  saveData();
+    saveData();
+    return res.json(channelleaveV2(token, channelId));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post('/dm/create/v2', (req: Request, res: Response, next) => {
@@ -183,11 +188,16 @@ app.post('/message/send/v2', (req: Request, res: Response, next) => {
   }
 });
 
-app.put('/message/edit/v1', (req: Request, res: Response, next) => {
-  const { token, messageId, message } = req.body;
+app.put('/message/edit/v2', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const { messageId, message } = req.body;
+    saveData();
 
-  res.json(messageEditV1(token, messageId, message));
-  saveData();
+    return res.json(messageEditV2(token, messageId, message));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
@@ -197,12 +207,16 @@ app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
   saveData();
 });
 
-app.delete('/dm/remove/v1', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const dmId = req.query.dmId as string;
+app.delete('/dm/remove/v2', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const dmId = req.query.dmId as string;
+    saveData();
 
-  res.json(dmRemoveV1(token, parseInt(dmId)));
-  saveData();
+    return res.json(dmRemoveV2(token, parseInt(dmId)));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/dm/messages/v2', (req: Request, res: Response, next) => {
@@ -293,7 +307,7 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
     saveData();
     return res.json(messageRemoveV2(token, parseInt(messageId)));
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 

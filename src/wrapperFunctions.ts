@@ -74,7 +74,7 @@ export function requestChannelInvite(token : string, channelId: number, uId: num
 }
 
 export function requestChannelLeave(token : string, channelId: number) {
-  return requestHelper('POST', '/channel/leave/v1', { token, channelId });
+  return requestHelper('POST', '/channel/leave/v2', { channelId }, token);
 }
 
 export function requestUserProfile (token: string, uId: number) {
@@ -90,7 +90,7 @@ export function requestMessageSend(token: string, channelId: number, message: st
 }
 
 export function requestDmRemove(token: string, dmId: number) {
-  return requestHelper('DELETE', '/dm/remove/v1', { token, dmId });
+  return requestHelper('DELETE', '/dm/remove/v2', { dmId }, token);
 }
 
 export function requestDmMessages(token : string, dmId : number, start: number) {
@@ -110,7 +110,7 @@ export function requestUserSetName(token: string, nameFirst: string, nameLast: s
 }
 
 export function requestMessageEdit(token: string, messageId: number, message: string) {
-  return requestHelper('PUT', '/message/edit/v1', { token, messageId, message });
+  return requestHelper('PUT', '/message/edit/v2', { messageId, message }, token);
 }
 
 export function requestUsersAll(token: string) {
