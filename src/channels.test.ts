@@ -111,7 +111,7 @@ describe('ChannelsListAll tests', () => {
 
   test('Testing failed channelsListAll (invalid token)', () => {
     requestChannelsCreate(token, 'Channel', false);
-    expect(requestChannelsListAll('InvalidToken')).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelsListAll('InvalidToken')).toEqual(403);
   });
 });
 

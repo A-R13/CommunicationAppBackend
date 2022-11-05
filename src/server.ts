@@ -8,7 +8,7 @@ import errorHandler from 'middleware-http-errors';
 import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV3, authLoginV2, authLogoutV2 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV2, addOwnerV1, removeOwnerV1 } from './channel';
-import { channelsCreateV3, channelsListV2, channelsListAllV2 } from './channels';
+import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV1, dmListV2, messageEditV2, messageSendDmV1, dmLeaveV2, messageRemoveV2 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
@@ -79,10 +79,14 @@ app.post('/channels/create/v3', (req: Request, res: Response, next) => {
   }
 });
 
-app.get('/channels/listall/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
+app.get('/channels/listall/v3', (req: Request, res: Response, next) => {
+  try{
+    const token = req.header('token');
 
-  res.json(channelsListAllV2(token));
+    return res.json(channelsListAllV3(token));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/user/profile/v3', (req: Request, res: Response, next) => {
@@ -208,7 +212,7 @@ app.post('/auth/logout/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     saveData();
-    
+
     return res.json(authLogoutV2(token));
   } catch(err){
     next(err);

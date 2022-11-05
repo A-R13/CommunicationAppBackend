@@ -99,13 +99,13 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-export function channelsListAllV2(token: string): {channels: channelShort[]} | {error: string} {
+export function channelsListAllV3(token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
   // Helper function
   const user = getToken(token);
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   // temporary array for channels
