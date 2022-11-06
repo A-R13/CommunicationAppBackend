@@ -1,61 +1,61 @@
 npm verb cli /import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/bin/node /import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/bin/npm
 npm info using npm@8.19.2
 npm info using node@v18.10.0
-npm timing npm:load:whichnode Completed in 1ms
-npm timing config:load:defaults Completed in 1ms
-npm timing config:load:file:/import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/lib/node_modules/npm/npmrc Completed in 2ms
-npm timing config:load:builtin Completed in 2ms
+npm timing npm:load:whichnode Completed in 0ms
+npm timing config:load:defaults Completed in 2ms
+npm timing config:load:file:/import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/lib/node_modules/npm/npmrc Completed in 15ms
+npm timing config:load:builtin Completed in 15ms
 npm timing config:load:cli Completed in 2ms
 npm timing config:load:env Completed in 0ms
 npm timing config:load:file:/import/cage/2/z5295293/CS1531_22T3/project-automarking/tempstore/.npmrc Completed in 0ms
-npm timing config:load:project Completed in 12ms
+npm timing config:load:project Completed in 5ms
 npm timing config:load:file:/import/cage/2/z5295293/.npmrc Completed in 0ms
-npm timing config:load:user Completed in 1ms
+npm timing config:load:user Completed in 0ms
 npm timing config:load:file:/import/kamen/3/cs1531/.nvm/versions/node/v18.10.0/etc/npmrc Completed in 0ms
-npm timing config:load:global Completed in 0ms
+npm timing config:load:global Completed in 1ms
 npm timing config:load:validate Completed in 0ms
-npm timing config:load:credentials Completed in 1ms
-npm timing config:load:setEnvs Completed in 1ms
-npm timing config:load Completed in 20ms
-npm timing npm:load:configload Completed in 20ms
+npm timing config:load:credentials Completed in 0ms
+npm timing config:load:setEnvs Completed in 0ms
+npm timing config:load Completed in 27ms
+npm timing npm:load:configload Completed in 27ms
 npm timing npm:load:mkdirpcache Completed in 1ms
-npm timing npm:load:mkdirplogs Completed in 0ms
+npm timing npm:load:mkdirplogs Completed in 1ms
 npm verb title npm run test **/?(*.)+(test).ts
 npm verb argv "run" "test" "--loglevel" "verbose" "--testMatch" "**/?(*.)+(test).ts"
-npm timing npm:load:setTitle Completed in 2ms
-npm timing config:load:flatten Completed in 2ms
-npm timing npm:load:display Completed in 4ms
+npm timing npm:load:setTitle Completed in 1ms
+npm timing config:load:flatten Completed in 3ms
+npm timing npm:load:display Completed in 5ms
 npm verb logfile logs-max:10 dir:/import/cage/2/z5295293/.npm/_logs
-npm verb logfile /import/cage/2/z5295293/.npm/_logs/2022-11-04T14_48_19_472Z-debug-0.log
-npm timing npm:load:logFile Completed in 18ms
+npm verb logfile /import/cage/2/z5295293/.npm/_logs/2022-11-06T04_19_28_568Z-debug-0.log
+npm timing npm:load:logFile Completed in 5ms
 npm timing npm:load:timers Completed in 0ms
 npm timing npm:load:configScope Completed in 0ms
-npm timing npm:load Completed in 47ms
+npm timing npm:load Completed in 40ms
 
 > test
 > jest **/?(*.)+(test).ts
 
-npm http fetch GET 200 https://registry.npmjs.org/npm 133ms (cache hit)
+npm http fetch GET 200 https://registry.npmjs.org/npm 39ms (cache hit)
   Invalid testPattern **/?(*.)+(test).ts supplied. Running all tests instead.
   Invalid testPattern **/?(*.)+(test).ts supplied. Running all tests instead.
-PASS src/messages.test.ts (27.66 s)
-PASS src/channel.test.ts (22.73 s)
-PASS src/users.test.ts (11.36 s)
+PASS src/messages.test.ts (32.097 s)
+PASS src/channel.test.ts (27.263 s)
+PASS src/users.test.ts (12.963 s)
 PASS src/auth.test.ts
-PASS src/channels.test.ts
+PASS src/channels.test.ts (5.387 s)
 PASS src/echo.test.ts
 
 Test Suites: 6 passed, 6 total
 Tests:       135 passed, 135 total
 Snapshots:   0 total
-Time:        71.645 s
+Time:        83.797 s
 Ran all test suites.
-npm timing command:run Completed in 72956ms
+npm timing command:run Completed in 85118ms
 npm notice 
 npm notice New patch version of npm available! 8.19.2 -> 8.19.3
 npm notice Changelog: <https://github.com/npm/cli/releases/tag/v8.19.3>
 npm notice Run `npm install -g npm@8.19.3` to update!
 npm notice 
 npm verb exit 0
-npm timing npm Completed in 73010ms
+npm timing npm Completed in 85166ms
 npm info ok 

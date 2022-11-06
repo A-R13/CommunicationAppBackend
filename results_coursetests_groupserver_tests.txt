@@ -198,7 +198,7 @@ httpTests/userTests/test_user_profile_setname.py::testInvalidToken PASSED [ 97%]
 =================================== FAILURES ===================================
 _______________________ testGlobalOwnerMemberCanAddowner _______________________
 
-userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=0, token='76cf4921-9323-4666-af5b-6fe9f7cbe5b0', handleStr='buzzlightyear')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=0, token='50daac07-adbd-4fde-b60e-f2e795a85e46', handleStr='buzzlightyear')
 woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
 ctx = None
 
@@ -229,10 +229,10 @@ httpTests/fakepi/util.py:134: InputError
 {'error': "User with authUserId '0' is not an owner of channel with channelId '[object Object]'!"}
 ______________________ testGlobalOwnerMmberCanRemoveOwner ______________________
 
-userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=0, token='95ab76c5-1d68-4eba-917e-1e766a0d8d9f', handleStr='lordzerg')
-userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='8347d747-fb16-44b4-9b9d-9df80e5eeb9e', handleStr='sheriffwoody')
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=0, token='81513e7e-06ad-48c8-8cf9-d39684c42a52', handleStr='lordzerg')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='2376e214-aed3-4543-b938-f20fffe0b4e5', handleStr='sheriffwoody')
 woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
-userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=2, token='8e5a40ac-cb38-4603-a138-15f53af16df0', handleStr='buzzlightyear')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=2, token='34b879ab-fb07-478d-b096-3b696b77e50c', handleStr='buzzlightyear')
 ctx = None
 
     def testGlobalOwnerMmberCanRemoveOwner(userZerg, userWoody, woodysPublicToybox, userBuzz, ctx):
@@ -264,7 +264,7 @@ httpTests/fakepi/util.py:134: InputError
 {'error': "User with authUserId '0' is not an owner of channel with channelId '[object Object]'!"}
 __________________________ testUnderFiftyMessagesSent __________________________
 
-userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='cf27c9c1-156a-45cc-828e-b723345f5216', handleStr='sheriffwoody')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='bc169b2b-5503-457f-9902-2ce93b2290da', handleStr='sheriffwoody')
 woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
 ctx = None
 
@@ -279,16 +279,16 @@ ctx = None
         assert dmMsgs['start'] == 0
         assert dmMsgs['end'] == -1
 >       assert messageIds[::-1] == [m['messageId'] for m in dmMsgs['messages']]
-E       assert [3, 2403, 4814, 308, 9717, 9361, 9681, 5049, 358, 4747] == [4747, 358, 5049, 9681, 9361, 9717, 308, 4814, 2403, 3]
-E         At index 0 diff: 3 != 4747
+E       assert [2979, 2851, 2824, 5478, 8444, 7949, 5969, 6571, 616, 808] == [808, 616, 6571, 5969, 7949, 8444, 5478, 2824, 2851, 2979]
+E         At index 0 diff: 2979 != 808
 E         Full diff:
-E         - [4747, 358, 5049, 9681, 9361, 9717, 308, 4814, 2403, 3]
-E         + [3, 2403, 4814, 308, 9717, 9361, 9681, 5049, 358, 4747]
+E         - [808, 616, 6571, 5969, 7949, 8444, 5478, 2824, 2851, 2979]
+E         + [2979, 2851, 2824, 5478, 8444, 7949, 5969, 6571, 616, 808]
 
 httpTests/dmTests/test_dm_messages.py:25: AssertionError
 __________________________ testOverFiftyMessagesSent ___________________________
 
-userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='51727a55-6aed-4448-8c5e-bc3d19431a56', handleStr='sheriffwoody')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='242ecf9d-cda6-4fad-a06b-12bc7caf5ed5', handleStr='sheriffwoody')
 woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
 ctx = None
 
@@ -303,109 +303,111 @@ ctx = None
         assert dmMsgs['start'] == 0
         assert dmMsgs['end'] == 50
 >       assert messageIds[0: 50] == [m['messageId'] for m in dmMsgs['messages']]
-E       assert [9675,\n 4382,\n 6455,\n 7891,\n 1086,\n 8324,\n 5734,\n 7048,\n 5028,\n 4582,\n 3824,\n 4818,\n 3346,\n 7986,\n 4466,\n 9888,\n 3225,\n 1089,\n 1312,\n 8752,\n 6648,\n 4858,\n 7325,\n 6684,\n 1294,\n 5109,\n 5510,\n 3378,\n 5359,\n 896,\n 5395,\n 396,\n 7894,\n 820,\n 6571,\n 5570,\n 3670,\n 9511,\n 916,\n 3027,\n 2613,\n 6768,\n 2179,\n 6168,\n 5112,\n 4364,\n 1235,\n 5347,\n 1239,\n 8841] == [1567,\n 8841,\n 1239,\n 5347,\n 1235,\n 4364,\n 5112,\n 6168,\n 2179,\n 6768,\n 2613,\n 3027,\n 916,\n 9511,\n 3670,\n 5570,\n 6571,\n 820,\n 7894,\n 396,\n 5395,\n 896,\n 5359,\n 3378,\n 5510,\n 5109,\n 1294,\n 6684,\n 7325,\n 4858,\n 6648,\n 8752,\n 1312,\n 1089,\n 3225,\n 9888,\n 4466,\n 7986,\n 3346,\n 4818,\n 3824,\n 4582,\n 5028,\n 7048,\n 5734,\n 8324,\n 1086,\n 7891,\n 6455,\n 4382]
-E         At index 0 diff: 9675 != 1567
+E       assert [1249,\n 8016,\n 6109,\n 7910,\n 1174,\n 3789,\n 9672,\n 9552,\n 577,\n 4763,\n 5836,\n 6529,\n 6300,\n 5506,\n 6910,\n 2013,\n 7904,\n 2071,\n 9025,\n 2217,\n 5860,\n 4302,\n 4018,\n 483,\n 15,\n 9370,\n 2704,\n 5458,\n 7964,\n 3031,\n 49,\n 4583,\n 6503,\n 4048,\n 6771,\n 428,\n 8407,\n 3787,\n 4353,\n 6755,\n 2122,\n 3476,\n 6300,\n 2878,\n 5156,\n 4940,\n 4165,\n 7849,\n 6080,\n 4757] == [3202,\n 4757,\n 6080,\n 7849,\n 4165,\n 4940,\n 5156,\n 2878,\n 6300,\n 3476,\n 2122,\n 6755,\n 4353,\n 3787,\n 8407,\n 428,\n 6771,\n 4048,\n 6503,\n 4583,\n 49,\n 3031,\n 7964,\n 5458,\n 2704,\n 9370,\n 15,\n 483,\n 4018,\n 4302,\n 5860,\n 2217,\n 9025,\n 2071,\n 7904,\n 2013,\n 6910,\n 5506,\n 6300,\n 6529,\n 5836,\n 4763,\n 577,\n 9552,\n 9672,\n 3789,\n 1174,\n 7910,\n 6109,\n 8016]
+E         At index 0 diff: 1249 != 3202
 E         Full diff:
 E           [
-E         -  1567,
-E         +  9675,
-E         +  4382,
-E         +  6455,
-E         +  7891,
-E         +  1086,
-E         +  8324,
-E         +  5734,
-E         +  7048,
-E         +  5028,
-E         +  4582,
-E         +  3824,
-E         +  4818,
-E         +  3346,
-E         +  7986,
-E         +  4466,
-E         +  9888,
-E         +  3225,
-E         +  1089,
-E         +  1312,
-E         +  8752,
-E         +  6648,
-E         +  4858,
-E         +  7325,
-E         +  6684,
-E         +  1294,
-E         +  5109,
-E         +  5510,
-E         +  3378,
-E         +  5359,
-E         +  896,
-E         +  5395,
-E         +  396,
-E         +  7894,
-E         +  820,
-E         +  6571,
-E         +  5570,
-E         +  3670,
-E         +  9511,
-E         +  916,
-E         +  3027,
-E         +  2613,
-E         +  6768,
-E         +  2179,
-E         +  6168,
-E         +  5112,
-E         +  4364,
-E         +  1235,
-E         +  5347,
-E         +  1239,
-E            8841,
-E         -  1239,
-E         -  5347,
-E         -  1235,
-E         -  4364,
-E         -  5112,
-E         -  6168,
-E         -  2179,
-E         -  6768,
-E         -  2613,
-E         -  3027,
-E         -  916,
-E         -  9511,
-E         -  3670,
-E         -  5570,
-E         -  6571,
-E         -  820,
-E         -  7894,
-E         -  396,
-E         -  5395,
-E         -  896,
-E         -  5359,
-E         -  3378,
-E         -  5510,
-E         -  5109,
-E         -  1294,
-E         -  6684,
-E         -  7325,
-E         -  4858,
-E         -  6648,
-E         -  8752,
-E         -  1312,
-E         -  1089,
-E         -  3225,
-E         -  9888,
-E         -  4466,
-E         -  7986,
-E         -  3346,
-E         -  4818,
-E         -  3824,
-E         -  4582,
-E         -  5028,
-E         -  7048,
-E         -  5734,
-E         -  8324,
-E         -  1086,
-E         -  7891,
-E         -  6455,
-E         -  4382,
+E         +  1249,
+E         +  8016,
+E         +  6109,
+E         +  7910,
+E         +  1174,
+E         +  3789,
+E         +  9672,
+E         +  9552,
+E         +  577,
+E         +  4763,
+E         +  5836,
+E         +  6529,
+E         +  6300,
+E         +  5506,
+E         +  6910,
+E         +  2013,
+E         +  7904,
+E         +  2071,
+E         +  9025,
+E         +  2217,
+E         +  5860,
+E         -  3202,
+E         ?   -
+E         +  4302,
+E         ?  +
+E         +  4018,
+E         +  483,
+E         +  15,
+E         +  9370,
+E         +  2704,
+E         +  5458,
+E         +  7964,
+E         +  3031,
+E         +  49,
+E         +  4583,
+E         +  6503,
+E         +  4048,
+E         +  6771,
+E         +  428,
+E         +  8407,
+E         +  3787,
+E         +  4353,
+E         +  6755,
+E         +  2122,
+E         +  3476,
+E         +  6300,
+E         +  2878,
+E         +  5156,
+E         +  4940,
+E         +  4165,
+E         +  7849,
+E         +  6080,
+E            4757,
+E         -  6080,
+E         -  7849,
+E         -  4165,
+E         -  4940,
+E         -  5156,
+E         -  2878,
+E         -  6300,
+E         -  3476,
+E         -  2122,
+E         -  6755,
+E         -  4353,
+E         -  3787,
+E         -  8407,
+E         -  428,
+E         -  6771,
+E         -  4048,
+E         -  6503,
+E         -  4583,
+E         -  49,
+E         -  3031,
+E         -  7964,
+E         -  5458,
+E         -  2704,
+E         -  9370,
+E         -  15,
+E         -  483,
+E         -  4018,
+E         -  4302,
+E         -  5860,
+E         -  2217,
+E         -  9025,
+E         -  2071,
+E         -  7904,
+E         -  2013,
+E         -  6910,
+E         -  5506,
+E         -  6300,
+E         -  6529,
+E         -  5836,
+E         -  4763,
+E         -  577,
+E         -  9552,
+E         -  9672,
+E         -  3789,
+E         -  1174,
+E         -  7910,
+E         -  6109,
+E         -  8016,
 E           ]
 
 httpTests/dmTests/test_dm_messages.py:38: AssertionError
@@ -414,4 +416,4 @@ FAILED httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerMemberCan
 FAILED httpTests/channelTests/test_channel_removeowner.py::testGlobalOwnerMmberCanRemoveOwner
 FAILED httpTests/dmTests/test_dm_messages.py::testUnderFiftyMessagesSent - as...
 FAILED httpTests/dmTests/test_dm_messages.py::testOverFiftyMessagesSent - ass...
-================== 4 failed, 181 passed, 183 skipped in 6.44s ==================
+================== 4 failed, 181 passed, 183 skipped in 7.06s ==================
