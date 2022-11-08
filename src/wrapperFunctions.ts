@@ -34,7 +34,7 @@ export function requestClear() {
 }
 
 export function requestAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
-  return requestHelper('POST', '/auth/register/v2', { email, password, nameFirst, nameLast });
+  return requestHelper('POST', '/auth/register/v3', { email, password, nameFirst, nameLast });
 }
 
 export function requestAuthLogin(email: string, password: string) {
@@ -42,7 +42,7 @@ export function requestAuthLogin(email: string, password: string) {
 }
 
 export function requestAuthLogout(token: string) {
-  return requestHelper('POST', '/auth/logout/v1', { token });
+  return requestHelper('POST', '/auth/logout/v2', {} , token);
 }
 
 export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
@@ -50,7 +50,7 @@ export function requestChannelsCreate (token: string, name: string, isPublic: bo
 }
 
 export function requestChannelsListAll (token: string) {
-  return requestHelper('GET', '/channels/listall/v2', { token });
+  return requestHelper('GET', '/channels/listall/v3', {}, token );
 }
 
 export function requestChannelsList (token: string) {
@@ -98,7 +98,7 @@ export function requestDmMessages(token : string, dmId : number, start: number) 
 }
 
 export function requestDmDetails(token: string, dmId: number) {
-  return requestHelper('GET', '/dm/details/v1', { token, dmId });
+  return requestHelper('GET', '/dm/details/v2', { dmId }, token);
 }
 
 export function requestDmList(token: string) {
@@ -122,7 +122,7 @@ export function requestAddOwner(token: string, channelId: number, uId: number) {
 }
 
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
-  return requestHelper('POST', '/message/senddm/v1', { token, dmId, message });
+  return requestHelper('POST', '/message/senddm/v2', {dmId, message }, token);
 }
 
 export function requestDmLeave(token: string, dmId: number) {

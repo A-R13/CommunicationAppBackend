@@ -274,22 +274,22 @@ export function dmMessagesV2 (token: string, dmId: number, start: number): { mes
  * @returns { name: string, members: [users]}
  */
 
-export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
+export function dmDetailsV2 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
   // check if token and dmId are valid
   const checkToken = getToken(token);
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
-    return { error: 'Invalid Token.' };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    return { error: 'Invalid DmId' };
+    throw HTTPError(400, `Error: Invalid DmId`);
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: 'User is not a member of this dm' };
+    throw HTTPError(403, `Error: User is not a member of the Dm`);
   }
 
   return {
@@ -325,25 +325,25 @@ export function dmListV2 (token: string): { dms: { dmId: number, name: string }[
   return { dms: dmList };
 }
 
-export function messageSendDmV1 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
+export function messageSendDmV2 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
   const data = getData();
   const checkToken = getToken(token);
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
-    return { error: 'Invalid Token.' };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    return { error: 'Invalid DmId' };
+    throw HTTPError(400, `Error: Invalid DmId`);
   }
 
   if (message.length < 1 || message.length > 1000) {
-    return { error: 'Invalid Message length' };
+    throw HTTPError(400, `Error: Invalid Message Length`);
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
-    return { error: 'User is not a member of this dm' };
+    throw HTTPError(403, `Error: User is not a member of Dm`);
   }
 
   const messageid = Math.floor(Math.random() * 10000);

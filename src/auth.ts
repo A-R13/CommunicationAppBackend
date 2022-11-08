@@ -14,20 +14,16 @@ import { getToken } from './other';
  * @returns {number} authUserId - unique Id of the user
  */
 
-export function authRegisterV2(email: string, password: string, nameFirst: string, nameLast: string): {token: string, authUserId: number} | {error: string} {
+export function authRegisterV3(email: string, password: string, nameFirst: string, nameLast: string): {token: string, authUserId: number} | {error: string} {
   const data = getData();
   // checks whether email, password, first name and last name are valid
   if (!validator.isEmail(email) || password.length < 6 || nameFirst.length < 1 ||
         nameFirst.length > 50 || nameLast.length < 1 || nameLast.length > 50) {
-    return {
-      error: 'Invalid Details.'
-    };
+    throw HTTPError(400, 'Error: Invalid Details.');
   }
   // checks whether email is already in use by another user
   if (data.users.find(users => users.email === email)) {
-    return {
-      error: 'Email in Use.'
-    };
+    throw HTTPError(400, 'Error: Email is already in use.');
   }
 
   // create user handle
@@ -105,12 +101,12 @@ export function authLoginV2(email: string, password: string): {token: string, au
  * @returns {}
  */
 
-export function authLogoutV1(token: string): Record<string, never> | {error: string} {
+export function authLogoutV2(token: string): Record<string, never> | {error: string} {
   const data = getData();
   const user = getToken(token);
 
   if (user === undefined) {
-    return { error: 'Invalid Token' };
+    throw HTTPError(403, 'Error: Invalid Token');
   }
   // Get index of token in order to remove it
   const index = user.sessions.indexOf(token);
