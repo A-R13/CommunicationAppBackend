@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
 import { getData, setData } from './dataStore';
-import { channelType, channelShort, getToken } from './other';
+import { channelType, channelShort, getToken, getHashOf, SECRET } from './other';
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -14,7 +14,9 @@ import { channelType, channelShort, getToken } from './other';
 
 export function channelsCreateV3 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
     throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
@@ -68,7 +70,9 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
 
 export function channelsListV2 (token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
     return { error: `${token} is invalid` };
@@ -102,7 +106,9 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
 export function channelsListAllV3(token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
   // Helper function
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
     throw HTTPError(403, `Error: User with token '${token}' does not exist!`);

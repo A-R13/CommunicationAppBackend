@@ -1,4 +1,5 @@
 import { getData, setData } from './dataStore';
+import crypto from 'crypto';
 
 // Exported types
 
@@ -136,6 +137,12 @@ export function userConvert(user: userType): userShort {
     nameLast: user.nameLast,
     handleStr: user.userHandle
   };
+}
+
+export const SECRET = 'dreamBeans';
+
+export function getHashOf(plaintext: string) {
+  return crypto.createHash('sha256').update(plaintext).digest('hex');
 }
 
 /**

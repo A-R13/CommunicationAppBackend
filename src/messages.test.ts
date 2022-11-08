@@ -210,7 +210,6 @@ describe('Dm Messages tests', () => {
     /* eslint-enable */
 
     expect(requestMessageEdit(user0.token, dm0.dmId, bigMessage)).toStrictEqual(400);
-
   });
 
   test('Correct Return with 54 messages', () => {

@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
 import { getData, setData } from './dataStore';
-import { channelType, userShort, message, getChannel, getUId, getToken } from './other';
+import { channelType, userShort, message, getChannel, getUId, getToken, getHashOf, SECRET } from './other';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -16,7 +16,9 @@ export function channelDetailsV3(token : string, channelId : number) {
   const data = getData();
   let checkInChannel = false;
 
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
   // checks if token is valid
   if (userToken === undefined) {
     throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
@@ -53,7 +55,9 @@ export function channelDetailsV3(token : string, channelId : number) {
 export function channelJoinV3 (token: string, channelId: number) {
   const data = getData();
 
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
+
   const channel = getChannel(channelId);
 
   if (!channel) {
@@ -97,7 +101,9 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
 
   const channel = getChannel(channelId);
   const user = getUId(uId);
-  const authUserToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const authUserToken = getToken(tokenHashed);
 
   // checking for invalid channelId, invalid uId, invalid token
   if (channel === undefined || user === undefined || authUserToken === undefined) {
@@ -156,7 +162,9 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
  */
 
 export function channelMessagesV3 (token: string, channelId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
   const channel: channelType = getChannel(channelId);
 
   if (channel === undefined) {
@@ -206,7 +214,9 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
   const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
-  const authUserToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const authUserToken = getToken(tokenHashed);
 
   // ERROR CASES
   // checking for invalid channelId, invalid uId, invalid token
@@ -271,7 +281,9 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
-  const authUserToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const authUserToken = getToken(tokenHashed);
 
   // ERROR CASES
 
@@ -320,7 +332,8 @@ export function channelleaveV2(token : string, channelId : number) {
   let checkChannelId = false;
   let checkInChannel = false;
 
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
 
   // Checks if token is valid
   if (userToken === undefined) {

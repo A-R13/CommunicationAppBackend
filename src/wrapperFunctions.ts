@@ -42,7 +42,7 @@ export function requestAuthLogin(email: string, password: string) {
 }
 
 export function requestAuthLogout(token: string) {
-  return requestHelper('POST', '/auth/logout/v2', {} , token);
+  return requestHelper('POST', '/auth/logout/v2', {}, token);
 }
 
 export function requestChannelsCreate (token: string, name: string, isPublic: boolean) {
@@ -50,7 +50,7 @@ export function requestChannelsCreate (token: string, name: string, isPublic: bo
 }
 
 export function requestChannelsListAll (token: string) {
-  return requestHelper('GET', '/channels/listall/v3', {}, token );
+  return requestHelper('GET', '/channels/listall/v3', {}, token);
 }
 
 export function requestChannelsList (token: string) {
@@ -122,7 +122,7 @@ export function requestAddOwner(token: string, channelId: number, uId: number) {
 }
 
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
-  return requestHelper('POST', '/message/senddm/v2', {dmId, message }, token);
+  return requestHelper('POST', '/message/senddm/v2', { dmId, message }, token);
 }
 
 export function requestDmLeave(token: string, dmId: number) {

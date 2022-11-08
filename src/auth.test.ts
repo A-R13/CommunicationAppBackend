@@ -156,7 +156,8 @@ describe('Testing authlogout function', () => {
     const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     const user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     expect(requestAuthLogout(user.token)).toStrictEqual({});
-  })
+    expect(requestAuthLogout(user2.token)).toStrictEqual({});
+  });
   test('Failed logout (invalid token)', () => {
     requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     expect(requestAuthLogout('wrongToken')).toStrictEqual(403);

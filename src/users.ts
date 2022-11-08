@@ -2,7 +2,7 @@ import HTTPError from 'http-errors';
 import validator from 'validator';
 
 import { getData } from './dataStore';
-import { getToken } from './other';
+import { getToken, getHashOf, SECRET } from './other';
 
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
@@ -13,10 +13,9 @@ import { getToken } from './other';
 
 export function userProfileV3 (token : string, uId : number) {
   const data = getData();
-  let checkToken = false;
-  let checkUId = false;
 
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
 
   if (userToken === undefined) {
     throw HTTPError(403, `Erorr: '${token}' is invalid`);
@@ -39,7 +38,7 @@ export function userProfileV3 (token : string, uId : number) {
       };
     }
   }
-} 
+}
 
 /**
  * <Description: Lists all users and their associated details>
@@ -51,7 +50,8 @@ export function userProfileV3 (token : string, uId : number) {
 
 export function usersAllV2 (token: string) {
   const data = getData();
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
     throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
@@ -82,7 +82,8 @@ export function usersAllV2 (token: string) {
  */
 
 export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   // error checking
   if (nameFirst === '' || nameFirst.length > 50) {
@@ -107,7 +108,8 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
  */
 export function userSetEmailV1 (token: string, email: string) {
   const data = getData();
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (!validator.isEmail(email)) {
     return { error: 'email is invalid' };
@@ -130,7 +132,9 @@ export function userSetEmailV1 (token: string, email: string) {
  */
 export function userSetHandleV1 (token: string, handleStr: string) {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   // error checking
   if (handleStr.length < 3 || handleStr.length > 20) {

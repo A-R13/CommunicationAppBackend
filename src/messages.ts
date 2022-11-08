@@ -4,7 +4,7 @@ import { getData, setData } from './dataStore';
 
 import {
   userType, userShort, message, dmType, getUId, getToken, getChannel, getDm,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './other';
 
 /**
@@ -18,7 +18,8 @@ import {
 export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {error: string} {
   const data = getData();
 
-  const user: userType = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
 
   let uIdArray;
 
@@ -80,7 +81,9 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
 export function messageSendV2 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
   let channel = getChannel(channelId);
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
 
   if (channel === undefined) {
     // If channel is undefined
@@ -125,7 +128,9 @@ export function messageSendV2 (token: string, channelId: number, message: string
 
 export function messageEditV2(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
 
   // checks if token is valid
   if (userToken === undefined) {
@@ -182,7 +187,9 @@ export function messageEditV2(token: string, messageId: number, message: string)
 export function dmRemoveV2(token : string, dmId: number) {
   const data = getData();
 
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
   const dm = getDm(dmId);
 
   // checks if token is valid
@@ -227,7 +234,9 @@ export function dmRemoveV2(token : string, dmId: number) {
  */
 
 export function dmMessagesV2 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+
   const dm: dmType = getDm(dmId);
 
   if (dm === undefined) {
@@ -276,20 +285,22 @@ export function dmMessagesV2 (token: string, dmId: number, start: number): { mes
 
 export function dmDetailsV2 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
   // check if token and dmId are valid
-  const checkToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const checkToken = getToken(tokenHashed);
+
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
     throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    throw HTTPError(400, `Error: Invalid DmId`);
+    throw HTTPError(400, 'Error: Invalid DmId');
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
     // If user is not a member of the target channel, return an error
-    throw HTTPError(403, `Error: User is not a member of the Dm`);
+    throw HTTPError(403, 'Error: User is not a member of the Dm');
   }
 
   return {
@@ -307,7 +318,9 @@ export function dmDetailsV2 (token: string, dmId: number): {name: string, member
  */
 
 export function dmListV2 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
   const data = getData();
   const dmArray = data.dms;
 
@@ -327,23 +340,26 @@ export function dmListV2 (token: string): { dms: { dmId: number, name: string }[
 
 export function messageSendDmV2 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
   const data = getData();
-  const checkToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const checkToken = getToken(tokenHashed);
+
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
     throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    throw HTTPError(400, `Error: Invalid DmId`);
+    throw HTTPError(400, 'Error: Invalid DmId');
   }
 
   if (message.length < 1 || message.length > 1000) {
-    throw HTTPError(400, `Error: Invalid Message Length`);
+    throw HTTPError(400, 'Error: Invalid Message Length');
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
-    throw HTTPError(403, `Error: User is not a member of Dm`);
+    throw HTTPError(403, 'Error: User is not a member of Dm');
   }
 
   const messageid = Math.floor(Math.random() * 10000);
@@ -376,7 +392,10 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
 
 export function dmLeaveV2 (token: string, dmId: number) {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+
   const checkInDm: dmType = getDm(dmId);
   // invalid token
   if (userToken === undefined) {
@@ -411,7 +430,9 @@ export function dmLeaveV2 (token: string, dmId: number) {
 
 export function messageRemoveV2 (token: string, messageId: number) {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
 
   // checks if token is valid
   if (userToken === undefined) {

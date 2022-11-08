@@ -61,7 +61,6 @@ app.post('/auth/register/v3', (req: Request, res: Response, next) => {
     const { email, password, nameFirst, nameLast } = req.body;
     saveData();
     return res.json(authRegisterV3(email, password, nameFirst, nameLast));
-
   } catch (err) {
     next(err);
   }
@@ -80,7 +79,7 @@ app.post('/channels/create/v3', (req: Request, res: Response, next) => {
 });
 
 app.get('/channels/listall/v3', (req: Request, res: Response, next) => {
-  try{
+  try {
     const token = req.header('token');
 
     return res.json(channelsListAllV3(token));
@@ -214,7 +213,7 @@ app.post('/auth/logout/v2', (req: Request, res: Response, next) => {
     saveData();
 
     return res.json(authLogoutV2(token));
-  } catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -246,10 +245,10 @@ app.get('/dm/messages/v2', (req: Request, res: Response, next) => {
 
 app.get('/dm/details/v2', (req: Request, res: Response, next) => {
   try {
-  const token = req.header('token');
-  const dmId = req.query.dmId as string;
+    const token = req.header('token');
+    const dmId = req.query.dmId as string;
 
-  res.json(dmDetailsV2(token, parseInt(dmId)));
+    res.json(dmDetailsV2(token, parseInt(dmId)));
   } catch (err) {
     next(err);
   }
