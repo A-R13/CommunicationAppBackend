@@ -465,3 +465,8 @@ export function messageRemoveV2 (token: string, messageId: number) {
   setData(data);
   return {};
 }
+
+export function messagePinV1(token, messageId) {
+  const data = getData();
+  
+}

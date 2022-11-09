@@ -144,3 +144,8 @@ export function requestUserSetEmail(token: string, email: string) {
 export function requestMessageRemove(token: string, messageId: number) {
   return requestHelper('DELETE', '/message/remove/v2', { messageId }, token);
 }
+
+export function requestMessagePin(token: string, messageId: number) {
+  return requestHelper('POST', '/message/pin/v1', { messageId }, token);
+}
+
