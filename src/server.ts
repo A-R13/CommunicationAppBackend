@@ -331,9 +331,9 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
   }
 });
 
-app.delete('/message/pin/v1', (req: Request, res: Response, next) => {
+app.post('/message/pin/v1', (req: Request, res: Response, next) => {
   try {
-    const messageId = req.query.messageId as string;
+    const { messageId } = req.body;
     const token = req.header('token');
 
     saveData();

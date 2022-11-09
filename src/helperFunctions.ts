@@ -142,3 +142,33 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
     }
   }
 }
+
+export function checkIsPinned(messageId: number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if the user is the same
+      if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // Is the same user
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
