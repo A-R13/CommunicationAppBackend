@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData } from './dataStore';
-import { channelType, userShort, message, getChannel, getUId, getToken, getHashOf, SECRET } from './other';
+import { getData, setData, channelType, userShort, message } from './dataStore';
+import { getChannel, getUId, getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <Description: function gives the channel details for a existing channel>

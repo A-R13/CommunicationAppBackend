@@ -1,11 +1,11 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData } from './dataStore';
+import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  userType, userShort, message, dmType, getUId, getToken, getChannel, getDm,
+  getUId, getToken, getChannel, getDm,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
-} from './other';
+} from './helperFunctions';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >

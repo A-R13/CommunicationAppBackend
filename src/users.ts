@@ -2,7 +2,7 @@ import HTTPError from 'http-errors';
 import validator from 'validator';
 
 import { getData } from './dataStore';
-import { getToken, getHashOf, SECRET } from './other';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>

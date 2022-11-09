@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
 
 import { getData, setData } from './dataStore';
-import { getToken, getHashOf, SECRET } from './other';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>

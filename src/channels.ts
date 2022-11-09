@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData } from './dataStore';
-import { channelType, channelShort, getToken, getHashOf, SECRET } from './other';
+import { getData, setData, channelType, channelShort } from './dataStore';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
