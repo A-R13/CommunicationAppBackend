@@ -25,6 +25,7 @@ export interface message {
   uId: number,
   message: string,
   timeSent: number,
+  isPinned: boolean,
 }
 
 export interface channelType {

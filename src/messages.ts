@@ -108,6 +108,7 @@ export function messageSendV2 (token: string, channelId: number, message: string
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
+    isPinned: false,
   };
 
   const data = getData();
@@ -147,7 +148,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    throw HTTPError(400, 'Error: Dm doesnt exist!');
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
   }
 
   // checks if it is owner and same user
@@ -371,6 +372,7 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
+        isPinned: false,
       });
       break;
     }
@@ -468,5 +470,43 @@ export function messageRemoveV2 (token: string, messageId: number) {
 
 export function messagePinV1(token, messageId) {
   const data = getData();
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+  const userIdentity = userToken.authUserId;
   
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const DmIndex = CheckValidMessageDms(messageId);
+
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+
+  if (channelIndex === -1 && DmIndex === -1) {
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
+  }
+
+  // In dms
+  if (channelIndex === -1) {
+    const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+    const dm = getDm(DmIndex);
+    const convertedUser: userShort = userConvert(userToken);
+    const owner: userShort = data.dms[DmIndex].owners.find(a => a.uId === userIdentity);
+  
+    // checks if the user is an owner.
+    if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
+      throw HTTPError(403, 'Error: Not an owner');
+    } else {
+      data.dms[DmIndex].messages[DmMessageIndex].isPinned === true;
+    }
+
+  } else { // in channels
+    const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+    if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userIdentity)) {
+      throw HTTPError(403, 'Error: Not an owner');
+    } else {
+      data.channels[channelIndex].messages[channelMessageIndex].isPinned === true;
+    }
+  }
+
 }

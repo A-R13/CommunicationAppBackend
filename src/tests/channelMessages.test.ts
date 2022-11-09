@@ -57,12 +57,14 @@ describe('Channel Messages tests', () => {
           uId: user2.authUserId,
           message: 'Message 1',
           timeSent: expect.any(Number),
+          isPinned: expect.any(Boolean),
         },
         {
           messageId: expect.any(Number),
           uId: user2.authUserId,
           message: 'Message 0',
           timeSent: expect.any(Number),
+          isPinned: expect.any(Boolean),
         }
       ]
     });
@@ -81,6 +83,7 @@ describe('Channel Messages tests', () => {
       uId: user2.authUserId,
       message: 'Message 5',
       timeSent: expect.any(Number),
+      isPinned: expect.any(Boolean),
     });
 
     expect(requestChannelMessages(user2.token, channel2.channelId, 2).messages).toContainEqual({
@@ -88,6 +91,7 @@ describe('Channel Messages tests', () => {
       uId: user2.authUserId,
       message: 'Message 51',
       timeSent: expect.any(Number),
+      isPinned: expect.any(Boolean),
     });
 
     expect(requestChannelMessages(user2.token, channel2.channelId, 2).messages).not.toContain({
@@ -95,6 +99,7 @@ describe('Channel Messages tests', () => {
       uId: user2.authUserId,
       message: 'Message 0',
       timeSent: expect.any(Number),
+      isPinned: expect.any(Boolean),
     });
   });
 });

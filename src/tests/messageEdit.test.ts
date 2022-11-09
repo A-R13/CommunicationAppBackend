@@ -51,6 +51,7 @@ describe('Message Edit', () => {
         messageId: msg1.messageId,
         uId: user0.authUserId,
         timeSent: expect.any(Number),
+        isPinned: expect.any(Boolean),
       }
     );
   });
@@ -73,6 +74,7 @@ describe('Message Edit', () => {
         messageId: msg1.messageId,
         uId: user1.authUserId,
         timeSent: expect.any(Number),
+        isPinned: expect.any(Boolean),
       }
     );
   });
@@ -89,12 +91,14 @@ describe('Message Edit', () => {
         messageId: msg3.messageId,
         uId: user1.authUserId,
         timeSent: expect.any(Number),
+        isPinned: expect.any(Boolean),
       },
       {
         message: 'Random text',
         messageId: msg2.messageId,
         uId: user0.authUserId,
         timeSent: expect.any(Number),
+        isPinned: expect.any(Boolean),
       }
     ]
     );
@@ -113,12 +117,14 @@ describe('Message Edit', () => {
           messageId: msg3.messageId,
           timeSent: expect.any(Number),
           uId: 1,
+          isPinned: expect.any(Boolean),
         },
         {
           message: 'Random text',
           messageId: msg2.messageId,
           timeSent: expect.any(Number),
           uId: 0,
+          isPinned: expect.any(Boolean),
         }
       ],
       start: 0,
@@ -138,6 +144,7 @@ describe('Message Edit', () => {
           messageId: msg2.messageId,
           timeSent: expect.any(Number),
           uId: 0,
+          isPinned: expect.any(Boolean),
         }
       ],
       start: 0,
