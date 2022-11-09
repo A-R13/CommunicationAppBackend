@@ -34,6 +34,7 @@ describe("Message Pin tests", () => {
         const msgdm = requestMessageSendDm(user0.token, dm0.dmId, 'FIRST MESSAGE BY THE OWNER IN DM');
 
         expect(requestMessagePin(user0.token, 0)).toStrictEqual(400); // invalid message id
+        expect(requestMessagePin("RANDOM TOKEN", msg1.messageId)).toStrictEqual(403); // invalid message id
         expect(requestMessagePin(user1.token, parseInt(msg1.messageId))).toStrictEqual(403); //unauthorised user pinning in channel
         expect(requestMessagePin(user1.token, parseInt(msgdm.messageId))).toStrictEqual(403); //unauthorised user pinning in Dm
     });
@@ -48,15 +49,6 @@ describe("Message Pin tests", () => {
 
         expect(requestMessagePin(user0.token, msg1.messageId)).toStrictEqual(400);
         expect(requestMessagePin(user0.token, msgdm.messageId)).toStrictEqual(400);
-    });
-
-    test("Error if not in channel/dm", () => {
-        const msg1 = requestMessageSend(user0.token, channel0.channelId, "THE FIRST MESSAGE BY OWNER");
-        const msgdm = requestMessageSendDm(user0.token, dm0.dmId, 'FIRST MESSAGE BY THE OWNER IN DM');
-        let user2: newUser =requestAuthRegister('example5@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 2
-
-        expect(requestMessagePin(user2.token, msg1.messageId)).toStrictEqual(400);
-        expect(requestMessagePin(user2.token, msgdm.messageId)).toStrictEqual(400);
     });
 
     test("Correctly Pins a message", () => {

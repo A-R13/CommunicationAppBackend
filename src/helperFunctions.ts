@@ -154,7 +154,7 @@ export function checkIsPinned(messageId: number) : boolean {
     } else {
       // in dms
       const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
-      // checks if the user is the same
+      // checks if pinned
       if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === true) {
         return true;
       } else {
@@ -164,7 +164,7 @@ export function checkIsPinned(messageId: number) : boolean {
   } else {
     // Message is in channel
     const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
-    // Is the same user
+    // checks if pinned
     if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === true) {
       return true;
     } else {

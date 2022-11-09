@@ -468,6 +468,13 @@ export function messageRemoveV2 (token: string, messageId: number) {
   return {};
 }
 
+/**
+ * <Description: Pins a message >
+* @param {string} token - Unique token of an authorised user
+ * @param {number} messageId - messageId
+ * @returns { }
+ */
+
 export function messagePinV1(token: string, messageId: any) {
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
@@ -495,9 +502,7 @@ export function messagePinV1(token: string, messageId: any) {
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
 
-    if (!data.dms[DmIndex].members.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the Dm')
-    } else if (!data.dms[DmIndex].owners.find(user => user.uId === userToken.authUserId)) {
+    if (!data.dms[DmIndex].owners.find(user => user.uId === userToken.authUserId)) {
       throw HTTPError(403, 'Error: Not an owner in channels');
     } else {
       data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
@@ -506,9 +511,7 @@ export function messagePinV1(token: string, messageId: any) {
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
 
-    if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the channel')
-    } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
+    if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
       throw HTTPError(403, 'Error: Not an owner in dms');
     } else {
       data.channels[channelIndex].messages[channelMessageIndex].isPinned = true;
