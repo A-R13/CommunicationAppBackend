@@ -448,3 +448,24 @@ export function messageRemoveV1 (token: string, messageId: number) {
   setData(data);
   return {};
 }
+
+
+export function messageUnpin(token: string, messageId: any) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const dmIndex = CheckValidMessageDms(messageId)
+
+  // Invalid token
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: Token is invalid');
+  }
+
+  if (checkIsPinned(messageId) === false) {
+    throw HTTPError(400, 'Error: Message is already unpinned');
+  }
+
+
+
+}
