@@ -6,7 +6,7 @@ import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
-import { authRegisterV3, authLoginV2, authLogoutV2 } from './auth';
+import { authRegisterV3, authLoginV2, authLogoutV2, authPasswordResetRequestV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV2, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
@@ -326,6 +326,17 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
 
     saveData();
     return res.json(messageRemoveV2(token, parseInt(messageId)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/auth/passwordreset/request/v1', (req: Request, res: Response, next) => {
+  try {
+    const { email } = req.body;
+
+    saveData();
+    return res.json(authPasswordResetRequestV1(email));
   } catch (err) {
     next(err);
   }
