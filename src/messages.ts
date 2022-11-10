@@ -487,6 +487,7 @@ export function messagePinV1(token: string, messageId: any) {
     throw HTTPError(403, 'Error: token is invalid');
   }
 
+  // check if message is pinned
   if (checkIsPinned(messageId) === true) {
     throw HTTPError(400, 'Error: Message is already pinned!');
   }
@@ -494,8 +495,6 @@ export function messagePinV1(token: string, messageId: any) {
   // check if valid messages
   if (channelIndex === -1 && DmIndex === -1) {
     throw HTTPError(400, 'Error: MessageId doesnt exist!');
-  } else if (channelIndex === -1 && DmIndex !== -1) {
-    
   }
 
   // In dms
