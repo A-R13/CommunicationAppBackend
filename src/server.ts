@@ -10,7 +10,7 @@ import { authRegisterV2, authLoginV2, authLogoutV1 } from './auth';
 import { channelDetailsV2, channelJoinV2, channelInviteV2, channelMessagesV2, channelleaveV1, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV2, channelsListV2, channelsListAllV2 } from './channels';
 
-import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1 } from './messages';
+import { dmCreateV1, messageSendV1, dmMessagesV1, dmRemoveV1, dmDetailsV1, dmListV1, messageEditV1, messageSendDmV1, dmLeaveV1, messageRemoveV1, messageUnpinV1 } from './messages';
 import { userProfileV2, usersAllV1, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
 
 import { clearV1 } from './other';
@@ -245,6 +245,18 @@ app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
 
   res.json(messageRemoveV1(token, parseInt(messageId)));
   saveData();
+});
+
+app.post('/message/unpin/v1', (req: Request, res: Response, next) => {
+  try {
+    const { messageId } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    res.json(messageUnpinV1(token, messageId));
+  } catch (err) {
+    next(err);
+  }
 });
 
 // start server
