@@ -1,4 +1,4 @@
-import { requestClear, requestAuthRegister, requestAuthLogout } from '../wrapperFunctions';
+import { requestClear, requestAuthRegister, requestAuthLogout, requestAuthLogin } from '../wrapperFunctions';
 // Function Wrappers using above function
 
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
