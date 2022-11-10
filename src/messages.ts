@@ -466,6 +466,34 @@ export function messageUnpin(token: string, messageId: any) {
     throw HTTPError(400, 'Error: Message is already unpinned');
   }
 
+  if (channelIndex === -1 && dmIndex === -1) {
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
+  } else if (channelIndex === -1 && dmIndex !== -1) {
+    if (!data.dms[dmIndex].members.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the Dm')
+    } else if (!data.dms[dmIndex].owners.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(403, 'Error: Not an owner in channels');
+    }
+  } else if (channelIndex !== -1 && dmIndex === -1) {
+    if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the channel')
+    } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
+      throw HTTPError(403, 'Error: Not an owner in dms');
+    }
+  }
+
+  if (channelIndex === -1) {
+     const dmMessageIndex = data.dms[dmIndex].messages.findIndex(message => message.messageId === messageId);
+     data.dms[dmIndex].messages[dmMessageIndex].isPinned = false;
+  }
+  else {
+    const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+    data.channels[channelIndex].messages[channelMessageIndex].isPinned = false;
+  }
+
+  setData(data);
+  return {};
+
 
 
 }
