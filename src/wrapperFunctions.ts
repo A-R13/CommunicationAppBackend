@@ -38,7 +38,7 @@ export function requestAuthRegister(email: string, password: string, nameFirst: 
 }
 
 export function requestAuthLogin(email: string, password: string) {
-  return requestHelper('POST', '/auth/login/v2', { email, password });
+  return requestHelper('POST', '/auth/login/v3', { email, password });
 }
 
 export function requestAuthLogout(token: string) {
@@ -70,7 +70,7 @@ export function requestChannelJoin(token : string, channelId: number) {
 }
 
 export function requestChannelInvite(token : string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/invite/v2', { token, channelId, uId });
+  return requestHelper('POST', '/channel/invite/v3', { channelId, uId }, token);
 }
 
 export function requestChannelLeave(token : string, channelId: number) {
@@ -106,7 +106,7 @@ export function requestDmList(token: string) {
 }
 
 export function requestUserSetName(token: string, nameFirst: string, nameLast: string) {
-  return requestHelper('PUT', '/user/profile/setname/v1', { token, nameFirst, nameLast });
+  return requestHelper('PUT', '/user/profile/setname/v2', { nameFirst, nameLast }, token);
 }
 
 export function requestMessageEdit(token: string, messageId: number, message: string) {
@@ -118,7 +118,7 @@ export function requestUsersAll(token: string) {
 }
 
 export function requestAddOwner(token: string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/addowner/v1', { token, channelId, uId });
+  return requestHelper('POST', '/channel/addowner/v2', { channelId, uId }, token);
 }
 
 export function requestMessageSendDm(token: string, dmId: number, message: string) {
@@ -130,15 +130,15 @@ export function requestDmLeave(token: string, dmId: number) {
 }
 
 export function requestRemoveOwner(token: string, channelId: number, uId: number) {
-  return requestHelper('POST', '/channel/removeowner/v1', { token, channelId, uId });
+  return requestHelper('POST', '/channel/removeowner/v2', { channelId, uId }, token);
 }
 
 export function requestUserSetHandle(token: string, handleStr: string) {
-  return requestHelper('PUT', '/user/profile/sethandle/v1', { token, handleStr });
+  return requestHelper('PUT', '/user/profile/sethandle/v2', { handleStr }, token);
 }
 
 export function requestUserSetEmail(token: string, email: string) {
-  return requestHelper('PUT', '/user/profile/setemail/v1', { token, email });
+  return requestHelper('PUT', '/user/profile/setemail/v2', { email }, token);
 }
 
 export function requestMessageRemove(token: string, messageId: number) {

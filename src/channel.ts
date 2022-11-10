@@ -94,7 +94,7 @@ export function channelJoinV3 (token: string, channelId: number) {
  * @returns
  */
 
-export function channelInviteV2 (token: string, channelId: number, uId: number) {
+export function channelInviteV3 (token: string, channelId: number, uId: number) {
   const data = getData();
   const userArray = data.users;
   const channelArray = data.channels;
@@ -106,8 +106,16 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   const authUserToken = getToken(tokenHashed);
 
   // checking for invalid channelId, invalid uId, invalid token
-  if (channel === undefined || user === undefined || authUserToken === undefined) {
-    return { error: 'invalid parameters' };
+  if (channel === undefined) {
+    throw HTTPError(400, 'Error: Invalid channelId');
+  }
+
+  if (user === undefined) {
+    throw HTTPError(400, 'Error: Invalid uId');
+  }
+
+  if (authUserToken === undefined) {
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   // find which index the channel is in
@@ -122,14 +130,14 @@ export function channelInviteV2 (token: string, channelId: number, uId: number) 
   const allMembersArray = channelArray[i].allMembers;
   for (const num2 in allMembersArray) {
     if (allMembersArray[num2].uId === uId) {
-      return { error: 'uId already part of the channel' };
+      throw HTTPError(400, 'Error: uId is already a part of the channel');
     }
   }
 
   // error - if the authuser is not a member of the channel, figure out what token really is, what the helper function getToken returns etc.
   const userInChannel = channel.allMembers.find(a => a.uId === authUserToken.authUserId);
   if (userInChannel === undefined) {
-    return { error: `User with authUserId '${authUserToken.authUserId}' is not a member of channel with channelId '${channel}'!` };
+    throw HTTPError(403, 'Error: Authorised user is not a member of the channel');
   }
 
   // no errors, pushing user object to channel
@@ -210,7 +218,7 @@ export function channelMessagesV3 (token: string, channelId: number, start: numb
  * @param {number} uId
  * @returns {{}}
  */
-export function addOwnerV1 (token: string, channelId: number, uId: number) {
+export function addOwnerV2 (token: string, channelId: number, uId: number) {
   const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
@@ -220,27 +228,33 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
 
   // ERROR CASES
   // checking for invalid channelId, invalid uId, invalid token
-  if (channel === undefined || user === undefined || authUserToken === undefined) {
-    return { error: 'invalid parameters' };
+  if (channel === undefined) {
+    throw HTTPError(400, 'Error: Invalid channel');
+  }
+
+  if (user === undefined) {
+    throw HTTPError(400, 'Error: Invalid uId');
+  }
+
+  if (authUserToken === undefined) {
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   // uId refers to a user who is not a member of the channel
   const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
-
-  // method 1
   if (!data.channels[channelIndex].allMembers.find(x => x.uId === uId)) {
-    return { error: 'uId is not an owner of the channel' };
+    throw HTTPError(400, 'Error: uId is not an member of the channel');
   }
 
   // uId refers to a user who is already an owner of the channel
   if (data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
-    return { error: 'uId is already an owner of the channel' };
+    throw HTTPError(400, 'Error: uId is already an owner of the channel');
   }
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
   if (userIsOwner === undefined) {
-    return { error: `User with authUserId '${authUserToken.authUserId}' is not an owner of channel with channelId '${channel}'!` };
+    throw HTTPError(403, 'Authorised user does not have owner permissions in the channel');
   }
 
   // SUCCESS CASE - add user an owner of the channel
@@ -277,7 +291,7 @@ export function addOwnerV1 (token: string, channelId: number, uId: number) {
  * @returns {{}}
  */
 
-export function removeOwnerV1 (token: string, channelId: number, uId: number) {
+export function removeOwnerV2 (token: string, channelId: number, uId: number) {
   const data = getData();
   const channel = getChannel(channelId);
   const user = getUId(uId);
@@ -286,29 +300,36 @@ export function removeOwnerV1 (token: string, channelId: number, uId: number) {
   const authUserToken = getToken(tokenHashed);
 
   // ERROR CASES
-
   // checking for invalid channelId, invalid uId, invalid token
-  if (channel === undefined || user === undefined || authUserToken === undefined) {
-    return { error: 'invalid parameters' };
+  if (channel === undefined) {
+    throw HTTPError(400, 'Error: Invalid channel');
+  }
+
+  if (user === undefined) {
+    throw HTTPError(400, 'Error: Invalid uId');
+  }
+
+  if (authUserToken === undefined) {
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   // uid is not an owner of the channel
   const channelIndex = data.channels.findIndex(c => c.channelId === channelId);
 
   if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === uId)) {
-    return { error: 'uId is not an owner of the channel' };
+    throw HTTPError(400, 'Error: uId is not an owner of the channel');
   }
 
   // uid is the only owner of the channel
   const userIndex = data.channels[channelIndex].ownerMembers.findIndex(x => x.uId === uId);
   if (userIndex === 0) {
-    return { error: 'uId is the only owner of the channel' };
+    throw HTTPError(400, 'Error: uId is the only owner of the channel');
   }
 
   // authUser which the token belongs to, is not an owner
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
   if (userIsOwner === undefined) {
-    return { error: `User with authUserId '${authUserToken.authUserId}' is not an owner of channel with channelId '${channel}'!` };
+    throw HTTPError(403, 'Error: Authorised user is not an owner of channel');
   }
 
   // SUCCESS CASE

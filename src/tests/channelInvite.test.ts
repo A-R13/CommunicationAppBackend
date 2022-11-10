@@ -123,47 +123,27 @@ describe('Channel Invite tests', () => {
   });
 
   test('throw error when channel is invalid', () => {
-    expect(requestChannelInvite(nicole.token, 5, dennis.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestChannelInvite(nicole.token, 5, dennis.authUserId)).toStrictEqual(400);
   });
 
-  test('throw error when authUser is invalid', () => {
-    expect(requestChannelInvite('a', channel.channelId, dennis.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+  test('throw error when token is invalid', () => {
+    expect(requestChannelInvite('a', channel.channelId, dennis.authUserId)).toStrictEqual(403);
   });
 
   test('throw error when uId is invalid', () => {
-    expect(requestChannelInvite(nicole.token, channel.channelId, 70)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestChannelInvite(nicole.token, channel.channelId, 70)).toStrictEqual(400);
   });
 
   test('throw error when uId is already a member', () => {
     requestChannelInvite(nicole.token, channel.channelId, dennis.authUserId);
-    expect(requestChannelInvite(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestChannelInvite(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual(400);
   });
 
   test('throw error when authUserId is not a member', () => {
-    expect(requestChannelInvite(dennis.token, channel.channelId, geoffrey.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
-  });
-
-  test('throw error when authUserId is not a member', () => {
-    requestChannelInvite(nicole.token, channel.channelId, dennis.authUserId);
-    // in this case, dennis is already a member as well
-    expect(requestChannelInvite(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestChannelInvite(dennis.token, channel.channelId, geoffrey.authUserId)).toStrictEqual(403);
   });
 
   test('throw error when user tries to invite themself', () => {
-    expect(requestChannelInvite(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual(
-      { error: expect.any(String) }
-    );
+    expect(requestChannelInvite(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual(400);
   });
 });

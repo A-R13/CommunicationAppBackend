@@ -24,20 +24,20 @@ describe('Testing authLogin function', () => {
     requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     requestAuthRegister('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
     const login = requestAuthLogin('example@gmail.com', 'WXYZ5678');
-    expect(login).toStrictEqual({ error: expect.any(String) });
+    expect(login).toStrictEqual(400);
   });
 
   // Email (right) / Password (does not exist)
   test('Testing failed login (password does not exist)', () => {
     requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('example@gmail.com', 'QWERTY');
-    expect(login).toStrictEqual({ error: expect.any(String) });
+    expect(login).toStrictEqual(400);
   });
 
   // Email (does not exist) / Password (null)
   test('Testing failed login (email does not exist)', () => {
     requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
     const login = requestAuthLogin('csesoc@gmail.com', 'ABCD1234');
-    expect(login).toStrictEqual({ error: expect.any(String) });
+    expect(login).toStrictEqual(400);
   });
 });
