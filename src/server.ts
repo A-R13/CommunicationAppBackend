@@ -9,9 +9,9 @@ import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV3, authLoginV2, authLogoutV2 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, channelleaveV2, addOwnerV1, removeOwnerV1 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
-
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
+import { standupStartV1 } from './standup'
 
 import { clearV1 } from './other';
 
@@ -330,6 +330,19 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
     next(err);
   }
 });
+
+app.post('/standup/start/v1', (req: Request, res: Response, next) => {
+  try {
+    const { channelId, length } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    return res.json(standupStartV1(token, parseInt(channelId), parseInt(length)));
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 // handles errors nicely
 app.use(errorHandler());
