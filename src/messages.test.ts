@@ -644,4 +644,50 @@ describe('message unpin test', () => {
   });
 
 
-})
+  test('Correct returns', () => {
+    const msg1 = requestMessageSend(user0.token, 'Message one in channel');
+    const msg2 = requestMessageSendDm(user0.token, 'Message one in dm');
+
+    requestMessagePin(user0.token, msg1.messageId);
+    requestMessagePin(user0.token, msg2.messageId);
+
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'Message one in channel',
+        messageId: msg1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+        isPinned: true,
+      },
+    ]);
+
+    expect(RequestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user0.authUserId,
+      message: 'Message one in dm',
+      timeSent: expect.any(Number),
+      isPinned: true,
+    });
+
+    requestMessageUnpin(user0.token, msg1.messageId);
+    requestMessageUnpin(user0.token, msg2.messageId);
+
+    expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'Message one in channel',
+        messageId: msg1.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+        isPinned: false,
+      },
+    ]);
+
+    expect(RequestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
+      messageId: expect.any(Number),
+      uId: user0.authUserId,
+      message: 'Message one in dm',
+      timeSent: expect.any(Number),
+      isPinned: false,
+    });
+  });
+});
