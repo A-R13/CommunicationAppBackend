@@ -143,6 +143,12 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
   }
 }
 
+/**
+ * <Description: Checks if message is already pinned >
+ * @param {number} messageId - messageId
+ * @returns { Booleon }
+ */
+
 export function checkIsPinned(messageId: number) : boolean {
   const data = getData();
   const CheckInChannel = CheckValidMessageChannels(messageId);
