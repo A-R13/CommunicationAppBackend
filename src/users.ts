@@ -81,17 +81,17 @@ export function usersAllV2 (token: string) {
  * @returns {{}}
  */
 
-export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
+export function userSetNameV2 (token: string, nameFirst: string, nameLast: string) {
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
   // error checking
   if (nameFirst === '' || nameFirst.length > 50) {
-    return { error: 'first name is not of the correct length' };
+    throw HTTPError(400, 'Error: First name is not of the correct length');
   } else if (nameLast === '' || nameLast.length > 50) {
-    return { error: 'last name is not of the correct length' };
+    throw HTTPError(400, 'Error: Last name is not of the correct length');
   } else if (user === undefined) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   user.nameFirst = nameFirst;
@@ -106,17 +106,17 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
  * @param {string} email
  * @returns {{}}
  */
-export function userSetEmailV1 (token: string, email: string) {
+export function userSetEmailV2 (token: string, email: string) {
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
   if (!validator.isEmail(email)) {
-    return { error: 'email is invalid' };
+    throw HTTPError(400, 'Error: Invalid email');
   } else if (user === undefined) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Error: Invalid token');
   } else if (data.users.find(users => users.email === email)) {
-    return { error: 'email already exists' };
+    throw HTTPError(400, 'Error: Email already exists');
   }
 
   user.email = email;
@@ -130,7 +130,7 @@ export function userSetEmailV1 (token: string, email: string) {
  * @param {string} handleStr
  * @returns {{}}
  */
-export function userSetHandleV1 (token: string, handleStr: string) {
+export function userSetHandleV2 (token: string, handleStr: string) {
   const data = getData();
 
   const tokenHashed = getHashOf(token + SECRET);
@@ -138,13 +138,13 @@ export function userSetHandleV1 (token: string, handleStr: string) {
 
   // error checking
   if (handleStr.length < 3 || handleStr.length > 20) {
-    return { error: 'handle is the incorrect length' };
+    throw HTTPError(400, 'Error: Handle is the incorrect length');
   } else if (handleStr.match(/^[0-9A-Za-z]+$/) === null) {
-    return { error: 'handle contains non-alphanumeric characters' };
+    throw HTTPError(400, 'Error: Handle contains non-alphanumeric characters');
   } else if (data.users.find(users => users.userHandle === handleStr)) {
-    return { error: 'handle already exists' };
+    throw HTTPError(400, 'Error: Handle already exists');
   } else if (user === undefined) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   user.userHandle = handleStr;

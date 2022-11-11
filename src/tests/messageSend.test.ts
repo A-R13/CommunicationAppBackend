@@ -56,7 +56,8 @@ describe(('Message Send tests'), () => {
       messageId: msg1.messageId,
       uId: user0.authUserId,
       timeSent: expect.any(Number),
-      isPinned: expect.any(Boolean),
+      reacts:  expect.any(Array),
+      isPinned: expect.any(Boolean)
     };
 
     expect(requestChannelMessages(user0.token, channel0.channelId, 0).messages).toContainEqual(msgFull);

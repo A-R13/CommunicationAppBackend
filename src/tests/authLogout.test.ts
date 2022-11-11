@@ -1,4 +1,4 @@
-import { requestClear, requestAuthRegister, requestAuthLogin } from '../wrapperFunctions';
+import { requestClear, requestAuthRegister, requestAuthLogout, requestAuthLogin } from '../wrapperFunctions';
 // Function Wrappers using above function
 
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
@@ -7,37 +7,33 @@ beforeEach(() => {
   requestClear();
 });
 
-describe('Testing authLogin function', () => {
-  // Testing login details are valid (registered)
-  test('Testing successful login', () => {
-    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+describe('Testing authlogout function', () => {
+  test('Successful logout (one token)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+  });
+  test('Successful logout (multiple tokens)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
     const login = requestAuthLogin('example@gmail.com', 'ABCD1234');
-    expect(login).toStrictEqual(
-      {
-        token: expect.any(String),
-        authUserId: expect.any(Number)
-      });
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+    expect(requestAuthLogout(login.token)).toStrictEqual({});
   });
 
-  // Email and password are valid/registered, but don't match (for different users)
-  test("Testing failed login (registered email and password don't match)", () => {
-    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-    requestAuthRegister('example2@gmail.com', 'WXYZ5678', 'Aditya', 'Rana12');
-    const login = requestAuthLogin('example@gmail.com', 'WXYZ5678');
-    expect(login).toStrictEqual({ error: expect.any(String) });
+  test('Succesfu logout (Multiple Users)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    const user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+    expect(requestAuthLogout(user2.token)).toStrictEqual({});
+  });
+  test('Failed logout (invalid token)', () => {
+    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    expect(requestAuthLogout('wrongToken')).toStrictEqual(403);
   });
 
-  // Email (right) / Password (does not exist)
-  test('Testing failed login (password does not exist)', () => {
-    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-    const login = requestAuthLogin('example@gmail.com', 'QWERTY');
-    expect(login).toStrictEqual({ error: expect.any(String) });
-  });
-
-  // Email (does not exist) / Password (null)
-  test('Testing failed login (email does not exist)', () => {
-    requestAuthRegister('example@gmail.com', 'ABCD1234', 'Nicole', 'Jiang');
-    const login = requestAuthLogin('csesoc@gmail.com', 'ABCD1234');
-    expect(login).toStrictEqual({ error: expect.any(String) });
+  test(' 1 Successful logout and 1 failed (multiple tokens)', () => {
+    const user = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Aditya', 'Rana');
+    requestAuthLogin('example@gmail.com', 'ABCD1234');
+    expect(requestAuthLogout(user.token)).toStrictEqual({});
+    expect(requestAuthLogout('wrongToken')).toStrictEqual(403);
   });
 });

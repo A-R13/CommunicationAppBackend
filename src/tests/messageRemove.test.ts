@@ -67,7 +67,8 @@ describe('message remove tests', () => {
         messageId: msg1.messageId,
         uId: user0.authUserId,
         timeSent: expect.any(Number),
-        isPinned: expect.any(Boolean),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
       },
     ]);
   });
@@ -88,7 +89,8 @@ describe('message remove tests', () => {
         messageId: msg1.messageId,
         uId: 0,
         timeSent: expect.any(Number),
-        isPinned: expect.any(Boolean),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
       },
     ]);
   });

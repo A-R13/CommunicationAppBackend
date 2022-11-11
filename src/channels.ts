@@ -50,6 +50,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
         },
       ],
       messages: [],
+      standup: { status: null, timeFinish: null },
     };
 
     data.channels.push(channel);
@@ -75,7 +76,7 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
   const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `${token} is invalid` };
+    throw HTTPError(403, `${token} is invalid`);
   }
 
   const listChannels = [];
