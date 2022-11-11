@@ -1,7 +1,9 @@
 import validator from 'validator';
+import HTTPError from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
+
 import { getData, setData } from './dataStore';
-import { getToken } from './other';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <Description: Given a valid email, password, first name and last name, this function will create a user account and return a unique id .>
@@ -12,20 +14,16 @@ import { getToken } from './other';
  * @returns {number} authUserId - unique Id of the user
  */
 
-export function authRegisterV2(email: string, password: string, nameFirst: string, nameLast: string): {token: string, authUserId: number} | {error: string} {
+export function authRegisterV3(email: string, password: string, nameFirst: string, nameLast: string): {token: string, authUserId: number} | {error: string} {
   const data = getData();
   // checks whether email, password, first name and last name are valid
   if (!validator.isEmail(email) || password.length < 6 || nameFirst.length < 1 ||
         nameFirst.length > 50 || nameLast.length < 1 || nameLast.length > 50) {
-    return {
-      error: 'Invalid Details.'
-    };
+    throw HTTPError(400, 'Error: Invalid Details.');
   }
   // checks whether email is already in use by another user
   if (data.users.find(users => users.email === email)) {
-    return {
-      error: 'Email in Use.'
-    };
+    throw HTTPError(400, 'Error: Email is already in use.');
   }
 
   // create user handle
@@ -51,16 +49,21 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
   }
   // generate a string token
   const token = uuidv4();
+  const tokenHashed = getHashOf(token + SECRET);
+
+  // Hasing the passwordd
+  const passwordHashed = getHashOf(password);
+
   // Assign, push and set the data
   data.users.push(
     {
       authUserId: id,
       userHandle: userHandle,
       email: email,
-      password: password,
+      password: passwordHashed,
       nameFirst: nameFirst,
       nameLast: nameLast,
-      sessions: [token],
+      sessions: [tokenHashed],
     }
   );
 
@@ -77,24 +80,25 @@ export function authRegisterV2(email: string, password: string, nameFirst: strin
  * @returns {number} authUserId - unique Id of the user
  * @returns {string} token
  */
-export function authLoginV2(email: string, password: string): {token: string, authUserId: number} | {error: string} {
+export function authLoginV3(email: string, password: string): {token: string, authUserId: number} | {error: string} {
   const data = getData();
   const array = data.users;
   for (const num in array) {
     if (array[num].email === email) {
-      if (array[num].password === password) {
+      if (array[num].password === getHashOf(password)) {
         const token = uuidv4();
-        array[num].sessions.push(token);
+        const tokenHashed = getHashOf(token + SECRET);
+        array[num].sessions.push(tokenHashed);
         return {
           token: token,
           authUserId: array[num].authUserId
         };
       } else {
-        return { error: 'error' };
+        throw HTTPError(400, 'Error: Invalid Password');
       }
     }
   }
-  return { error: 'error' };
+  throw HTTPError(400, 'Error: Invalid Email');
 }
 
 /**
@@ -103,15 +107,16 @@ export function authLoginV2(email: string, password: string): {token: string, au
  * @returns {}
  */
 
-export function authLogoutV1(token: string): Record<string, never> | {error: string} {
+export function authLogoutV2(token: string): Record<string, never> | {error: string} {
   const data = getData();
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: 'Invalid Token' };
+    throw HTTPError(403, 'Error: Invalid Token');
   }
   // Get index of token in order to remove it
-  const index = user.sessions.indexOf(token);
+  const index = user.sessions.indexOf(tokenHashed);
 
   for (const users of data.users) {
     if (users.authUserId === user.authUserId) {

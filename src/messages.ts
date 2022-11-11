@@ -1,9 +1,11 @@
-import { getData, setData } from './dataStore';
+import HTTPError from 'http-errors';
+
+import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  userType, userShort, message, dmType, getUId, getToken, getChannel, getDm,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser
-} from './other';
+  getUId, getToken, getChannel, getDm,
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
+} from './helperFunctions';
 
 /**
  * <description: Creates a new dm with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -13,27 +15,28 @@ import {
  * @returns { {dmId: number} } - The dmId of the newly created dm
  */
 
-export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {error: string} {
+export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {error: string} {
   const data = getData();
 
-  const user: userType = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
 
   let uIdArray;
 
   uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
 
   if (JSON.stringify(uIdArray) !== JSON.stringify(uIds)) {
-    return { error: 'A uId in the input is not valid' };
+    throw HTTPError(400, 'Error: A uId in the input is not valid.');
   }
 
   const uIdset = Array.from(new Set(uIdArray));
 
   if (uIdset.length !== uIds.length) {
-    return { error: "There are duplicate uId's in the input uIds" };
+    throw HTTPError(400, "Error: There are duplicate uId's in the input uIds.");
   }
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does no t exist!`);
   }
 
   const length = data.dms.length;
@@ -76,24 +79,26 @@ export function dmCreateV1 (token: string, uIds: number[]): {dmId: number} | {er
  * @returns { {dmId: number} } - The dmId of the newly created dm
  */
 
-export function messageSendV1 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
+export function messageSendV2 (token: string, channelId: number, message: string): {messageId: number} | {error: string} {
   let channel = getChannel(channelId);
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
 
   if (channel === undefined) {
     // If channel is undefined
-    return { error: `Channel with channelId '${channel}' does not exist!` };
+    throw HTTPError(400, `Error: Channel with channelId '${channel}' does not exist!`);
   } else if (message.length < 1 || message.length > 1000) {
-    return { error: 'The message is either too short (< 1) or too long (> 1000).' };
+    throw HTTPError(400, 'Error: The message is either too short (< 1) or too long (> 1000).');
   } else if (user === undefined) {
     // If user doesn't exist at all, return an error
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   const userInChannel = channel.allMembers.find(a => a.uId === user.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: `User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channel}'!` };
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
   }
 
   const messageid = Math.floor(Math.random() * 10000);
@@ -121,13 +126,19 @@ export function messageSendV1 (token: string, channelId: number, message: string
  * @returns {}
  */
 
-export function messageEditV1(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
+export function messageEditV2(token: string, messageId: number, message: string): Record<string, never> | {error: string} {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
 
   // checks if token is valid
-  if (userToken === undefined || message.length > 1000) {
-    return { error: 'Token Is invalid or the message length is > 1000' };
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is invalid');
+  }
+
+  if (message.length > 1000) {
+    throw HTTPError(400, 'Error: Message length cannot be greater than 1000 characters');
   }
 
   // check if valid messages
@@ -136,16 +147,12 @@ export function messageEditV1(token: string, messageId: number, message: string)
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    return {
-      error: 'Message doenst exist in both Dms and Channel'
-    };
+    throw HTTPError(400, 'Error: Dm doesnt exist!');
   }
 
   // checks if it is owner and same user
   if (CheckMessageUser(userToken.authUserId, messageId) === false) {
-    return {
-      error: 'User is not an owner and the original sender'
-    };
+    throw HTTPError(403, 'Error: Not the same user and not an owner!');
   }
 
   // In dms
@@ -177,21 +184,21 @@ export function messageEditV1(token: string, messageId: number, message: string)
  * @returns {} - nothing
  */
 
-export function dmRemoveV1(token : string, dmId: number) {
+export function dmRemoveV2(token : string, dmId: number) {
   const data = getData();
 
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
   const dm = getDm(dmId);
 
   // checks if token is valid
   if (user === undefined) {
-    return { error: 'Token is invalid' };
+    throw HTTPError(403, 'Error: Token doesnt exist');
   }
   // dm doesnt exist
   if (dm === undefined) {
-    return {
-      error: 'dm doesnt exist'
-    };
+    throw HTTPError(400, 'Error: Dm doesnt exist');
   }
 
   const userIdentity = user.authUserId;
@@ -202,9 +209,7 @@ export function dmRemoveV1(token : string, dmId: number) {
 
   // checks if the user is an owner.
   if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
-    return {
-      error: 'User isnt an owner'
-    };
+    throw HTTPError(403, 'Error: Not an owner');
   }
 
   // deletes the dm
@@ -228,40 +233,42 @@ export function dmRemoveV1(token : string, dmId: number) {
  * @returns { messages: [{ messageId, uId, message, timeSent }], start: number, end: number}
  */
 
-export function dmMessagesV1 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
-  const userToken = getToken(token);
+export function dmMessagesV2 (token: string, dmId: number, start: number): { messages: message[], start: number, end: number} | { error: string} {
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+
   const dm: dmType = getDm(dmId);
 
   if (dm === undefined) {
     // If dm is undefined
-    return { error: `dm with dmId '${dmId}' does not exist!` };
+    throw HTTPError(400, `Error: Dm with dmId '${dmId}' does not exist!`);
   } else if (start > dm.messages.length) {
     // If the provided start is greater than the total messages in the dm, an error will be returned
-    return { error: `Start '${start}' is greater than the total number of messages in the specified dm` };
+    throw HTTPError(400, `Error: Start '${start}' is greater than the total number of messages in the specified channel`);
   }
 
   if (userToken === undefined) {
     // If user doesn't exist at all, return an error
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   const userInDm = dm.members.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInDm === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: `User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!` };
+    throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!`);
   }
 
   if ((start + 50) > dm.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
-      messages: dm.messages.slice(start, dm.messages.length),
+      messages: dm.messages.slice(0, dm.messages.length),
       start: start,
       end: -1,
     };
   } else {
     return {
       // If the end value is less than the messages in the channel, set end to (start + 50) to indicate there are still more messages to be loaded
-      messages: dm.messages.slice(start, (start + 50)),
+      messages: dm.messages.slice(0, (start + 50)),
       start: start,
       end: (start + 50),
     };
@@ -276,22 +283,24 @@ export function dmMessagesV1 (token: string, dmId: number, start: number): { mes
  * @returns { name: string, members: [users]}
  */
 
-export function dmDetailsV1 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
+export function dmDetailsV2 (token: string, dmId: number): {name: string, members: userShort[]} | { error: string} {
   // check if token and dmId are valid
-  const checkToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const checkToken = getToken(tokenHashed);
+
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
-    return { error: 'Invalid Token.' };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    return { error: 'Invalid DmId' };
+    throw HTTPError(400, 'Error: Invalid DmId');
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
     // If user is not a member of the target channel, return an error
-    return { error: 'User is not a member of this dm' };
+    throw HTTPError(403, 'Error: User is not a member of the Dm');
   }
 
   return {
@@ -308,13 +317,15 @@ export function dmDetailsV1 (token: string, dmId: number): {name: string, member
  * @returns { dms: dmType[] } dms
  */
 
-export function dmListV1 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
-  const user = getToken(token);
+export function dmListV2 (token: string): { dms: { dmId: number, name: string }[] } | { error: string } {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
   const data = getData();
   const dmArray = data.dms;
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   let dmList: { dmId: number, name: string }[] = [];
@@ -327,32 +338,35 @@ export function dmListV1 (token: string): { dms: { dmId: number, name: string }[
   return { dms: dmList };
 }
 
-export function messageSendDmV1 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
+export function messageSendDmV2 (token: string, dmId: number, message: string): {messageId: number} | {error: string} {
   const data = getData();
-  const checkToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const checkToken = getToken(tokenHashed);
+
   const checkDM: dmType = getDm(dmId);
 
   if (checkToken === undefined) {
-    return { error: 'Invalid Token.' };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
   if (checkDM === undefined) {
-    return { error: 'Invalid DmId' };
+    throw HTTPError(400, 'Error: Invalid DmId');
   }
 
   if (message.length < 1 || message.length > 1000) {
-    return { error: 'Invalid Message length' };
+    throw HTTPError(400, 'Error: Invalid Message Length');
   }
   // check if user is a member of the Dm
   const userInDm = checkDM.members.find((a: userShort) => a.uId === checkToken.authUserId);
   if (userInDm === undefined) {
-    return { error: 'User is not a member of this dm' };
+    throw HTTPError(403, 'Error: User is not a member of Dm');
   }
 
   const messageid = Math.floor(Math.random() * 10000);
 
   for (const dm of data.dms) {
     if (dm.dmId === checkDM.dmId) {
-      dm.messages.push({
+      dm.messages.unshift({
         messageId: messageid,
         uId: checkToken.authUserId,
         message: message,
@@ -376,24 +390,27 @@ export function messageSendDmV1 (token: string, dmId: number, message: string): 
  * @returns {}
  */
 
-export function dmLeaveV1 (token: string, dmId: number) {
+export function dmLeaveV2 (token: string, dmId: number) {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+
   const checkInDm: dmType = getDm(dmId);
   // invalid token
   if (userToken === undefined) {
-    return { error: `Inputted token '${token}' is invalid` };
+    throw HTTPError(403, 'Error: User token does not exist!');
   }
-  // nvalid dmID
+  // Invalid dmID
   if (checkInDm === undefined) {
-    return { error: 'Dm ID not found' };
+    throw HTTPError(400, 'Error: DmId is not valid!');
   }
 
   const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInDm === undefined) {
-    return { error: 'Inputted user is not a member of this DM' };
+    throw HTTPError(403, 'Error: User is not a member of the dm');
   } else {
     data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
@@ -411,13 +428,15 @@ export function dmLeaveV1 (token: string, dmId: number) {
  * @returns {}
  */
 
-export function messageRemoveV1 (token: string, messageId: number) {
+export function messageRemoveV2 (token: string, messageId: number) {
   const data = getData();
-  const userToken = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
 
   // checks if token is valid
   if (userToken === undefined) {
-    return { error: 'Token is invalid' };
+    throw HTTPError(403, 'Error, User token does not exist!');
   }
 
   // check if valid messages
@@ -426,14 +445,12 @@ export function messageRemoveV1 (token: string, messageId: number) {
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    return { error: 'Channel/Dm is invalid' };
+    throw HTTPError(400, 'Error: Message does not exist in channel/dm');
   }
 
   // checks if it is owner and same user
   if (CheckMessageUser(userToken.authUserId, messageId) === false) {
-    return {
-      error: 'User is not an owner or user is not the creator of the message'
-    };
+    throw HTTPError(403, 'Error: User is not an owner or user is not the creator of the message');
   }
 
   // In dms
