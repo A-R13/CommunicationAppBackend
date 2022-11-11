@@ -253,7 +253,7 @@ export function addOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined) {
+  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
     throw HTTPError(403, 'Authorised user does not have owner permissions in the channel');
   }
 
@@ -328,7 +328,7 @@ export function removeOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authUser which the token belongs to, is not an owner
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined) {
+  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
     throw HTTPError(403, 'Error: Authorised user is not an owner of channel');
   }
 

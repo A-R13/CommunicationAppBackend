@@ -54,7 +54,7 @@ export function requestChannelsListAll (token: string) {
 }
 
 export function requestChannelsList (token: string) {
-  return requestHelper('GET', '/channels/list/v2', { token });
+  return requestHelper('GET', '/channels/list/v2', { }, token);
 }
 
 export function requestchannelDetails(token : string, channelId : number) {
@@ -143,4 +143,8 @@ export function requestUserSetEmail(token: string, email: string) {
 
 export function requestMessageRemove(token: string, messageId: number) {
   return requestHelper('DELETE', '/message/remove/v2', { messageId }, token);
+}
+
+export function requestStandupStart(token: string, channelId: number, length: number) {
+  return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
