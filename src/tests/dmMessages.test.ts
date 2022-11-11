@@ -60,12 +60,16 @@ describe('Dm Messages tests', () => {
           uId: user0.authUserId,
           message: 'Message 1',
           timeSent: expect.any(Number),
+          reacts:  expect.any(Array),
+          isPinned: expect.any(Boolean)
         },
         {
           messageId: expect.any(Number),
           uId: user0.authUserId,
           message: 'Message 0',
           timeSent: expect.any(Number),
+          reacts:  expect.any(Array),
+          isPinned: expect.any(Boolean)
         }
       ]
     });
@@ -99,6 +103,8 @@ describe('Dm Messages tests', () => {
       uId: user0.authUserId,
       message: 'Message 5',
       timeSent: expect.any(Number),
+      reacts:  expect.any(Array),
+      isPinned: expect.any(Boolean)
     });
 
     expect(requestDmMessages(user0.token, dm0.dmId, 2).messages).toContainEqual({
@@ -106,6 +112,8 @@ describe('Dm Messages tests', () => {
       uId: user0.authUserId,
       message: 'Message 52',
       timeSent: expect.any(Number),
+      reacts:  expect.any(Array),
+      isPinned: expect.any(Boolean)
     });
 
     expect(requestDmMessages(user0.token, dm0.dmId, 2).messages).not.toContain({
@@ -113,6 +121,8 @@ describe('Dm Messages tests', () => {
       uId: user0.authUserId,
       message: 'Message 1',
       timeSent: expect.any(Number),
+      reacts:  expect.any(Array),
+      isPinned: expect.any(Boolean)
     });
   });
 });
