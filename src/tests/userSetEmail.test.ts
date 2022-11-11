@@ -7,7 +7,7 @@ afterEach(() => {
   requestClear();
 });
 
-describe('userSetEmailV1 tests', () => {
+describe('userSetEmailV2 tests', () => {
   let user0: newUser;
   let user1: newUser;
 
@@ -54,26 +54,26 @@ describe('userSetEmailV1 tests', () => {
 
   // email is in the invalid format
   test('throw error if email is in the invalid format', () => {
-    expect(requestUserSetEmail(user0.token, 'example@gmail...com')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserSetEmail(user0.token, 'example@gmail...com')).toStrictEqual(400);
   });
 
   // no email has been inputted
   test('throw error if no email has been inputted', () => {
-    expect(requestUserSetEmail(user0.token, '')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserSetEmail(user0.token, '')).toStrictEqual(400);
   });
 
   // invalid token
   test('throw error if the token is invalid', () => {
-    expect(requestUserSetEmail('a', 'example0@gmail.com')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserSetEmail('a', 'example0@gmail.com')).toStrictEqual(403);
   });
 
   // email already exists
   test('throw error if no email is already in use', () => {
-    expect(requestUserSetEmail(user0.token, 'example2@gmail.com')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserSetEmail(user0.token, 'example2@gmail.com')).toStrictEqual(400);
   });
 
   // email isn't being changed (sub-category)
   test('throw error if the new email has not been changed', () => {
-    expect(requestUserSetEmail(user0.token, 'example1@gmail.com')).toStrictEqual({ error: expect.any(String) });
+    expect(requestUserSetEmail(user0.token, 'example1@gmail.com')).toStrictEqual(400);
   });
 });

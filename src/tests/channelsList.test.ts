@@ -16,7 +16,7 @@ describe('channelsList tests', () => {
   });
 
   test('Testing error return', () => {
-    expect(requestChannelsList('abcd')).toStrictEqual({ error: expect.any(String) });
+    expect(requestChannelsList('abcd')).toStrictEqual(403);
   });
 
   test('testing user in multiple channels', () => {
