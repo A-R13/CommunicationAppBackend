@@ -1,7 +1,7 @@
 import { newUser, newChannel, newDm, message } from '../dataStore';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestAdminUserRemove, requestChannelJoin, requestUsersAll, requestUserProfile, requestDmCreate,
-  requestMessageSend, requestChannelMessages, requestMessageSendDm, requestDmMessages
+  requestMessageSend, requestChannelMessages, requestMessageSendDm, requestDmMessages, requestMessagePin
 } from '../wrapperFunctions';
 
 requestClear();
@@ -96,6 +96,7 @@ describe('Correct Returns and correct changes', () => {
         const msg1: message = requestMessageSend(user2.token, channel1.channelId, 'Message from user with uId 1');
         const msg2: message = requestMessageSend(user3.token, channel1.channelId, 'Message from user with uId 2');
 
+        requestMessagePin(user1.token, msg2.messageId);
         // Add a react to the 2nd msg to see if the react sticks.
         expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
             {
@@ -144,6 +145,7 @@ describe('Correct Returns and correct changes', () => {
         const msg1: message = requestMessageSendDm(user2.token, dm1.dmId, 'Message from user with uId 1');
         const msg2: message = requestMessageSendDm(user3.token, dm1.dmId, 'Message from user with uId 2');
 
+        requestMessagePin(user1.token, msg2.messageId);
         // Add a react to the 2nd msg to see if the react sticks.
         expect(requestDmMessages(user1.token, dm1.dmId, 0).messages).toStrictEqual([
             {
