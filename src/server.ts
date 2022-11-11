@@ -53,6 +53,7 @@ app.post('/auth/login/v3', (req: Request, res: Response, next) => {
   try {
     const { email, password } = req.body;
     saveData();
+    
     return res.json(authLoginV3(email, password));
   } catch (err) {
     next(err);
@@ -95,6 +96,7 @@ app.get('/user/profile/v3', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const uId = req.query.uId as string;
+
     return res.json(userProfileV3(token, parseInt(uId)));
   } catch (err) {
     next(err);
@@ -172,9 +174,13 @@ app.post('/channel/addowner/v2', (req: Request, res: Response, next) => {
 });
 
 app.get('/channels/list/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
+  try {
+    const token = req.header('token');
 
-  res.json(channelsListV2(token));
+    res.json(channelsListV2(token));
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post('/channel/leave/v2', (req: Request, res: Response, next) => {
@@ -217,8 +223,7 @@ app.put('/message/edit/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const { messageId, message } = req.body;
-    saveData();
-
+    
     return res.json(messageEditV2(token, messageId, message));
   } catch (err) {
     next(err);
@@ -254,7 +259,6 @@ app.get('/dm/messages/v2', (req: Request, res: Response, next) => {
     const start = req.query.start as string;
     const token = req.header('token');
 
-    saveData();
     return res.json(dmMessagesV2(token, parseInt(dmId), parseInt(start)));
   } catch (err) {
     next(err);
