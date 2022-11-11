@@ -53,7 +53,6 @@ app.post('/auth/login/v3', (req: Request, res: Response, next) => {
   try {
     const { email, password } = req.body;
     saveData();
-    
     return res.json(authLoginV3(email, password));
   } catch (err) {
     next(err);
@@ -221,7 +220,6 @@ app.put('/message/edit/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const { messageId, message } = req.body;
-    
     return res.json(messageEditV2(token, messageId, message));
   } catch (err) {
     next(err);
@@ -373,9 +371,9 @@ app.get('/search/v1', (req: Request, res: Response, next) => {
 
     return res.json(searchV1(token, queryStr));
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 app.post('/standup/start/v1', (req: Request, res: Response, next) => {
   try {
