@@ -2,6 +2,12 @@ import fs from 'fs';
 
 // Exported types
 
+export interface reacts {
+  reactId: number,
+  uIds: number[],
+  isThisUserReacted: boolean
+}
+
 export interface userType {
   authUserId: number,
   userHandle: string,
@@ -25,6 +31,8 @@ export interface message {
   uId: number,
   message: string,
   timeSent: number,
+  reacts: [],
+  isPinned: boolean
 }
 
 export interface channelType {
@@ -68,11 +76,7 @@ export interface newDm {
   dmId: number
 }
 
-export interface reacts {
-  reactId: number,
-  uIds: number[],
-  isThisUserReacted: boolean
-}
+
 export interface messagesReacts {
   messageId: number,
   uId: number,

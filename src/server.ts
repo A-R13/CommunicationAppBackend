@@ -12,6 +12,7 @@ import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels'
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2 } from './users';
+import { searchV1 } from './search';
 
 import { clearV1 } from './other';
 
@@ -361,6 +362,17 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
     next(err);
   }
 });
+
+app.get('/search/v1', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    const queryStr = req.query.queryStr as string;
+
+    return res.json(searchV1(token, queryStr));
+  } catch (err) {
+    next(err);
+  }
+})
 
 // handles errors nicely
 app.use(errorHandler());
