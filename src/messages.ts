@@ -469,3 +469,12 @@ export function messageRemoveV2 (token: string, messageId: number) {
   setData(data);
   return {};
 }
+/**
+ * <Description: Allows a user to add a reaction to a valid message
+ * @param {string} token -  Unique token of an authorised user
+ * @param {number} messageId - Unique id for a message
+ * @param {number} reactId - Id for a reaction
+ */
+export function messageReact (token: string, messageId: number, reactId: number) {
+
+}
