@@ -38,7 +38,7 @@ describe('standup active tests', () => {
         expect(requestStandupActive(user1.token, channel1.channelId)).toStrictEqual(
             {
                 status: false,
-                timeFinish: expect.any(Number),
+                timeFinish: null,
             },
         );
 
