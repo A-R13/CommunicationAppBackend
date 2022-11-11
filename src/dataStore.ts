@@ -68,6 +68,20 @@ export interface newDm {
   dmId: number
 }
 
+export interface reacts {
+  reactId: number,
+  uIds: number[],
+  isThisUserReacted: boolean
+}
+export interface messagesReacts {
+  messageId: number,
+  uId: number,
+  message: string,
+  timeSent: number,
+  reacts: reacts[],
+  isPinned: boolean
+}
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
   users: [],

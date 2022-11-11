@@ -139,7 +139,6 @@ app.post('/channel/invite/v3', (req: Request, res: Response, next) => {
   try {
     const { channelId, uId } = req.body;
     const token = req.header('token');
-    
     saveData();
     return res.json(channelInviteV3(token, parseInt(channelId), parseInt(uId)));
   } catch (err) {
@@ -151,7 +150,6 @@ app.post('/channel/removeowner/v2', (req: Request, res: Response, next) => {
   try {
     const { channelId, uId } = req.body;
     const token = req.header('token');
-    
     saveData();
     return res.json(removeOwnerV2(token, parseInt(channelId), parseInt(uId)));
   } catch (err) {
