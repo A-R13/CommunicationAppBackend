@@ -70,6 +70,7 @@ describe('Message Pin tests', () => {
         messageId: msg1.messageId,
         uId: user0.authUserId,
         timeSent: expect.any(Number),
+        reacts: expect.any(Array),
         isPinned: true,
       },
     ]);
@@ -79,6 +80,7 @@ describe('Message Pin tests', () => {
       uId: user0.authUserId,
       message: 'FIRST MESSAGE BY THE OWNER IN DM',
       timeSent: expect.any(Number),
+      reacts: expect.any(Array),
       isPinned: true,
     });
   });

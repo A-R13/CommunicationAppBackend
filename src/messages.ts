@@ -499,24 +499,22 @@ export function messagePinV1(token: string, messageId: any) {
     throw HTTPError(400, 'Error: MessageId doesnt exist!');
   } else if (channelIndex === -1 && DmIndex !== -1) {
     if (!data.dms[DmIndex].members.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the Dm')
+      throw HTTPError(400, 'Error: User is not in the Dm');
     } else if (!data.dms[DmIndex].owners.find(user => user.uId === userToken.authUserId)) {
       throw HTTPError(403, 'Error: Not an owner in channels');
-    } 
+    }
   } else if (channelIndex !== -1 && DmIndex === -1) {
     if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the channel')
+      throw HTTPError(400, 'Error: User is not in the channel');
     } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
       throw HTTPError(403, 'Error: Not an owner in dms');
-    } 
+    }
   }
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
-    
+
     data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
-
-
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
 
@@ -525,5 +523,4 @@ export function messagePinV1(token: string, messageId: any) {
 
   setData(data);
   return {};
-
 }
