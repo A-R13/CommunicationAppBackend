@@ -103,11 +103,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
 
   const messageid = Math.floor(Math.random() * 10000);
 
-  const msgg = {
+  const msgg: message = {
     messageId: messageid,
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
+    reacts: [],
+    isPinned: false
   };
 
   const data = getData();
@@ -371,6 +373,8 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
+        reacts: [],
+        isPinned: false
       });
       break;
     }
