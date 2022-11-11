@@ -76,7 +76,6 @@ export interface newDm {
   dmId: number
 }
 
-
 export interface messagesReacts {
   messageId: number,
   uId: number,

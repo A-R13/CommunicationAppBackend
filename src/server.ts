@@ -372,7 +372,7 @@ app.get('/search/v1', (req: Request, res: Response, next) => {
   } catch (err) {
     next(err);
   }
-})
+});
 
 // handles errors nicely
 app.use(errorHandler());

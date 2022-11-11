@@ -103,7 +103,7 @@ export function messageSendV2 (token: string, channelId: number, message: string
 
   const messageid = Math.floor(Math.random() * 10000);
 
-  const msgg = {
+  const msgg: message = {
     messageId: messageid,
     uId: user.authUserId,
     message: message,
