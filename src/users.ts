@@ -1,6 +1,9 @@
-import { getData } from './dataStore';
-import { getToken } from './other';
+import HTTPError from 'http-errors';
 import validator from 'validator';
+
+import { getData } from './dataStore';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
+
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
  * @param {number} channelId - unique ID for a channel
@@ -8,23 +11,22 @@ import validator from 'validator';
  * @returns {user}
  */
 
-export function userProfileV2 (token : string, uId : number) {
+export function userProfileV3 (token : string, uId : number) {
   const data = getData();
-  let checkToken = false;
-  let checkUId = false;
 
-  const userToken = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
 
-  if (userToken !== undefined) {
-    checkToken = true;
+  if (userToken === undefined) {
+    throw HTTPError(403, `Erorr: '${token}' is invalid`);
   }
 
-  if (data.users.find(users => users.authUserId === uId)) {
-    checkUId = true;
+  if (data.users.find(users => users.authUserId === uId) === undefined) {
+    throw HTTPError(400, 'Erorr: uID is not correct!');
   }
 
   for (const tokenFinder of data.users) {
-    if (checkToken === true && checkUId === true && uId === tokenFinder.authUserId) {
+    if (uId === tokenFinder.authUserId) {
       return {
         user: {
           uId: tokenFinder.authUserId,
@@ -36,10 +38,6 @@ export function userProfileV2 (token : string, uId : number) {
       };
     }
   }
-
-  if (checkToken === false || checkUId === false) {
-    return { error: 'Token is invalid or the uId isnt correct' };
-  }
 }
 
 /**
@@ -50,12 +48,13 @@ export function userProfileV2 (token : string, uId : number) {
  * @returns {Array of objects}
  */
 
-export function usersAllV1 (token: string) {
+export function usersAllV2 (token: string) {
   const data = getData();
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `The inputted token '${token}' is invalid` };
+    throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
   }
   const userArray = data.users;
   // modifies stored users array to only return what's needed
@@ -82,16 +81,17 @@ export function usersAllV1 (token: string) {
  * @returns {{}}
  */
 
-export function userSetNameV1 (token: string, nameFirst: string, nameLast: string) {
-  const user = getToken(token);
+export function userSetNameV2 (token: string, nameFirst: string, nameLast: string) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   // error checking
   if (nameFirst === '' || nameFirst.length > 50) {
-    return { error: 'first name is not of the correct length' };
+    throw HTTPError(400, 'Error: First name is not of the correct length');
   } else if (nameLast === '' || nameLast.length > 50) {
-    return { error: 'last name is not of the correct length' };
+    throw HTTPError(400, 'Error: Last name is not of the correct length');
   } else if (user === undefined) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   user.nameFirst = nameFirst;
@@ -106,16 +106,17 @@ export function userSetNameV1 (token: string, nameFirst: string, nameLast: strin
  * @param {string} email
  * @returns {{}}
  */
-export function userSetEmailV1 (token: string, email: string) {
+export function userSetEmailV2 (token: string, email: string) {
   const data = getData();
-  const user = getToken(token);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (!validator.isEmail(email)) {
-    return { error: 'email is invalid' };
+    throw HTTPError(400, 'Error: Invalid email');
   } else if (user === undefined) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Error: Invalid token');
   } else if (data.users.find(users => users.email === email)) {
-    return { error: 'email already exists' };
+    throw HTTPError(400, 'Error: Email already exists');
   }
 
   user.email = email;
@@ -129,19 +130,21 @@ export function userSetEmailV1 (token: string, email: string) {
  * @param {string} handleStr
  * @returns {{}}
  */
-export function userSetHandleV1 (token: string, handleStr: string) {
+export function userSetHandleV2 (token: string, handleStr: string) {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   // error checking
   if (handleStr.length < 3 || handleStr.length > 20) {
-    return { error: 'handle is the incorrect length' };
+    throw HTTPError(400, 'Error: Handle is the incorrect length');
   } else if (handleStr.match(/^[0-9A-Za-z]+$/) === null) {
-    return { error: 'handle contains non-alphanumeric characters' };
+    throw HTTPError(400, 'Error: Handle contains non-alphanumeric characters');
   } else if (data.users.find(users => users.userHandle === handleStr)) {
-    return { error: 'handle already exists' };
+    throw HTTPError(400, 'Error: Handle already exists');
   } else if (user === undefined) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'Error: Invalid token');
   }
 
   user.userHandle = handleStr;
