@@ -42,3 +42,36 @@ export function standupStartV1(token: string, channelId: number, length: number)
 
   return { timeFinish: timeFinish };
 }
+
+export function standupActiveV1(token: string, channelId: number): { status: boolean, timeFinish: number } {
+  const channel1 = getChannel(channelId);
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  if (userToken === undefined)  {
+    throw HTTPError(403, 'Error: User token is invalid');
+  }
+  if (channel === undefined) {
+    throw HTTPError(400, 'Error: ChannelId in invalid');
+  }
+
+  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
+  if (userInChannel === undefined) {
+    // If user is not a member of the target channel, return an error
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
+  }
+
+  const timeFinish = Math.floor(Date.now() / 1000) + length;
+
+  if (channel1.standup.status === true) {
+    return {
+      status: true,
+      timeFinish: timeFinish,
+    }
+  } else {
+    return {
+      status: false,
+      timeFinish: null,
+    }
+  }
+}
