@@ -144,3 +144,7 @@ export function requestUserSetEmail(token: string, email: string) {
 export function requestMessageRemove(token: string, messageId: number) {
   return requestHelper('DELETE', '/message/remove/v2', { messageId }, token);
 }
+
+export function requestSearch(token: string, queryStr: string) {
+  return requestHelper('GET', '/search/v1', { queryStr }, token);
+}
