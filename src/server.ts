@@ -11,7 +11,7 @@ import { channelDetailsV3, channelJoinV3, channelInviteV2, channelMessagesV3, ch
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV1, userSetEmailV1, userSetHandleV1 } from './users';
-import { standupStartV1 } from './standup'
+import { standupStartV1 } from './standup';
 
 import { clearV1 } from './other';
 
@@ -342,7 +342,6 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
     next(err);
   }
 });
-
 
 // handles errors nicely
 app.use(errorHandler());

@@ -34,7 +34,7 @@ export interface channelType {
   ownerMembers: userShort[],
   allMembers: userShort[],
   messages: message[],
-  standup: { status: Boolean, timeFinish: Number },
+  standup: { status: boolean, timeFinish: number },
 }
 
 export interface channelShort {

@@ -5,15 +5,14 @@ import {
 
 requestClear();
 
-
 let user1: newUser;
 let channel1: newChannel;
 
 beforeEach(() => {
-    requestClear();
+  requestClear();
 
-    user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
-    channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
+  user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'nicole', 'Doe');
+  channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
 });
 
 afterEach(() => {
@@ -21,28 +20,24 @@ afterEach(() => {
 });
 
 describe('Error Testing', () => {
+  test('error returns', () => {
+    // invalid channel
+    expect(requestStandupStart(user1.token, 99, 10)).toStrictEqual(400);
 
-    test('error returns', () => {
-        // invalid channel
-        expect(requestStandupStart(user1.token, 99, 10)).toStrictEqual(400);
-    
-        // user is already in channel
-        expect(requestStandupStart(user1.token, channel1.channelId, -2)).toStrictEqual(400);
-    
-        // A standup is already running
-        requestStandupStart(user1.token, channel1.channelId, 10);
-        expect(requestStandupStart(user1.token, channel1.channelId, 3)).toStrictEqual(400);
-    
-        // invalid user
-        expect(requestStandupStart('abcde', channel1.channelId, 3)).toStrictEqual(403);
-    });
+    // user is already in channel
+    expect(requestStandupStart(user1.token, channel1.channelId, -2)).toStrictEqual(400);
 
-}) 
+    // A standup is already running
+    requestStandupStart(user1.token, channel1.channelId, 10);
+    expect(requestStandupStart(user1.token, channel1.channelId, 3)).toStrictEqual(400);
+
+    // invalid user
+    expect(requestStandupStart('abcde', channel1.channelId, 3)).toStrictEqual(403);
+  });
+});
 
 describe('Correct Return', () => {
-    
-    test('Correct return', () => {
-
-        expect(requestStandupStart(user1.token, channel1.channelId, 10)).toStrictEqual({ timeFinish: expect.any(Number) });
-    })
-})
+  test('Correct return', () => {
+    expect(requestStandupStart(user1.token, channel1.channelId, 10)).toStrictEqual({ timeFinish: expect.any(Number) });
+  });
+});
