@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm,
+  getUId, getToken, getChannel, getDm, checkIsPinned,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -103,11 +103,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
 
   const messageid = Math.floor(Math.random() * 10000);
 
-  const msgg = {
+  const msgg: message = {
     messageId: messageid,
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
+    reacts: [],
+    isPinned: false
   };
 
   const data = getData();
@@ -147,7 +149,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
   const DmIndex = CheckValidMessageDms(messageId);
 
   if (channelIndex === -1 && DmIndex === -1) {
-    throw HTTPError(400, 'Error: Dm doesnt exist!');
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
   }
 
   // checks if it is owner and same user
@@ -371,6 +373,8 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
+        reacts: [],
+        isPinned: false,
       });
       break;
     }
@@ -466,12 +470,24 @@ export function messageRemoveV2 (token: string, messageId: number) {
   return {};
 }
 
+<<<<<<< HEAD
 
 export function messageUnpin(token: string, messageId: any) {
+=======
+/**
+ * <Description: Pins a message >
+* @param {string} token - Unique token of an authorised user
+ * @param {number} messageId - messageId
+ * @returns { }
+ */
+
+export function messagePinV1(token: string, messageId: any) {
+>>>>>>> master
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
+<<<<<<< HEAD
   const dmIndex = CheckValidMessageDms(messageId)
 
   // Invalid token
@@ -494,10 +510,37 @@ export function messageUnpin(token: string, messageId: any) {
   } else if (channelIndex !== -1 && dmIndex === -1) {
     if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
       throw HTTPError(400, 'Error: User is not in the channel')
+=======
+  const DmIndex = CheckValidMessageDms(messageId);
+
+  // checks if token is valid
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is invalid');
+  }
+
+  // check if message is pinned
+  if (checkIsPinned(messageId) === true) {
+    throw HTTPError(400, 'Error: Message is already pinned!');
+  }
+
+  // check if valid messages
+  if (channelIndex === -1 && DmIndex === -1) {
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
+  } else if (channelIndex === -1 && DmIndex !== -1) {
+    if (!data.dms[DmIndex].members.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the Dm');
+    } else if (!data.dms[DmIndex].owners.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(403, 'Error: Not an owner in channels');
+    }
+  } else if (channelIndex !== -1 && DmIndex === -1) {
+    if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the channel');
+>>>>>>> master
     } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
       throw HTTPError(403, 'Error: Not an owner in dms');
     }
   }
+<<<<<<< HEAD
 
   if (channelIndex === -1) {
      const dmMessageIndex = data.dms[dmIndex].messages.findIndex(message => message.messageId === messageId);
@@ -514,3 +557,19 @@ export function messageUnpin(token: string, messageId: any) {
 
 
 }
+=======
+  // In dms
+  if (channelIndex === -1) {
+    const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+
+    data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
+  } else { // in channels
+    const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+
+    data.channels[channelIndex].messages[channelMessageIndex].isPinned = true;
+  }
+
+  setData(data);
+  return {};
+}
+>>>>>>> master

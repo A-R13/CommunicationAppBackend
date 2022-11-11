@@ -1,4 +1,4 @@
-import { newUser, dmType } from '../dataStore';
+import { newUser, dmType, newDm } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestDmCreate, requestMessageSendDm
@@ -14,13 +14,15 @@ describe('Message Send Dm Tests', () => {
   let user0: newUser;
   let user1: newUser;
   let user2: newUser;
-  let dm0: dmType;
+  let dm0: newDm;
+  let dm1: newDm
 
   beforeEach(() => {
     requestClear();
     user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
     user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
     user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
+    dm1 = requestDmCreate(user1.token,[user0.authUserId]);
     dm0 = requestDmCreate(user0.token, [user1.authUserId]);
   });
 
