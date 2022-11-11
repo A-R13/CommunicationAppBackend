@@ -1,5 +1,7 @@
-import { getData, setData } from './dataStore';
-import { channelType, channelShort, getToken } from './other';
+import HTTPError from 'http-errors';
+
+import { getData, setData, channelType, channelShort } from './dataStore';
+import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
  * <description: Creates a new channel with the specified name and public/private status, the user who makes the channel is added as a owner and member. >
@@ -10,12 +12,14 @@ import { channelType, channelShort, getToken } from './other';
  * @returns { {channelId: number} } - The channelId of the newly created channel
  */
 
-export function channelsCreateV2 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
+export function channelsCreateV3 (token: string, name: string, isPublic: boolean): { channelId: number } | { error: string } {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   if (name.length >= 1 && name.length <= 20) {
@@ -46,6 +50,7 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
         },
       ],
       messages: [],
+      standup: { status: null, timeFinish: null },
     };
 
     data.channels.push(channel);
@@ -54,7 +59,7 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
 
     return { channelId: channelID };
   } else {
-    return { error: 'Channel name does not meet the required standards standard' };
+    throw HTTPError(400, 'Error: Channel name does not meet the required stadards.');
   }
 }
 
@@ -66,10 +71,12 @@ export function channelsCreateV2 (token: string, name: string, isPublic: boolean
 
 export function channelsListV2 (token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `${token} is invalid` };
+    throw HTTPError(403, `${token} is invalid`);
   }
 
   const listChannels = [];
@@ -97,13 +104,15 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
  * @returns {Array<Objects>} channels - Lists all of the created channels with their ChannelId and name as keys in the object.
  */
 
-export function channelsListAllV2(token: string): {channels: channelShort[]} | {error: string} {
+export function channelsListAllV3(token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
   // Helper function
-  const user = getToken(token);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `User with token '${token}' does not exist!` };
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   // temporary array for channels

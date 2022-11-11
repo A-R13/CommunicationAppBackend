@@ -1,5 +1,73 @@
-import { storedData } from './other';
 import fs from 'fs';
+
+// Exported types
+
+export interface userType {
+  authUserId: number,
+  userHandle: string,
+  email: string,
+  password: string,
+  nameFirst: string,
+  nameLast: string,
+  sessions: string[],
+}
+
+export interface userShort {
+  uId: number,
+  email: string,
+  nameFirst: string,
+  nameLast: string,
+  handleStr: string,
+}
+
+export interface message {
+  messageId: number,
+  uId: number,
+  message: string,
+  timeSent: number,
+}
+
+export interface channelType {
+  channelId: number,
+  channelName: string,
+  isPublic: boolean,
+  ownerMembers: userShort[],
+  allMembers: userShort[],
+  messages: message[],
+  standup: { status: boolean, timeFinish: number },
+}
+
+export interface channelShort {
+  channelId: number,
+  name: string,
+}
+
+export interface dmType {
+  name: string,
+  dmId: number,
+  members: userShort[],
+  owners: userShort[],
+  messages: message[]
+}
+
+export interface storedData {
+  users: userType[],
+  channels: channelType[],
+  dms: dmType[],
+}
+
+export interface newUser {
+  token: string,
+  authUserId: number
+}
+
+export interface newChannel {
+  channelId: number
+}
+
+export interface newDm {
+  dmId: number
+}
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
