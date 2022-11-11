@@ -5,6 +5,10 @@ import {
 
 requestClear();
 
+afterEach(() => {
+    requestClear();
+});
+
 describe('standup active tests', () => {
     let user0: newUser;
     let user1: newUser;
@@ -20,10 +24,6 @@ describe('standup active tests', () => {
         channel1 = requestChannelsCreate(user0.token, 'Channel1', false);
     });
 
-    afterEach(() => {
-        requestClear();
-    });
-
     test('Error returns', () => {
         // Invalid channelId
         expect(requestStandupActive(user0.token, 99)).toStrictEqual(400);
@@ -32,6 +32,7 @@ describe('standup active tests', () => {
         // user not in channel
         expect(requestStandupActive(user1.token, channel1.channelId)).toStrictEqual(403);
     })
+
 
     test('correct returns', () => {
         requestChannelJoin(user1.token, channel1.channelId);
@@ -50,4 +51,5 @@ describe('standup active tests', () => {
             },
         );
     });
+
 });

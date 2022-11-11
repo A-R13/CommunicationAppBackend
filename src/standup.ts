@@ -44,7 +44,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
 }
 
 export function standupActiveV1(token: string, channelId: number): { status: boolean, timeFinish: number } {
-  const channel1 = getChannel(channelId);
+  const channel = getChannel(channelId);
   const tokenHashed = getHashOf(token + SECRET);
   const userToken = getToken(tokenHashed);
 
@@ -54,6 +54,7 @@ export function standupActiveV1(token: string, channelId: number): { status: boo
   if (channel === undefined) {
     throw HTTPError(400, 'Error: ChannelId in invalid');
   }
+
 
   const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInChannel === undefined) {
@@ -74,4 +75,5 @@ export function standupActiveV1(token: string, channelId: number): { status: boo
       timeFinish: null,
     }
   }
+
 }

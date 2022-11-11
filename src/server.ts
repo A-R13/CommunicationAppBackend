@@ -5,6 +5,7 @@ import config from './config.json';
 import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
 
+import { readData, saveData, wipeData } from './dataStore';
 import { authRegisterV3, authLoginV3, authLogoutV2 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
@@ -384,7 +385,6 @@ app.get('/standup/active/v1', (req: Request, res: Response, next) => {
     const channelId = req.query.channelId as string;
     const token = req.header('token');
 
-    saveData();
     return res.json(standupActiveV1(token, parseInt(channelId)));
   } catch (err) {
     next(err);
