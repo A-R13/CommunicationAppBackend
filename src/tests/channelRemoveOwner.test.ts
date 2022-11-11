@@ -60,35 +60,35 @@ describe('removeOwner tests', () => {
   // channelId does not refer to a valid channel
   test('invalid channelId', () => {
     requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-    expect(requestRemoveOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual(400);
   });
 
   // uId does not refer to a valid user
   test('invalid uId', () => {
     requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-    expect(requestRemoveOwner(nicole.token, channel.channelId, 100000)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner(nicole.token, channel.channelId, 100000)).toStrictEqual(400);
   });
 
   // token is invalid
   test('invalid token', () => {
     requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-    expect(requestRemoveOwner('a', channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner('a', channel.channelId, dennis.authUserId)).toStrictEqual(403);
   });
 
   // uId refers to a user who is not an owner of the channel
   test('uId is not an owner', () => {
-    expect(requestRemoveOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual(400);
   });
 
   // uId refers to a user who is currently the only owner of the channel
   test('uId is the only owner', () => {
-    expect(requestRemoveOwner(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual(400);
   });
 
   // channelId is valid and the authorised user does not have owner permissions in the channel
   test('authorised user does not have owner perms', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
     requestAddOwner(nicole.token, channel.channelId, dennis.authUserId);
-    expect(requestRemoveOwner(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestRemoveOwner(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual(403);
   });
 });

@@ -64,42 +64,42 @@ describe('addOwner tests', () => {
   // channelId does not refer to a valid channel
   test('throw error if invalid channelId', () => {
     requestChannelJoin(dennis.token, channel.channelId);
-    expect(requestAddOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner(nicole.token, 100000, dennis.authUserId)).toStrictEqual(400);
   });
 
   // uId does not refer to a valid user
   test('throw error if invalid uId', () => {
     requestChannelJoin(dennis.token, channel.channelId);
-    expect(requestAddOwner(nicole.token, channel.channelId, 100000)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner(nicole.token, channel.channelId, 100000)).toStrictEqual(400);
   });
 
   // uId refers to a user who is not a member of the channel
   test('throw error if uId is not a member of the channel', () => {
-    expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId));
+    expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual(400);
   });
 
   // uId refers to a user who is already an owner of the channel
   test('throw error if uId is already an owner', () => {
     requestChannelJoin(dennis.token, channel.channelId);
     expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual({});
-    expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner(nicole.token, channel.channelId, dennis.authUserId)).toStrictEqual(400);
   });
 
   // channelId is valid and the authorised user does not have owner permissions
   test('throw error if authorised user is not an owner', () => {
     requestChannelJoin(dennis.token, channel.channelId);
     requestChannelJoin(geoffrey.token, channel.channelId);
-    expect(requestAddOwner(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner(geoffrey.token, channel.channelId, dennis.authUserId)).toStrictEqual(403);
   });
 
   // token is invalid
   test('throw error if token is invalid', () => {
     requestChannelJoin(dennis.token, channel.channelId);
-    expect(requestAddOwner('a', channel.channelId, dennis.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner('a', channel.channelId, dennis.authUserId)).toStrictEqual(403);
   });
 
   // authorised user tries to add themselves as an owner
   test('throw error if authorised user adds themself as owner', () => {
-    expect(requestAddOwner(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual({ error: expect.any(String) });
+    expect(requestAddOwner(nicole.token, channel.channelId, nicole.authUserId)).toStrictEqual(400);
   });
 });

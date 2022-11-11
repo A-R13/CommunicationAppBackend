@@ -80,7 +80,7 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
  * @returns {number} authUserId - unique Id of the user
  * @returns {string} token
  */
-export function authLoginV2(email: string, password: string): {token: string, authUserId: number} | {error: string} {
+export function authLoginV3(email: string, password: string): {token: string, authUserId: number} | {error: string} {
   const data = getData();
   const array = data.users;
   for (const num in array) {
@@ -94,11 +94,11 @@ export function authLoginV2(email: string, password: string): {token: string, au
           authUserId: array[num].authUserId
         };
       } else {
-        return { error: 'error' };
+        throw HTTPError(400, 'Error: Invalid Password');
       }
     }
   }
-  return { error: 'error' };
+  throw HTTPError(400, 'Error: Invalid Email');
 }
 
 /**
