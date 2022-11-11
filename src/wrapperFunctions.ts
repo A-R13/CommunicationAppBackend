@@ -54,7 +54,7 @@ export function requestChannelsListAll (token: string) {
 }
 
 export function requestChannelsList (token: string) {
-  return requestHelper('GET', '/channels/list/v2', { token });
+  return requestHelper('GET', '/channels/list/v2', { }, token);
 }
 
 export function requestchannelDetails(token : string, channelId : number) {

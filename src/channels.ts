@@ -76,7 +76,7 @@ export function channelsListV2 (token: string): {channels: channelShort[]} | {er
   const user = getToken(tokenHashed);
 
   if (user === undefined) {
-    return { error: `${token} is invalid` };
+    throw HTTPError(403, `${token} is invalid`);
   }
 
   const listChannels = [];
