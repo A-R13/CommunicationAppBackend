@@ -151,3 +151,8 @@ export function userSetHandleV2 (token: string, handleStr: string) {
 
   return {};
 }
+
+export function userStatsV1(token: string) {
+  const data = getData();
+
+}

@@ -11,7 +11,7 @@ import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, ch
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1 } from './messages';
-import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2 } from './users';
+import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1 } from './users';
 import { searchV1 } from './search';
 import { standupStartV1 } from './standup';
 import { clearV1 } from './other';
@@ -395,6 +395,15 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
 
     saveData();
     return res.json(standupStartV1(token, parseInt(channelId), parseInt(length)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/user/stats/v1', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+    return res.json(userStatsV1(token));
   } catch (err) {
     next(err);
   }
