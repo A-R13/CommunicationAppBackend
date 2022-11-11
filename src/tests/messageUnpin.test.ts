@@ -1,3 +1,4 @@
+
 import { newUser, newChannel, dmType} from '../dataStore';
 
 import {requestClear, requestAuthRegister, requestChannelsCreate, requestDmCreate, requestChannelJoin, requestMessageSend,
@@ -13,7 +14,6 @@ afterEach(() => {
 describe('message unpin test', () => {
     let user0: newUser;
     let user1: newUser;
-    const user2: newUser;
     let channel0: newChannel;
     let dm0: dmType;
 
@@ -23,7 +23,7 @@ describe('message unpin test', () => {
       user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
 
       channel0 = requestChannelsCreate('user0.token', 'channel1', true);
-      dmm0 = requestDmCreate(user0.token, [1]);
+      dm0 = requestDmCreate(user0.token, [1]);
     });
 
     test('Error returns', () => {
@@ -44,7 +44,7 @@ describe('message unpin test', () => {
     });
 
     test('user no in same channel/dm', () => {
-      user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe');
+      const user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe');
       const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
       const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
 
@@ -74,8 +74,8 @@ describe('message unpin test', () => {
 
 
     test('Correct returns', () => {
-      const msg1 = requestMessageSend(user0.token, 'Message one in channel');
-      const msg2 = requestMessageSendDm(user0.token, 'Message one in dm');
+      const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
+      const msg2 = requestMessageSendDm(user0.token, channel0.channelId, 'Message one in dm');
 
       requestMessagePin(user0.token, msg1.messageId);
       requestMessagePin(user0.token, msg2.messageId);
@@ -90,7 +90,7 @@ describe('message unpin test', () => {
         },
       ]);
 
-      expect(RequestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
+      expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
         messageId: expect.any(Number),
         uId: user0.authUserId,
         message: 'Message one in dm',
@@ -111,7 +111,7 @@ describe('message unpin test', () => {
         },
       ]);
 
-      expect(RequestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
+      expect(requestDmMessages(user0.token, dm0.dmId, 0).messages).toContainEqual({
         messageId: expect.any(Number),
         uId: user0.authUserId,
         message: 'Message one in dm',
@@ -120,3 +120,4 @@ describe('message unpin test', () => {
       });
     });
   });
+
