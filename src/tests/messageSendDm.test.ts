@@ -1,4 +1,4 @@
-import { newUser, dmType } from '../dataStore';
+import { newUser, dmType, newDm } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestDmCreate, requestMessageSendDm
@@ -14,7 +14,7 @@ describe('Message Send Dm Tests', () => {
   let user0: newUser;
   let user1: newUser;
   let user2: newUser;
-  let dm0: dmType;
+  let dm0: newDm;
 
   beforeEach(() => {
     requestClear();

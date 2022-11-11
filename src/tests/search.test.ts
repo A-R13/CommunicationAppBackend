@@ -2,23 +2,33 @@ import {
   requestClear, requestAuthRegister, requestDmCreate, requestChannelsCreate, requestSearch, requestMessageSend, 
   requestMessageSendDm, requestChannelJoin
 } from '../wrapperFunctions';
-// Function Wrappers using above function
 
+import { newUser, newDm, newChannel} from '../dataStore';
 requestClear(); // Need to call it here before calling it in the beforeEach for some reason.
 
-beforeEach(() => {
+afterEach(() => {
   requestClear();
-  user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
-  user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-  dm = requestDmCreate(user0.token, [user1.authUserId]);
-  channel = requestChannelsCreate(user0.token, 'Channel1', true);
-  requestChannelJoin(user1.token, channel.channelId);
-  requestMessageSend(user0.token, channel.channelId, 'Test Message Channel')
-  requestMessageSendDm(user0.token, dm.dmId, 'Test Message Dm')
-
 });
 
 describe('Testing Search function', () => {
+  let user0: newUser;
+  let user1: newUser;
+  let user2: newUser;
+  let dm: newDm;
+  let channel: newChannel
+
+  beforeEach(() => {
+    requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    dm = requestDmCreate(user0.token, [user1.authUserId]);
+    channel = requestChannelsCreate(user0.token, 'Channel1', true);
+    requestChannelJoin(user1.token, channel.channelId);
+    requestMessageSend(user0.token, channel.channelId, 'Test Message Channel')
+    requestMessageSendDm(user0.token, dm.dmId, 'Test Message Dm')
+
+  });
+
   test('Error return (Empty query)', () => {
     expect(requestSearch(user0.token, '')).toStrictEqual(400);
   })
@@ -39,15 +49,19 @@ describe('Testing Search function', () => {
     expect(requestSearch(user0.token, bigMessage)).toStrictEqual(400);
   })
 
+  test('Error return (Invalid token)', () => {
+    expect(requestSearch('Invalid Token', 'Valid Message')).toStrictEqual(403);
+  })
+
   test('Successful return in channel', () => {
     // Search is called by user who sent the message in the channel
-    requestSearch(user0.token, 'Test Message Cha').toStrictEqual({
+    expect(requestSearch(user0.token, 'Test Message Cha')).toStrictEqual({
       messages: [
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
           message: 'Test Message Channel',
-          timeSent: expect.any(number),
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         }
@@ -57,13 +71,13 @@ describe('Testing Search function', () => {
 
   test('Successful return in channel', () => {
     // search is called by another member in the channel
-    requestSearch(user1.token, 'Test Message Cha').toStrictEqual({
+    expect(requestSearch(user1.token, 'Test Message Cha')).toStrictEqual({
       messages: [
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
           message: 'Test Message Channel',
-          timeSent: expect.any(number),
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         }
@@ -73,13 +87,13 @@ describe('Testing Search function', () => {
 
   test('Successful return in Dm', () => {
     // search is called by user who sent the message in the Dm
-    requestSearch(user0.token, 'Test Message Dm').toStrictEqual({
+    expect(requestSearch(user0.token, 'Test Message Dm')).toStrictEqual({
       messages: [
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
           message: 'Test Message Dm',
-          timeSent: expect.any(number),
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         }
@@ -89,13 +103,13 @@ describe('Testing Search function', () => {
 
   test('Successful return in Dm', () => {
     // search is called by another member of the Dm  
-    requestSearch(user0.token, 'Test Message Dm').toStrictEqual({
+    expect(requestSearch(user0.token, 'Test Message Dm')).toStrictEqual({
       messages: [
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
           message: 'Test Message Dm',
-          timeSent: expect.any(number),
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         }
@@ -105,22 +119,22 @@ describe('Testing Search function', () => {
 
   test('Successful return (Multiple Messages Match)', () => {
     requestMessageSend(user0.token, channel.channelId, 'Test Message Channel2')
-    requestSearch(user0.token, 'Test Message Cha').toStrictEqual({
+    expect(requestSearch(user0.token, 'Test Message Cha')).toStrictEqual({
       messages: [
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
-          message: 'Test Message Channel',
-          timeSent: expect.any(number),
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
+          message: 'Test Message Channel2',
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         },
 
         { 
-          messageId: expect.any(number), 
-          uId: expect.any(number), 
-          message: 'Test Message Channel2',
-          timeSent: expect.any(number),
+          messageId: expect.any(Number), 
+          uId: expect.any(Number), 
+          message: 'Test Message Channel',
+          timeSent: expect.any(Number),
           reacts:  expect.any(Array),
           isPinned: expect.any(Boolean)
         }
@@ -129,8 +143,9 @@ describe('Testing Search function', () => {
   })
 
   test('Successful return (No messages Match)', () => {
-    requestMessageSend(user0.token, channel.channelId, 'Test Message Channel2')
-    requestSearch(user0.token, 'No match').toStrictEqual({
+    const dm2:newDm = requestDmCreate(user1.token, []);
+    const channel2: newChannel = requestChannelsCreate(user1.token, 'Channel2', true);
+    expect(requestSearch(user0.token, 'No match')).toStrictEqual({
       messages: []
     })
   })
