@@ -71,4 +71,6 @@ describe('messageSendLater tests', () => {
         expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message 1', 0600)).toStrictEqual(403);
     });
 
+    // token is invalid
+
 });
