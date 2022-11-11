@@ -148,6 +148,11 @@ export function requestMessageRemove(token: string, messageId: number) {
 export function requestSearch(token: string, queryStr: string) {
   return requestHelper('GET', '/search/v1', { queryStr }, token);
 }
+
 export function requestStandupStart(token: string, channelId: number, length: number) {
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
+}
+
+export function requestAdminUserRemove(token: string, uId: number) {
+  return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
 }
