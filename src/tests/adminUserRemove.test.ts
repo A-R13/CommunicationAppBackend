@@ -38,7 +38,7 @@ describe('Error Return Tests', () => {
         expect(requestAdminUserRemove(user1.token, 4)).toStrictEqual(400);
 
         // User 1 is the only global owner, so an error must be thrown.
-        expect(requestAdminUserRemove(user3.token, user1.authUserId)).toStrictEqual(400);
+        expect(requestAdminUserRemove(user1.token, user1.authUserId)).toStrictEqual(400);
 
     });
 
@@ -48,7 +48,7 @@ describe('Error Return Tests', () => {
         expect(requestAdminUserRemove('abcde', user1.authUserId)).toStrictEqual(403);
 
         // Authorising user is not a global owner.
-        expect(requestAdminUserRemove(user3.token, user2.authUserId)).toStrictEqual(403);
+        expect(requestAdminUserRemove(user2.token, user3.authUserId)).toStrictEqual(403);
     });
 
 });

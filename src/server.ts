@@ -403,7 +403,7 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
 
 app.delete('/admin/user/remove/v1', (req: Request, res: Response, next) => {
   try {
-    const uId = req.query.messageId as string;
+    const uId = req.query.uId as string;
     const token = req.header('token');
 
     saveData();
