@@ -86,6 +86,10 @@ export interface messagesReacts {
   isPinned: boolean
 }
 
+export interface newMessage {
+  messageId: number
+}
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
   users: [],
