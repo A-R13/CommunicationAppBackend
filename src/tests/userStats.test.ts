@@ -1,5 +1,5 @@
 import exp from 'constants';
-import { newUser, newChannel, dmType } from '../dataStore';
+import { newUser, newChannel, dmType, userShort } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin,
@@ -457,5 +457,37 @@ describe("User Stats Tests", () => {
             });
     }) 
 
+    test("Correct output for multiple messages", () => {
+        let user2: newUser = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
+        requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER MESSAGE");
+        requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER MESSAGE");
+        requestMessageSend(user0.token, channel0.channelId, 'THE Second MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER ANOTHER MESSAGE");
+        requestMessageSend(user0.token, channel0.channelId, 'THE ASIDHNOE MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHASDASDER MESSAGE");
+        requestMessageSend(user0.token, channel0.channelId, 'THE Second MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ASDASDASD ANOTHER MESSAGE");
+        expect(requestUserStatsV1(user2.token)).toStrictEqual(
+            {
+                channelsJoined: [{
+                    numChannelsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }, 
+            ],
+                DmsJoined: [{
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                },
+            ],
+                messagesSent: [{
+                    numMessagesSent: 0,
+                    timeStamp: expect.any(Number)
+                },
+            ],
+                involvementRate: expect.any(Number)    
+            });
+    }) 
 
 })

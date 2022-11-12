@@ -563,7 +563,6 @@ export function messagePinV1(token: string, messageId: any) {
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
-
     data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
