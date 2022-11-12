@@ -55,7 +55,6 @@ export function standupActiveV1(token: string, channelId: number): { status: boo
     throw HTTPError(400, 'Error: ChannelId in invalid');
   }
 
-
   const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
