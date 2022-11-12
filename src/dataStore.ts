@@ -8,6 +8,13 @@ export interface reacts {
   isThisUserReacted: boolean
 }
 
+export interface userStats {
+  channelsJoined: {},
+  dmsJoined: [], 
+  messagesSent: [], 
+  involvementRate: number,
+}
+
 export interface userType {
   authUserId: number,
   userHandle: string,

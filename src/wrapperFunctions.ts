@@ -158,5 +158,5 @@ export function requestStandupStart(token: string, channelId: number, length: nu
 }
 
 export function requestUserStatsV1(token: string) {
-  return requestHelper('POST', '/user/stats/v1', { }, token);
+  return requestHelper('GET', '/user/stats/v1', { }, token);
 }

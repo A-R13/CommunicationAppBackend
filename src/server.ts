@@ -400,7 +400,7 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
   }
 });
 
-app.post('/user/stats/v1', (req: Request, res: Response, next) => {
+app.get('/user/stats/v1', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     return res.json(userStatsV1(token));

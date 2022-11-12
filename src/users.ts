@@ -154,5 +154,63 @@ export function userSetHandleV2 (token: string, handleStr: string) {
 
 export function userStatsV1(token: string) {
   const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  let numChannelsJoined = [];
+  let numDmsJoined = [];
+  let numMsgsSent = [];
+
+  let numChannels = 0;
+  let numDms = 0;
+  let numMsgs = 0;
+  
+  if (userToken === undefined) {
+    throw HTTPError(403, "Error: token is not valid");
+  }
+
+  for (let i in data.channels) {
+    let a = data.channels[i].allMembers.filter(a => a.uId === userToken.authUserId);
+
+    for (let j in data.channels[i].messages) {
+      if (data.channels[i].messages[j].uId === userToken.authUserId) {
+        numMsgsSent.push(data.dms[i].messages[j]);
+      }
+      numMsgs++;
+    }
+
+    numChannelsJoined.push(a);
+    numChannels++;
+  }
+  
+  for (let i in data.dms) {
+    let a = data.dms[i].members.filter(a => a.uId === userToken.authUserId);
+
+    for (let j in data.dms[i].messages) {
+      if (data.dms[i].messages[j].uId === userToken.authUserId) {
+        numMsgsSent.push(data.dms[i].messages[j]);
+      }
+      numMsgs++;
+    }
+
+    numDmsJoined.push(a);
+    numDms++;
+  }
+
+  let involvementRate = (numChannelsJoined.length + numDmsJoined.length + numMsgsSent.length)/(numChannels + numDms + numMsgs)
+
+  if (involvementRate < 0) {
+    involvementRate = 0;
+  } else if (involvementRate > 1) {
+    involvementRate = 1;
+  }
+
+  return {
+    channelsJoined: [numChannelsJoined.length],
+    DmsJoined: [numDmsJoined.length],
+    messagesSent: [numMsgsSent.length],
+    involvementRate: involvementRate,
+  }
+
 
 }

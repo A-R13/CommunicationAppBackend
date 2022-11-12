@@ -31,18 +31,20 @@ describe("User Stats Tests", () => {
         expect(requestUserStatsV1("Random Token")).toStrictEqual(403);
     })
 
-    test("Correct output", () => {
+    test("Correct output in just channels", () => {
         requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
         expect(requestUserStatsV1(user0.token)).toStrictEqual({
             channelsJoined: [1, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [1, expect.any(Number)]
+            messagesSent: [1, expect.any(Number)],
+            involvementRate: expect.any(Number)    
         });
 
         expect(requestUserStatsV1(user1.token)).toStrictEqual({
             channelsJoined: [0, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [0, expect.any(Number)]
+            messagesSent: [0, expect.any(Number)],
+            involvementRate: expect.any(Number)    
         });
     }) 
 
@@ -53,13 +55,15 @@ describe("User Stats Tests", () => {
         expect(requestUserStatsV1(user0.token)).toStrictEqual({
             channelsJoined: [1, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [2, expect.any(Number)]
+            messagesSent: [2, expect.any(Number)],
+            involvementRate: expect.any(Number)    
         });
 
         expect(requestUserStatsV1(user1.token)).toStrictEqual({
             channelsJoined: [0, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [1, expect.any(Number)]
+            messagesSent: [1, expect.any(Number)],
+            involvementRate: expect.any(Number)    
         });
     }) 
 
@@ -74,13 +78,15 @@ describe("User Stats Tests", () => {
         expect(requestUserStatsV1(user0.token)).toStrictEqual({
             channelsJoined: [1, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [3, expect.any(Number)]
+            messagesSent: [3, expect.any(Number)],
+            involvementRate: expect.any(Number)    
         });
 
         expect(requestUserStatsV1(user1.token)).toStrictEqual({
             channelsJoined: [0, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
-            messagesSent: [2, expect.any(Number)]
+            messagesSent: [2, expect.any(Number)],     
+            involvementRate: expect.any(Number)       
         });
     }) 
 
