@@ -66,6 +66,8 @@ export function usersAllV2 (token: string) {
         nameLast: user.nameLast,
         handleStr: user.userHandle
       };
+    } else {
+      return user;
     }
   });
 
