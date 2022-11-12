@@ -10,12 +10,19 @@ let user1: newUser;
 let user2: newUser;
 let user3: newUser;
 
+let channel1: newChannel;
+let dm1: newDm
+
 beforeEach(() => {
     requestClear();
 
     user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
     user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe');
     user3 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jeff', 'Doe');
+
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
+
+    dm1 = requestDmCreate(user1.token, [1, 2]);
 });
 
 afterEach(() => {
@@ -38,14 +45,17 @@ describe('Error Return Tests', () => {
     test('403 Error Returns', () => {
         
         // Invalid token
-        expect(requestAdminUserRemove('abcde', user1.authUserId)).toStrictEqual(400);
+        expect(requestAdminUserRemove('abcde', user1.authUserId)).toStrictEqual(403);
+
+        // Authorising user is not a global owner.
+        expect(requestAdminUserRemove(user3.token, user2.authUserId)).toStrictEqual(403);
     });
 
 });
 
 
-describe('Correct Returns and correct changes', () => {
 
+describe('Correct Returns and correct changes', () => {
 
 
     test('Example Correct Return', () => {
@@ -87,12 +97,13 @@ describe('Correct Returns and correct changes', () => {
 
     });
 
-    let channel1: newChannel = requestChannelsCreate(user1.token, 'Channel1', true);
-    requestChannelJoin(user2.token, channel1.channelId);
-    requestChannelJoin(user3.token, channel1.channelId);
-
+    
     
     test('Correct change for channel messages', () => {
+
+        requestChannelJoin(user2.token, channel1.channelId);
+        requestChannelJoin(user3.token, channel1.channelId);
+
         const msg1: message = requestMessageSend(user2.token, channel1.channelId, 'Message from user with uId 1');
         const msg2: message = requestMessageSend(user3.token, channel1.channelId, 'Message from user with uId 2');
 
@@ -139,7 +150,6 @@ describe('Correct Returns and correct changes', () => {
         ]);
     });
     
-    let dm1: newDm = requestDmCreate(user1.token, [1, 2]);
 
     test('Correct change for dm messages', () => {
         const msg1: message = requestMessageSendDm(user2.token, dm1.dmId, 'Message from user with uId 1');

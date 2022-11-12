@@ -57,15 +57,16 @@ export function usersAllV2 (token: string) {
     throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
   }
   const userArray = data.users;
-  // modifies stored users array to only return what's needed
-  const detailsArray = userArray.map(user => {
-    return {
-      uId: user.authUserId,
-      email: user.email,
-      nameFirst: user.nameFirst,
-      nameLast: user.nameLast,
-      handleStr: user.userHandle
-    };
+  const detailsArray = userArray.filter(user => {
+    if (user.isRemoved === false) {
+      return {
+        uId: user.authUserId,
+        email: user.email,
+        nameFirst: user.nameFirst,
+        nameLast: user.nameLast,
+        handleStr: user.userHandle
+      };
+    }
   });
 
   return {

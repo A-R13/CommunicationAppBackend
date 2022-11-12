@@ -54,6 +54,13 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
   // Hasing the passwordd
   const passwordHashed = getHashOf(password);
 
+  let perm: number;
+  if (id === 0) {
+    perm = 1;
+  } else {
+    perm = 2;
+  }
+
   // Assign, push and set the data
   data.users.push(
     {
@@ -64,6 +71,8 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       nameFirst: nameFirst,
       nameLast: nameLast,
       sessions: [tokenHashed],
+      permissions: perm,
+      isRemoved: false,
     }
   );
 
