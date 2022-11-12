@@ -3,7 +3,7 @@ import { newUser, newChannel, dmType } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin,
-  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm
+  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave
 } from '../wrapperFunctions';
 
 requestClear();
@@ -44,6 +44,18 @@ describe("User Stats Tests", () => {
             channelsJoined: [0, expect.any(Number)],
             DmsJoined: [1, expect.any(Number)],
             messagesSent: [0, expect.any(Number)],
+            involvementRate: expect.any(Number)    
+        });
+    }) 
+
+    test("Correct output for leaving channel", () => {
+        requestChannelJoin(user1.token, channel0.channelId);
+        requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
+        requestChannelLeave(user0.token, channel0.channelId);
+        expect(requestUserStatsV1(user0.token)).toStrictEqual({
+            channelsJoined: [0, expect.any(Number)],
+            DmsJoined: [1, expect.any(Number)],
+            messagesSent: [1, expect.any(Number)],
             involvementRate: expect.any(Number)    
         });
     }) 

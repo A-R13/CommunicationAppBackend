@@ -174,12 +174,13 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
       j = parseInt(num3);
     }
   }
-  const userData = {
+  const userData: userShort = {
     uId: userArray[j].authUserId,
     email: userArray[j].email,
     nameFirst: userArray[j].nameFirst,
     nameLast: userArray[j].nameLast,
     handleStr: userArray[j].userHandle,
+    timeJoined: Math.floor(Date.now() / 1000),
   };
   data.channels[channelId].allMembers.push(userData);
 

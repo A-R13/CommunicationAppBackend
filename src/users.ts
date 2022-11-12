@@ -1,3 +1,4 @@
+import { channel } from 'diagnostics_channel';
 import HTTPError from 'http-errors';
 import validator from 'validator';
 
@@ -161,8 +162,8 @@ export function userStatsV1(token: string) {
   let numDmsJoined = [];
   let numMsgsSent = [];
 
-  let numChannels = 0;
-  let numDms = 0;
+  let numChannels = data.channels.length;
+  let numDms = data.dms.length;
   let numMsgs = 0;
 
   let channelTimejoined = 0;
@@ -173,6 +174,7 @@ export function userStatsV1(token: string) {
   }
 
   for (let i in data.channels) {
+
     let a = data.channels[i].allMembers.filter(a => a.uId === userToken.authUserId);
 
     for (let j in data.channels[i].messages) {
@@ -185,9 +187,13 @@ export function userStatsV1(token: string) {
       numMsgs++;
     }
 
-    channelTimejoined = a[0].timeJoined;
-    numChannelsJoined.push(a);
-    numChannels++;
+    if (a.length !== 0) {  
+      if (a[0].timeJoined > channelTimejoined) {
+        channelTimejoined = a[0].timeJoined;
+      }
+      numChannelsJoined.push(a);
+    } 
+
   }
   
   for (let i in data.dms) {
@@ -204,7 +210,6 @@ export function userStatsV1(token: string) {
     }
 
     numDmsJoined.push(a);
-    numDms++;
   }
 
   let involvementRate = (numChannelsJoined.length + numDmsJoined.length + numMsgsSent.length)/(numChannels + numDms + numMsgs)
