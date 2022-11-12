@@ -23,6 +23,7 @@ export interface userType {
   nameFirst: string,
   nameLast: string,
   sessions: string[],
+  timeCreated?: number,
 }
 
 export interface userShort {
