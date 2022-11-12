@@ -57,7 +57,7 @@ export function usersAllV2 (token: string) {
     throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
   }
   const userArray = data.users;
-  const detailsArray = userArray.filter(user => {
+  const detailsArray = userArray.map(user => {
     if (user.isRemoved === false) {
       return {
         uId: user.authUserId,

@@ -31,7 +31,13 @@ export function adminUserRemoveV1(token: string, uId: number) {
       throw HTTPError(403, `Erorr: The authorising user is not a global owner, so they cannot perform this action.`);
     }
 
-    
+    targetUser.email = '';
+    targetUser.isRemoved = true;
+    targetUser.nameFirst = 'Removed';
+    targetUser.nameLast = 'user';
+    targetUser.permissions = null;
+    targetUser.sessions = [];
+    targetUser.userHandle = '';
 
     return { }
 }

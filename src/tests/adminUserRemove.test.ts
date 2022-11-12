@@ -68,7 +68,7 @@ describe('Correct Returns and correct changes', () => {
             handleStr: 'bobdoe',
         });
 
-        expect(requestUserProfile(user1.token, user2.authUserId)).toStrictEqual( {
+        expect(requestUserProfile(user1.token, user2.authUserId).user).toStrictEqual( {
             uId: 1,
             email: 'example2@gmail.com',
             nameFirst: 'Bob',
@@ -78,7 +78,7 @@ describe('Correct Returns and correct changes', () => {
 
         expect(requestAdminUserRemove(user1.token, user2.authUserId)).toStrictEqual( {} );
 
-        expect(requestUserProfile(user1.token, user2.authUserId)).toStrictEqual( {
+        expect(requestUserProfile(user1.token, user2.authUserId).user).toStrictEqual( {
             uId: 1,
             email: '',
             nameFirst: 'Removed',
