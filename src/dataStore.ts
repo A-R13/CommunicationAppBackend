@@ -8,13 +8,6 @@ export interface reacts {
   isThisUserReacted: boolean
 }
 
-export interface userStats {
-  channelsJoined: {},
-  dmsJoined: [], 
-  messagesSent: [], 
-  involvementRate: number,
-}
-
 export interface userType {
   authUserId: number,
   userHandle: string,
@@ -24,6 +17,7 @@ export interface userType {
   nameLast: string,
   sessions: string[],
   timeCreated?: number,
+  stats?: any,
 }
 
 export interface userShort {

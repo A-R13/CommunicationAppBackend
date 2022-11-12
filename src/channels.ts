@@ -38,7 +38,6 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
           nameFirst: user.nameFirst,
           nameLast: user.nameLast,
           handleStr: user.userHandle,
-          timeJoined: Math.floor(Date.now() / 1000),
         },
       ],
       allMembers: [
@@ -48,7 +47,6 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
           nameFirst: user.nameFirst,
           nameLast: user.nameLast,
           handleStr: user.userHandle,
-          timeJoined: Math.floor(Date.now() / 1000),
         },
       ],
       messages: [],
@@ -56,6 +54,15 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
     };
 
     data.channels.push(channel);
+
+    // adds 1 to number of channels joined
+    data.users[user.authUserId].stats[3].numChannelsJoined++;
+
+    // pushes some stats back to the user
+    data.users[user.authUserId].stats[0].channelsJoined.push({
+      numChannelsJoined: data.users[user.authUserId].stats[3].numChannelsJoined,
+      timeStamp: Math.floor(Date.now() / 1000)
+    })
 
     setData(data);
 

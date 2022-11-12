@@ -3,7 +3,7 @@ import { channel } from 'diagnostics_channel';
 import HTTPError from 'http-errors';
 import validator from 'validator';
 
-import { getData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
@@ -161,92 +161,28 @@ export function userStatsV1(token: string) {
 
   if (userToken === undefined) {
     throw HTTPError(403, "Error: token is not valid");
-  }
+  }  
 
-  let channelsJoined = [{
-    numChannelsJoined: 0,
-    timeStamp: data.users[userToken.authUserId].timeCreated,
-  }];
-
-  let dmsJoined = [{
-    numDmsJoined: 0,
-    timeStamp: data.users[userToken.authUserId].timeCreated,
-  }];
-
-  let messagesSent = [{
-    numMessagesSent: 0,
-    timeStamp: data.users[userToken.authUserId].timeCreated,
-  }];
-
-  let numChannelsJoined = [];
-  let numDmsJoined = [];
-  let MessagesSentinbothDmsandChannels = [];
-
-  let numChannels = data.channels.length;
-  let numDms = data.dms.length;
+  const numChannelsJoined = data.users[userToken.authUserId].stats[3].numChannelsJoined;
+  const numDmsJoined = data.users[userToken.authUserId].stats[3].numDmsJoined;
+  const numMsgsSent = data.users[userToken.authUserId].stats[3].numMessagesSent;
+  const numChannels = data.channels.length;
+  const numDms = data.dms.length;
   let numMsgs = 0;
-  
 
   for (let i in data.channels) {
-    // if user is in the channel, get their details from the channel
-    let a = data.channels[i].allMembers.filter(a => a.uId === userToken.authUserId);
-
-    // count the messages sent by the user
     for (let j in data.channels[i].messages) {
-      if (data.channels[i].messages[j].uId === userToken.authUserId) {
-        MessagesSentinbothDmsandChannels.push(data.channels[i].messages[j]);
-      }
-      // counts the number of messages in the channels
       numMsgs++;
-    }
-
-    // checks if user is still in the channel. Updates the timestamp. Pushes the number of channels joined to a variable
-    if (a.length !== 0) {  
-      numChannelsJoined.push(a);
-      channelsJoined.push({
-        numChannelsJoined: numChannelsJoined.length,
-        timeStamp: a[0].timeJoined,
-      })
     }
   }
 
-  
   for (let i in data.dms) {
-    let a = data.dms[i].members.filter(a => a.uId === userToken.authUserId);
-
     for (let j in data.dms[i].messages) {
-      if (data.dms[i].messages[j].uId === userToken.authUserId) {
-        MessagesSentinbothDmsandChannels.push(data.dms[i].messages[j]);
-      }
       numMsgs++;
     }
-
-    if (a.length !== 0) {  
-      numDmsJoined.push(a);
-      dmsJoined.push({
-        numDmsJoined: numDmsJoined.length,
-        timeStamp: a[0].timeJoined, // THERE IS NO TIME JOINED
-      })
-    }
-  }
-
-  // sort messages by time
-  MessagesSentinbothDmsandChannels.sort(function (a, b) {
-    return b.timeSent - a.timeSent;
-  });
-
-  let n = 0;
-
-  // push into message sent
-  for (let i of MessagesSentinbothDmsandChannels) {
-    n++;
-    messagesSent.push({
-      numMessagesSent: n,
-      timeStamp: i.timeSent
-    })
   }
   
-  let involvementRate = (numChannelsJoined.length + numDmsJoined.length + MessagesSentinbothDmsandChannels.length)/(numChannels + numDms + numMsgs)
+  let involvementRate = (numChannelsJoined + numDmsJoined + numMsgsSent)/(numChannels + numDms + numMsgs)
 
   if (involvementRate < 0) {
     involvementRate = 0;
@@ -254,19 +190,13 @@ export function userStatsV1(token: string) {
     involvementRate = 1;
   }
 
+  
+  setData(data);
+
   return {
-    channelsJoined: channelsJoined,
-    DmsJoined: dmsJoined,
-    messagesSent: messagesSent,
+    channelsJoined: data.users[userToken.authUserId].stats[0].channelsJoined,
+    DmsJoined: data.users[userToken.authUserId].stats[1].dmsJoined,
+    messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
     involvementRate: involvementRate,
   }
-
-
 }
-
-/*
-{"DmsJoined": 0, "channelsJoined": [{"numChannelsJoined": 0,
-"timeStamp": 1668230018}, {"numChannelsJoined": 1, "timeStamp": 1668230018}], 
-"involvementRate": 1, "messagesSent": [{"numMessagesSent": 0, "timeStamp": 1668230018}, 
-{"numMessagesSent": 1, "timeStamp": 1668230018}]} 
-*/

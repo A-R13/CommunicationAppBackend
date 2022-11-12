@@ -3,7 +3,7 @@ import { newUser, newChannel, dmType } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin,
-  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave
+  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave, requestDmRemove, requestDmLeave
 } from '../wrapperFunctions';
 
 requestClear();
@@ -45,7 +45,7 @@ describe("User Stats Tests", () => {
             },
         ],
             DmsJoined: [{
-                numDmsJoined: 1,
+                numDmsJoined: 0,
                 timeStamp: expect.any(Number)
             },
             {
@@ -100,6 +100,14 @@ describe("User Stats Tests", () => {
                     numChannelsJoined: 0,
                     timeStamp: expect.any(Number)
                 }, 
+                {
+                    numChannelsJoined: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numChannelsJoined: 0,
+                    timeStamp: expect.any(Number)
+                },
             ],
                 DmsJoined: [{
                     numDmsJoined: 0,
@@ -246,15 +254,207 @@ describe("User Stats Tests", () => {
                 timeStamp: expect.any(Number)
             }],
             DmsJoined: [{
+                numDmsJoined: 0,
+                timeStamp: expect.any(Number)
+            },
+            {
                 numDmsJoined: 1,
                 timeStamp: expect.any(Number)
-            }],
+            }
+        ],
             messagesSent: [{
-                numMessagesSent: 2,
+                numMessagesSent: 0,
                 timeStamp: expect.any(Number)
-            }],
+            },
+            {
+                numMessagesSent: 1,
+                timeStamp: expect.any(Number)
+            },
+        ],
             involvementRate: expect.any(Number)      
         });
+    })
+
+    test("Correct output for removing dms", () => {
+        requestMessageSendDm(user0.token, dm0.dmId, 'THE FIRST MESSAGE BY OWNER IN THE DMMSS');
+        requestDmRemove(user0.token, dm0.dmId);
+        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+            {
+                channelsJoined: [{
+                    numChannelsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }, 
+                {
+                    numChannelsJoined: 1,
+                    timeStamp: expect.any(Number)
+                },
+            ],
+                DmsJoined: [{
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsJoined: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                messagesSent: [{
+                    numMessagesSent: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 1,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                involvementRate: expect.any(Number)    
+            });
+
+            expect(requestUserStatsV1(user1.token)).toStrictEqual(
+                {
+                    channelsJoined: [{
+                        numChannelsJoined: 0,
+                        timeStamp: expect.any(Number)
+                    }, 
+                ],
+                    DmsJoined: [{
+                        numDmsJoined: 0,
+                        timeStamp: expect.any(Number)
+                    },
+                    {
+                        numDmsJoined: 1,
+                        timeStamp: expect.any(Number)
+                    },
+                    {
+                        numDmsJoined: 0,
+                        timeStamp: expect.any(Number)
+                    }
+                ],
+                    messagesSent: [{
+                        numMessagesSent: 0,
+                        timeStamp: expect.any(Number)
+                    },
+                ],
+                    involvementRate: expect.any(Number)    
+                });
+    }) 
+
+    test("Correct output for leaving dms", () => {
+        requestMessageSendDm(user1.token, dm0.dmId, 'THE FIRST MESSAGE BY NOT AN OWNER IN THE DMMSS');
+        requestDmLeave(user1.token, dm0.dmId);
+        expect(requestUserStatsV1(user1.token)).toStrictEqual(
+            {
+                channelsJoined: [{
+                    numChannelsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }, 
+            ],
+                DmsJoined: [{
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsJoined: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                messagesSent: [{
+                    numMessagesSent: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 1,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                involvementRate: expect.any(Number)    
+            });
+
+            expect(requestUserStatsV1(user0.token)).toStrictEqual(
+                {
+                    channelsJoined: [{
+                        numChannelsJoined: 0,
+                        timeStamp: expect.any(Number)
+                    }, 
+                    {
+                        numChannelsJoined: 1,
+                        timeStamp: expect.any(Number)
+                    }, 
+                ],
+                    DmsJoined: [{
+                        numDmsJoined: 0,
+                        timeStamp: expect.any(Number)
+                    },
+                    {
+                        numDmsJoined: 1,
+                        timeStamp: expect.any(Number)
+                    },
+                ],
+                    messagesSent: [{
+                        numMessagesSent: 0,
+                        timeStamp: expect.any(Number)
+                    },
+                ],
+                    involvementRate: expect.any(Number)    
+                });
+    }) 
+
+    test("Correct output for multiple messages", () => {
+        requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER MESSAGE");
+        requestMessageSend(user0.token, channel0.channelId, 'THE Second MESSAGE BY OWNER');
+        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER ANOTHER MESSAGE");
+        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+            {
+                channelsJoined: [{
+                    numChannelsJoined: 0,
+                    timeStamp: expect.any(Number)
+                }, 
+                {
+                    numChannelsJoined: 1,
+                    timeStamp: expect.any(Number)
+                },
+            ],
+                DmsJoined: [{
+                    numDmsJoined: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsJoined: 1,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                messagesSent: [{
+                    numMessagesSent: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 2,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 3,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 4,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                involvementRate: expect.any(Number)    
+            });
     }) 
 
 

@@ -403,6 +403,7 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
 app.get('/user/stats/v1', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
+    saveData();
     return res.json(userStatsV1(token));
   } catch (err) {
     next(err);
