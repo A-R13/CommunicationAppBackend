@@ -37,11 +37,38 @@ export function channelDetailsV3(token : string, channelId : number) {
     throw HTTPError(403, 'Error: User is not in the channel requested!');
   }
 
+  let ownerArraywithoutTimejoined = [];
+  let AllArraywithoutTimejoined = [];
+
+  for (let j in data.channels[channelId].ownerMembers) {
+    ownerArraywithoutTimejoined.push(
+      {
+        uId: data.channels[channelId].ownerMembers[j].uId,
+        email: data.channels[channelId].ownerMembers[j].email,
+        nameFirst: data.channels[channelId].ownerMembers[j].nameFirst,
+        nameLast: data.channels[channelId].ownerMembers[j].nameLast,
+        handleStr: data.channels[channelId].ownerMembers[j].handleStr,
+      },
+    )
+  }
+
+    for (let k in data.channels[channelId].allMembers) {
+      AllArraywithoutTimejoined.push(
+        {
+          uId: data.channels[channelId].allMembers[k].uId,
+          email: data.channels[channelId].allMembers[k].email,
+          nameFirst: data.channels[channelId].allMembers[k].nameFirst,
+          nameLast: data.channels[channelId].allMembers[k].nameLast,
+          handleStr: data.channels[channelId].allMembers[k].handleStr,
+        },
+      )
+    }
+
   return {
     name: data.channels[channelId].channelName,
     isPublic: data.channels[channelId].isPublic,
-    ownerMembers: data.channels[channelId].ownerMembers,
-    allMembers: data.channels[channelId].allMembers,
+    ownerMembers: ownerArraywithoutTimejoined,
+    allMembers: AllArraywithoutTimejoined,
   };
 }
 
@@ -76,7 +103,7 @@ export function channelJoinV3 (token: string, channelId: number) {
     throw HTTPError(403, `Error: '${channelId}' is private, you cannot join this channel`);
   }
 
-  channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
+  channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId, timeJoined: Math.floor(Date.now() / 1000) });
 
   setData(data);
 

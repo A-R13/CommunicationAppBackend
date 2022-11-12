@@ -38,6 +38,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
           nameFirst: user.nameFirst,
           nameLast: user.nameLast,
           handleStr: user.userHandle,
+          timeJoined: Math.floor(Date.now() / 1000),
         },
       ],
       allMembers: [
@@ -47,6 +48,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
           nameFirst: user.nameFirst,
           nameLast: user.nameLast,
           handleStr: user.userHandle,
+          timeJoined: Math.floor(Date.now() / 1000),
         },
       ],
       messages: [],

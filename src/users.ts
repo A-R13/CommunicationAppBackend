@@ -164,6 +164,9 @@ export function userStatsV1(token: string) {
   let numChannels = 0;
   let numDms = 0;
   let numMsgs = 0;
+
+  let channelTimejoined = 0;
+  let latestMessagetime = 0;
   
   if (userToken === undefined) {
     throw HTTPError(403, "Error: token is not valid");
@@ -174,11 +177,15 @@ export function userStatsV1(token: string) {
 
     for (let j in data.channels[i].messages) {
       if (data.channels[i].messages[j].uId === userToken.authUserId) {
-        numMsgsSent.push(data.dms[i].messages[j]);
+        numMsgsSent.push(data.channels[i].messages[j]);
+        if (data.channels[i].messages[j].timeSent > latestMessagetime) {
+          latestMessagetime = data.channels[i].messages[j].timeSent;
+        }
       }
       numMsgs++;
     }
 
+    channelTimejoined = a[0].timeJoined;
     numChannelsJoined.push(a);
     numChannels++;
   }
@@ -189,6 +196,9 @@ export function userStatsV1(token: string) {
     for (let j in data.dms[i].messages) {
       if (data.dms[i].messages[j].uId === userToken.authUserId) {
         numMsgsSent.push(data.dms[i].messages[j]);
+        if (data.dms[i].messages[j].timeSent > latestMessagetime) {
+          latestMessagetime = data.dms[i].messages[j].timeSent;
+        }
       }
       numMsgs++;
     }
@@ -206,9 +216,9 @@ export function userStatsV1(token: string) {
   }
 
   return {
-    channelsJoined: [numChannelsJoined.length],
-    DmsJoined: [numDmsJoined.length],
-    messagesSent: [numMsgsSent.length],
+    channelsJoined: [numChannelsJoined.length, channelTimejoined],
+    DmsJoined: [numDmsJoined.length, ],
+    messagesSent: [numMsgsSent.length, latestMessagetime],
     involvementRate: involvementRate,
   }
 
