@@ -66,7 +66,7 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   data.dms.push(dm);
 
-  for (let i of membersArray) {
+  for (const i of membersArray) {
     // adds 1 to the number of dms joined
     data.users[i.uId].stats[3].numDmsJoined += 1;
 
@@ -74,11 +74,8 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
     data.users[i.uId].stats[1].dmsJoined.push({
       numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
       timeStamp: Math.floor(Date.now() / 1000)
-    })
-  
-
+    });
   }
-
 
   setData(data);
 
@@ -137,8 +134,7 @@ export function messageSendV2 (token: string, channelId: number, message: string
   data.users[user.authUserId].stats[2].messagesSent.push({
     numMessagesSent: data.users[user.authUserId].stats[3].numMessagesSent,
     timeStamp: Math.floor(Date.now() / 1000)
-  })
-  
+  });
 
   setData(data);
 
@@ -238,7 +234,7 @@ export function dmRemoveV2(token : string, dmId: number) {
     throw HTTPError(403, 'Error: Not an owner');
   }
 
-  for (let i of data.dms[dmId].members) {
+  for (const i of data.dms[dmId].members) {
     // adds 1 to the number of messages sent
     data.users[i.uId].stats[3].numDmsJoined -= 1;
 
@@ -246,9 +242,8 @@ export function dmRemoveV2(token : string, dmId: number) {
     data.users[i.uId].stats[1].dmsJoined.push({
       numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
       timeStamp: Math.floor(Date.now() / 1000)
-    })
+    });
   }
-
 
   // deletes the dm
   for (const i in data.dms) {
@@ -423,7 +418,7 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
   data.users[checkToken.authUserId].stats[2].messagesSent.push({
     numMessagesSent: data.users[checkToken.authUserId].stats[3].numMessagesSent,
     timeStamp: Math.floor(Date.now() / 1000)
-  })
+  });
 
   setData(data);
 
@@ -458,7 +453,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
   const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
-  
+
   if (userInDm === undefined) {
     throw HTTPError(403, 'Error: User is not a member of the dm');
   } else {
@@ -473,8 +468,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
   data.users[userToken.authUserId].stats[1].dmsJoined.push({
     numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
     timeStamp: Math.floor(Date.now() / 1000)
-  })
-
+  });
 
   return {};
 }

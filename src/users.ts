@@ -1,5 +1,3 @@
-import { timeStamp } from 'console';
-import { channel } from 'diagnostics_channel';
 import HTTPError from 'http-errors';
 import validator from 'validator';
 
@@ -160,8 +158,8 @@ export function userStatsV1(token: string) {
   const userToken = getToken(tokenHashed);
 
   if (userToken === undefined) {
-    throw HTTPError(403, "Error: token is not valid");
-  }  
+    throw HTTPError(403, 'Error: token is not valid');
+  }
 
   const numChannelsJoined = data.users[userToken.authUserId].stats[3].numChannelsJoined;
   const numDmsJoined = data.users[userToken.authUserId].stats[3].numDmsJoined;
@@ -170,19 +168,15 @@ export function userStatsV1(token: string) {
   const numDms = data.dms.length;
   let numMsgs = 0;
 
-  for (let i in data.channels) {
-    for (let j in data.channels[i].messages) {
-      numMsgs++;
-    }
+  for (const i in data.channels) {
+    numMsgs += data.channels[i].messages.length;
   }
 
-  for (let i in data.dms) {
-    for (let j in data.dms[i].messages) {
-      numMsgs++;
-    }
+  for (const i in data.dms) {
+    numMsgs += data.dms[i].messages.length;
   }
-  
-  let involvementRate = (numChannelsJoined + numDmsJoined + numMsgsSent)/(numChannels + numDms + numMsgs)
+
+  let involvementRate = (numChannelsJoined + numDmsJoined + numMsgsSent) / (numChannels + numDms + numMsgs);
 
   if (involvementRate < 0) {
     involvementRate = 0;
@@ -190,7 +184,6 @@ export function userStatsV1(token: string) {
     involvementRate = 1;
   }
 
-  
   setData(data);
 
   return {
@@ -198,5 +191,5 @@ export function userStatsV1(token: string) {
     DmsJoined: data.users[userToken.authUserId].stats[1].dmsJoined,
     messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
     involvementRate: involvementRate,
-  }
+  };
 }

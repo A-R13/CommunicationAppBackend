@@ -65,12 +65,12 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       nameLast: nameLast,
       sessions: [tokenHashed],
       stats: [
-        { 
+        {
           channelsJoined: [{
-          numChannelsJoined: 0,
-          timeStamp: Math.floor(Date.now() / 1000)
+            numChannelsJoined: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
           }]
-        }, 
+        },
         {
           dmsJoined: [{
             numDmsJoined: 0,
@@ -91,8 +91,6 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       ]
     }
   );
-
-  
 
   setData(data);
   return {

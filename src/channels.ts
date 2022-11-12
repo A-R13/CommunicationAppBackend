@@ -62,7 +62,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
     data.users[user.authUserId].stats[0].channelsJoined.push({
       numChannelsJoined: data.users[user.authUserId].stats[3].numChannelsJoined,
       timeStamp: Math.floor(Date.now() / 1000)
-    })
+    });
 
     setData(data);
 
