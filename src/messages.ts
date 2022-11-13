@@ -119,13 +119,7 @@ export function messageSendV2 (token: string, channelId: number, message: string
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [
-      {
-        reactId: 1,
-        uids: [],
-        isThisUserReacted: false
-      }
-    ],
+    reacts: [],
     isPinned: false
   };
 
@@ -410,13 +404,7 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
-        reacts: [
-          {
-            reactId: 1,
-            uids: [],
-            isThisUserReacted: false
-          }
-        ],
+        reacts: [],
         isPinned: false
       });
       break;
@@ -557,7 +545,7 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
     throw HTTPError(400, 'Invalid reactId');
   }
 
-  const message = userReacted(user.authUserId, messageId);
+  const message = userReacted(user.authUserId, messageId, reactId);
 
   if (message === false) {
     throw HTTPError(400, 'User has already reacted');

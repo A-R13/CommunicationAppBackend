@@ -148,7 +148,7 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
  * @param {number} - messaageId - unique id for channel
  * @returns {message} - returns message object
  */
-export function userReacted (authUserId: number, messageId: number) {
+export function userReacted (authUserId: number, messageId: number, reactId: number) {
   const data = getData();
 
   for (const channel of data.channels) {
@@ -157,9 +157,21 @@ export function userReacted (authUserId: number, messageId: number) {
 
     if (userInChannel !== undefined && messageInChannel !== undefined) {
       for (const message of channel.messages) {
-        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-        if (react === undefined) {
-          return message;
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction === undefined) {
+            message.reacts.push(
+              {
+                reactId: reactId,
+                uids: [],
+                isThisUserReacted: false
+              }
+            );
+            return message;
+          } else if (react === undefined) {
+            return message;
+          }
         }
       }
     }
@@ -171,9 +183,21 @@ export function userReacted (authUserId: number, messageId: number) {
 
     if (userInDm !== undefined && messageInDm !== undefined) {
       for (const message of dm.messages) {
-        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-        if (react === undefined) {
-          return message;
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction === undefined) {
+            message.reacts.push(
+              {
+                reactId: reactId,
+                uids: [],
+                isThisUserReacted: false,
+              }
+            );
+            return message;
+          } else if (react === undefined) {
+            return message;
+          }
         }
       }
     }

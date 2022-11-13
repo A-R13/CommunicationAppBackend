@@ -53,8 +53,13 @@ describe('Testing react function', () => {
   });
 
   test('Succesful return (Message in Dm)', () => {
-    expect(requestMessageReact(user0.token, dmMessage.messageId, 1)).toStrictEqual({}) 
+    expect(requestMessageReact(user0.token, dmMessage.messageId, 1)).toStrictEqual({}); 
   });
 
-
+  test ('Successful return (Message in Dm and in channel)', () => {
+    expect(requestMessageReact(user0.token, dmMessage.messageId, 1)).toStrictEqual({});
+    expect(requestMessageReact(user1.token, dmMessage.messageId, 1)).toStrictEqual({});
+    expect(requestMessageReact(user0.token, channelMessage.messageId, 1)).toStrictEqual({});
+    expect(requestMessageReact(user1.token, channelMessage.messageId, 1)).toStrictEqual({})
+  });
 })
