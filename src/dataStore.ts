@@ -16,6 +16,11 @@ export interface userType {
   nameFirst: string,
   nameLast: string,
   sessions: string[],
+  permissions: number,
+  isRemoved: boolean
+  timeCreated?: number,
+  stats?: any,
+  resetCode: string
 }
 
 export interface userShort {
@@ -24,6 +29,7 @@ export interface userShort {
   nameFirst: string,
   nameLast: string,
   handleStr: string,
+  timeJoined?: number,
 }
 
 export interface message {
@@ -56,6 +62,7 @@ export interface dmType {
   members: userShort[],
   owners: userShort[],
   messages: message[]
+  timeJoined?: number,
 }
 
 export interface storedData {

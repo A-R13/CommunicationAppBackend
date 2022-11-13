@@ -160,3 +160,14 @@ export function requestStandupStart(token: string, channelId: number, length: nu
 export function requestStandupActive(token: string, channelId: number) {
   return requestHelper('GET', '/standup/active/v1', { channelId }, token);
 }
+export function requestUserStatsV1(token: string) {
+  return requestHelper('GET', '/user/stats/v1', { }, token);
+}
+
+export function requestAuthPasswordResetRequest(email: string) {
+  return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
+}
+
+export function requestAdminUserRemove(token: string, uId: number) {
+  return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
+}
