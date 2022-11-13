@@ -564,6 +564,8 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   }
 
   message.reacts[0].uids.push(user.authUserId);
+
+  return {};
 }
 
 /**

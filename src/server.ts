@@ -408,7 +408,7 @@ app.post('/message/react/v1', (req: Request, res: Response, next) => {
     saveData();
     return res.json(messageReactV1(token, parseInt(messageId), parseInt(reactId)));
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 

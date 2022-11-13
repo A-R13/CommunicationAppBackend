@@ -178,7 +178,6 @@ export function userReacted (authUserId: number, messageId: number) {
       }
     }
   }
-
   return false;
 }
 
