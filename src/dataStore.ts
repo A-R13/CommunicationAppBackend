@@ -16,6 +16,8 @@ export interface userType {
   nameFirst: string,
   nameLast: string,
   sessions: string[],
+  permissions: number,
+  isRemoved: boolean
   timeCreated?: number,
   stats?: any,
   resetCode: string
