@@ -18,6 +18,7 @@ export interface userType {
   sessions: string[],
   timeCreated?: number,
   stats?: any,
+  resetCode: string
 }
 
 export interface userShort {

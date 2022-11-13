@@ -160,3 +160,7 @@ export function requestStandupStart(token: string, channelId: number, length: nu
 export function requestUserStatsV1(token: string) {
   return requestHelper('GET', '/user/stats/v1', { }, token);
 }
+
+export function requestAuthPasswordResetRequest(email: string) {
+  return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
+}
