@@ -1,4 +1,4 @@
-import { getData, userShort, userType } from './dataStore';
+import { getData, userShort, userType, message, reacts } from './dataStore';
 import crypto from 'crypto';
 
 /**
@@ -141,4 +141,43 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
       return false;
     }
   }
+}
+/**
+ * <Description: Checks if user has reacted to message>
+ * @param {number} - authUserId - Unqiue id for user
+ * @param {number} - messaageId - unique id for channel
+ * @returns {message} - returns message object
+ */
+export function userReacted (authUserId: number, messageId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+    const messageInChannel = channel.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInChannel !== undefined && messageInChannel !== undefined) {
+      for (const message of channel.messages) {
+        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        if (react === undefined) {
+          return message;
+        }
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+    const messageInDm = dm.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInDm !== undefined && messageInDm !== undefined) {
+      for (const message of dm.messages) {
+        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        if (react === undefined) {
+          return message;
+        }
+      }
+    }
+  }
+
+  return false;
 }
