@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { userShort } from './dataStore';
+import { getData, userShort } from './dataStore';
 import { SECRET, getHashOf, getToken, getChannel } from './helperFunctions';
 
 export function standupStartV1(token: string, channelId: number, length: number): { timeFinish: number } {
@@ -45,6 +45,8 @@ export function standupStartV1(token: string, channelId: number, length: number)
   return { timeFinish: timeFinish };
 }
 
-export function standupSendV1() {
-  
+export function standupSendV1(token: string, channelId: number, message: string) {
+
+
+
 }
