@@ -161,7 +161,6 @@ export function requestStandupSend(token: string, channelId: number, message: st
   return requestHelper('POST', '/standup/send/v1', { channelId, message }, token);
 }
 
-
 export function requestUserStatsV1(token: string) {
   return requestHelper('GET', '/user/stats/v1', { }, token);
 }
