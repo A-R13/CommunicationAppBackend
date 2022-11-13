@@ -34,9 +34,6 @@ export function standupStartV1(token: string, channelId: number, length: number)
 
   const timeFinish = Math.floor(Date.now() / 1000) + length;
 
-  // Add an object to the channel
-  // standup : { status: active, timeFinish: number }
-
   channel.standup.status = true;
   channel.standup.timeFinish = timeFinish;
 

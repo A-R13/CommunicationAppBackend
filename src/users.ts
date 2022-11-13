@@ -2,6 +2,7 @@ import HTTPError from 'http-errors';
 import validator from 'validator';
 import request from 'sync-request';
 import fs from 'fs';
+import sharp from 'sharp';
 
 
 import { getData } from './dataStore';
@@ -165,9 +166,20 @@ export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: 
   const res = request(
     'GET', imgUrl
   );
+
+  if (res.statusCode !== 200) {
+    throw HTTPError(400, 'Error: Image URL is invalid');
+  }
   const body = res.getBody();
   const filePath = '/profilePhotos/' + `${user.userHandle}` + '.jpg';
   fs.writeFileSync(filePath, body, { flag: 'w' });
+
+  const imageData = sharp(filePath).metadata();
+
+  if ((xStart < 0 || xStart > imageData.width) || (xEnd < 0 || xEnd > imageData.width) 
+    || (yStart < 0 || yStart > imageData.height) || (yEnd < 0 || yEnd > imageData.height)) {
+      throw HTTPError(400, 'Error: One of the input points are outside the valid limits for the given image.');
+  }
 
   return {}
 }
