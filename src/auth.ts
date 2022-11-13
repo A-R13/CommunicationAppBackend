@@ -1,6 +1,7 @@
 import validator from 'validator';
 import HTTPError from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
+import nodemailer from 'nodemailer';
 
 import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
@@ -73,6 +74,32 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       sessions: [tokenHashed],
       permissions: perm,
       isRemoved: false,
+      stats: [
+        {
+          channelsJoined: [{
+            numChannelsJoined: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          dmsJoined: [{
+            numDmsJoined: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          messagesSent: [{
+            numMessagesSent: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          numChannelsJoined: 0,
+          numDmsJoined: 0,
+          numMessagesSent: 0
+        }
+      ],
+      resetCode: null,
     }
   );
 
@@ -134,5 +161,43 @@ export function authLogoutV2(token: string): Record<string, never> | {error: str
   }
   setData(data);
 
+  return {};
+}
+
+export function authPasswordResetRequestV1(email: string) : Record<string, never> {
+  const data = getData();
+
+  const user = data.users.find(a => a.email === email);
+
+  if (user === undefined) {
+    return {};
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 't15adream1@gmail.com',
+      pass: 'cnjeixndgpzxtxir'
+    }
+  });
+
+  const resetCode = Math.random().toString(36).substring(2, 15);
+  const mailOptions = {
+    from: 't15adream1@gmail.com',
+    to: email,
+    subject: 'Password Reset Code',
+    text: `Here is your requested reset code, ${resetCode}`
+  };
+
+  user.resetCode = resetCode;
+
+  transporter.sendMail(mailOptions);
+
+  user.sessions.length = 0;
+  // Clears all the current sessions.
+
+  // email t15adream1@gmail.com
+  // pass cnjeixndgpzxtxir
+  // https://www.receivesms.org/us-phone-number/3640/
   return {};
 }

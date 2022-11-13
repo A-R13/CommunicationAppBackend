@@ -66,6 +66,17 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   data.dms.push(dm);
 
+  for (const i of membersArray) {
+    // adds 1 to the number of dms joined
+    data.users[i.uId].stats[3].numDmsJoined += 1;
+
+    // pushes some stats about number of dms joined back to user
+    data.users[i.uId].stats[1].dmsJoined.push({
+      numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
+  }
+
   setData(data);
 
   return { dmId: length };
@@ -115,6 +126,15 @@ export function messageSendV2 (token: string, channelId: number, message: string
   const data = getData();
   channel = data.channels.find(c => c === channel);
   channel.messages.unshift(msgg);
+
+  // adds 1 to the number of messages sent
+  data.users[user.authUserId].stats[3].numMessagesSent += 1;
+
+  // pushes some stats about number of messages sent back to user
+  data.users[user.authUserId].stats[2].messagesSent.push({
+    numMessagesSent: data.users[user.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
 
@@ -212,6 +232,17 @@ export function dmRemoveV2(token : string, dmId: number) {
   // checks if the user is an owner.
   if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
     throw HTTPError(403, 'Error: Not an owner');
+  }
+
+  for (const i of data.dms[dmId].members) {
+    // adds 1 to the number of messages sent
+    data.users[i.uId].stats[3].numDmsJoined -= 1;
+
+    // pushes some stats about number of dms joined sent back to user
+    data.users[i.uId].stats[1].dmsJoined.push({
+      numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
 
   // deletes the dm
@@ -380,6 +411,15 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
     }
   }
 
+  // adds 1 to the number of messages sent
+  data.users[checkToken.authUserId].stats[3].numMessagesSent += 1;
+
+  // pushes some stats about number of messages sent back to user
+  data.users[checkToken.authUserId].stats[2].messagesSent.push({
+    numMessagesSent: data.users[checkToken.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
   setData(data);
 
   return { messageId: messageid };
@@ -413,12 +453,22 @@ export function dmLeaveV2 (token: string, dmId: number) {
   const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
+
   if (userInDm === undefined) {
     throw HTTPError(403, 'Error: User is not a member of the dm');
   } else {
     data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
   }
+
+  // adds 1 to the number of messages sent
+  data.users[userToken.authUserId].stats[3].numDmsJoined -= 1;
+
+  // pushes some stats about number of dms joined sent back to user
+  data.users[userToken.authUserId].stats[1].dmsJoined.push({
+    numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   return {};
 }
@@ -513,7 +563,6 @@ export function messagePinV1(token: string, messageId: any) {
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
-
     data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
