@@ -1,6 +1,8 @@
+import { channelleaveV2 } from '../channel';
 import { newUser, newChannel } from '../dataStore';
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave,
+  requestStandupStart
 } from '../wrapperFunctions';
 
 requestClear();
@@ -78,4 +80,28 @@ describe('Channel leave function', () => {
       }
     );
   });
+
+
+  test('Correct return, after startup has ended', () => {
+    requestStandupStart(nicole.token, channel.channelId, 2);
+    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+
+    expect(channelleaveV2(nicole.token, channel.channelId)).toStrictEqual(400)
+
+    expect(requestStandupStart(nicole.token, channel.channelId, 5)).toStrictEqual({ timeFinish: expect.any(Number) });
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+    
+
+
+  });
+
 });
