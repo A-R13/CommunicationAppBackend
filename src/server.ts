@@ -400,6 +400,18 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
   }
 });
 
+app.get('/users/stats/v1', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+
+    saveData();
+    return res.json(userStatsV1(token));
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 // handles errors nicely
 app.use(errorHandler());
 

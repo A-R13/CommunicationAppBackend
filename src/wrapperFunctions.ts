@@ -156,3 +156,7 @@ export function requestSearch(token: string, queryStr: string) {
 export function requestStandupStart(token: string, channelId: number, length: number) {
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
+
+export function requestUsersStats(token: string) {
+  return requestHelper('GET', '/users/stats/v1', { }, token);
+}

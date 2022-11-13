@@ -149,7 +149,7 @@ describe('users stats test', () => {
         dm1 = requestDmCreate(user0.token, [1]);
 
         requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        requestMessageSendDm(user0,token, dm0,dmId, 'Message one in dm');
+        requestMessageSendDm(user0,token, dm0,.mId, 'Message one in dm');
 
         expect(requestUsersStats(user0.token)).toStrictEqual(
             {

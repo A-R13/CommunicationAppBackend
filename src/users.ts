@@ -151,3 +151,46 @@ export function userSetHandleV2 (token: string, handleStr: string) {
 
   return {};
 }
+
+
+export function usersStats(token: string) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is not valid');
+  }
+
+  const numChannelsExist = data.users[userToken.authUserId].stats[3].numChannelsJoined;
+  const numDmsExist = data.users[userToken.authUserId].stats[3].numDmsJoined;
+  const numMsgsExist = data.users[userToken.authUserId].stats[3].numMessagesSent;
+  const numChannels = data.channels.length;
+  const numDms = data.dms.length;
+  let numMsgs = 0;
+
+  for (const i in data.channels) {
+    numMsgs += data.channels[i].messages.length;
+  }
+
+  for (const i in data.dms) {
+    numMsgs += data.dms[i].messages.length;
+  }
+
+  let utilizationRate = (numChannelsExist + numDmsExist + numMsgsExist) / (numChannels + numDms + numMsgs);
+
+  if (utilizationRate < 0) {
+    utilizationRate = 0;
+  } else if (utilizationRate > 1) {
+    utilizationRate = 1;
+  }
+
+  setData(data);
+
+  return {
+    channelsExist: data.users[userToken.authUserId].stats[0].channelsExist,
+    DmsExist: data.users[userToken.authUserId].stats[1].dmsExist,
+    messagesExist: data.users[userToken.authUserId].stats[2].messagesExist,
+    utilizationRate: utilizationRate,
+  };
+}
