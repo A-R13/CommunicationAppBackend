@@ -164,3 +164,7 @@ export function requestUserStatsV1(token: string) {
 export function requestAuthPasswordResetRequest(email: string) {
   return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
 }
+
+export function requestAdminUserRemove(token: string, uId: number) {
+  return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
+}
