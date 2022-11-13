@@ -17,23 +17,17 @@ describe('users stats test', () => {
     let user1: newUser;
     let channel0: newChannel;
     let channel1: newChannel;
-    let channel2: newChannel;
+
+
     let dm0: dmType;
     let dm1: dmType;
+
 
 
     beforeEach(() => {
         requestClear();
         user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid: 0
         user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe'); // uid: 1
-
-        channel0 = requestChannelsCreate(user0.token, 'Channel0', true)
-        channel1 = requestChannelsCreate(user1.token, 'Channel1', true)
-        channel2 = requestChannelsCreate(user2.token, 'Channel2', true)
-
-        dm0 = requestDmCreate(user0.token, [1]);
-        dm1 = requestDmCreate(user1.token, [2]);
-        dm2 = requestDmCreate(user2.token, [0]);
 
     });
 
@@ -149,7 +143,7 @@ describe('users stats test', () => {
         dm1 = requestDmCreate(user0.token, [1]);
 
         requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        requestMessageSendDm(user0,token, dm0,.mId, 'Message one in dm');
+        requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
 
         expect(requestUsersStats(user0.token)).toStrictEqual(
             {
