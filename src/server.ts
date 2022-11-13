@@ -45,6 +45,8 @@ const server = app.listen(PORT, HOST, () => {
   console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
 });
 
+app.use('/profilePhotos', express.static('profilePhotos'));
+
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
   res.json(clearV1());

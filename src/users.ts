@@ -1,5 +1,8 @@
 import HTTPError from 'http-errors';
 import validator from 'validator';
+import request from 'sync-request';
+import fs from 'fs';
+
 
 import { getData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
@@ -155,6 +158,16 @@ export function userSetHandleV2 (token: string, handleStr: string) {
 
 
 export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
+
+  const res = request(
+    'GET', imgUrl
+  );
+  const body = res.getBody();
+  const filePath = '/profilePhotos/' + `${user.userHandle}` + '.jpg';
+  fs.writeFileSync(filePath, body, { flag: 'w' });
 
   return {}
 }
