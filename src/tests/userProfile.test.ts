@@ -28,7 +28,8 @@ describe('Testing for userProfileV3', () => {
           email: 'example1@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'Doe',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profilePhoto: null
         }
       }
     );
@@ -43,6 +44,7 @@ describe('Testing for userProfileV3', () => {
           nameFirst: 'Bob',
           nameLast: 'Doe',
           handleStr: 'bobdoe',
+          profilePhoto: null
         }
       }
     );

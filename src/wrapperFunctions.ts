@@ -156,3 +156,7 @@ export function requestSearch(token: string, queryStr: string) {
 export function requestStandupStart(token: string, channelId: number, length: number) {
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
+
+export function requestUserProilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  return requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
+}

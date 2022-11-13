@@ -34,6 +34,7 @@ export function userProfileV3 (token : string, uId : number) {
           nameFirst: tokenFinder.nameFirst,
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
+          profilePhoto: tokenFinder.profilePhoto
         }
       };
     }
@@ -150,4 +151,10 @@ export function userSetHandleV2 (token: string, handleStr: string) {
   user.userHandle = handleStr;
 
   return {};
+}
+
+
+export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+
+  return {}
 }

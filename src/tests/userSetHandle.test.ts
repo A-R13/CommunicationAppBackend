@@ -28,6 +28,7 @@ describe('userSetHandleV2 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bettyboop',
+          profilePhoto: null
         }
       }
     );
@@ -45,6 +46,7 @@ describe('userSetHandleV2 tests', () => {
           nameFirst: 'Carl',
           nameLast: 'White',
           handleStr: 'bobsmith',
+          profilePhoto: null
         }
       }
     );
