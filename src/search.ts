@@ -4,10 +4,10 @@ import { getData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
- * < description: Given a string this function searchs all dms and channels that the user is a part 
+ * < description: Given a string this function searchs all dms and channels that the user is a part
  * of and returns messages that include the query string.
  * @param {string} token - unique token of an authorised user
- * @param {string} queryStr - string entered by user to search 
+ * @param {string} queryStr - string entered by user to search
  * @returns {messages: message[]} Array of messages that contain the substring queryStr
  */
 export function searchV1(token: string, queryStr: string): { messages: messagesReacts[] } {

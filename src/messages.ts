@@ -4,7 +4,7 @@ import { getData, setData, userType, userShort, message, dmType } from './dataSt
 
 import {
   getUId, getToken, getChannel, getDm,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userReacted
 } from './helperFunctions';
 
 /**
@@ -108,7 +108,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [],
+    reacts: [
+      {
+        reactId: 1,
+        uids: [],
+        isThisUserReacted: false
+      }
+    ],
     isPinned: false
   };
 
@@ -373,7 +379,13 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
-        reacts: [],
+        reacts: [
+          {
+            reactId: 1,
+            uids: [],
+            isThisUserReacted: false
+          }
+        ],
         isPinned: false
       });
       break;
@@ -475,6 +487,33 @@ export function messageRemoveV2 (token: string, messageId: number) {
  * @param {number} messageId - Unique id for a message
  * @param {number} reactId - Id for a reaction
  */
-export function messageReact (token: string, messageId: number, reactId: number) {
+export function messageReactV1 (token: string, messageId: number, reactId: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
 
+  // Check if messageId exists in channels or dms
+  const DmInd = CheckValidMessageDms(messageId);
+  const ChInd = CheckValidMessageChannels(messageId);
+
+  // checks if token is valid
+  if (user === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+  // if message id does not exist in dm or channel
+  if (ChInd === -1 && DmInd === -1) {
+    throw HTTPError(400, 'Message Id is not valid');
+  }
+  if (reactId !== 1) {
+    throw HTTPError(400, 'Invalid reactId');
+  }
+
+  const message = userReacted(user.authUserId, messageId);
+
+  if (message === false) {
+    throw HTTPError(400, 'User has already reacted');
+  }
+
+  message.reacts[0].uids.push(user.authUserId);
+
+  return {};
 }

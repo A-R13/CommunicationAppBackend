@@ -40,7 +40,7 @@ describe('Testing react function', () => {
   });
 
   test('Error return (Invalid token)', () => {
-    expect(requestMessageReact('Invalid Token', channelMessage.messageId, 1)).toStrictEqual(400);
+    expect(requestMessageReact('Invalid Token', channelMessage.messageId, 1)).toStrictEqual(403);
   });
 
   test('Error return (Message already contains reactId from user)', () => {
