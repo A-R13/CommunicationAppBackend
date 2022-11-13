@@ -37,11 +37,38 @@ export function channelDetailsV3(token : string, channelId : number) {
     throw HTTPError(403, 'Error: User is not in the channel requested!');
   }
 
+  const ownerArraywithoutTimejoined = [];
+  const AllArraywithoutTimejoined = [];
+
+  for (const j in data.channels[channelId].ownerMembers) {
+    ownerArraywithoutTimejoined.push(
+      {
+        uId: data.channels[channelId].ownerMembers[j].uId,
+        email: data.channels[channelId].ownerMembers[j].email,
+        nameFirst: data.channels[channelId].ownerMembers[j].nameFirst,
+        nameLast: data.channels[channelId].ownerMembers[j].nameLast,
+        handleStr: data.channels[channelId].ownerMembers[j].handleStr,
+      }
+    );
+  }
+
+  for (const k in data.channels[channelId].allMembers) {
+    AllArraywithoutTimejoined.push(
+      {
+        uId: data.channels[channelId].allMembers[k].uId,
+        email: data.channels[channelId].allMembers[k].email,
+        nameFirst: data.channels[channelId].allMembers[k].nameFirst,
+        nameLast: data.channels[channelId].allMembers[k].nameLast,
+        handleStr: data.channels[channelId].allMembers[k].handleStr,
+      }
+    );
+  }
+
   return {
     name: data.channels[channelId].channelName,
     isPublic: data.channels[channelId].isPublic,
-    ownerMembers: data.channels[channelId].ownerMembers,
-    allMembers: data.channels[channelId].allMembers,
+    ownerMembers: ownerArraywithoutTimejoined,
+    allMembers: AllArraywithoutTimejoined,
   };
 }
 
@@ -77,6 +104,15 @@ export function channelJoinV3 (token: string, channelId: number) {
   }
 
   channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
+
+  // adds 1 to number of channels joined
+  data.users[user.authUserId].stats[3].numChannelsJoined += 1;
+
+  // pushes some stats back to the user
+  data.users[user.authUserId].stats[0].channelsJoined.push({
+    numChannelsJoined: data.users[user.authUserId].stats[3].numChannelsJoined,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
 
@@ -147,7 +183,7 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
       j = parseInt(num3);
     }
   }
-  const userData = {
+  const userData: userShort = {
     uId: userArray[j].authUserId,
     email: userArray[j].email,
     nameFirst: userArray[j].nameFirst,
@@ -155,6 +191,15 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
     handleStr: userArray[j].userHandle,
   };
   data.channels[channelId].allMembers.push(userData);
+
+  // adds 1 to the number of channels joined
+  data.users[user.authUserId].stats[3].numChannelsJoined += 1;
+
+  // pushes some stats back to the user
+  data.users[j].stats[0].channelsJoined.push({
+    numChannelsJoined: data.users[j].stats[3].numChannelsJoined,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   return {};
 }
@@ -380,6 +425,16 @@ export function channelleaveV2(token : string, channelId : number) {
 
   data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
   data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
+
+  // adds 1 to the number of messages sent
+  data.users[userToken.authUserId].stats[3].numChannelsJoined -= 1;
+
+  // pushes some stats about number of messages sent back to user
+  data.users[userToken.authUserId].stats[0].channelsJoined.push({
+    numChannelsJoined: data.users[userToken.authUserId].stats[3].numChannelsJoined,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
   // set data and return nothing
   setData(data);
 
