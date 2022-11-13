@@ -4,8 +4,7 @@ import request from 'sync-request';
 import fs from 'fs';
 import sharp from 'sharp';
 
-
-import { getData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
@@ -62,15 +61,18 @@ export function usersAllV2 (token: string) {
     throw HTTPError(403, `Error: the inputted token '${token}' is invalid`);
   }
   const userArray = data.users;
-  // modifies stored users array to only return what's needed
   const detailsArray = userArray.map(user => {
-    return {
-      uId: user.authUserId,
-      email: user.email,
-      nameFirst: user.nameFirst,
-      nameLast: user.nameLast,
-      handleStr: user.userHandle
-    };
+    if (user.isRemoved === false) {
+      return {
+        uId: user.authUserId,
+        email: user.email,
+        nameFirst: user.nameFirst,
+        nameLast: user.nameLast,
+        handleStr: user.userHandle
+      };
+    } else {
+      return user;
+    }
   });
 
   return {
@@ -157,9 +159,49 @@ export function userSetHandleV2 (token: string, handleStr: string) {
   return {};
 }
 
+export function userStatsV1(token: string) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is not valid');
+  }
+
+  const numChannelsJoined = data.users[userToken.authUserId].stats[3].numChannelsJoined;
+  const numDmsJoined = data.users[userToken.authUserId].stats[3].numDmsJoined;
+  const numMsgsSent = data.users[userToken.authUserId].stats[3].numMessagesSent;
+  const numChannels = data.channels.length;
+  const numDms = data.dms.length;
+  let numMsgs = 0;
+
+  for (const i in data.channels) {
+    numMsgs += data.channels[i].messages.length;
+  }
+
+  for (const i in data.dms) {
+    numMsgs += data.dms[i].messages.length;
+  }
+
+  let involvementRate = (numChannelsJoined + numDmsJoined + numMsgsSent) / (numChannels + numDms + numMsgs);
+
+  if (involvementRate < 0) {
+    involvementRate = 0;
+  } else if (involvementRate > 1) {
+    involvementRate = 1;
+  }
+
+  setData(data);
+
+  return {
+    channelsJoined: data.users[userToken.authUserId].stats[0].channelsJoined,
+    DmsJoined: data.users[userToken.authUserId].stats[1].dmsJoined,
+    messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
+    involvementRate: involvementRate,
+  };
+}
 
 export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
-  
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
@@ -176,10 +218,10 @@ export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: 
 
   const imageData = sharp(filePath).metadata();
 
-  if ((xStart < 0 || xStart > imageData.width) || (xEnd < 0 || xEnd > imageData.width) 
-    || (yStart < 0 || yStart > imageData.height) || (yEnd < 0 || yEnd > imageData.height)) {
-      throw HTTPError(400, 'Error: One of the input points are outside the valid limits for the given image.');
+  if ((xStart < 0 || xStart > imageData.width) || (xEnd < 0 || xEnd > imageData.width) ||
+    (yStart < 0 || yStart > imageData.height) || (yEnd < 0 || yEnd > imageData.height)) {
+    throw HTTPError(400, 'Error: One of the input points are outside the valid limits for the given image.');
   }
 
-  return {}
+  return {};
 }

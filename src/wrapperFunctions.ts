@@ -157,6 +157,18 @@ export function requestStandupStart(token: string, channelId: number, length: nu
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
 
+export function requestUserStatsV1(token: string) {
+  return requestHelper('GET', '/user/stats/v1', { }, token);
+}
+
+export function requestAuthPasswordResetRequest(email: string) {
+  return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
+}
+
+export function requestAdminUserRemove(token: string, uId: number) {
+  return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
+}
+
 export function requestUserProilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   return requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }
