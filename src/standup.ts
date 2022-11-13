@@ -21,10 +21,11 @@ export function standupStartV1(token: string, channelId: number, length: number)
     if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
       channel.standup.status = false;
       channel.standup.timeFinish = null;
+      channel.standup.starter = null;
     } else {
       throw HTTPError(400, 'Error: There is an active standup in this channel!');
     }
-  }
+  } 
 
   const userInChannel = channel.allMembers.find((a: userShort) => a.uId === user.authUserId);
   if (userInChannel === undefined) {
@@ -39,6 +40,11 @@ export function standupStartV1(token: string, channelId: number, length: number)
 
   channel.standup.status = true;
   channel.standup.timeFinish = timeFinish;
+  channel.standup.starter = user.authUserId;
 
   return { timeFinish: timeFinish };
+}
+
+export function standupSendV1() {
+  
 }

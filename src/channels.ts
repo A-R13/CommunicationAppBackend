@@ -50,7 +50,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
         },
       ],
       messages: [],
-      standup: { status: null, timeFinish: null },
+      standup: { status: null, timeFinish: null, starter: null },
     };
 
     data.channels.push(channel);

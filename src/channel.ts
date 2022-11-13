@@ -423,10 +423,18 @@ export function channelleaveV2(token : string, channelId : number) {
     throw HTTPError(403, 'Error: User is not in the requested channel!');
   }
 
+  if (data.channels[channelId].standup.timeFinish < Math.floor(Date.now() / 1000)) {
+    data.channels[channelId].standup.starter = null;
+  }
+
+  if (data.channels[channelId].standup.status === true && data.channels[channelId].standup.starter === userToken.authUserId) {
+    throw HTTPError(400, 'Error: User currently started a standup.!');
+  }
+
   data.channels[channelId].ownerMembers = data.channels[channelId].ownerMembers.filter(member => member.uId !== userToken.authUserId);
   data.channels[channelId].allMembers = data.channels[channelId].allMembers.filter(member => member.uId !== userToken.authUserId);
 
-  // adds 1 to the number of messages sent
+  // minuses 1 to the number of messages sent
   data.users[userToken.authUserId].stats[3].numChannelsJoined -= 1;
 
   // pushes some stats about number of messages sent back to user
