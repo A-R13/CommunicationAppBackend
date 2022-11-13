@@ -157,10 +157,6 @@ export function requestStandupStart(token: string, channelId: number, length: nu
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
 
-export function requestMessageReact(token: string, messageId: number, reactId: number) {
-  return requestHelper('POST', '/message/react/v1', { messageId, reactId }, token);
-}
-
 export function requestUserStatsV1(token: string) {
   return requestHelper('GET', '/user/stats/v1', { }, token);
 }

@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export interface reacts {
   reactId: number,
-  uids: number[],
+  uIds: number[],
   isThisUserReacted: boolean
 }
 
@@ -37,7 +37,7 @@ export interface message {
   uId: number,
   message: string,
   timeSent: number,
-  reacts: reacts[],
+  reacts: [],
   isPinned: boolean
 }
 
@@ -91,10 +91,6 @@ export interface messagesReacts {
   timeSent: number,
   reacts: reacts[],
   isPinned: boolean
-}
-
-export interface newMessage {
-  messageId: number
 }
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW
