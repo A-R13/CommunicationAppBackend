@@ -16,7 +16,7 @@ export interface userType {
   nameFirst: string,
   nameLast: string,
   sessions: string[],
-  profilePhoto: string
+  profileImgUrl?: string
 }
 
 export interface userShort {

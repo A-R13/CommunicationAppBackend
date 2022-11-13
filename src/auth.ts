@@ -64,7 +64,7 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       nameFirst: nameFirst,
       nameLast: nameLast,
       sessions: [tokenHashed],
-      profilePhoto: null
+      profileImgUrl: null
     }
   );
 

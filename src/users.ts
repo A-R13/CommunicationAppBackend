@@ -37,7 +37,7 @@ export function userProfileV3 (token : string, uId : number) {
           nameFirst: tokenFinder.nameFirst,
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
-          profilePhoto: tokenFinder.profilePhoto
+          profileImgUrl: tokenFinder.profileImgUrl
         }
       };
     }
