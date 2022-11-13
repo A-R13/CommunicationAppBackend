@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { getData, userShort } from './dataStore';
+import { getData, saveData, userShort } from './dataStore';
 import { SECRET, getHashOf, getToken, getChannel } from './helperFunctions';
 
 export function standupStartV1(token: string, channelId: number, length: number): { timeFinish: number } {
@@ -42,11 +42,57 @@ export function standupStartV1(token: string, channelId: number, length: number)
   channel.standup.timeFinish = timeFinish;
   channel.standup.starter = user.authUserId;
 
+
   return { timeFinish: timeFinish };
 }
 
 export function standupSendV1(token: string, channelId: number, message: string) {
+  const data = getData();
 
+  const channel = getChannel(channelId);
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
 
+  if (user === undefined) {
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
+  } else if (channel === undefined) {
+    throw HTTPError(400, `Error: Channel with channelId '${channelId}' does not exist!`);
+  } else if (message.length > 1000) {
+    throw HTTPError(400, 'Error: Message length cannot be greater than 1000!');
+  } 
+
+  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === user.authUserId);
+  if (userInChannel === undefined) {
+    // If user is not a member of the target channel, return an error
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
+  }
+
+  if (channel.standup.timeFinish < Math.floor(Date.now() / 1000)) {
+    if (channel.standup.messageStore.length !== 0) {
+      channel.messages.unshift(channel.standup.messageStore[0])
+      channel.standup.messageStore.splice(0, 1);
+    }
+  }
+
+  if (channel.standup.status === false) {
+    throw HTTPError(400, 'Error: There is not an active standup currently running');
+  } else {
+    if (channel.standup.messageStore.length === 0) {
+      channel.standup.messageStore.push({
+        messageId: Math.floor(Math.random() * 10000),
+        uId: user.authUserId,
+        message: user.userHandle + ": " + message,
+        timeSent: Math.floor(Date.now() / 1000),
+        reacts: [],
+        isPinned: false
+      })
+    } else {
+      channel.standup.messageStore[0].message += ("\n" + user.userHandle + ": " + message)
+    }
+
+  }
+
+  saveData();
+  return {};
 
 }

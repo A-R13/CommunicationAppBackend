@@ -1,7 +1,7 @@
 import { newUser, newChannel } from '../dataStore';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestStandupStart, requestStandupSend,
-  requestChannelMessages
+  requestChannelMessages, requestChannelJoin, requestchannelDetails,
 } from '../wrapperFunctions';
 
 requestClear();
@@ -15,7 +15,7 @@ beforeEach(() => {
   requestClear();
 
   user1 = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-  channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
+  channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
 
   user2 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
 });
@@ -53,11 +53,11 @@ describe('Error Testing', () => {
 
   test('error returns when theres no active standup', () => {
 
-    expect(requestStandupSend("Random token", channel1.channelId, "MESSAGE")).toStrictEqual(400);
+    expect(requestStandupSend("Random token", channel1.channelId, "MESSAGE")).toStrictEqual(403);
 
     expect(requestStandupSend(user1.token, 10, "MESSAGE")).toStrictEqual(400);
 
-    expect(requestStandupSend("Random token", channel1.channelId, "MESSAGE")).toStrictEqual(400);
+    expect(requestStandupSend("Random token", channel1.channelId, "MESSAGE")).toStrictEqual(403);
 
     expect(requestStandupSend(user2.token, channel1.channelId, "Message but not a user in channel")).toStrictEqual(403);
   });
@@ -81,6 +81,7 @@ describe('error', () => {
 
 describe('Correct', () => {
     test('COrrect return', () => {
+      requestChannelJoin(user2.token, channel1.channelId);
       requestStandupStart(user1.token, channel1.channelId, 2);
       const threeSeconds = Math.floor(Date.now() / 1000) + 3;
   
@@ -92,10 +93,12 @@ describe('Correct', () => {
         while (Math.floor(Date.now() / 1000) < threeSeconds) {
         }
         /* eslint-enable */
+      
+      requestStandupSend(user1.token, channel1.channelId, "The fourth message in a standup");
 
       expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
         {
-          message: 'bobdoe: The first message in a standup\n johndoe: The second message in a standup\n bobdoe: The third message in a standup',
+          message: 'bobdoe: The first message in a standup\njohndoe: The second message in a standup\nbobdoe: The third message in a standup',
           messageId: expect.any(Number),
           uId: user1.authUserId,
           timeSent: expect.any(Number),
