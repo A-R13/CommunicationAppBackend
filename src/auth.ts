@@ -65,7 +65,32 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
       nameFirst: nameFirst,
       nameLast: nameLast,
       sessions: [tokenHashed],
-      resetCode: null
+      stats: [
+        {
+          channelsJoined: [{
+            numChannelsJoined: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          dmsJoined: [{
+            numDmsJoined: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          messagesSent: [{
+            numMessagesSent: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          numChannelsJoined: 0,
+          numDmsJoined: 0,
+          numMessagesSent: 0
+        }
+      ],
+      resetCode: null,
     }
   );
 

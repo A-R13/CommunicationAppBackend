@@ -145,8 +145,8 @@ export function requestMessageRemove(token: string, messageId: number) {
   return requestHelper('DELETE', '/message/remove/v2', { messageId }, token);
 }
 
-export function requestAuthPasswordResetRequest(email: string) {
-  return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
+export function requestMessagePin(token: string, messageId: number) {
+  return requestHelper('POST', '/message/pin/v1', { messageId }, token);
 }
 
 export function requestSearch(token: string, queryStr: string) {
@@ -155,4 +155,12 @@ export function requestSearch(token: string, queryStr: string) {
 
 export function requestStandupStart(token: string, channelId: number, length: number) {
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
+}
+
+export function requestUserStatsV1(token: string) {
+  return requestHelper('GET', '/user/stats/v1', { }, token);
+}
+
+export function requestAuthPasswordResetRequest(email: string) {
+  return requestHelper('POST', '/auth/passwordreset/request/v1', { email });
 }
