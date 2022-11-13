@@ -58,7 +58,7 @@ describe('Channel Messages tests', () => {
           message: 'Message 1',
           timeSent: expect.any(Number),
           reacts:  expect.any(Array),
-          isPinned: expect.any(Boolean)
+          isPinned: expect.any(Boolean),
         },
         {
           messageId: expect.any(Number),
