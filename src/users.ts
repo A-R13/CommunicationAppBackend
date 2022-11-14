@@ -208,9 +208,9 @@ export function usersStats(token: string) {
     throw HTTPError(403, 'Error: token is not valid');
   }
 
-  const numChannelsExist = data.users[userToken.authUserId].stats[3].numChannelsJoined;
-  const numDmsExist = data.users[userToken.authUserId].stats[3].numDmsJoined;
-  const numMsgsExist = data.users[userToken.authUserId].stats[3].numMessagesSent;
+  const numChannelsExist = data.users[userToken.authUserId].stats[3].numChannelsExist;
+  const numDmsExist = data.users[userToken.authUserId].stats[3].numDmsExist;
+  const numMsgsExist = data.users[userToken.authUserId].stats[3].numMessagesExist;
   const numChannels = data.channels.length;
   const numDms = data.dms.length;
   let numMsgs = 0;

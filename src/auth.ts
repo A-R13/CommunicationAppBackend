@@ -99,6 +99,31 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
           numMessagesSent: 0
         }
       ],
+      statsv2: [
+        {
+          channelsExist: [{
+            numChannelsExist: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          dmsExist: [{
+            numDmsExist: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          messagesExist: [{
+            numMessagesExist: 0,
+            timeStamp: Math.floor(Date.now() / 1000)
+          }]
+        },
+        {
+          numChannelsExist: 0,
+          numDmsExist: 0,
+          numMessagesExist: 0
+        }
+      ],
       resetCode: null,
     }
   );
