@@ -49,7 +49,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
  * @param {number} channelId - unique ID for a channel
  *
  * @returns {status: boolean} - status of standup
- * @returns {timeFinish: number} - timeFinish of standup
+ * @returns {timeFinish: number} - Finishing time of standup
  */
 
 export function standupActiveV1(token: string, channelId: number, length: number): { isActive: boolean, timeFinish: number } {
@@ -76,15 +76,19 @@ export function standupActiveV1(token: string, channelId: number, length: number
 
       return {
         isActive: false,
-        timeFinish: null,
-      }
+        timeFinish: null
+      };
     } else {
       channel.standup.status = true;
 
       return {
         isActive: true,
-        timeFinish: channel.standup.timeFinish,
-      }
+        timeFinish: channel.standup.timeFinish
+      };
     }
   }
+  return {
+    isActive: false,
+    timeFinish: null
+  };
 }
