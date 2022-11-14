@@ -452,11 +452,11 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
     const token = req.header('token');
 
     saveData();
-    return res.json (messageUnreactV1(token, parseInt(messageId), parseInt(reactId)));
-  } catch(err){
+    return res.json(messageUnreactV1(token, parseInt(messageId), parseInt(reactId)));
+  } catch (err) {
     next(err);
   }
-})
+});
 
 // handles errors nicely
 app.use(errorHandler());
@@ -465,4 +465,3 @@ app.use(errorHandler());
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
-

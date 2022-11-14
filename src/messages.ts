@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, userType, userShort, message, dmType } from './dataStore';
+import { getData, setData, userType, userShort, message, dmType, reacts } from './dataStore';
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, userReacted, isUserReacted, messageFinder,
@@ -618,35 +618,33 @@ export function messagePinV1(token: string, messageId: any) {
  */
 
 export function messageUnreactV1 (token: string, messageId: number, reactId: number) {
-
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
   // Check if messageId exists in channels or dms
-  const DmInd = CheckValidMessageDms(messageId);
-  const ChInd = CheckValidMessageChannels(messageId);
-
+  const message = messageFinder(messageId);
+  // check if user has reacted to message
+  
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
-  // if message id does not exist in dm or channel
-  if (ChInd === -1 && DmInd === -1) {
-    throw HTTPError(400, 'Message Id is not valid');
-  }
+
   if (reactId !== 1) {
     throw HTTPError(400, 'Invalid reactId');
   }
-
-  const check = isUserReacted(user.authUserId, messageId, reactId);
-  const message = messageFinder(messageId);
-
-  if (check === false) {
-    throw HTTPError(400, 'User reaction does not exist')
+  
+  if (message === false) {
+      throw HTTPError(400, 'Invalid Message Id')
   }
 
+  // check if user has reacted
+  const check = isUserReacted(user.authUserId, messageId, reactId); 
+  
+  if (check === false) {
+    throw HTTPError(400, 'User reaction does not exist');
+  }
   let index;
-
-  for (const reaction of message.reacts){
+  for (const reaction of message.reacts) {
     index = reaction.uids.indexOf(user.authUserId);
     reaction.uids.splice(index);
   }

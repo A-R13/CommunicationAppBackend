@@ -247,7 +247,7 @@ export function checkIsPinned(messageId: number) : boolean {
  * @param {number} authUserId - unique identifier for user
  * @param {number} messageId - unique identifier for message
  * @param {number} reactId - unique identifier for reaction
- * 
+ *
  * @returns {boolean} returns true if user has reacted, false otherwise
  */
 
@@ -292,17 +292,19 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
 
 /**
  * @param {number} messageId - unique identifier for a message
- * 
+ *
  * @returns {message} returns message object that mathces the messageId
  */
 
 export function messageFinder (messageId: number) {
   const data = getData();
-
+  let messageFound: message;
+  
   for (const channel of data.channels) {
     for (const message of channel.messages) {
       if (message.messageId === messageId) {
-        return message;
+        messageFound = message;
+        return messageFound;
       }
     }
   }
@@ -310,7 +312,8 @@ export function messageFinder (messageId: number) {
   for (const dm of data.dms) {
     for (const message of dm.messages) {
       if (message.messageId === messageId) {
-        return message;
+        messageFound = message;
+        return messageFound;
       }
     }
   }
