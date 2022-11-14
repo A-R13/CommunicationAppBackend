@@ -17,7 +17,9 @@ afterEach(() => {
 describe('Error Testing', () => {
     test('// invalid url/ not correct this one returns a 404', () => {
 
-    expect(() => requestUserProfilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toThrowError;
+        expect(() => requestUserProfilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toThrowError;
+
+    // expect(() => requestUserProfilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toThrowError;
     });
 
     test('start/end points are outside the image', () => {
