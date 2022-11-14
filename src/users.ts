@@ -207,24 +207,24 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
-  if (token === undefined) {
-    throw HTTPError(403, 'Error: The token used is not valid.');
-  }
+  // if (token === undefined) {
+  //   throw HTTPError(403, 'Error: The token used is not valid.');
+  // }
 
-  const res = request(
-    'GET', imgUrl
-  );
+  // const res = request(
+  //   'GET', imgUrl
+  // );
 
-  if (res.statusCode !== 200) {
-    throw HTTPError(400, 'Error: Image URL is invalid');
-  }
-  const body = res.getBody();
-  const filePath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
-  fs.writeFileSync(filePath, body, { flag: 'w' });
+  // if (res.statusCode !== 200) {
+  //   throw HTTPError(400, 'Error: Image URL is invalid');
+  // }
+  // const body = res.getBody();
+  // const filePath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
+  // fs.writeFileSync(filePath, body, { flag: 'w' });
 
   // const imageData = sharp(filePath).metadata();
 
-  const image = sharp('profilePhotos/lindked.jpg');
+  const image = sharp('profilePhotos/bridge.jpg');
   const metadata = await image.metadata();
   console.log(metadata.width, metadata.height, metadata.format);
 
@@ -241,7 +241,14 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
     throw HTTPError(400, 'Error: One of the input end points are less than or equal to their respective start points.');    
   } 
 
+  // Extracting region (Cropping the image)
+
+  const croppedImg = image.extract( {left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart)} );
+  croppedImg.toFile('profilePhotos/cropped.jpg'); // croppedImg.toFile('filepath');
+
+  // user.profileImgUrl = '/static/' + filePath;
+
   return {};
 }
 
-userProfileUploadPhotoV1('abcd', 'asd', 0, 0, 0, 0)
+userProfileUploadPhotoV1('abcd', 'asd', 200, 1000, 1300, 900)
