@@ -44,7 +44,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
 }
 
 
-export function standupActiveV1(token: string, channelId: number, length: number): { status: boolean, timeFinish: number } {
+export function standupActiveV1(token: string, channelId: number, length: number): { isActive: boolean, timeFinish: number } {
   const channel = getChannel(channelId);
 
   const tokenHashed = getHashOf(token + SECRET);
@@ -56,23 +56,32 @@ export function standupActiveV1(token: string, channelId: number, length: number
     throw HTTPError(400, `Error: Channel with channelId '${channelId}' does not exist!`);
   }
 
-
-
-  if (channel.standup.status === true) {
-    if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
-      channel.standup.status = false;
-      channel.standup.timeFinish = null;
-    } else {
-      channel.standup.status = true;
-      channel.standup.status = timeFinish;
-    }
-  }
-
   const userInChannel = channel.allMembers.find((a: userShort) => a.uId === user.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
     throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
   }
+
+  if (channel.standup.status === true) {
+    if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
+      channel.standup.status = false;
+      channel.standup.timeFinish = null;
+
+      return {
+        isActive: false,
+        timeFinish: null,
+      }
+    } else {
+      channel.standup.status = true;
+
+      return {
+        isActive: true,
+        timeFinish: channel.standup.timeFinish,
+      }
+    }
+  }
+
+
 /*
   const timeFinish = Math.floor(Date.now() / 1000) + length;
 
