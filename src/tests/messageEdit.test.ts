@@ -182,8 +182,6 @@ describe('Message Edit', () => {
     // hower it should still work as if they pass through a valid message id, it will search and edit the message.
     // requestMessageEdit(user0.token, msg3.messageId, 'RANDOM MESSAGE BY SECOND USER.');
 
-    console.log(requestChannelMessages(user1.token, channel0.channelId, 0).messages)
-
     expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
       {
         message: 'bobdoe: The first message in a standup\njohndoe: The second message in a standup\nbobdoe: The third message in a standup',
