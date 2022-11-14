@@ -519,6 +519,7 @@ export function messageRemoveV2 (token: string, messageId: number) {
   setData(data);
   return {};
 }
+
 /**
  * <Description: Allows a user to add a reaction to a valid message
  * @param {string} token -  Unique token of an authorised user
@@ -568,6 +569,7 @@ export function messagePinV1(token: string, messageId: any) {
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
+
   const DmIndex = CheckValidMessageDms(messageId);
 
   // checks if token is valid
@@ -596,9 +598,11 @@ export function messagePinV1(token: string, messageId: any) {
       throw HTTPError(403, 'Error: Not an owner in dms');
     }
   }
+
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+
     data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
