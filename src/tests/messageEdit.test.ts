@@ -2,7 +2,7 @@ import { newUser, newChannel, dmType } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmMessages,
-  requestMessageEdit, requestChannelJoin, requestMessageSendDm
+  requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestStandupSend, requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
 
 requestClear();
@@ -19,8 +19,8 @@ describe('Message Edit', () => {
 
   beforeEach(() => {
     requestClear();
-    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 0
-    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 1
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid = 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
     dm0 = requestDmCreate(user0.token, [user1.authUserId]);
     channel0 = requestChannelsCreate(user0.token, 'Channel 1', true);
   });
@@ -157,5 +157,59 @@ describe('Message Edit', () => {
       start: 0,
       end: -1
     });
+  });
+
+  test(('Correct returns, standup messages'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Random text');
+    const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
+
+    requestStandupStart(user0.token, channel0.channelId, 2);
+    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
+
+    requestStandupSend(user0.token, channel0.channelId, "The first message in a standup");
+    requestStandupSend(user1.token, channel0.channelId, "The second message in a standup");
+    requestStandupSend(user0.token, channel0.channelId, "The third message in a standup");
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+
+    requestStandupActive(user0.token, channel0.channelId)
+
+    // cannot test message edit for standup as none of the functions return the message id. not sure how to implement.
+    // hower it should still work as if they pass through a valid message id, it will search and edit the message.
+    // requestMessageEdit(user0.token, msg3.messageId, 'RANDOM MESSAGE BY SECOND USER.');
+
+    console.log(requestChannelMessages(user1.token, channel0.channelId, 0).messages)
+
+    expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'bobdoe: The first message in a standup\njohndoe: The second message in a standup\nbobdoe: The third message in a standup',
+        messageId: expect.any(Number),
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      },
+      {
+        message: 'Test Message 3',
+        messageId: msg3.messageId,
+        uId: user1.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      },
+      {
+        message: 'Random text',
+        messageId: msg2.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      },
+    ]
+    );
   });
 });

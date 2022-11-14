@@ -54,7 +54,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
  * @returns {timeFinish: number} - Finishing time of standup
  */
 
-export function standupActiveV1(token: string, channelId: number, length: number): { isActive: boolean, timeFinish: number } {
+export function standupActiveV1(token: string, channelId: number): { isActive: boolean, timeFinish: number } {
   const channel = getChannel(channelId);
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
@@ -75,6 +75,11 @@ export function standupActiveV1(token: string, channelId: number, length: number
     if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
       channel.standup.status = false;
       channel.standup.timeFinish = null;
+
+      if (channel.standup.messageStore.length !== 0) {
+        channel.messages.unshift(channel.standup.messageStore[0]);
+        channel.standup.messageStore.splice(0, 1);
+      }
 
       return {
         isActive: false,
@@ -114,7 +119,7 @@ export function standupSendV1(token: string, channelId: number, message: string)
     throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
   }
 
-  if (channel.standup.timeFinish < Math.floor(Date.now() / 1000)) {
+  if (channel.standup.timeFinish === null) {
     if (channel.standup.messageStore.length !== 0) {
       channel.messages.unshift(channel.standup.messageStore[0]);
       channel.standup.messageStore.splice(0, 1);

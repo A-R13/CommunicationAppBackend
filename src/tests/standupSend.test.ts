@@ -1,7 +1,7 @@
 import { newUser, newChannel } from '../dataStore';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestStandupStart, requestStandupSend,
-  requestChannelMessages, requestChannelJoin, requestchannelDetails,
+  requestChannelMessages, requestChannelJoin, requestStandupActive
 } from '../wrapperFunctions';
 
 requestClear();
@@ -80,7 +80,7 @@ describe('error', () => {
 });
 
 describe('Correct', () => {
-    test('COrrect return', () => {
+    test('COrrect return v1', () => {
       requestChannelJoin(user2.token, channel1.channelId);
       requestStandupStart(user1.token, channel1.channelId, 2);
       const threeSeconds = Math.floor(Date.now() / 1000) + 3;
@@ -94,7 +94,7 @@ describe('Correct', () => {
         }
         /* eslint-enable */
       
-      requestStandupSend(user1.token, channel1.channelId, "The fourth message in a standup");
+      requestStandupActive(user1.token, channel1.channelId)
 
       expect(requestChannelMessages(user1.token, channel1.channelId, 0).messages).toStrictEqual([
         {
