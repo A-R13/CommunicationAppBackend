@@ -2,7 +2,7 @@ import { channelleaveV2 } from '../channel';
 import { newUser, newChannel } from '../dataStore';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave,
-  requestStandupStart
+  requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
 
 requestClear();
@@ -81,7 +81,7 @@ describe('Channel leave function', () => {
     );
   });
 
-  test('Correct return, after startup has ended', () => {
+  test('Correct return, after startup has ended. Tests if starter cant leave during standup', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
     requestStandupStart(nicole.token, channel.channelId, 5);
     const threeSeconds = Math.floor(Date.now() / 1000) + 3;
@@ -121,7 +121,7 @@ describe('Channel leave function', () => {
     );
   });
 
-  test('Correct return, after startup has ended', () => {
+  test('Correct return, after startup has ended. Another user, not starter, leaves channel', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
     requestStandupStart(nicole.token, channel.channelId, 5);
     const threeSeconds = Math.floor(Date.now() / 1000) + 6;
@@ -130,6 +130,8 @@ describe('Channel leave function', () => {
     while (Math.floor(Date.now() / 1000) < threeSeconds) {
     }
     /* eslint-enable */
+
+    requestStandupActive(nicole.token, channel.channelId)
     
     requestChannelLeave(nicole.token, channel.channelId);
   
@@ -148,10 +150,6 @@ describe('Channel leave function', () => {
       }
     );
 
-
-
   });
-
-
 
 });

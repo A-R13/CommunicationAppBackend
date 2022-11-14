@@ -75,6 +75,7 @@ export function standupActiveV1(token: string, channelId: number): { isActive: b
     if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
       channel.standup.status = false;
       channel.standup.timeFinish = null;
+      channel.standup.starter = null;
 
       if (channel.standup.messageStore.length !== 0) {
         channel.messages.unshift(channel.standup.messageStore[0]);
