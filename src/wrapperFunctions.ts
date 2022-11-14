@@ -173,6 +173,6 @@ export function requestAdminUserRemove(token: string, uId: number) {
   return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
 }
 
-export function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
-  return requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
+export async function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }

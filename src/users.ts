@@ -243,8 +243,8 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   // Extracting region (Cropping the image)
 
   const croppedImg = image.extract({ left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart) });
-  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'
-  croppedImg.toFile(outputPath); 
+  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg';
+  croppedImg.toFile(outputPath);
 
   user.profileImgUrl = outputPath;
 

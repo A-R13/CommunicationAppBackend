@@ -447,13 +447,14 @@ app.delete('/admin/user/remove/v1', (req: Request, res: Response, next) => {
   }
 });
 
-app.post('/user/profile/uploadphoto/v1', (req: Request, res: Response, next) => {
+app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response, next) => {
   try {
     const { imgUrl, xStart, yStart, xEnd, yEnd } = req.body;
     const token = req.header('token');
 
     saveData();
-    return res.json(userProfileUploadPhotoV1(token, imgUrl, parseInt(xStart), parseInt(yStart), parseInt(xEnd), parseInt(yEnd)));
+    const ret = await userProfileUploadPhotoV1(token, imgUrl, parseInt(xStart), parseInt(yStart), parseInt(xEnd), parseInt(yEnd));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
