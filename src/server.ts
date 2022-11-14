@@ -6,14 +6,15 @@ import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
-import { authRegisterV3, authLoginV3, authLogoutV2 } from './auth';
+import { adminUserRemoveV1 } from './admin';
+import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
-import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1 } from './messages';
+import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1 } from './messages';
 import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1 } from './users';
 import { searchV1 } from './search';
-import { standupStartV1, standupSendV1 } from './standup';
+import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 import { clearV1 } from './other';
 
 const PORT: number = parseInt(process.env.PORT || config.port);
@@ -54,6 +55,7 @@ app.post('/auth/login/v3', (req: Request, res: Response, next) => {
   try {
     const { email, password } = req.body;
     saveData();
+
     return res.json(authLoginV3(email, password));
   } catch (err) {
     next(err);
@@ -141,6 +143,7 @@ app.post('/channel/invite/v3', (req: Request, res: Response, next) => {
   try {
     const { channelId, uId } = req.body;
     const token = req.header('token');
+
     saveData();
     return res.json(channelInviteV3(token, parseInt(channelId), parseInt(uId)));
   } catch (err) {
@@ -152,6 +155,7 @@ app.post('/channel/removeowner/v2', (req: Request, res: Response, next) => {
   try {
     const { channelId, uId } = req.body;
     const token = req.header('token');
+
     saveData();
     return res.json(removeOwnerV2(token, parseInt(channelId), parseInt(uId)));
   } catch (err) {
@@ -221,6 +225,7 @@ app.put('/message/edit/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const { messageId, message } = req.body;
+
     return res.json(messageEditV2(token, messageId, message));
   } catch (err) {
     next(err);
@@ -400,6 +405,29 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
   }
 });
 
+app.get('/standup/active/v1', (req: Request, res: Response, next) => {
+  try {
+    const channelId = req.query.channelId as string;
+    const token = req.header('token');
+
+    return res.json(standupActiveV1(token, parseInt(channelId)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/message/react/v1', (req: Request, res: Response, next) => {
+  try {
+    const { messageId, reactId } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    return res.json(messageReactV1(token, parseInt(messageId), parseInt(reactId)));
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/standup/send/v1', (req: Request, res: Response, next) => {
   try {
     const { channelId, message } = req.body;
@@ -417,6 +445,29 @@ app.get('/user/stats/v1', (req: Request, res: Response, next) => {
     const token = req.header('token');
     saveData();
     return res.json(userStatsV1(token));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/auth/passwordreset/request/v1', (req: Request, res: Response, next) => {
+  try {
+    const { email } = req.body;
+
+    saveData();
+    return res.json(authPasswordResetRequestV1(email));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete('/admin/user/remove/v1', (req: Request, res: Response, next) => {
+  try {
+    const uId = req.query.uId as string;
+    const token = req.header('token');
+
+    saveData();
+    return res.json(adminUserRemoveV1(token, parseInt(uId)));
   } catch (err) {
     next(err);
   }

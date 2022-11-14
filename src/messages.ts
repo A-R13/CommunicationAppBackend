@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned,
+  getUId, getToken, getChannel, getDm, checkIsPinned, userReacted,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -405,7 +405,7 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
         reacts: [],
-        isPinned: false,
+        isPinned: false
       });
       break;
     }
@@ -521,6 +521,43 @@ export function messageRemoveV2 (token: string, messageId: number) {
 }
 
 /**
+ * <Description: Allows a user to add a reaction to a valid message
+ * @param {string} token -  Unique token of an authorised user
+ * @param {number} messageId - Unique id for a message
+ * @param {number} reactId - Id for a reaction
+ */
+export function messageReactV1 (token: string, messageId: number, reactId: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
+  // Check if messageId exists in channels or dms
+  const DmInd = CheckValidMessageDms(messageId);
+  const ChInd = CheckValidMessageChannels(messageId);
+
+  // checks if token is valid
+  if (user === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+  // if message id does not exist in dm or channel
+  if (ChInd === -1 && DmInd === -1) {
+    throw HTTPError(400, 'Message Id is not valid');
+  }
+  if (reactId !== 1) {
+    throw HTTPError(400, 'Invalid reactId');
+  }
+
+  const message = userReacted(user.authUserId, messageId, reactId);
+
+  if (message === false) {
+    throw HTTPError(400, 'User has already reacted');
+  }
+
+  message.reacts[0].uids.push(user.authUserId);
+
+  return {};
+}
+
+/**
  * <Description: Pins a message >
 * @param {string} token - Unique token of an authorised user
  * @param {number} messageId - messageId
@@ -532,6 +569,7 @@ export function messagePinV1(token: string, messageId: any) {
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
+
   const DmIndex = CheckValidMessageDms(messageId);
 
   // checks if token is valid
@@ -560,9 +598,11 @@ export function messagePinV1(token: string, messageId: any) {
       throw HTTPError(403, 'Error: Not an owner in dms');
     }
   }
+
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+
     data.dms[DmIndex].messages[DmMessageIndex].isPinned = true;
   } else { // in channels
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);

@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export interface reacts {
   reactId: number,
-  uIds: number[],
+  uids: number[],
   isThisUserReacted: boolean
 }
 
@@ -16,8 +16,11 @@ export interface userType {
   nameFirst: string,
   nameLast: string,
   sessions: string[],
+  permissions: number,
+  isRemoved: boolean
   timeCreated?: number,
   stats?: any,
+  resetCode: string
 }
 
 export interface userShort {
@@ -34,7 +37,7 @@ export interface message {
   uId: number,
   message: string,
   timeSent: number,
-  reacts: [],
+  reacts: reacts[],
   isPinned: boolean
 }
 
@@ -88,6 +91,10 @@ export interface messagesReacts {
   timeSent: number,
   reacts: reacts[],
   isPinned: boolean
+}
+
+export interface newMessage {
+  messageId: number
 }
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW
