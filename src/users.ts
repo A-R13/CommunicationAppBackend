@@ -6,7 +6,6 @@ import sharp from 'sharp';
 
 import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
-import { profile } from 'console';
 
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
@@ -203,30 +202,30 @@ export function userStatsV1(token: string) {
   };
 }
 
-export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
-  // if (token === undefined) {
-  //   throw HTTPError(403, 'Error: The token used is not valid.');
-  // }
+  if (user === undefined) {
+    throw HTTPError(403, 'Error: The token used is not valid.');
+  }
 
-  // const res = request(
-  //   'GET', imgUrl
-  // );
+  const res = request(
+    'GET', imgUrl
+  );
 
-  // if (res.statusCode !== 200) {
-  //   throw HTTPError(400, 'Error: Image URL is invalid');
-  // }
-  // const body = res.getBody();
-  // const filePath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
-  // fs.writeFileSync(filePath, body, { flag: 'w' });
+  if (res.statusCode !== 200) {
+    throw HTTPError(400, 'Error: Image URL is invalid');
+  }
+  const body = res.getBody();
+  const filePath = 'profilePhotos/temp.jpg';
+  fs.writeFileSync(filePath, body, { flag: 'w' });
 
   // const imageData = sharp(filePath).metadata();
 
   const image = sharp('profilePhotos/bridge.jpg');
-  const metadata = await image.metadata();
-  console.log(metadata.width, metadata.height, metadata.format);
+  const metadata = image.metadata();
+//   console.log(metadata.width, metadata.height, metadata.format);
 
   if (metadata.format !== 'jpeg') { // This is good
     throw HTTPError(400, 'Error: The file is not of type .jpeg/jpg.');
@@ -244,7 +243,8 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   // Extracting region (Cropping the image)
 
   const croppedImg = image.extract( {left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart)} );
-  croppedImg.toFile('profilePhotos/cropped.jpg'); // croppedImg.toFile('filepath');
+  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
+  croppedImg.toFile(outputPath); // croppedImg.toFile('filepath');
 
   // user.profileImgUrl = '/static/' + filePath;
 

@@ -17,22 +17,22 @@ afterEach(() => {
 describe('Error Testing', () => {
     test('// invalid url/ not correct this one returns a 404', () => {
 
-    expect(requestUserProilePhotoUpload(user1.token, 'https://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toStrictEqual(400);
+    expect(requestUserProilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toStrictEqual(400);
     });
 
     test('start/end points are outside the image', () => {
     
-        expect(requestUserProilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640×426.jpeg', 0, 0, 1024, 1024)).toStrictEqual(400);
+        expect(requestUserProilePhotoUpload(user1.token, 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg', 0, 0, 1024, 1024)).toStrictEqual(400);
     });
 
     test('xEnd is less than xStart', () => {
     
-        expect(requestUserProilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640×426.jpeg', 50, 0, 10, 800)).toStrictEqual(400);
+        expect(requestUserProilePhotoUpload(user1.token, 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg', 50, 0, 10, 800)).toStrictEqual(400);
     });
 
     test('yEnd is less than yStart', () => {
     
-        expect(requestUserProilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640×426.jpeg', 0, 50, 800, 10)).toStrictEqual(400);
+        expect(requestUserProilePhotoUpload(user1.token, 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg', 0, 50, 800, 10)).toStrictEqual(400);
     });
 
     test('image is not a .jpg', () => {
@@ -42,7 +42,7 @@ describe('Error Testing', () => {
     
     test('invalid user', () => {
        
-        expect(requestUserProilePhotoUpload('abcde', 'http://filesamples.com/samples/image/jpeg/sample_640×426.jpeg', 0, 0, 1024, 1024)).toStrictEqual(403);
+        expect(requestUserProilePhotoUpload('abcde', 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg', 0, 0, 1024, 1024)).toStrictEqual(403);
     });
 
 });
@@ -51,7 +51,7 @@ describe('Succesful Upload', () => {
     test('File 1', () => {
         expect(requestUserProfile(user1.token, user1.authUserId).user.profilePhoto).toStrictEqual(null);
 
-        expect(requestUserProilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640×426.jpeg', 200, 200, 800, 800)).toStrictEqual( {} );
+        expect(requestUserProilePhotoUpload(user1.token, 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg', 200, 200, 800, 800)).toStrictEqual( {} );
 
         expect(requestUserProfile(user1.token, user1.authUserId).user.profilePhoto).toBe(String);
     })
