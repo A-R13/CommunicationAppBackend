@@ -172,3 +172,7 @@ export function requestAuthPasswordResetRequest(email: string) {
 export function requestAdminUserRemove(token: string, uId: number) {
   return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
 }
+
+export function requestMessageUnreact(token: string, messageId: number, reactId: number) {
+  return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
+}

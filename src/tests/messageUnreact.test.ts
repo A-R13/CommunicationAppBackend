@@ -37,7 +37,7 @@ describe('Testing react function', () => {
 
   test('Error return (Invalid token)', () => {
     requestMessageReact(user0.token, channelMessage.messageId, 1);
-    expect(requestMessageUnreact('Invalid Token', channelMessage.messageId, 1)).toStrictEqual(400);
+    expect(requestMessageUnreact('Invalid Token', channelMessage.messageId, 1)).toStrictEqual(403);
   })
 
   test('Error return (Invalid reactId)', () => {
