@@ -169,6 +169,10 @@ export function requestMessageReact(token: string, messageId: number, reactId: n
   return requestHelper('POST', '/message/react/v1', { messageId, reactId }, token);
 }
 
+export function requestStandupSend(token: string, channelId: number, message: string) {
+  return requestHelper('POST', '/standup/send/v1', { channelId, message }, token);
+}
+
 export function requestUserStatsV1(token: string) {
   return requestHelper('GET', '/user/stats/v1', { }, token);
 }
