@@ -29,7 +29,7 @@ describe('Testing for userProfileV3', () => {
           nameFirst: 'nicole',
           nameLast: 'Doe',
           handleStr: 'nicoledoe',
-          profilePhoto: null
+          profileImgUrl: null
         }
       }
     );
@@ -44,7 +44,7 @@ describe('Testing for userProfileV3', () => {
           nameFirst: 'Bob',
           nameLast: 'Doe',
           handleStr: 'bobdoe',
-          profilePhoto: null
+          profileImgUrl: null
         }
       }
     );

@@ -66,6 +66,7 @@ describe('Correct Returns and correct changes', () => {
             nameFirst: 'Bob',
             nameLast: 'Doe',
             handleStr: 'bobdoe',
+            profileImgUrl: null
         };
 
         expect(requestUsersAll(user1.token).users).toContainEqual( userBob );
@@ -80,6 +81,7 @@ describe('Correct Returns and correct changes', () => {
             nameFirst: 'Removed',
             nameLast: 'user',
             handleStr: '',
+            profileImgUrl: null
         });
 
         expect(requestUsersAll(user1.token).users).not.toContainEqual( userBob );

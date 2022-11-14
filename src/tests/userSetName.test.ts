@@ -26,7 +26,7 @@ describe('Testing for userSetNameV2', () => {
           nameFirst: 'geoffrey',
           nameLast: 'mok',
           handleStr: 'nicoledoe',
-          profilePhoto: null
+          profileImgUrl: null
         }
       }
     );

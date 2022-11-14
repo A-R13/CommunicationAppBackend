@@ -68,7 +68,8 @@ export function usersAllV2 (token: string) {
         email: user.email,
         nameFirst: user.nameFirst,
         nameLast: user.nameLast,
-        handleStr: user.userHandle
+        handleStr: user.userHandle,
+        profileImgUrl: user.profileImgUrl
       };
     } else {
       return user;
