@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned,
+  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -541,8 +541,8 @@ export function messageUnpinV1(token: string, messageId: any) {
   }
 
   // check if message is pinned
-  if (checkIsPinned(messageId) === true) {
-    throw HTTPError(400, 'Error: Message is already pinned!');
+  if (checkIsUnpinned(messageId) === false) {
+    throw HTTPError(400, 'Error: Message is already Unpinned!');
   }
 
   // check if valid messages
@@ -564,45 +564,15 @@ export function messageUnpinV1(token: string, messageId: any) {
 
   // In dms
   if (channelIndex === -1) {
-    const DmMessageIndex = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
-
-    data.dms[DmIndex].messages[DmMessageIndex].isPinned = false;
+    const DmMessageIndex2 = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+    data.dms[DmIndex].messages[DmMessageIndex2].isPinned = false;
   } else { // in channels
-    const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
-
-    data.channels[channelIndex].messages[channelMessageIndex].isPinned = false;
+    const channelMessageIndex2 = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+    data.channels[channelIndex].messages[channelMessageIndex2].isPinned = false;
   }
 
   setData(data);
   return {};
 }
 
-
-
-/*
-  if (channelIndex === -1 && dmIndex === -1) {
-    throw HTTPError(400, 'Error: MessageId doesnt exist!');
-  } else if (channelIndex === -1 && dmIndex !== -1) {
-    if (!data.dms[dmIndex].members.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the Dm')
-    } else if (!data.dms[dmIndex].owners.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(403, 'Error: Not an owner in channels');
-    }
-  } else if (channelIndex !== -1 && dmIndex === -1) {
-    if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
-      throw HTTPError(400, 'Error: User is not in the channel');
-    } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
-      throw HTTPError(403, 'Error: Not an owner in dms');
-    }
-  }
-  if (channelIndex === -1) {
-    const dmMessageIndex = data.dms[dmIndex].messages.findIndex(message => message.messageId === messageId);
-    data.dms[dmIndex].messages[dmMessageIndex].isPinned = false;
- }
- else {
-   const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
-   data.channels[channelIndex].messages[channelMessageIndex].isPinned = false;
- }
-
-*/
 
