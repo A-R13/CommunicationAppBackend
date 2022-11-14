@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export interface reacts {
   reactId: number,
-  uIds: number[],
+  uids: number[],
   isThisUserReacted: boolean
 }
 
@@ -37,7 +37,7 @@ export interface message {
   uId: number,
   message: string,
   timeSent: number,
-  reacts: [],
+  reacts: reacts[],
   isPinned: boolean
 }
 
@@ -48,7 +48,7 @@ export interface channelType {
   ownerMembers: userShort[],
   allMembers: userShort[],
   messages: message[],
-  standup: { status: boolean, timeFinish: number },
+  standup: { status: boolean, timeFinish: number, starter: number, messageStore: any },
 }
 
 export interface channelShort {
@@ -91,6 +91,10 @@ export interface messagesReacts {
   timeSent: number,
   reacts: reacts[],
   isPinned: boolean
+}
+
+export interface newMessage {
+  messageId: number
 }
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW

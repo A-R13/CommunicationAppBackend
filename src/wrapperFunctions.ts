@@ -157,11 +157,19 @@ export function requestStandupStart(token: string, channelId: number, length: nu
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
 
-export function requestUsersStats(token: string) {
-  return requestHelper('GET', '/users/stats/v1', { }, token);
-
+export function requestStandupActive(token: string, channelId: number) {
+  return requestHelper('GET', '/standup/active/v1', { channelId }, token);
 }
-  export function requestUserStatsV1(token: string) {
+
+export function requestMessageReact(token: string, messageId: number, reactId: number) {
+  return requestHelper('POST', '/message/react/v1', { messageId, reactId }, token);
+}
+
+export function requestStandupSend(token: string, channelId: number, message: string) {
+  return requestHelper('POST', '/standup/send/v1', { channelId, message }, token);
+}
+
+export function requestUserStatsV1(token: string) {
   return requestHelper('GET', '/user/stats/v1', { }, token);
 }
 
@@ -171,4 +179,12 @@ export function requestAuthPasswordResetRequest(email: string) {
 
 export function requestAdminUserRemove(token: string, uId: number) {
   return requestHelper('DELETE', '/admin/user/remove/v1', { uId }, token);
+}
+
+export function requestMessageUnreact(token: string, messageId: number, reactId: number) {
+  return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
+}
+
+export function requestUsersStats(token: string) {
+  return requestHelper('GET', '/users/stats/v1', { }, token);
 }
