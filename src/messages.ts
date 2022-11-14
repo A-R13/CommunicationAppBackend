@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned,
+  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -66,6 +66,17 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   data.dms.push(dm);
 
+  for (const i of membersArray) {
+    // adds 1 to the number of dms joined
+    data.users[i.uId].stats[3].numDmsJoined += 1;
+
+    // pushes some stats about number of dms joined back to user
+    data.users[i.uId].stats[1].dmsJoined.push({
+      numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
+  }
+
   setData(data);
 
   return { dmId: length };
@@ -115,6 +126,15 @@ export function messageSendV2 (token: string, channelId: number, message: string
   const data = getData();
   channel = data.channels.find(c => c === channel);
   channel.messages.unshift(msgg);
+
+  // adds 1 to the number of messages sent
+  data.users[user.authUserId].stats[3].numMessagesSent += 1;
+
+  // pushes some stats about number of messages sent back to user
+  data.users[user.authUserId].stats[2].messagesSent.push({
+    numMessagesSent: data.users[user.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
 
@@ -212,6 +232,17 @@ export function dmRemoveV2(token : string, dmId: number) {
   // checks if the user is an owner.
   if (JSON.stringify(owner) !== JSON.stringify(convertedUser)) {
     throw HTTPError(403, 'Error: Not an owner');
+  }
+
+  for (const i of data.dms[dmId].members) {
+    // adds 1 to the number of messages sent
+    data.users[i.uId].stats[3].numDmsJoined -= 1;
+
+    // pushes some stats about number of dms joined sent back to user
+    data.users[i.uId].stats[1].dmsJoined.push({
+      numDmsJoined: data.users[i.uId].stats[3].numDmsJoined,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
 
   // deletes the dm
@@ -374,11 +405,20 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
         reacts: [],
-        isPinned: false,
+        isPinned: false
       });
       break;
     }
   }
+
+  // adds 1 to the number of messages sent
+  data.users[checkToken.authUserId].stats[3].numMessagesSent += 1;
+
+  // pushes some stats about number of messages sent back to user
+  data.users[checkToken.authUserId].stats[2].messagesSent.push({
+    numMessagesSent: data.users[checkToken.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
 
@@ -413,12 +453,22 @@ export function dmLeaveV2 (token: string, dmId: number) {
   const userId = userToken.authUserId;
 
   const userInDm = checkInDm.members.find((a: userShort) => a.uId === userToken.authUserId);
+
   if (userInDm === undefined) {
     throw HTTPError(403, 'Error: User is not a member of the dm');
   } else {
     data.dms[dmId].owners = data.dms[dmId].owners.filter(m => m.uId !== userId);
     data.dms[dmId].members = data.dms[dmId].members.filter(m => m.uId !== userId);
   }
+
+  // adds 1 to the number of messages sent
+  data.users[userToken.authUserId].stats[3].numDmsJoined -= 1;
+
+  // pushes some stats about number of dms joined sent back to user
+  data.users[userToken.authUserId].stats[1].dmsJoined.push({
+    numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   return {};
 }
@@ -467,6 +517,43 @@ export function messageRemoveV2 (token: string, messageId: number) {
   }
 
   setData(data);
+  return {};
+}
+
+/**
+ * <Description: Allows a user to add a reaction to a valid message
+ * @param {string} token -  Unique token of an authorised user
+ * @param {number} messageId - Unique id for a message
+ * @param {number} reactId - Id for a reaction
+ */
+export function messageReactV1 (token: string, messageId: number, reactId: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
+  // Check if messageId exists in channels or dms
+  const DmInd = CheckValidMessageDms(messageId);
+  const ChInd = CheckValidMessageChannels(messageId);
+
+  // checks if token is valid
+  if (user === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+  // if message id does not exist in dm or channel
+  if (ChInd === -1 && DmInd === -1) {
+    throw HTTPError(400, 'Message Id is not valid');
+  }
+  if (reactId !== 1) {
+    throw HTTPError(400, 'Invalid reactId');
+  }
+
+  const message = userReacted(user.authUserId, messageId, reactId);
+
+  if (message === false) {
+    throw HTTPError(400, 'User has already reacted');
+  }
+
+  message.reacts[0].uids.push(user.authUserId);
+
   return {};
 }
 
@@ -533,6 +620,7 @@ export function messageUnpinV1(token: string, messageId: any) {
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
+
   const DmIndex = CheckValidMessageDms(messageId);
 
   // checks if token is valid
@@ -565,9 +653,11 @@ export function messageUnpinV1(token: string, messageId: any) {
   // In dms
   if (channelIndex === -1) {
     const DmMessageIndex2 = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+
     data.dms[DmIndex].messages[DmMessageIndex2].isPinned = false;
   } else { // in channels
     const channelMessageIndex2 = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+
     data.channels[channelIndex].messages[channelMessageIndex2].isPinned = false;
   }
 
@@ -576,3 +666,44 @@ export function messageUnpinV1(token: string, messageId: any) {
 }
 
 
+/**
+ * <Description: Allows the user to remove their reaction from a message>
+ * @param {string} token - Unique token of authorised user
+ * @param {number} messageId - unique Id for a message
+ * @param {number} reactId - unique id for the type of reaction
+ */
+
+export function messageUnreactV1 (token: string, messageId: number, reactId: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(messageId);
+  // check if user has reacted to message
+
+  if (user === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+
+  if (reactId !== 1) {
+    throw HTTPError(400, 'Invalid reactId');
+  }
+
+  if (message === false) {
+    throw HTTPError(400, 'Invalid Message Id');
+  }
+
+  // check if user has reacted
+  const check = isUserReacted(user.authUserId, messageId, reactId);
+
+  if (check === false) {
+    throw HTTPError(400, 'User reaction does not exist');
+  }
+  let index;
+  for (const reaction of message.reacts) {
+    index = reaction.uids.indexOf(user.authUserId);
+    reaction.uids.splice(index);
+  }
+
+  return {};
+}
