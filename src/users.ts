@@ -6,6 +6,7 @@ import sharp from 'sharp';
 
 import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
+import { profile } from 'console';
 
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
@@ -202,9 +203,13 @@ export function userStatsV1(token: string) {
   };
 }
 
-export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
+
+  if (token === undefined) {
+    throw HTTPError(403, 'Error: The token used is not valid.');
+  }
 
   const res = request(
     'GET', imgUrl
@@ -214,15 +219,29 @@ export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: 
     throw HTTPError(400, 'Error: Image URL is invalid');
   }
   const body = res.getBody();
-  const filePath = '/profilePhotos/' + `${user.userHandle}` + '.jpg';
+  const filePath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
   fs.writeFileSync(filePath, body, { flag: 'w' });
 
-  const imageData = sharp(filePath).metadata();
+  // const imageData = sharp(filePath).metadata();
 
-  if ((xStart < 0 || xStart > imageData.width) || (xEnd < 0 || xEnd > imageData.width) ||
-    (yStart < 0 || yStart > imageData.height) || (yEnd < 0 || yEnd > imageData.height)) {
+  const image = sharp('profilePhotos/lindked.jpg');
+  const metadata = await image.metadata();
+  console.log(metadata.width, metadata.height, metadata.format);
+
+  if (metadata.format !== 'jpeg') { // This is good
+    throw HTTPError(400, 'Error: The file is not of type .jpeg/jpg.');
+  }
+
+  if ((xStart < 0 || xStart > metadata.width) || (xEnd < 0 || xEnd > metadata.width) ||
+    (yStart < 0 || yStart > metadata.height) || (yEnd < 0 || yEnd > metadata.height)) {
     throw HTTPError(400, 'Error: One of the input points are outside the valid limits for the given image.');
   }
 
+  if (xEnd <= xStart || yEnd <= yStart) {
+    throw HTTPError(400, 'Error: One of the input end points are less than or equal to their respective start points.');    
+  } 
+
   return {};
 }
+
+userProfileUploadPhotoV1('abcd', 'asd', 0, 0, 0, 0)
