@@ -248,7 +248,7 @@ export function checkIsPinned(messageId: number) : boolean {
  * @returns { Booleon }
  */
 
- export function checkIsUnpinned(messageId: number) : boolean {
+export function checkIsUnpinned(messageId: number) : boolean {
   const data = getData();
   const CheckInChannel = CheckValidMessageChannels(messageId);
   if (CheckInChannel === -1) {

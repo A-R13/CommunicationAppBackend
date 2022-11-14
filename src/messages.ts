@@ -613,14 +613,18 @@ export function messagePinV1(token: string, messageId: any) {
   return {};
 }
 
-
+/**
+ * <Description: Unpins a pinned message >
+ * @param {string} token - Unique token of an authorised user
+ * @param {number} messageId - messageId
+ * @returns { }
+ */
 
 export function messageUnpinV1(token: string, messageId: any) {
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
-
   const DmIndex = CheckValidMessageDms(messageId);
 
   // checks if token is valid
@@ -664,7 +668,6 @@ export function messageUnpinV1(token: string, messageId: any) {
   setData(data);
   return {};
 }
-
 
 /**
  * <Description: Allows the user to remove their reaction from a message>

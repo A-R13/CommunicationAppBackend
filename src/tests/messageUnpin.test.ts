@@ -31,9 +31,10 @@ describe('Message unpin tests', () => {
     requestChannelJoin(user1.token, channel0.channelId);
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
     const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
-
+    requestMessagePin(user0.token, msg1.messageId);
+    requestMessagePin(user0.token, msg2.messageId);
     // Invalid messageId
-    expect(requestMessageUnpin(user0.token, 0)).toStrictEqual(400);
+    expect(requestMessageUnpin(user0.token, 99)).toStrictEqual(400);
     // Invalid token
     expect(requestMessageUnpin('INVALID TOKEN', msg1.messageId)).toStrictEqual(403);
     // user has no owner permissions in channel/dm
@@ -59,6 +60,9 @@ describe('Message unpin tests', () => {
     const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
     const msg2 = requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
     const user2: newUser = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe'); // uid = 2
+
+    requestMessagePin(user0.token, msg1.messageId);
+    requestMessagePin(user0.token, msg2.messageId);
 
     expect(requestMessageUnpin(user2.token, msg1.messageId)).toStrictEqual(400);
     expect(requestMessageUnpin(user2.token, msg2.messageId)).toStrictEqual(400);

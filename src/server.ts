@@ -485,7 +485,6 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
   }
 });
 
-
 // handles errors nicely
 app.use(errorHandler());
 
