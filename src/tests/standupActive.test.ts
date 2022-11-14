@@ -3,28 +3,26 @@ import {
     requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin, requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
 
-
 requestClear();
-
-let user1: newUser;
-let channel1: newChannel;
-
-let user2: newUser;
-
-beforeEach(() => {
-  requestClear();
-
-  user1 = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Bob', 'Doe');
-  channel1 = requestChannelsCreate(user1.token, 'Channel1', false);
-
-  user2 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
-});
 
 afterEach(() => {
   requestClear();
 });
 
-describe('Error Testing', () => {
+describe('standup active tests', () => {
+  let user1: newUser;
+  let user2: newUser;
+  let channel1: newChannel;
+
+  beforeEach(() => {
+    requestClear();
+
+    user1 = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Bob', 'Doe');
+    channel1 = requestChannelsCreate(user1.token, 'Channel1', true);
+
+    user2 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe');
+  });
+
   test('error returns', () => {
     // invalid channel
     expect(requestStandupActive(user1.token, 99)).toStrictEqual(400);
@@ -35,26 +33,20 @@ describe('Error Testing', () => {
     // invalid user
     expect(requestStandupActive('abcde', channel1.channelId)).toStrictEqual(403);
   });
-});
 
-describe('Correct Return', () => {
+  test('standup is not active', () => {
+    requestChannelJoin(user2.token, channel1.channelId);
+    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ status: false, timeFinish: null });
+
+  })
+
   test('Correct return', () => {
     requestChannelJoin(user2.token, channel1.channelId);
     requestStandupStart(user1.token, channel1.channelId, 10);
-    expect(requestStandupActive(user1.token, channel1.channelId)).toStrictEqual({ status: true, timeFinish: expect.any(Number) });
+    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ status: true, timeFinish: expect.any(Number) });
   });
 
-  test('Correct return, after startup has ended', () => {
-    requestStandupStart(user1.token, channel1.channelId, 2);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
 
-    /*eslint-disable */
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
-
-    expect(requestStandupActive(user1.token, channel1.channelId)).toStrictEqual({ status: false, timeFinish: null });
-  });
 });
 
 
