@@ -36,14 +36,14 @@ describe('standup active tests', () => {
 
   test('standup is not active', () => {
     requestChannelJoin(user2.token, channel1.channelId);
-    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ status: false, timeFinish: null });
+    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ isActive: false, timeFinish: null });
 
   })
 
   test('Correct return', () => {
     requestChannelJoin(user2.token, channel1.channelId);
     requestStandupStart(user1.token, channel1.channelId, 10);
-    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ status: true, timeFinish: expect.any(Number) });
+    expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ isActive: true, timeFinish: expect.any(Number) });
   });
 
 

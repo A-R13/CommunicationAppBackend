@@ -52,36 +52,39 @@ export function standupStartV1(token: string, channelId: number, length: number)
  * @returns {timeFinish: number} - timeFinish of standup
  */
 
-export function standupActiveV1(token: string, channelId: number, length: number): { status: boolean, timeFinish: number } {
+export function standupActiveV1(token: string, channelId: number, length: number): { isActive: boolean, timeFinish: number } {
   const channel = getChannel(channelId);
   const tokenHashed = getHashOf(token + SECRET);
-  const userToken = getToken(tokenHashed);
+  const user = getToken(tokenHashed);
 
-  if (userToken === undefined) {
-    throw HTTPError(403, `Error: Token in invalid`);
-  }
-  if (channel === undefined) {
-    throw HTTPError(400, `Error: ChannelId in invalid`);
+  if (user === undefined) {
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
+  } else if (channel === undefined) {
+    throw HTTPError(400, `Error: Channel with channelId '${channelId}' does not exist!`);
   }
 
-  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === userToken.authUserId);
+  const userInChannel = channel.allMembers.find((a: userShort) => a.uId === user.authUserId);
   if (userInChannel === undefined) {
     // If user is not a member of the target channel, return an error
-    throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channelId}'!`);
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
   }
 
-  const timeFinish = Math.floor(Date.now() / 1000) + length;
+  if (channel.standup.status === true) {
+    if (Math.floor(Date.now() / 1000) > channel.standup.timeFinish) {
+      channel.standup.status = false;
+      channel.standup.timeFinish = null;
 
-  if (channel.standup.status === false) {
       return {
-        status: false,
-        timeFinish: null
+        isActive: false,
+        timeFinish: null,
       }
-  }
-  else {
+    } else {
+      channel.standup.status = true;
+
       return {
-        status: true,
-        timeFinish: timeFinish
+        isActive: true,
+        timeFinish: channel.standup.timeFinish,
       }
     }
+  }
 }
