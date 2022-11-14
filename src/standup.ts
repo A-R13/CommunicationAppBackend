@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { saveData, userShort } from './dataStore';
+import { userShort } from './dataStore';
 import { SECRET, getHashOf, getToken, getChannel } from './helperFunctions';
 
 export function standupStartV1(token: string, channelId: number, length: number): { timeFinish: number } {
@@ -120,14 +120,7 @@ export function standupSendV1(token: string, channelId: number, message: string)
     throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of channel with channelId '${channelId}'!`);
   }
 
-  if (channel.standup.timeFinish === null) {
-    if (channel.standup.messageStore.length !== 0) {
-      channel.messages.unshift(channel.standup.messageStore[0]);
-      channel.standup.messageStore.splice(0, 1);
-    }
-  }
-
-  if (channel.standup.status === false) {
+  if (channel.standup.status === false || channel.standup.status === null) {
     throw HTTPError(400, 'Error: There is not an active standup currently running');
   } else {
     if (channel.standup.messageStore.length === 0) {
@@ -139,11 +132,10 @@ export function standupSendV1(token: string, channelId: number, message: string)
         reacts: [],
         isPinned: false
       });
+      return {};
     } else {
       channel.standup.messageStore[0].message += ('\n' + user.userHandle + ': ' + message);
+      return {};
     }
   }
-
-  saveData();
-  return {};
 }

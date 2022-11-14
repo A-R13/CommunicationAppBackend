@@ -49,6 +49,7 @@ describe('Error Testing', () => {
   
       expect(requestStandupSend(user1.token, channel1.channelId, bigMessage)).toStrictEqual(400);
       expect(requestStandupSend(user2.token, channel1.channelId, "Message but not a user in channel")).toStrictEqual(403);
+
   });
 
   test('error returns when theres no active standup', () => {
@@ -60,6 +61,8 @@ describe('Error Testing', () => {
     expect(requestStandupSend("Random token", channel1.channelId, "MESSAGE")).toStrictEqual(403);
 
     expect(requestStandupSend(user2.token, channel1.channelId, "Message but not a user in channel")).toStrictEqual(403);
+
+    expect(requestStandupSend(user1.token, channel1.channelId, "Message but no standup active")).toStrictEqual(400);
   });
 
 });
