@@ -243,6 +243,42 @@ export function checkIsPinned(messageId: number) : boolean {
 }
 
 /**
+ * <Description: Checks if message is already unpinned >
+ * @param {number} messageId - messageId
+ * @returns { Booleon }
+ */
+
+export function checkIsUnpinned(messageId: number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if pinned
+      if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === false) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // checks if pinned
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+/**
  * <Description: Checks if user has reacted to message>
  * @param {number} authUserId - unique identifier for user
  * @param {number} messageId - unique identifier for message

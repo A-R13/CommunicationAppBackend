@@ -157,6 +157,10 @@ export function requestStandupStart(token: string, channelId: number, length: nu
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
 
+export function requestMessageUnpin(token: string, messageId: number) {
+  return requestHelper('POST', '/message/unpin/v1', { messageId }, token);
+}
+
 export function requestStandupActive(token: string, channelId: number) {
   return requestHelper('GET', '/standup/active/v1', { channelId }, token);
 }
