@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, userType, userShort, message, dmType, reacts } from './dataStore';
+import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, userReacted, isUserReacted, messageFinder,
@@ -624,7 +624,7 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   // Check if messageId exists in channels or dms
   const message = messageFinder(messageId);
   // check if user has reacted to message
-  
+
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
@@ -632,14 +632,14 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   if (reactId !== 1) {
     throw HTTPError(400, 'Invalid reactId');
   }
-  
+
   if (message === false) {
-      throw HTTPError(400, 'Invalid Message Id')
+    throw HTTPError(400, 'Invalid Message Id');
   }
 
   // check if user has reacted
-  const check = isUserReacted(user.authUserId, messageId, reactId); 
-  
+  const check = isUserReacted(user.authUserId, messageId, reactId);
+
   if (check === false) {
     throw HTTPError(400, 'User reaction does not exist');
   }

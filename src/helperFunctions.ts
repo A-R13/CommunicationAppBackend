@@ -299,7 +299,7 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
 export function messageFinder (messageId: number) {
   const data = getData();
   let messageFound: message;
-  
+
   for (const channel of data.channels) {
     for (const message of channel.messages) {
       if (message.messageId === messageId) {
