@@ -202,7 +202,7 @@ export function userStatsV1(token: string) {
   };
 }
 
-export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
 
@@ -223,9 +223,9 @@ export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: 
 
   // const imageData = sharp(filePath).metadata();
 
-  const image = sharp('profilePhotos/bridge.jpg');
-  const metadata = image.metadata();
-//   console.log(metadata.width, metadata.height, metadata.format);
+  const image = sharp(filePath);
+  const metadata = await image.metadata();
+  //   console.log(metadata.width, metadata.height, metadata.format);
 
   if (metadata.format !== 'jpeg') { // This is good
     throw HTTPError(400, 'Error: The file is not of type .jpeg/jpg.');
@@ -237,18 +237,18 @@ export function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: 
   }
 
   if (xEnd <= xStart || yEnd <= yStart) {
-    throw HTTPError(400, 'Error: One of the input end points are less than or equal to their respective start points.');    
-  } 
+    throw HTTPError(400, 'Error: One of the input end points are less than or equal to their respective start points.');
+  }
 
   // Extracting region (Cropping the image)
 
-  const croppedImg = image.extract( {left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart)} );
-  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end 
+  const croppedImg = image.extract({ left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart) });
+  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg'; // Need to test without the .jpg end
   croppedImg.toFile(outputPath); // croppedImg.toFile('filepath');
 
-  // user.profileImgUrl = '/static/' + filePath;
+  user.profileImgUrl = outputPath;
 
   return {};
 }
 
-userProfileUploadPhotoV1('abcd', 'asd', 200, 1000, 1300, 900)
+// userProfileUploadPhotoV1('abcd', 'asd', 200, 1000, 1300, 900)

@@ -21,7 +21,7 @@ export interface userType {
   timeCreated?: number,
   stats?: any,
   resetCode: string,
-  profileImgUrl?: string
+  profileImgUrl: string | null
 }
 
 export interface userShort {

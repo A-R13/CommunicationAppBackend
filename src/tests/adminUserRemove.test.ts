@@ -4,6 +4,15 @@ import {
   requestMessageSend, requestChannelMessages, requestMessageSendDm, requestDmMessages, requestMessagePin, requestchannelDetails, requestDmDetails
 } from '../wrapperFunctions';
 
+interface userPhotoType {
+    uId: number,
+    email: string,
+    nameFirst: string,
+    nameLast: string,
+    handleStr: string,
+    profileImgUrl: string | null
+}
+
 requestClear();
 
 let user1: newUser;
@@ -60,7 +69,7 @@ describe('Correct Returns and correct changes', () => {
 
     test('Example Correct Return', () => {
 
-        const userBob = {
+        const userBob: userPhotoType = {
             uId: 1,
             email: 'example2@gmail.com',
             nameFirst: 'Bob',
