@@ -17,6 +17,7 @@ describe('adminpermission change test', () => {
     let user2: newUser;
 
     let channel0: newChannel;
+    let channel1: newChannel;
     let dm0: newDm;
 
     beforeEach(() => {
@@ -53,7 +54,7 @@ describe('adminpermission change test', () => {
     //channel owner requesting to demote the only global owner in channel
     test('error return ', () => {
         requestChannelJoin(user0.token, channel1.channelId);
-        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual({});
+        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual(400);
 
     });
 
@@ -61,7 +62,7 @@ describe('adminpermission change test', () => {
     test('error return', () => {
         requestChannelJoin(user0.token, channel1.channelId);
         requestAddOwner(user1.token, channel1.channelId, user2.authUserId);
-        requestremoveOwner(user1.token, channel1.channelId, user0.authUserId);
+        requestRemoveOwner(user1.token, channel1.channelId, user0.authUserId);
         expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
 
     });
