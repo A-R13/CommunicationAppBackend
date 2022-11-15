@@ -1,4 +1,5 @@
 import { requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails } from '../wrapperFunctions';
+import { defaultProfilePhoto } from '../helperFunctions';
 import { newUser } from '../dataStore';
 
 requestClear();
@@ -35,6 +36,7 @@ describe('channelsCreate tests', () => {
           nameFirst: 'John',
           nameLast: 'Doe',
           handleStr: 'johndoe',
+          profileImgUrl: defaultProfilePhoto
         },
       ],
       allMembers: [
@@ -44,6 +46,7 @@ describe('channelsCreate tests', () => {
           nameFirst: 'John',
           nameLast: 'Doe',
           handleStr: 'johndoe',
+          profileImgUrl: defaultProfilePhoto
         },
       ]
     });
