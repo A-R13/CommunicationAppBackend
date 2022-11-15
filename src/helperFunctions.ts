@@ -49,7 +49,8 @@ export function userConvert(user: userType): userShort {
     email: user.email,
     nameFirst: user.nameFirst,
     nameLast: user.nameLast,
-    handleStr: user.userHandle
+    handleStr: user.userHandle,
+    profileImgUrl: user.profileImgUrl
   };
 }
 
@@ -185,9 +186,9 @@ export function userReacted (authUserId: number, messageId: number, reactId: num
     if (userInDm !== undefined && messageInDm !== undefined) {
       for (const message of dm.messages) {
         if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction === undefined) {
+          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction2 === undefined) {
             message.reacts.push(
               {
                 reactId: reactId,
@@ -196,7 +197,7 @@ export function userReacted (authUserId: number, messageId: number, reactId: num
               }
             );
             return message;
-          } else if (react === undefined) {
+          } else if (react2 === undefined) {
             return message;
           }
         }
@@ -243,6 +244,42 @@ export function checkIsPinned(messageId: number) : boolean {
 }
 
 /**
+ * <Description: Checks if message is already unpinned >
+ * @param {number} messageId - messageId
+ * @returns { Booleon }
+ */
+
+export function checkIsUnpinned(messageId: number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if pinned
+      if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === false) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // checks if pinned
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+/**
  * <Description: Checks if user has reacted to message>
  * @param {number} authUserId - unique identifier for user
  * @param {number} messageId - unique identifier for message
@@ -278,9 +315,9 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
     if (userInDm !== undefined && messageInDm !== undefined) {
       for (const message of dm.messages) {
         if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction !== undefined && react !== undefined) {
+          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction2 !== undefined && react2 !== undefined) {
             return true;
           }
         }
@@ -293,33 +330,81 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
 /**
  * @param {number} messageId - unique identifier for a message
  *
- * @returns {message} returns message object that mathces the messageId
+ * @returns {message} returns message object that matches the messageId that the user is part of
  */
 
-export function messageFinder (messageId: number) {
+export function messageFinder (authUserId: number, messageId: number) {
   const data = getData();
   let messageFound: message;
 
   for (const channel of data.channels) {
-    for (const message of channel.messages) {
-      if (message.messageId === messageId) {
-        messageFound = message;
-        return messageFound;
+    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+    if (userInChannel !== undefined) {
+      for (const message of channel.messages) {
+        if (message.messageId === messageId) {
+          messageFound = message;
+          return messageFound;
+        }
       }
     }
   }
 
   for (const dm of data.dms) {
-    for (const message of dm.messages) {
-      if (message.messageId === messageId) {
-        messageFound = message;
-        return messageFound;
+    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+    if (userInDm !== undefined) {
+      for (const message of dm.messages) {
+        if (message.messageId === messageId) {
+          messageFound = message;
+          return messageFound;
+        }
       }
     }
   }
 
   return false;
 }
+
+/**
+ * <Description: Returns whether a user is part of dm>
+ * @param {number} dmId
+ * @param {number} authUserId
+ * @returns {boolean}
+ */
+export function userMemberDM (dmId: number, authUserId: number) {
+  const data = getData();
+
+  for (const dm of data.dms) {
+    if (dm.dmId === dmId) {
+      const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+      if (userInDm !== undefined) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * <Description: Returns whether a user is part of channel>
+ * @param {number} channelId
+ * @param {number} authUserId
+ * @returns {Boolean}
+ */
+export function userMemberChannel (channelId: number, authUserId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    if (channel.channelId === channelId) {
+      const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+      if (userInChannel !== undefined) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
 
 // /**
 //  * <Description: Returns the object in users array which corresponds with inputted permissionId. >
@@ -330,3 +415,4 @@ export function messageFinder (messageId: number) {
 //   const data = getData();
 //   return data.users.find(a => a.permissions == permissionId);
 // }
+

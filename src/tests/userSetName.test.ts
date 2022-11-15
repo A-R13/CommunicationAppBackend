@@ -1,4 +1,5 @@
 import { newUser } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import { requestClear, requestAuthRegister, requestUserProfile, requestUserSetName } from '../wrapperFunctions';
 
 requestClear();
@@ -25,7 +26,8 @@ describe('Testing for userSetNameV2', () => {
           email: 'example1@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: defaultProfilePhoto
         }
       }
     );

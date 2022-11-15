@@ -20,7 +20,8 @@ export interface userType {
   isRemoved: boolean
   timeCreated?: number,
   stats?: any,
-  resetCode: string
+  resetCode: string,
+  profileImgUrl: string
 }
 
 export interface userShort {
@@ -30,11 +31,13 @@ export interface userShort {
   nameLast: string,
   handleStr: string,
   timeJoined?: number,
+  profileImgUrl: string
 }
 
 export interface message {
   messageId: number,
   uId: number,
+  sharedMessage?: string,
   message: string,
   timeSent: number,
   reacts: reacts[],
