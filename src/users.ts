@@ -202,6 +202,9 @@ export function userStatsV1(token: string) {
   };
 }
 
+// ADD DOCUMENTAION
+
+
 export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);
@@ -221,11 +224,8 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   const filePath = 'profilePhotos/temp';
   fs.writeFileSync(filePath, body, { flag: 'w' });
 
-  // const imageData = sharp(filePath).metadata();
-
   const image = sharp(filePath);
   const metadata = await image.metadata();
-  //   console.log(metadata.width, metadata.height, metadata.format);
 
   if (metadata.format !== 'jpeg') { // This is good
     throw HTTPError(400, 'Error: The file is not of type .jpeg/jpg.');
@@ -250,5 +250,3 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
 
   return {};
 }
-
-// userProfileUploadPhotoV1('abcd', 'asd', 200, 1000, 1300, 900)
