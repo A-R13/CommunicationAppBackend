@@ -521,7 +521,7 @@ export function messageRemoveV2 (token: string, messageId: number) {
 }
 
 export function messageSendLaterV1 (token: string, channelId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
-  let channel = getChannel(channelId);
+  const channel = getChannel(channelId);
 
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
@@ -542,13 +542,13 @@ export function messageSendLaterV1 (token: string, channelId: number, message: s
   if (checkUserInChannel === undefined) {
     throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of the target channel`);
   }
-  
+
   const messageId = Math.floor(Math.random() * 10000);
 
   const delay = timeSent - currentTime;
 
   setTimeout(() => { messageSendV2(token, channel.channelId, message); }, delay);
-  
+
   return { messageId: messageId };
 }
 
@@ -742,4 +742,3 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
 
   return {};
 }
-
