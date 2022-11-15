@@ -520,6 +520,14 @@ export function messageRemoveV2 (token: string, messageId: number) {
   return {};
 }
 
+/**
+ * <Description: Sends a message from the authorised user to the channel specified by channelId automatically at a specified time in the future.>
+ * @param {string} token
+ * @param {number} channelId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns { messageId: messageId} messageId
+ */
 export function messageSendLaterV1 (token: string, channelId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
   const channel = getChannel(channelId);
 
@@ -743,7 +751,45 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   return {};
 }
 
+/**
+ * <Description: Sends a message from the authorised user to the DM specified by dmId automatically at a specified time in the future.>
+ * @param {string} token
+ * @param {number} dmId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns { messageId: messageId} messageId
+ */
 export function messageSendLaterDmV1 (token: string, dmId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
+  const data = getData();
 
-  return { messageId: messageId}
+  const tokenHashed = getHashOf(token + SECRET);
+  const authUserToken: userType = getToken(tokenHashed);
+  const checkDm: dmType = getDm(dmId);
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  // error checking
+  if (authUserToken === undefined) {
+    throw HTTPError(403, 'Error: User with the token does not exist');
+  } else if (checkDm === undefined) {
+    throw HTTPError(400, 'Error: Invalid dmId');
+  } else if (message.length < 1 || message.length > 1000) {
+    throw HTTPError(400, 'Error: Invalid message length');
+  } else if (timeSent < currentTime) {
+    throw HTTPError(400, 'Error: timeSent is in the past');
+  }
+
+  const userInDm = checkDm.members.find((a: userShort) => a.uId === authUserToken.authUserId);
+  if (userInDm === undefined) {
+    throw HTTPError(403, 'Error: Authorised user is not member of DM');
+  }
+
+  const messageId = Math.floor(Math.random() * 10000);
+
+  const delay = timeSent - currentTime;
+
+  setTimeout(() => { messageSendDmV2(token, checkDm.dmId, message); }, delay);
+
+  setData(data);
+
+  return { messageId: messageId };
 }
