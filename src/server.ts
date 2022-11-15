@@ -529,7 +529,7 @@ app.post('/message/sendlaterdm/v1', (req: Request, res: Response, next) => {
     const { dmId, message, timeSent } = req.body;
     const token = req.header('token');
     saveData();
-    return res.json(messageSendLaterDmV1(token, parseInt(dmId), message, timeSent))
+    return res.json(messageSendLaterDmV1(token, parseInt(dmId), message, timeSent));
   } catch (err) {
     next(err);
   }
