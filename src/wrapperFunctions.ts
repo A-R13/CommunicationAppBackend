@@ -200,3 +200,7 @@ export async function requestUserProfilePhotoUpload(token: string, imgUrl: strin
 export function requestMessageSendLaterDm(token: string, dmId: number, message: string, timeSent: number) {
   return requestHelper('POST', '/message/sendlaterdm/v1', { dmId, message, timeSent }, token);
 }
+
+export function requestAuthPasswordResetReset(resetCode: string, newPassword: string) {
+  return requestHelper('POST', '/auth/passwordreset/reset/v1', { resetCode, newPassword });
+}

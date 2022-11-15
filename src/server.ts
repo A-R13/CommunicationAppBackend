@@ -7,7 +7,7 @@ import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { adminUserRemoveV1 } from './admin';
-import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1 } from './auth';
+import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1, authPasswordResetResetV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
@@ -530,6 +530,16 @@ app.post('/message/sendlaterdm/v1', (req: Request, res: Response, next) => {
     const token = req.header('token');
     saveData();
     return res.json(messageSendLaterDmV1(token, parseInt(dmId), message, timeSent));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response, next) => {
+  try {
+    const { resetCode, newPassword } = req.body;
+    saveData();
+    return res.json(authPasswordResetResetV1(resetCode, newPassword));
   } catch (err) {
     next(err);
   }
