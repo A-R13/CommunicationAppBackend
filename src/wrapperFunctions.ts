@@ -188,3 +188,7 @@ export function requestAdminUserRemove(token: string, uId: number) {
 export function requestMessageUnreact(token: string, messageId: number, reactId: number) {
   return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
 }
+
+export function requestMessageSendLater(token: string, channelId: number, message: string, timeSent: number) {
+  return requestHelper('POST', '/message/sendlater/v1', { channelId, message, timeSent }, token);
+}
