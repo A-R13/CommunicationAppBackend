@@ -184,3 +184,7 @@ export function requestAdminUserRemove(token: string, uId: number) {
 export function requestMessageUnreact(token: string, messageId: number, reactId: number) {
   return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
 }
+
+export function requestAdminUserpermissionChange(token: string, uId: number, permissionId: number) {
+  return requestHelper('POST', '/admin/userpermission/change/v1', { uId, permissionId }, token);
+}

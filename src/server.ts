@@ -6,7 +6,7 @@ import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
-import { adminUserRemoveV1 } from './admin';
+import { adminUserRemoveV1, adminUserpermissionChangeV1 } from './admin';
 import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
@@ -480,6 +480,18 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
 
     saveData();
     return res.json(messageUnreactV1(token, parseInt(messageId), parseInt(reactId)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/admin/userpermission/change/v1', (req: Request, res: Response, next) => {
+  try {
+    const { uId, permissionId } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    return res.json(adminUserpermissionChangeV1(token, parseInt(uId), parseInt(permissionId)));
   } catch (err) {
     next(err);
   }
