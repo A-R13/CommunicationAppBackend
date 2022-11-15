@@ -210,3 +210,22 @@ export function authPasswordResetRequestV1(email: string) : Record<string, never
   // https://www.receivesms.org/us-phone-number/3640/
   return {};
 }
+
+export function authPasswordResetResetV1(resetCode: string, newPassword: string): {error: string} {
+  const data = getData();
+  const user = data.users.find(a => a.resetCode === resetCode);
+
+  // error checking
+  if (user === undefined) {
+    throw HTTPError(400, 'Error: resetCode is not a valid reset code');
+  } else if (newPassword.length < 6) {
+    throw HTTPError(400, 'Error: newPassword is less than 6 characters long');
+  }
+
+  user.password = newPassword;
+  user.resetCode = null;
+
+  return {};
+
+}
+
