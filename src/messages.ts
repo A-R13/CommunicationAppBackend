@@ -525,6 +525,7 @@ export function messageSendLaterV1 (token: string, channelId: number, message: s
 
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
+  const currentTime = Math.floor(Date.now() / 1000);
 
   // Error checking
   if (channel === undefined) {
@@ -533,33 +534,21 @@ export function messageSendLaterV1 (token: string, channelId: number, message: s
     throw HTTPError(403, `Error: User with token '${token}' does not exist`);
   } else if (message.length < 1 || message.length > 1000) {
     throw HTTPError(400, 'Error: The message is either too short (<1) or too long (>1000)');
+  } else if (timeSent < currentTime) {
+    throw HTTPError(400, 'Error: TimeSent is in the past');
   }
 
   const checkUserInChannel = channel.allMembers.find(a => a.uId === user.authUserId);
   if (checkUserInChannel === undefined) {
     throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of the target channel`);
   }
-
+  
   const messageId = Math.floor(Math.random() * 10000);
 
-  const msg: message = {
-    messageId: messageId, 
-    uId: user.authUserId,
-    message: message,
-    timeSent: '??',
-    reacts: '??',
-    isPinned: '??'  
-  };
+  const delay = timeSent - currentTime;
 
-  // initialise a current time
-  // initialise a delay (time between current and timesent) -> error checking if delay is negative
-  // write a function that will send out a message after the given 'delay'
-    // getting the data (message) and setting it in the channel's message array, should be in you 'setTimeout' 
-    const data = getData();
-    channel = data.channels.find(c => c === channel);
-    channel.messages.unshift(msg);
+  setTimeout(() => { messageSendV2(token, channel.channelId, message); }, delay);
   
-  setData();
   return { messageId: messageId };
 }
 
