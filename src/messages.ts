@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned, userReacted, isUserReacted, messageFinder, userMemberDM, userMemberChannel,
+  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -469,7 +469,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
     numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
     timeStamp: Math.floor(Date.now() / 1000)
   });
-
+  // test
   return {};
 }
 
@@ -518,6 +518,38 @@ export function messageRemoveV2 (token: string, messageId: number) {
 
   setData(data);
   return {};
+}
+
+export function messageSendLaterV1 (token: string, channelId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
+  const channel = getChannel(channelId);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  // Error checking
+  if (channel === undefined) {
+    throw HTTPError(400, `Error: Channel with channelId '${channel}' does not exist`);
+  } else if (user === undefined) {
+    throw HTTPError(403, `Error: User with token '${token}' does not exist`);
+  } else if (message.length < 1 || message.length > 1000) {
+    throw HTTPError(400, 'Error: The message is either too short (<1) or too long (>1000)');
+  } else if (timeSent < currentTime) {
+    throw HTTPError(400, 'Error: TimeSent is in the past');
+  }
+
+  const checkUserInChannel = channel.allMembers.find(a => a.uId === user.authUserId);
+  if (checkUserInChannel === undefined) {
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of the target channel`);
+  }
+
+  const messageId = Math.floor(Math.random() * 10000);
+
+  const delay = timeSent - currentTime;
+
+  setTimeout(() => { messageSendV2(token, channel.channelId, message); }, delay);
+
+  return { messageId: messageId };
 }
 
 /**
@@ -569,7 +601,6 @@ export function messagePinV1(token: string, messageId: any) {
   const tokenHashed = getHashOf(token + SECRET);
   const userToken: userType = getToken(tokenHashed);
   const channelIndex = CheckValidMessageChannels(messageId);
-
   const DmIndex = CheckValidMessageDms(messageId);
 
   // checks if token is valid
@@ -615,6 +646,62 @@ export function messagePinV1(token: string, messageId: any) {
 }
 
 /**
+ * <Description: Unpins a pinned message >
+ * @param {string} token - Unique token of an authorised user
+ * @param {number} messageId - messageId
+ * @returns { }
+ */
+
+export function messageUnpinV1(token: string, messageId: any) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken: userType = getToken(tokenHashed);
+  const channelIndex = CheckValidMessageChannels(messageId);
+  const DmIndex = CheckValidMessageDms(messageId);
+
+  // checks if token is valid
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is invalid');
+  }
+
+  // check if message is pinned
+  if (checkIsUnpinned(messageId) === false) {
+    throw HTTPError(400, 'Error: Message is already Unpinned!');
+  }
+
+  // check if valid messages
+  if (channelIndex === -1 && DmIndex === -1) {
+    throw HTTPError(400, 'Error: MessageId doesnt exist!');
+  } else if (channelIndex === -1 && DmIndex !== -1) {
+    if (!data.dms[DmIndex].members.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the Dm');
+    } else if (!data.dms[DmIndex].owners.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(403, 'Error: Not an owner in channels');
+    }
+  } else if (channelIndex !== -1 && DmIndex === -1) {
+    if (!data.channels[channelIndex].allMembers.find(user => user.uId === userToken.authUserId)) {
+      throw HTTPError(400, 'Error: User is not in the channel');
+    } else if (!data.channels[channelIndex].ownerMembers.find(x => x.uId === userToken.authUserId)) {
+      throw HTTPError(403, 'Error: Not an owner in dms');
+    }
+  }
+
+  // In dms
+  if (channelIndex === -1) {
+    const DmMessageIndex2 = data.dms[DmIndex].messages.findIndex(message => message.messageId === messageId);
+
+    data.dms[DmIndex].messages[DmMessageIndex2].isPinned = false;
+  } else { // in channels
+    const channelMessageIndex2 = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
+
+    data.channels[channelIndex].messages[channelMessageIndex2].isPinned = false;
+  }
+
+  setData(data);
+  return {};
+}
+
+/**
  * <Description: Allows the user to remove their reaction from a message>
  * @param {string} token - Unique token of authorised user
  * @param {number} messageId - unique Id for a message
@@ -625,6 +712,10 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(messageId);
+  // check if user has reacted to message
+
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
@@ -633,12 +724,10 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
     throw HTTPError(400, 'Invalid reactId');
   }
 
-  // Check if messageId exists in channels or dms
-  const message = messageFinder(user.authUserId, messageId);
-
   if (message === false) {
     throw HTTPError(400, 'Invalid Message Id');
   }
+
   // check if user has reacted
   const check = isUserReacted(user.authUserId, messageId, reactId);
 
@@ -653,6 +742,7 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
 
   return {};
 }
+
 /**
  * <Descripton: Given a messageId it will send it to another channel or Dm>
  * @param {string} token - unique identifier for user

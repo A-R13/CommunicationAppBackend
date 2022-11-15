@@ -29,6 +29,7 @@ describe('userSetEmailV2 tests', () => {
               nameFirst: 'Bob',
               nameLast: 'Smith',
               handleStr: 'bobsmith',
+              profileImgUrl: null
             }
       }
     );
@@ -47,6 +48,7 @@ describe('userSetEmailV2 tests', () => {
               nameFirst: 'Bob',
               nameLast: 'Smith',
               handleStr: 'bobsmith',
+              profileImgUrl: null
             }
       }
     );

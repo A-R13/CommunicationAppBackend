@@ -27,6 +27,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
+          profileImgUrl: null
         }
       ]
     });
@@ -38,7 +39,8 @@ describe('usersAllv1 tests', () => {
           email: 'example1@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Smith',
-          handleStr: 'bobsmith'
+          handleStr: 'bobsmith',
+          profileImgUrl: null
         },
         {
           uId: 1,
@@ -46,6 +48,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
+          profileImgUrl: null
         }
       ]
 
@@ -59,6 +62,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
+          profileImgUrl: null
         },
         {
           uId: 1,
@@ -66,6 +70,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
+          profileImgUrl: null
         },
         {
           uId: 2,
@@ -73,6 +78,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jacob',
           nameLast: 'Doe',
           handleStr: 'jacobdoe',
+          profileImgUrl: null
         },
       ]
     });

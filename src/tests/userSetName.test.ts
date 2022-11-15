@@ -25,7 +25,8 @@ describe('Testing for userSetNameV2', () => {
           email: 'example1@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: null
         }
       }
     );
