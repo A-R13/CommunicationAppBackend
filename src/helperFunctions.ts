@@ -185,9 +185,9 @@ export function userReacted (authUserId: number, messageId: number, reactId: num
     if (userInDm !== undefined && messageInDm !== undefined) {
       for (const message of dm.messages) {
         if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction === undefined) {
+          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction2 === undefined) {
             message.reacts.push(
               {
                 reactId: reactId,
@@ -196,7 +196,7 @@ export function userReacted (authUserId: number, messageId: number, reactId: num
               }
             );
             return message;
-          } else if (react === undefined) {
+          } else if (react2 === undefined) {
             return message;
           }
         }
@@ -278,9 +278,9 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
     if (userInDm !== undefined && messageInDm !== undefined) {
       for (const message of dm.messages) {
         if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction !== undefined && react !== undefined) {
+          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction2 !== undefined && react2 !== undefined) {
             return true;
           }
         }
@@ -324,5 +324,45 @@ export function messageFinder (authUserId: number, messageId: number) {
     }
   }
 
+  return false;
+}
+
+/**
+ * <Description: Returns whether a user is part of dm>
+ * @param {number} dmId
+ * @param {number} authUserId
+ * @returns {boolean}
+ */
+export function userMemberDM (dmId: number, authUserId: number) {
+  const data = getData();
+
+  for (const dm of data.dms) {
+    if (dm.dmId === dmId) {
+      const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+      if (userInDm !== undefined) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * <Description: Returns whether a user is part of channel>
+ * @param {number} channelId
+ * @param {number} authUserId
+ * @returns {Boolean}
+ */
+export function userMemberChannel (channelId: number, authUserId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    if (channel.channelId === channelId) {
+      const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+      if (userInChannel !== undefined) {
+        return true;
+      }
+    }
+  }
   return false;
 }

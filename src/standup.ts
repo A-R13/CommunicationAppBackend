@@ -52,7 +52,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
  * @returns {timeFinish: number} - Finishing time of standup
  */
 
-export function standupActiveV1(token: string, channelId: number, length: number): { isActive: boolean, timeFinish: number } {
+export function standupActiveV1(token: string, channelId: number): { isActive: boolean, timeFinish: number } {
   const channel = getChannel(channelId);
   const tokenHashed = getHashOf(token + SECRET);
   const user = getToken(tokenHashed);

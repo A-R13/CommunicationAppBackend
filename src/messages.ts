@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned, userReacted, isUserReacted, messageFinder,
+  getUId, getToken, getChannel, getDm, checkIsPinned, userReacted, isUserReacted, messageFinder, userMemberDM, userMemberChannel,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
 } from './helperFunctions';
 
@@ -652,4 +652,68 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   }
 
   return {};
+}
+/**
+ * <Descripton: Given a messageId it will send it to another channel or Dm>
+ * @param {string} token - unique identifier for user
+ * @param {number} ogMessageId - unique identifier for message
+ * @param {string} message - optional message
+ * @param {number} channelId - unique identifier for a channel
+ * @param {number} dmId - unique identifier for a Dm
+ */
+
+export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+
+  const dm = getDm(dmId);
+  const channel = getChannel(channelId);
+
+  if (user === undefined) {
+    throw HTTPError(403, 'Error, User token does not exist!');
+  }
+
+  if (dm === undefined && channel === undefined) {
+    throw HTTPError(400, 'Dm and Channel are both invalid');
+  }
+
+  if (channelId !== -1 && dmId !== -1) {
+    throw HTTPError(400, 'Invalid ChannelId or DmId');
+  }
+
+  if (message.length > 1000) {
+    throw HTTPError(400, 'Message Length is invalid');
+  }
+  const messageCheck = messageFinder(user.authUserId, ogMessageId);
+
+  if (messageCheck === false) {
+    throw HTTPError(400, 'Invalid Message Id');
+  }
+
+  const check = userMemberDM(dmId, user.authUserId);
+  const check2 = userMemberChannel(channelId, user.authUserId);
+
+  if (check === false && check2 === false) {
+    throw HTTPError(403, 'Member is not part of Channel or Dm');
+  }
+
+  const original = messageCheck.message;
+  const messageid = Math.floor(Math.random() * 10000);
+  const msgg: message = {
+    messageId: messageid,
+    uId: user.authUserId,
+    sharedMessage: message,
+    message: message + '\r\n' + '"""' + '\r\n' + original + '\r\n' + '"""',
+    timeSent: Math.floor(Date.now() / 1000),
+    reacts: [],
+    isPinned: false
+  };
+  if (dmId === -1) {
+    channel.messages.unshift(msgg);
+  }
+  if (channelId === -1) {
+    dm.messages.unshift(msgg);
+  }
+
+  return { sharedMessageId: messageid };
 }

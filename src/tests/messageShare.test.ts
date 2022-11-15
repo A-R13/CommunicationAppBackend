@@ -3,7 +3,7 @@ import {
   requestMessageSend, requestMessageSendDm, requestChannelJoin, requestMessageShare
 } from '../wrapperFunctions';
 
-import { newUser, newDm, newChannel, newMessage} from '../dataStore';
+import { newUser, newDm, newChannel, newMessage, getData} from '../dataStore';
 requestClear();
 
 afterEach(() => {
@@ -20,7 +20,7 @@ describe('Testing react function', () => {
   let channel1: newChannel;
   let cMessage: newMessage;
   let dmMessage: newMessage;
-  let cMessage: newMessage; 
+  let cMessage2: newMessage; 
 
   beforeEach(() => {
     requestClear();
@@ -78,18 +78,17 @@ describe('Testing react function', () => {
   });
 
   test('Succesful return (Sharing from channel to channel)', () => {
-    expect(requestMessageShare(user0.token, cMessage.messagedId, 'Shared', channel1.channelId, -1)).toStrictEqual({});
+    expect(requestMessageShare(user0.token, cMessage.messageId, 'Shared', channel1.channelId, -1)).toStrictEqual({ sharedMessageId: expect.any(Number)});
   });
 
   test('Successful return (Sharing from channel to Dm)', () => {
-    expect(requestMessageShare(user0.token, cMessage.messageId, 'Shared', -1, dm0.dmId)).toStrictEqual({});
+    expect(requestMessageShare(user0.token, cMessage.messageId, 'Shared', -1, dm0.dmId)).toStrictEqual({ sharedMessageId: expect.any(Number) });
   });
 
   test('Succesful return (sharing from dm to dm)', () => {
-    expect(requestMessageShare(user0.token, dmMessage.messageId, 'Shared', -1, dm1.dmId)).toStrictEqual({});
-  });
+    expect(requestMessageShare(user0.token, dmMessage.messageId, 'Shared', -1, dm1.dmId)).toStrictEqual({ sharedMessageId: expect.any(Number) });  });
 
   test('Successful return (sharing from dm to channel)', () => {
-    expect(requestMessageShare(user0.token, dmMessage.messageId, 'Shared', channel0.channelId, -1)).toStrictEqual({});
+    expect(requestMessageShare(user0.token, dmMessage.messageId, 'Shared', channel0.channelId, -1)).toStrictEqual({ sharedMessageId: expect.any(Number) });
   });
 });
