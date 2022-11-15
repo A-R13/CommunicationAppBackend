@@ -192,3 +192,7 @@ export function requestMessageUnreact(token: string, messageId: number, reactId:
 export function requestMessageSendLater(token: string, channelId: number, message: string, timeSent: number) {
   return requestHelper('POST', '/message/sendlater/v1', { channelId, message, timeSent }, token);
 }
+
+export async function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
+}

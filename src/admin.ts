@@ -3,6 +3,15 @@ import HTTPError from 'http-errors';
 import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET, getUId, userConvert } from './helperFunctions';
 
+/**
+ * <Description: Given a valid uId, the user with that uId will be removed as a admin. The authorising user needs to be a global
+ * owner, and the target user cannot be the only user with global ownership. >
+ * @param {string} token
+ * @param {number} uId
+ *
+ * @returns {{}}
+ */
+
 export function adminUserRemoveV1(token: string, uId: number) {
   const targetUser = getUId(uId);
 

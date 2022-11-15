@@ -20,7 +20,8 @@ export interface userType {
   isRemoved: boolean
   timeCreated?: number,
   stats?: any,
-  resetCode: string
+  resetCode: string,
+  profileImgUrl: string | null
 }
 
 export interface userShort {

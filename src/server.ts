@@ -12,7 +12,8 @@ import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, ch
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1 } from './messages';
-import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1 } from './users';
+import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1, userProfileUploadPhotoV1 } from './users';
+
 import { searchV1 } from './search';
 import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 import { clearV1 } from './other';
@@ -45,6 +46,8 @@ const server = app.listen(PORT, HOST, () => {
   readData();
   console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
 });
+
+app.use('/profilePhotos', express.static('profilePhotos'));
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
@@ -497,13 +500,26 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
   }
 });
 
+
 app.post('/message/sendlater/v1', (req: Request, res: Response, next) => {
   try {
     const { channelId, message, timeSent } = req.body;
     const token = req.header('token');
-
     saveData();
     return res.json(messageSendLaterV1(token, parseInt(channelId), message, timeSent));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response, next) => {
+  try {
+    const { imgUrl, xStart, yStart, xEnd, yEnd } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    const ret = await userProfileUploadPhotoV1(token, imgUrl, parseInt(xStart), parseInt(yStart), parseInt(xEnd), parseInt(yEnd));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
