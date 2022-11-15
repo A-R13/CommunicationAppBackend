@@ -69,8 +69,8 @@ describe('Succesful Upload', () => {
         expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).toStrictEqual(expectedPath);
     })
 
+    // If time is too long get rid of this test.
     test('Example 2', () => {
-        // Try with a different image.
         user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe');
 
         expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).toStrictEqual(null);
