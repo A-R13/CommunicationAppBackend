@@ -32,12 +32,6 @@ describe('messageSendLater tests', () => {
       timeSent = Math.floor(Date.now() / 1000);
     });
 
-    // success case
-    test(('successfully sent message later'), () => {
-      requestChannelJoin(user1.token, channel0.channelId);
-      expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message', timeSent + 100)).toStrictEqual({ messageId: expect.any(Number) });
-    });
-
     // channelId does not refer to a valid channel
     test(('invalid channel'), () => {
       expect(requestMessageSendLater(user0.token, 1000, 'Test Message', timeSent)).toStrictEqual(400);
@@ -71,4 +65,9 @@ describe('messageSendLater tests', () => {
       expect(requestMessageSendLater('a', channel0.channelId, 'Test Message 1', timeSent)).toStrictEqual(403);
     });
 
+    // success case
+    test(('successfully sent message later'), () => {
+      requestChannelJoin(user1.token, channel0.channelId);
+      expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message', timeSent + 100)).toStrictEqual({ messageId: expect.any(Number) });
+    });
 });
