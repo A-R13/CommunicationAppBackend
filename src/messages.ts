@@ -858,4 +858,3 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
 
   return { sharedMessageId: messageid };
 }
-
