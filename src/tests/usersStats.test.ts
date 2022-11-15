@@ -2,7 +2,7 @@ import exp from 'constants';
 import { newUser, newChannel, dmType, userShort } from '../dataStore';
 
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin,
+  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin, requestMessageRemove,
   requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave, requestDmRemove, requestDmLeave, requestUsersStats
 } from '../wrapperFunctions';
 
@@ -35,7 +35,7 @@ describe('users stats test', () => {
         expect(requestUsersStats('INVALID TOKEN')).toStrictEqual(403);
     });
 
-    test('correct returns - nothing exists', () => {
+    test('correct returns', () => {
      //   requestMessageSend(user0.token, channel0.channelId, 'Message One in channel');
 
         expect(requestUsersStats(user0.token)).toStrictEqual(
@@ -57,7 +57,7 @@ describe('users stats test', () => {
         );
     });
 
-    test('correct returns - one of everything with message in channel', () => {
+    test('correct returns with message in channel', () => {
         channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
         requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
@@ -96,7 +96,7 @@ describe('users stats test', () => {
         });
     });
 
-    test('correct returns - one of everything with message in dm', () => {
+    test('correct returns with message in dm', () => {
         channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
         requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
@@ -293,8 +293,9 @@ describe('users stats test', () => {
     test('correct returns for removing messages', () => {
         channel0 = requestChannelsCreate(user0.token, 'channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
-        requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        requestMessageSend(user0.token, channel0.channelId, 'Message two in channel');
+        const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
+        const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Message two in channel');
+        requestMessageRemove(user0.token, msg1.messageId);
 
         expect(requestUsersStats(user0.token)).toStrictEqual(
             {
