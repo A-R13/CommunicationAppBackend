@@ -320,3 +320,14 @@ export function messageFinder (messageId: number) {
 
   return false;
 }
+
+/**
+ * <Description: Returns the object in users array which corresponds with inputted permissionId. >
+ * @param {number} permissionId
+ * @returns {}
+ */
+ export function getPermissionId(permissionId: number) {
+  const data = getData();
+  return data.users.find(a => a.permissions == permissionId)
+}
+
