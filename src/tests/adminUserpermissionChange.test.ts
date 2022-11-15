@@ -48,15 +48,15 @@ describe('adminpermission change test', () => {
         //invalid token
         expect(requestAdminUserpermissionChange('INVALID TOKEN', user0.authUserId, 1)).toStrictEqual(403)
         //not a global owner
-        expect(requestAdminUserpermissionChange(user1.token, user2.authUserId, 1)).toStrictEqual(403);
+        expect(requestAdminUserpermissionChange(user2.token, user1.authUserId, 1)).toStrictEqual(403);
     });
 
-    //channel owner requesting to demote the only global owner in channel
-    test('error return ', () => {
-        requestChannelJoin(user0.token, channel1.channelId);
-        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual(400);
+    // //channel owner requesting to demote the only global owner in channel
+    // test('error return ', () => {
+    //     requestChannelJoin(user0.token, channel1.channelId);
+    //     expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual(400);
 
-    });
+    // });
 
     //removed global owner tries to change permission
     test('error return', () => {

@@ -89,11 +89,11 @@ export function adminUserRemoveV1(token: string, uId: number) {
 }
 
 
-export function adminUserpermissionChangeV1 (token: string, uid: number, permissionId: number) {
+export function adminUserpermissionChangeV1 (token: string, uId: number, permissionId: number) {
   const targetUser = getUId(uId);
+
   const tokenHashed = getHashOf(token + SECRET);
   const userToken = getToken(tokenHashed);
-  const permission = getPermissionId(permissionId);
 
   const data = getData();
 
@@ -106,7 +106,7 @@ export function adminUserpermissionChangeV1 (token: string, uid: number, permiss
     throw HTTPError(400, 'Error: userId does not exist!');
   }
   // Invalid permissionId
-  if (permission === undefined) {
+  if (permissionId !== 1 && permissionId !== 2) {
     throw HTTPError(400, 'Error: permissionId is invalid');
   }
 
@@ -127,30 +127,38 @@ export function adminUserpermissionChangeV1 (token: string, uid: number, permiss
   }
 
   //user already has the permissions level of permissionId
-  if (data.users[targetUser].permissions === 1 && permission === 1) {
-    throw HTTPError(400, 'Error: User already has set permission level');
-  }
-  if (data.users[targetUser].permissions === 2 && permission === 2) {
+  if (targetUser.permissions === permissionId) {
     throw HTTPError(400, 'Error: User already has set permission level');
   }
 
-  channels.forEach(channel => {
-    if (channel.allMembers.findIndex(user => user.uId === uId) !== -1) {
-      if (permission === 1) {
-        data.users[targetUser].permissions = 1;
-      } else {
-        data.users[targetUser].permissions = 2;
-      }
-    }
-  });
+  targetUser.permissions = permissionId;
+  
+  setData(data);
 
-  dm.forEach(dm => {
-    if (dm.members.findIndex(user => user.uId === uId) !== -1) {
-      if (permission === 1) {
-        data.users[targetUser].permissions = 1;
-      } else {
-        data.users[targetUser].permissions = 2;
-      }
-    }
-  });
+  return {};
+  // if (data.users[targetUser].permissions === 1 && permission === 1) {
+  // }
+  // if (data.users[targetUser].permissions === 2 && permission === 2) {
+  //   throw HTTPError(400, 'Error: User already has set permission level');
+  // }
+
+  // channels.forEach(channel => {
+  //   if (channel.allMembers.findIndex(user => user.uId === uId) !== -1) {
+  //     if (permission === 1) {
+  //       data.users[targetUser].permissions = 1;
+  //     } else {
+  //       data.users[targetUser].permissions = 2;
+  //     }
+  //   }
+  // });
+
+  // dm.forEach(dm => {
+  //   if (dm.members.findIndex(user => user.uId === uId) !== -1) {
+  //     if (permission === 1) {
+  //       data.users[targetUser].permissions = 1;
+  //     } else {
+  //       data.users[targetUser].permissions = 2;
+  //     }
+  //   }
+  // });
 }
