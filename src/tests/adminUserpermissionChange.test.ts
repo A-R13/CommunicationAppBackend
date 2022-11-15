@@ -18,7 +18,6 @@ describe('adminpermission change test', () => {
 
     let channel0: newChannel;
     let channel1: newChannel;
-    let dm0: newDm;
 
     beforeEach(() => {
         requestClear();
@@ -58,44 +57,52 @@ describe('adminpermission change test', () => {
 
     // });
 
-    //removed global owner tries to change permission
-    test('error return', () => {
-        requestChannelJoin(user0.token, channel1.channelId);
-        requestAddOwner(user1.token, channel1.channelId, user2.authUserId);
-        requestRemoveOwner(user1.token, channel1.channelId, user0.authUserId);
-        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
-
-    });
-
-    test('error return in Dm', () => {
-        dm0 = requestDmCreate(user1.token, [0]);
-        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
-    })
-
     test('correct return', () => {
-        requestChannelJoin(user1.token, channel0.channelId);
+
         expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 1)).toStrictEqual({});
+    });
+
+    //removed global owner tries to change permission
+    test('Example Correct Return', () => {
+        requestChannelJoin(user0.token, channel1.channelId);
+        requestChannelJoin(user2.token, channel1.channelId);
+
+        // User 2 is a normal member of the channel, with normal global permissions
+        expect(requestAddOwner(user2.token, channel1.channelId, user0.authUserId)).toThrowError;
+
+        // user 2 now has global permissions
+        expect(requestAdminUserpermissionChange(user0.token, user2.authUserId, 1)).toStrictEqual({});
+
+        // Since user 2 has global permissions they have same permissions as a channel owner, and can thus add a owner. 
+        expect(requestAddOwner(user2.token, channel1.channelId, user0.authUserId)).not.toThrowError;
 
     });
+
+    // test('error return in Dm', () => {
+    //     dm0 = requestDmCreate(user1.token, [0]);
+    //     expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
+    // })
+
+
 
     //global owner changing channel owners permission
     test('correct return', () => {
         requestChannelJoin(user0.token, channel1.channelId);
-        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual({});
-
+        requestRemoveOwner(user0.token, channel1.channelId, user1.authUserId);
     });
 
     //adding new owner who can change permission of other owners
     test('correct return', () => {
-        requestChannelJoin(user0.token, channel1.channelId);
-        requestChannelJoin(user2.token, channel1.channelId);
-        requestAddOwner(user1.token, channel1.channelId, user2.authUserId);
+        // User 0 promoting user 2 to global owner
+        expect(requestAdminUserpermissionChange(user0.token, user2.authUserId, 1)).toStrictEqual({});
+
+        // Since user 2 is now a global owner they can demote user0 to be a normal owner
         expect(requestAdminUserpermissionChange(user2.token, user0.authUserId, 2)).toStrictEqual({});
 
     });
 
-    test('correct return in Dm', () => {
-        dm0 = requestDmCreate(user1.token, [0]);
-        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 1)).toStrictEqual({});
-    });
+    // test('correct return in Dm', () => {
+    //     dm0 = requestDmCreate(user1.token, [0]);
+    //     expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 1)).toStrictEqual({});
+    // });
 })

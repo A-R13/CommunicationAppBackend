@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
 import { getData, setData } from './dataStore';
-import { getToken, getHashOf, SECRET, getUId, userConvert, getPermissionId } from './helperFunctions';
+import { getToken, getHashOf, SECRET, getUId, userConvert } from './helperFunctions';
 
 export function adminUserRemoveV1(token: string, uId: number) {
   const targetUser = getUId(uId);
@@ -88,7 +88,6 @@ export function adminUserRemoveV1(token: string, uId: number) {
   return { };
 }
 
-
 export function adminUserpermissionChangeV1 (token: string, uId: number, permissionId: number) {
   const targetUser = getUId(uId);
 
@@ -126,13 +125,13 @@ export function adminUserpermissionChangeV1 (token: string, uId: number, permiss
     throw HTTPError(403, 'Erorr: The authorising user is not a global owner, so they cannot perform this action.');
   }
 
-  //user already has the permissions level of permissionId
+  // user already has the permissions level of permissionId
   if (targetUser.permissions === permissionId) {
     throw HTTPError(400, 'Error: User already has set permission level');
   }
 
   targetUser.permissions = permissionId;
-  
+
   setData(data);
 
   return {};
