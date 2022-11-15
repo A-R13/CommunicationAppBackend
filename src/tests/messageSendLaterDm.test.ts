@@ -1,8 +1,7 @@
-import { waitForDebugger } from 'inspector';
-import { newUser, newChannel } from '../dataStore';
+import { newUser, dmType, newDm } from '../dataStore';
 
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestMessageSendLater, requestChannelJoin
+  requestClear, requestAuthRegister, requestDmCreate, requestMessageSendDm, requestMessageSendLaterDm
 } from '../wrapperFunctions';
 
 requestClear();
@@ -14,6 +13,7 @@ beforeEach(() => {
 describe('messageSendLaterDm tests', () => {
 	let user0: newUser;
 	let user1: newUser;
+	let user2: newUser;
 	let dm0: newDm;
 	let dm1: newDm;
 	let timeSent;
@@ -23,8 +23,8 @@ describe('messageSendLaterDm tests', () => {
 	  user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 0
 	  user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
 		user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
-    dm0 = requestDmCreate(user1.token,[user0.authUserId]);
-    dm1 = requestDmCreate(user0.token, [user1.authUserId]);
+    dm1 = requestDmCreate(user1.token,[user0.authUserId]);
+    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
 	  timeSent = Math.floor(Date.now() / 1000);
 	});
 
@@ -51,20 +51,16 @@ describe('messageSendLaterDm tests', () => {
 
 	// authorised user is not a member of the DM they are trying to post to
 	test(('authorised user is not a member of the respective DM'), () => {
-		expect(requestMessageSendLaterDm(user2.token, dm0.dmId, 'Test Message', timeSent)).toStrictEqual(400);
+		expect(requestMessageSendLaterDm(user2.token, dm0.dmId, 'Test Message', timeSent)).toStrictEqual(403);
 	});
 
 	// token is invalid 
 	test(('invalid token'), () => {
-		expect(requestMessageSendLaterDm('a', dm0.dmId, 'Test Message', timeSent)).toStrictEqual(400);
+		expect(requestMessageSendLaterDm('a', dm0.dmId, 'Test Message', timeSent)).toStrictEqual(403);
 	});
 
 	// success case
 	test(('successfully sent a DM later'), () => {
-		const message = requestMessageSendLaterDm(user0.token, dm0.dmId, 'Test Message');
-		const message2 = requestMessageSendLaterDm(user0.token, dm.dmId, 'Test Message 2');
-		expect(message).toStrictEqual({ messageId: expect.any(Number) });
-		expect(message2).toStrictEqual({ messageId: expect.any(Number) });
-		expect(message).not.toBe(message2);
+		expect(requestMessageSendLaterDm(user0.token, dm0.dmId, 'Test Message', timeSent)).toStrictEqual({ messageId: expect.any(Number) });
 	});
 });
