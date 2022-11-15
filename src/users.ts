@@ -1,5 +1,8 @@
 import HTTPError from 'http-errors';
 import validator from 'validator';
+import request from 'sync-request';
+import fs from 'fs';
+import sharp from 'sharp';
 
 import { getData, setData } from './dataStore';
 import { getToken, getHashOf, SECRET } from './helperFunctions';
@@ -34,6 +37,7 @@ export function userProfileV3 (token : string, uId : number) {
           nameFirst: tokenFinder.nameFirst,
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
+          profileImgUrl: tokenFinder.profileImgUrl
         }
       };
     }
@@ -64,7 +68,8 @@ export function usersAllV2 (token: string) {
         email: user.email,
         nameFirst: user.nameFirst,
         nameLast: user.nameLast,
-        handleStr: user.userHandle
+        handleStr: user.userHandle,
+        profileImgUrl: user.profileImgUrl
       };
     } else {
       return user;
@@ -195,4 +200,63 @@ export function userStatsV1(token: string) {
     messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
     involvementRate: involvementRate,
   };
+}
+
+/**
+ * <Description: Given a valid http url of a image, and the coordinates to crop the image, the cropped image is set as the user's
+ * profile photo>
+ * @param {string} token
+ * @param {string} imgUrl
+ * @param {number} xStart
+ * @param {number} yStart
+ * @param {number} xEnd
+ * @param {number} xStart
+ *
+ * @returns {{}}
+ */
+
+export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  const tokenHashed = getHashOf(token + SECRET);
+  const user = getToken(tokenHashed);
+
+  if (user === undefined) {
+    throw HTTPError(403, 'Error: The token used is not valid.');
+  }
+
+  const res = request(
+    'GET', imgUrl
+  );
+
+  if (res.statusCode !== 200) {
+    throw HTTPError(400, 'Error: Image URL is invalid');
+  }
+  const body = res.getBody();
+  const filePath = 'profilePhotos/temp';
+  fs.writeFileSync(filePath, body, { flag: 'w' });
+
+  const image = sharp(filePath);
+  const metadata = await image.metadata();
+
+  if (metadata.format !== 'jpeg') { // This is good
+    throw HTTPError(400, 'Error: The file is not of type .jpeg/jpg.');
+  }
+
+  if ((xStart < 0 || xStart > metadata.width) || (xEnd < 0 || xEnd > metadata.width) ||
+    (yStart < 0 || yStart > metadata.height) || (yEnd < 0 || yEnd > metadata.height)) {
+    throw HTTPError(400, 'Error: One of the input points are outside the valid limits for the given image.');
+  }
+
+  if (xEnd <= xStart || yEnd <= yStart) {
+    throw HTTPError(400, 'Error: One of the input end points are less than or equal to their respective start points.');
+  }
+
+  // Extracting region (Cropping the image)
+
+  const croppedImg = image.extract({ left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart) });
+  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg';
+  croppedImg.toFile(outputPath);
+
+  user.profileImgUrl = outputPath;
+
+  return {};
 }

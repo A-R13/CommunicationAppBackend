@@ -100,6 +100,7 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
         }
       ],
       resetCode: null,
+      profileImgUrl: null
     }
   );
 
@@ -163,6 +164,14 @@ export function authLogoutV2(token: string): Record<string, never> | {error: str
 
   return {};
 }
+
+/**
+ * <Description: Given a valid email, the function sends an email with a reset code unique to the user. If the email doesn't
+ * exit the function won't send an email, but will still return as if the email was sent correctly for security. >
+ * @param {string} email
+ *
+ * @returns {}
+ */
 
 export function authPasswordResetRequestV1(email: string) : Record<string, never> {
   const data = getData();
