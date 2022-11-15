@@ -1,6 +1,6 @@
 import express, { json, Request, Response } from 'express';
 import { echo } from './echo';
-// import morgan from 'morgan';
+import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
@@ -26,7 +26,7 @@ app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
 // for logging errors (print to terminal)
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 
 // Example get request
 app.get('/echo', (req: Request, res: Response, next) => {
