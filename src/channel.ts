@@ -48,6 +48,7 @@ export function channelDetailsV3(token : string, channelId : number) {
         nameFirst: data.channels[channelId].ownerMembers[j].nameFirst,
         nameLast: data.channels[channelId].ownerMembers[j].nameLast,
         handleStr: data.channels[channelId].ownerMembers[j].handleStr,
+        profileImgUrl: data.channels[channelId].ownerMembers[j].profileImgUrl
       }
     );
   }
@@ -60,6 +61,7 @@ export function channelDetailsV3(token : string, channelId : number) {
         nameFirst: data.channels[channelId].allMembers[k].nameFirst,
         nameLast: data.channels[channelId].allMembers[k].nameLast,
         handleStr: data.channels[channelId].allMembers[k].handleStr,
+        profileImgUrl: data.channels[channelId].allMembers[k].profileImgUrl
       }
     );
   }
@@ -103,7 +105,7 @@ export function channelJoinV3 (token: string, channelId: number) {
     throw HTTPError(403, `Error: '${channelId}' is private, you cannot join this channel`);
   }
 
-  channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId });
+  channel.allMembers.push({ email: user.email, handleStr: user.userHandle, nameFirst: user.nameFirst, nameLast: user.nameLast, uId: user.authUserId, profileImgUrl: user.profileImgUrl });
 
   // adds 1 to number of channels joined
   data.users[user.authUserId].stats[3].numChannelsJoined += 1;
@@ -189,6 +191,7 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
     nameFirst: userArray[j].nameFirst,
     nameLast: userArray[j].nameLast,
     handleStr: userArray[j].userHandle,
+    profileImgUrl: userArray[j].profileImgUrl,
   };
   data.channels[channelId].allMembers.push(userData);
 
@@ -319,6 +322,7 @@ export function addOwnerV2 (token: string, channelId: number, uId: number) {
     nameFirst: userArray[index].nameFirst,
     nameLast: userArray[index].nameLast,
     handleStr: userArray[index].userHandle,
+    profileImgUrl: userArray[index].profileImgUrl
   };
 
   // push the data

@@ -49,7 +49,8 @@ export function userConvert(user: userType): userShort {
     email: user.email,
     nameFirst: user.nameFirst,
     nameLast: user.nameLast,
-    handleStr: user.userHandle
+    handleStr: user.userHandle,
+    profileImgUrl: user.profileImgUrl
   };
 }
 
@@ -402,3 +403,5 @@ export function userMemberChannel (channelId: number, authUserId: number) {
   }
   return false;
 }
+
+export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';

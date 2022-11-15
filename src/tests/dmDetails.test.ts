@@ -1,5 +1,5 @@
 import { newUser, dmType } from '../dataStore';
-
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestDmCreate, requestDmDetails
 } from '../wrapperFunctions';
@@ -23,6 +23,7 @@ describe('Dm details tests', () => {
       nameFirst: 'John',
       nameLast: 'Doe',
       uId: 0,
+      profileImgUrl: defaultProfilePhoto
     },
     {
       email: 'example2@gmail.com',
@@ -30,6 +31,7 @@ describe('Dm details tests', () => {
       nameFirst: 'Bob',
       nameLast: 'Doe',
       uId: 1,
+      profileImgUrl: defaultProfilePhoto
     }
   ];
 
