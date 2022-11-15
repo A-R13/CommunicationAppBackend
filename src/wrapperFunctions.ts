@@ -196,3 +196,7 @@ export function requestMessageSendLater(token: string, channelId: number, messag
 export async function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }
+
+export function requestMessageSendLaterDm(token: string, dmId: number, message: string, timeSent: number) {
+  return requestHelper('POST', '/message/sendlaterdm/v1', { dmId, message, timeSent }, token);
+}

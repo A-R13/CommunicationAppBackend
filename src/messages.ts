@@ -742,3 +742,8 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
 
   return {};
 }
+
+export function messageSendLaterDmV1 (token: string, dmId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
+
+  return { messageId: messageId}
+}
