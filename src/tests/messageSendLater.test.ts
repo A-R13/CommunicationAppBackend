@@ -11,6 +11,13 @@ afterEach(() => {
   requestClear();
 });
 
+// // create a function 'wait' that will run nothing for a matter of time, to ensure the data is not cleared before message is to be sent
+// function wait() {
+//   while (Math.floor(Date.now() / 1000) < ) {
+    
+//   }
+// }
+
 describe('messageSendLater tests', () => {
     let user0: newUser;
     let user1: newUser;
@@ -33,35 +40,35 @@ describe('messageSendLater tests', () => {
 
     // channelId does not refer to a valid channel
     test(('invalid channel'), () => {
-      expect(requestMessageSendLater(user0.token, 1000, 'Test Message', timeSent + 100)).toStrictEqual(400);
+      expect(requestMessageSendLater(user0.token, 1000, 'Test Message', timeSent)).toStrictEqual(400);
     });
 
     // length of the message is less than 1
     test(('message length < 1'), () => {
-      expect(requestMessageSendLater(user0.token, channel0.channelId, '', timeSent + 100)).toStrictEqual(400);
+      expect(requestMessageSendLater(user0.token, channel0.channelId, '', timeSent)).toStrictEqual(400);
     });
     
     // length of the message is over 1000 characters
     test(('message length > 1000'), () => {
       const bigMessage = 'a'.repeat(1001);
       const timeSent = Math.floor(Date.now() / 1000);
-      expect(requestMessageSendLater(user0.token, channel0.channelId, bigMessage, timeSent + 100)).toStrictEqual(400);
+      expect(requestMessageSendLater(user0.token, channel0.channelId, bigMessage, timeSent)).toStrictEqual(400);
     });
       
 
     // timeSent is a time in the past
     test(('timeSet is a time in the past'), () => {
-      expect(requestMessageSendLater(user0.token, channel0.channelId, 'Test Message', timeSent - 100)).toStrictEqual(400);
+      expect(requestMessageSendLater(user0.token, channel0.channelId, 'Test Message', timeSent - 1)).toStrictEqual(400);
     });
 
     // channelId is valid and the authorised user is not a member of the channel they are trying to post to
     test(('authorised user is not a member of the channel'), () => {
-      expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message 1', timeSent + 100)).toStrictEqual(403);
+      expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message 1', timeSent)).toStrictEqual(403);
     });
 
     // token is invalid
     test(('token is invalid'), () => {
-      expect(requestMessageSendLater('a', channel0.channelId, 'Test Message 1', timeSent + 100)).toStrictEqual(403);
+      expect(requestMessageSendLater('a', channel0.channelId, 'Test Message 1', timeSent)).toStrictEqual(403);
     });
 
 });
