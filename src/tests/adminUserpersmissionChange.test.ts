@@ -26,28 +26,69 @@ describe('adminpermission change test', () => {
         user2 = requestAuthRegister('example3@gmail.com', 'ABCD1234', 'Jeff', 'Doe');
 
         channel0 = requestChannelsCreate(user0.token, 'channel1', true);
-        dm0 = requestDmCreate(user1.token, [1]);
+        channel1 = requestChannelsCreate(user1.token, 'channel2', true);
     });
 
     test ('error returns', () => {
         requestChannelJoin(user1.token, channel0.channelId);
 
         // uid is not a valid user
-        expect(requestadminUserpermissionChange(user0.token, 0, pm.permissionId, pm.permissionId)).toStrictEqual(400);
+        expect(requestAdminUserpermissionChange(user0.token, 0, 1)).toStrictEqual(400);
         //only global owner
-        expect(requestadminUserpermissionChange(user0.token, user0.authUserId, pm.permissionId)).toStrictEqual(400);
+        expect(requestAdminUserpermissionChange(user0.token, user0.authUserId, 2)).toStrictEqual(400);
         //invalid permissionId
-        expect(requestadminUserpermissionChange(user0.token, user1.authUserId, 0)).toStrictEqual(400);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 99)).toStrictEqual(400);
+
         //user already has same permission level
-        requestAdminUserRemove(requestadminUserpermissionChange(user0.token, user1.authUserId, pm.permissionId));
-        expect(requestadminUserpermissionChange(user0.token, user1.authUserIdm, pm.permissionId)).toStrictEqual(400);
+        requestAdminUserpermissionChange(user0.token, user1.authUserId, 1);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 1)).toStrictEqual(400);
 
         //invalid token
-        expect(requestadminUserpermissionChange('INVALID TOKEN', user0.authUserId, pm.permissionId)).toStrictEqual(403)
+        expect(requestAdminUserpermissionChange('INVALID TOKEN', user0.authUserId, 1)).toStrictEqual(403)
         //not a global owner
-        expect(requestadminUserpermissionChange(user1.tokne, user2.authUserId, pm.permissionId)).toStrictEqual(403);
+        expect(requestAdminUserpermissionChange(user1.token, user2.authUserId, 1)).toStrictEqual(403);
     });
 
+    test('correct return', () => {
+        requestChannelJoin(user1.token, channel0.channelId);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual({});
 
+    });
 
+    test('correct return for channel owner changing global owner permission', () => {
+        requestChannelJoin(user0.token, channel1.channelId);
+        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual({});
+
+    });
+
+    test('correct return for global owner changing channel owner permission', () => {
+        requestChannelJoin(user0.token, channel1.channelId);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual({});
+
+    });
+
+    test('adding new owner who can change permission of other owners', () => {
+        requestChannelJoin(user0.token, channel1.channelId);
+        requestChannelJoin(user2.token, channel1.channelId);
+        requestAddOwner(user1.token, channel1.channelId, user2.authUserId);
+        expect(requestAdminUserpermissionChange(user2.token, user1.authUserId, 2)).toStrictEqual({});
+
+    });
+
+    test('error return if removed global owner tries to change permission', () => {
+        requestChannelJoin(user0.token, channel1.channelId);
+        requestremoveOwner(user1.token, channel1.channelId, user0.authUserId);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
+
+    });
+
+    test('correct return in Dm', () => {
+        dm0 = requestDmCreate(user1.token, [0]);
+        expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 1)).toStrictEqual({});
+    });
+
+    test('error return in Dm', () => {
+        dm0 = requestDmCreate(user1.token, [0]);
+        expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
+    })
 })
