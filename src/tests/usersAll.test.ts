@@ -1,4 +1,5 @@
 import { newUser } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import { requestClear, requestAuthRegister, requestUsersAll } from '../wrapperFunctions';
 
 requestClear();
@@ -27,7 +28,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         }
       ]
     });
@@ -40,7 +41,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         },
         {
           uId: 1,
@@ -48,7 +49,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         }
       ]
 
@@ -62,7 +63,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Bob',
           nameLast: 'Smith',
           handleStr: 'bobsmith',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         },
         {
           uId: 1,
@@ -70,7 +71,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         },
         {
           uId: 2,
@@ -78,7 +79,7 @@ describe('usersAllv1 tests', () => {
           nameFirst: 'Jacob',
           nameLast: 'Doe',
           handleStr: 'jacobdoe',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         },
       ]
     });

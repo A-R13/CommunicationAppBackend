@@ -1,4 +1,5 @@
 import { newUser } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import { requestClear, requestAuthRegister, requestUserProfile, requestUserProfilePhotoUpload } from '../wrapperFunctions';
 
 requestClear();
@@ -61,23 +62,21 @@ describe('Error Testing', () => {
 let user2: newUser;
 describe('Succesful Upload', () => {
     test('Example 1', () => {
-        expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).toStrictEqual(null);
+        expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).toStrictEqual(defaultProfilePhoto);
 
         expect(requestUserProfilePhotoUpload(user1.token, url, 1200, 0, 2800, 1867)).resolves.toStrictEqual( {} );
 
-        const expectedPath = 'profilePhotos/bobdoe.jpg'
-        expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).toStrictEqual(expectedPath);
+        expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).not.toBe(defaultProfilePhoto);
     })
 
     // If time is too long get rid of this test.
     test('Example 2', () => {
         user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe');
 
-        expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).toStrictEqual(null);
+        expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).toStrictEqual(defaultProfilePhoto);
 
         expect(requestUserProfilePhotoUpload(user2.token, url, 200, 200, 580, 480)).resolves.toStrictEqual( {} );
 
-        const expectedPath = 'profilePhotos/johndoe.jpg'
-        expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).toStrictEqual(expectedPath);
+        expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).not.toBe(defaultProfilePhoto);
     })
 })
