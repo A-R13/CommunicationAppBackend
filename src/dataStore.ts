@@ -49,7 +49,7 @@ export interface channelType {
   ownerMembers: userShort[],
   allMembers: userShort[],
   messages: message[],
-  standup: { status: boolean, timeFinish: number },
+  standup: { status: boolean, timeFinish: number, starter: number, messageStore: any },
 }
 
 export interface channelShort {

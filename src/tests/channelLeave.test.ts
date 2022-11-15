@@ -1,6 +1,8 @@
+import { channelleaveV2 } from '../channel';
 import { newUser, newChannel } from '../dataStore';
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave
+  requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave,
+  requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
 
 requestClear();
@@ -78,4 +80,76 @@ describe('Channel leave function', () => {
       }
     );
   });
+
+  test('Correct return, after startup has ended. Tests if starter cant leave during standup', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestStandupStart(nicole.token, channel.channelId, 5);
+    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+
+    requestChannelLeave(geoffrey.token, channel.channelId)
+    expect(requestChannelLeave(nicole.token, channel.channelId)).toStrictEqual(400);
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+    
+    expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+        allMembers: [{
+          uId: 0,
+          email: 'nicole.jiang@gmail.com',
+          nameFirst: 'nicole',
+          nameLast: 'jiang',
+          handleStr: 'nicolejiang'
+        }],
+      }
+    );
+  });
+
+  test('Correct return, after startup has ended. Another user, not starter, leaves channel', () => {
+    requestChannelJoin(geoffrey.token, channel.channelId);
+    requestStandupStart(nicole.token, channel.channelId, 5);
+    const threeSeconds = Math.floor(Date.now() / 1000) + 6;
+
+    /*eslint-disable */ 
+    while (Math.floor(Date.now() / 1000) < threeSeconds) {
+    }
+    /* eslint-enable */
+
+    requestStandupActive(nicole.token, channel.channelId)
+    
+    requestChannelLeave(nicole.token, channel.channelId);
+  
+    expect(requestchannelDetails(geoffrey.token, channel.channelId)).toStrictEqual(
+      {
+        name: 'funChannelName',
+        isPublic: true,
+        ownerMembers: [],
+        allMembers: [{
+          uId: 1,
+          email: 'geoffrey.mok@gmail.com',
+          nameFirst: 'geoffrey',
+          nameLast: 'mok',
+          handleStr: 'geoffreymok'
+        }],
+      }
+    );
+
+  });
+
 });
