@@ -469,7 +469,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
     numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
     timeStamp: Math.floor(Date.now() / 1000)
   });
-
+  // test
   return {};
 }
 
@@ -518,6 +518,38 @@ export function messageRemoveV2 (token: string, messageId: number) {
 
   setData(data);
   return {};
+}
+
+export function messageSendLaterV1 (token: string, channelId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
+  const channel = getChannel(channelId);
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const user: userType = getToken(tokenHashed);
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  // Error checking
+  if (channel === undefined) {
+    throw HTTPError(400, `Error: Channel with channelId '${channel}' does not exist`);
+  } else if (user === undefined) {
+    throw HTTPError(403, `Error: User with token '${token}' does not exist`);
+  } else if (message.length < 1 || message.length > 1000) {
+    throw HTTPError(400, 'Error: The message is either too short (<1) or too long (>1000)');
+  } else if (timeSent < currentTime) {
+    throw HTTPError(400, 'Error: TimeSent is in the past');
+  }
+
+  const checkUserInChannel = channel.allMembers.find(a => a.uId === user.authUserId);
+  if (checkUserInChannel === undefined) {
+    throw HTTPError(403, `Error: User with authUserId '${user.authUserId}' is not a member of the target channel`);
+  }
+
+  const messageId = Math.floor(Math.random() * 10000);
+
+  const delay = timeSent - currentTime;
+
+  setTimeout(() => { messageSendV2(token, channel.channelId, message); }, delay);
+
+  return { messageId: messageId };
 }
 
 /**
