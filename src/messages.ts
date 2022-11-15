@@ -469,7 +469,7 @@ export function dmLeaveV2 (token: string, dmId: number) {
     numDmsJoined: data.users[userToken.authUserId].stats[3].numDmsJoined,
     timeStamp: Math.floor(Date.now() / 1000)
   });
-
+  // test
   return {};
 }
 
