@@ -202,8 +202,18 @@ export function userStatsV1(token: string) {
   };
 }
 
-// ADD DOCUMENTAION
-
+/**
+ * <Description: Given a valid http url of a image, and the coordinates to crop the image, the cropped image is set as the user's
+ * profile photo>
+ * @param {string} token
+ * @param {string} imgUrl
+ * @param {number} xStart
+ * @param {number} yStart
+ * @param {number} xEnd
+ * @param {number} xStart
+ *
+ * @returns {{}}
+ */
 
 export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   const tokenHashed = getHashOf(token + SECRET);

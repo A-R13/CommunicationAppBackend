@@ -3,6 +3,16 @@ import HTTPError from 'http-errors';
 import { userShort } from './dataStore';
 import { SECRET, getHashOf, getToken, getChannel } from './helperFunctions';
 
+/**
+ * <Description: Given a valid channel, and postive integer, a standup will be created for length seconds in the specifed
+ * channel. >
+ * @param {string} token
+ * @param {number} channelId
+ * @param {number} length
+ *
+ * @returns { number } timefinish: The time in seconds at when the created standup will end.
+ */
+
 export function standupStartV1(token: string, channelId: number, length: number): { timeFinish: number } {
   const channel = getChannel(channelId);
 
@@ -47,7 +57,7 @@ export function standupStartV1(token: string, channelId: number, length: number)
  *
  * @param {number} channelId - unique ID for a channel
  *
- * @returns {status: boolean} - status of standup
+ * @returns {isActive: boolean} - status of standup
  * @returns {timeFinish: number} - Finishing time of standup
  */
 

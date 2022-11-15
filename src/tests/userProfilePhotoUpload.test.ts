@@ -24,7 +24,6 @@ describe('Error Testing', () => {
         expect(requestUserProfilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100))
         .resolves.toStrictEqual(400);
 
-    // expect(() => requestUserProfilePhotoUpload(user1.token, 'http://filesamples.com/samples/image/jpeg/sample_640x426.jpeg', 0, 0, 100, 100)).toThrowError;
     });
 
     test('start/end points are outside the image', () => {
@@ -71,6 +70,7 @@ describe('Succesful Upload', () => {
     })
 
     test('Example 2', () => {
+        // Try with a different image.
         user2 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'John', 'Doe');
 
         expect(requestUserProfile(user1.token, user2.authUserId).user.profileImgUrl).toStrictEqual(null);
