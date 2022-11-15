@@ -36,6 +36,7 @@ export interface userShort {
 export interface message {
   messageId: number,
   uId: number,
+  sharedMessage?: string,
   message: string,
   timeSent: number,
   reacts: reacts[],
