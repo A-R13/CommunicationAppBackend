@@ -22,7 +22,7 @@ describe('messageSendLater tests', () => {
     let user0: newUser;
     let user1: newUser;
     let channel0: newChannel;
-    let timeSent;
+    let timeSent: number;
       
     beforeEach(() => {
       requestClear();

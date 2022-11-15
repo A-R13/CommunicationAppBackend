@@ -4,7 +4,7 @@ import { getData, setData, userType, userShort, message, dmType } from './dataSt
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel
 } from './helperFunctions';
 
 /**
@@ -712,8 +712,6 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  // Check if messageId exists in channels or dms
-  const message = messageFinder(messageId);
   // check if user has reacted to message
 
   if (user === undefined) {
@@ -723,7 +721,8 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   if (reactId !== 1) {
     throw HTTPError(400, 'Invalid reactId');
   }
-
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(user.authUserId, messageId);
   if (message === false) {
     throw HTTPError(400, 'Invalid Message Id');
   }
