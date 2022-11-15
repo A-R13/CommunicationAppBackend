@@ -189,6 +189,10 @@ export function requestMessageUnreact(token: string, messageId: number, reactId:
   return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
 }
 
+export function requestMessageShare (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+  return requestHelper('POST', '/message/share/v1', { ogMessageId, message, channelId, dmId }, token);
+}
+
 export function requestMessageSendLater(token: string, channelId: number, message: string, timeSent: number) {
   return requestHelper('POST', '/message/sendlater/v1', { channelId, message, timeSent }, token);
 }

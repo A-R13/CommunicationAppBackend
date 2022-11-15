@@ -11,7 +11,8 @@ import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1 }
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
-import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageSendLaterDmV1 } from './messages';
+import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageSendLaterDmV1, messageShareV1 } from './messages';
+
 import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1, userProfileUploadPhotoV1 } from './users';
 
 import { searchV1 } from './search';
@@ -495,6 +496,18 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
 
     saveData();
     return res.json(messageUnreactV1(token, parseInt(messageId), parseInt(reactId)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/message/share/v1', (req: Request, res: Response, next) => {
+  try {
+    const { ogMessageId, message, channelId, dmId } = req.body;
+    const token = req.header('token');
+
+    saveData();
+    return res.json(messageShareV1(token, parseInt(ogMessageId), message, parseInt(channelId), parseInt(dmId)));
   } catch (err) {
     next(err);
   }
