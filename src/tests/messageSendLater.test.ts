@@ -7,7 +7,7 @@ import {
 
 requestClear();
 
-afterEach(() => {
+beforeEach(() => {
   requestClear();
 });
 
