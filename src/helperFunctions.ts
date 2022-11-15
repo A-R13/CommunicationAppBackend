@@ -1,4 +1,4 @@
-import { getData, userShort, userType } from './dataStore';
+import { getData, userShort, userType, message, reacts } from './dataStore';
 import crypto from 'crypto';
 
 /**
@@ -141,4 +141,218 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
       return false;
     }
   }
+}
+/**
+ * <Description: Adds a reaction to a message with messageId>
+ * @param {number} - authUserId - Unqiue id for user
+ * @param {number} - messaageId - unique id for channel
+ * @param {number} - reactId - unique reaction id
+ * @returns {message} - returns message object
+ */
+export function userReacted (authUserId: number, messageId: number, reactId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+    const messageInChannel = channel.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInChannel !== undefined && messageInChannel !== undefined) {
+      for (const message of channel.messages) {
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction === undefined) {
+            message.reacts.push(
+              {
+                reactId: reactId,
+                uids: [],
+                isThisUserReacted: false
+              }
+            );
+            return message;
+          } else if (react === undefined) {
+            return message;
+          }
+        }
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+    const messageInDm = dm.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInDm !== undefined && messageInDm !== undefined) {
+      for (const message of dm.messages) {
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction === undefined) {
+            message.reacts.push(
+              {
+                reactId: reactId,
+                uids: [],
+                isThisUserReacted: false,
+              }
+            );
+            return message;
+          } else if (react === undefined) {
+            return message;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * <Description: Checks if message is already pinned >
+ * @param {number} messageId - messageId
+ * @returns { Booleon }
+ */
+
+export function checkIsPinned(messageId: number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if pinned
+      if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // checks if pinned
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+/**
+ * <Description: Checks if message is already unpinned >
+ * @param {number} messageId - messageId
+ * @returns { Booleon }
+ */
+
+export function checkIsUnpinned(messageId: number) : boolean {
+  const data = getData();
+  const CheckInChannel = CheckValidMessageChannels(messageId);
+  if (CheckInChannel === -1) {
+    const checkInDm = CheckValidMessageDms(messageId);
+    if (checkInDm === -1) {
+      // not in channel or dms
+      return false;
+    } else {
+      // in dms
+      const DmMessageIndex = data.dms[checkInDm].messages.findIndex(message => message.messageId === messageId);
+      // checks if pinned
+      if (data.dms[checkInDm].messages[DmMessageIndex].isPinned === false) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } else {
+    // Message is in channel
+    const ChannelMessageIndex = data.channels[CheckInChannel].messages.findIndex(message => message.messageId === messageId);
+    // checks if pinned
+    if (data.channels[CheckInChannel].messages[ChannelMessageIndex].isPinned === false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+/**
+ * <Description: Checks if user has reacted to message>
+ * @param {number} authUserId - unique identifier for user
+ * @param {number} messageId - unique identifier for message
+ * @param {number} reactId - unique identifier for reaction
+ *
+ * @returns {boolean} returns true if user has reacted, false otherwise
+ */
+
+export function isUserReacted(authUserId: number, messageId: number, reactId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+    const messageInChannel = channel.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInChannel !== undefined && messageInChannel !== undefined) {
+      for (const message of channel.messages) {
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction !== undefined && react !== undefined) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+    const messageInDm = dm.messages.find((b: message) => b.messageId === messageId);
+
+    if (userInDm !== undefined && messageInDm !== undefined) {
+      for (const message of dm.messages) {
+        if (message.messageId === messageId) {
+          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
+          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+          if (reaction !== undefined && react !== undefined) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * @param {number} messageId - unique identifier for a message
+ *
+ * @returns {message} returns message object that mathces the messageId
+ */
+
+export function messageFinder (messageId: number) {
+  const data = getData();
+  let messageFound: message;
+
+  for (const channel of data.channels) {
+    for (const message of channel.messages) {
+      if (message.messageId === messageId) {
+        messageFound = message;
+        return messageFound;
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    for (const message of dm.messages) {
+      if (message.messageId === messageId) {
+        messageFound = message;
+        return messageFound;
+      }
+    }
+  }
+
+  return false;
 }
