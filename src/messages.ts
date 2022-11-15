@@ -625,10 +625,6 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  // Check if messageId exists in channels or dms
-  const message = messageFinder(messageId);
-  // check if user has reacted to message
-
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
@@ -637,10 +633,12 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
     throw HTTPError(400, 'Invalid reactId');
   }
 
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(user.authUserId, messageId);
+
   if (message === false) {
     throw HTTPError(400, 'Invalid Message Id');
   }
-
   // check if user has reacted
   const check = isUserReacted(user.authUserId, messageId, reactId);
 

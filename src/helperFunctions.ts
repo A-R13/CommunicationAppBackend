@@ -293,27 +293,33 @@ export function isUserReacted(authUserId: number, messageId: number, reactId: nu
 /**
  * @param {number} messageId - unique identifier for a message
  *
- * @returns {message} returns message object that mathces the messageId
+ * @returns {message} returns message object that matches the messageId that the user is part of
  */
 
-export function messageFinder (messageId: number) {
+export function messageFinder (authUserId: number, messageId: number) {
   const data = getData();
   let messageFound: message;
 
   for (const channel of data.channels) {
-    for (const message of channel.messages) {
-      if (message.messageId === messageId) {
-        messageFound = message;
-        return messageFound;
+    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
+    if (userInChannel !== undefined) {
+      for (const message of channel.messages) {
+        if (message.messageId === messageId) {
+          messageFound = message;
+          return messageFound;
+        }
       }
     }
   }
 
   for (const dm of data.dms) {
-    for (const message of dm.messages) {
-      if (message.messageId === messageId) {
-        messageFound = message;
-        return messageFound;
+    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
+    if (userInDm !== undefined) {
+      for (const message of dm.messages) {
+        if (message.messageId === messageId) {
+          messageFound = message;
+          return messageFound;
+        }
       }
     }
   }
