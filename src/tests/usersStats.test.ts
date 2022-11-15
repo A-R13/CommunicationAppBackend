@@ -290,6 +290,59 @@ describe('users stats test', () => {
             });
     });
 
+    test('correct returns for removing dm and message in that dm', () => {
+        channel0 = requestChannelsCreate(user0.token, 'channel0', true);
+        dm0 = requestDmCreate(user0.token, [1]);
+        requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
+        requestMessageSendDm(user0.token, dm0.dmId, 'Message two in dm');
+
+        requestDmRemove(user0.token, dm0.dmId);
+
+        expect(requestUsersStats(user0.token)).toStrictEqual(
+            {
+                channelsExist: [{
+                    numChannelsExist: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numChannelsExist: 1,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                dmsExist: [{
+                    numDmsExists: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsExists: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsExists: 0,
+                    timeStamp: expect.any(Number)
+                }
+            ],
+                messagesExist: [{
+                    numMessagesExist: 0,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesExist: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesExist: 2,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesExist: 0,
+                    timeStamp: expect.any(Number)
+                },
+            ],
+                utilizationRate: expect.any(Number)
+            });
+    });
+
     test('correct returns for removing messages', () => {
         channel0 = requestChannelsCreate(user0.token, 'channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
