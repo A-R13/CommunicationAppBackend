@@ -7,11 +7,12 @@ import errorHandler from 'middleware-http-errors';
 
 import { readData, saveData, wipeData } from './dataStore';
 import { adminUserRemoveV1 } from './admin';
-import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1 } from './auth';
+import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1, authPasswordResetResetV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
 import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
 
-import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageShareV1 } from './messages';
+import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageSendLaterDmV1, messageShareV1 } from './messages';
+
 import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1, userProfileUploadPhotoV1 } from './users';
 
 import { searchV1 } from './search';
@@ -531,6 +532,27 @@ app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response, nex
     saveData();
     const ret = await userProfileUploadPhotoV1(token, imgUrl, parseInt(xStart), parseInt(yStart), parseInt(xEnd), parseInt(yEnd));
     return res.json(ret);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/message/sendlaterdm/v1', (req: Request, res: Response, next) => {
+  try {
+    const { dmId, message, timeSent } = req.body;
+    const token = req.header('token');
+    saveData();
+    return res.json(messageSendLaterDmV1(token, parseInt(dmId), message, timeSent));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response, next) => {
+  try {
+    const { resetCode, newPassword } = req.body;
+    saveData();
+    return res.json(authPasswordResetResetV1(resetCode, newPassword));
   } catch (err) {
     next(err);
   }
