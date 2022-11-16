@@ -791,7 +791,6 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
   const msgg: message = {
     messageId: messageid,
     uId: user.authUserId,
-    sharedMessage: message,
     message: message + '\r\n' + '"""' + '\r\n' + original + '\r\n' + '"""',
     timeSent: Math.floor(Date.now() / 1000),
     reacts: [],
