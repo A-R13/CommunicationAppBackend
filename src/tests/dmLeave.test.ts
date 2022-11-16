@@ -1,5 +1,5 @@
 import { newUser, newDm } from '../dataStore';
-
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestDmCreate, requestDmDetails, requestDmLeave
 } from '../wrapperFunctions';
@@ -50,6 +50,7 @@ describe('dmLeave tests', () => {
           nameFirst: 'Jake',
           nameLast: 'Doe',
           handleStr: 'jakedoe',
+          profileImgUrl: defaultProfilePhoto
         }],
         name: 'bobdoe, jakedoe, johndoe',
       }
@@ -67,6 +68,7 @@ describe('dmLeave tests', () => {
             nameFirst: 'John',
             nameLast: 'Doe',
             handleStr: 'johndoe',
+            profileImgUrl: defaultProfilePhoto
           },
           {
             uId: 2,
@@ -74,6 +76,7 @@ describe('dmLeave tests', () => {
             nameFirst: 'Bob',
             nameLast: 'Doe',
             handleStr: 'bobdoe',
+            profileImgUrl: defaultProfilePhoto
           }],
         name: 'bobdoe, jakedoe, johndoe',
       }

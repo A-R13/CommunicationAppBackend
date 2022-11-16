@@ -1,4 +1,5 @@
-import { newUser, newChannel, newDm, message } from '../dataStore';
+import { newUser, newChannel, newDm, message, userShort } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestAdminUserRemove, requestChannelJoin, requestUsersAll, requestUserProfile, requestDmCreate,
   requestMessageSend, requestChannelMessages, requestMessageSendDm, requestDmMessages, requestMessagePin, requestchannelDetails, requestDmDetails
@@ -60,12 +61,13 @@ describe('Correct Returns and correct changes', () => {
 
     test('Example Correct Return', () => {
 
-        const userBob = {
+        const userBob: userShort = {
             uId: 1,
             email: 'example2@gmail.com',
             nameFirst: 'Bob',
             nameLast: 'Doe',
             handleStr: 'bobdoe',
+            profileImgUrl: defaultProfilePhoto
         };
 
         expect(requestUsersAll(user1.token).users).toContainEqual( userBob );
@@ -80,6 +82,7 @@ describe('Correct Returns and correct changes', () => {
             nameFirst: 'Removed',
             nameLast: 'user',
             handleStr: '',
+            profileImgUrl: defaultProfilePhoto
         });
 
         expect(requestUsersAll(user1.token).users).not.toContainEqual( userBob );
@@ -97,12 +100,13 @@ describe('Correct Returns and correct changes', () => {
         const msg1: message = requestMessageSend(user2.token, channel1.channelId, 'Message from user with uId 1');
         const msg2: message = requestMessageSend(user3.token, channel1.channelId, 'Message from user with uId 2');
 
-        const userJeff = {
+        const userJeff: userShort = {
             uId: 2,
             email: 'example3@gmail.com',
             nameFirst: 'Jeff',
             nameLast: 'Doe',
             handleStr: 'jeffdoe',
+            profileImgUrl: defaultProfilePhoto
         };
 
         requestMessagePin(user1.token, msg2.messageId);
@@ -157,12 +161,13 @@ describe('Correct Returns and correct changes', () => {
         const msg1: message = requestMessageSendDm(user2.token, dm1.dmId, 'Message from user with uId 1');
         const msg2: message = requestMessageSendDm(user3.token, dm1.dmId, 'Message from user with uId 2');
 
-        const userBob = {
+        const userBob: userShort = {
             uId: 1,
             email: 'example2@gmail.com',
             nameFirst: 'Bob',
             nameLast: 'Doe',
             handleStr: 'bobdoe',
+            profileImgUrl: defaultProfilePhoto
         };
 
         requestMessagePin(user1.token, msg2.messageId);

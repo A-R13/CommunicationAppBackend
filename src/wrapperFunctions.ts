@@ -157,6 +157,10 @@ export function requestStandupStart(token: string, channelId: number, length: nu
   return requestHelper('POST', '/standup/start/v1', { channelId, length }, token);
 }
 
+export function requestMessageUnpin(token: string, messageId: number) {
+  return requestHelper('POST', '/message/unpin/v1', { messageId }, token);
+}
+
 export function requestStandupActive(token: string, channelId: number) {
   return requestHelper('GET', '/standup/active/v1', { channelId }, token);
 }
@@ -183,6 +187,18 @@ export function requestAdminUserRemove(token: string, uId: number) {
 
 export function requestMessageUnreact(token: string, messageId: number, reactId: number) {
   return requestHelper('POST', '/message/unreact/v1', { messageId, reactId }, token);
+}
+
+export function requestMessageShare (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+  return requestHelper('POST', '/message/share/v1', { ogMessageId, message, channelId, dmId }, token);
+}
+
+export function requestMessageSendLater(token: string, channelId: number, message: string, timeSent: number) {
+  return requestHelper('POST', '/message/sendlater/v1', { channelId, message, timeSent }, token);
+}
+
+export async function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
+  return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }
 
 export function requestUsersStats(token: string) {

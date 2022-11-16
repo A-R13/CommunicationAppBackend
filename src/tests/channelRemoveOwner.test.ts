@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin,
   requestAddOwner, requestRemoveOwner
@@ -38,20 +39,23 @@ describe('removeOwner tests', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 1,
           email: 'dennis.pulickal@gmail.com',
           nameFirst: 'dennis',
           nameLast: 'pulickal',
-          handleStr: 'dennispulickal'
+          handleStr: 'dennispulickal',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
