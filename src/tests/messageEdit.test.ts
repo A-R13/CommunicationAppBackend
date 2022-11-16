@@ -2,7 +2,8 @@ import { newUser, newChannel, dmType } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmMessages,
-  requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestStandupSend, requestStandupStart, requestStandupActive
+  requestMessageEdit, requestChannelJoin, requestMessageSendDm, requestStandupSend, requestStandupStart, requestStandupActive,
+  requestMessageShare
 } from '../wrapperFunctions';
 
 requestClear();
@@ -210,4 +211,81 @@ describe('Message Edit', () => {
     ]
     );
   });
+
+  test(('Correct returns, editing shared in channel messages'), () => {
+    requestChannelJoin(user1.token, channel0.channelId);
+    const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Random text');
+    const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
+    const msg = requestMessageShare(user1.token, msg3.messageId, 'Shared message', channel0.channelId, -1)
+
+    requestMessageEdit(user1.token, msg.sharedMessageId, 'RANDOM MESSAGE BY FIRST USER.');
+
+    expect(requestChannelMessages(user1.token, channel0.channelId, 0).messages).toStrictEqual([
+      {
+        message: 'RANDOM MESSAGE BY FIRST USER.',
+        messageId: msg.sharedMessageId,
+        uId: user1.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      },
+      {
+        message: 'Test Message 3',
+        messageId: msg3.messageId,
+        uId: user1.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      },
+      {
+        message: 'Random text',
+        messageId: msg2.messageId,
+        uId: user0.authUserId,
+        timeSent: expect.any(Number),
+        reacts:  expect.any(Array),
+        isPinned: expect.any(Boolean)
+      }
+    ]
+    );
+  });
+
+  test(('Correct returns, editing shared in dm messages'), () => {
+    const msg2 = requestMessageSendDm(user0.token, 0, 'Random text');
+    const msg3 = requestMessageSendDm(user1.token, 0, 'Test Message 3');
+    const msg = requestMessageShare(user0.token, msg3.messageId, 'Shared', -1, dm0.dmId)
+
+    requestMessageEdit(user0.token, msg.sharedMessageId, 'RANDOM MESSAGE BY SECOND USER.');
+
+    expect(requestDmMessages(user0.token, dm0.dmId, 0)).toStrictEqual({
+      messages: [
+        {
+          message: 'RANDOM MESSAGE BY SECOND USER.',
+          messageId: msg.sharedMessageId,
+          timeSent: expect.any(Number),
+          uId: user0.authUserId,
+          reacts:  expect.any(Array),
+          isPinned: expect.any(Boolean)
+        },
+        {
+          message: 'Test Message 3',
+          messageId: msg3.messageId,
+          uId: user1.authUserId,
+          timeSent: expect.any(Number),
+          reacts:  expect.any(Array),
+          isPinned: expect.any(Boolean)
+        },
+        {
+          message: 'Random text',
+          messageId: msg2.messageId,
+          timeSent: expect.any(Number),
+          uId: 0,
+          reacts:  expect.any(Array),
+          isPinned: expect.any(Boolean)
+        }
+      ],
+      start: 0,
+      end: -1
+    });
+  });
+
 });
