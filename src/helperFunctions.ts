@@ -1,5 +1,7 @@
 import { getData, userShort, userType, message, reacts, notification, channelType } from './dataStore';
 import crypto from 'crypto';
+import config from './config.json';
+const PORT: number = parseInt(process.env.PORT || config.port);
 
 /**
    * <Description: Returns the object in channels array which corresponds with inputed channelId. >
@@ -404,7 +406,8 @@ export function userMemberChannel (channelId: number, authUserId: number) {
   return false;
 }
 
-export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
+export const localRoute = `http://localhost:${PORT}/`;
+export const defaultProfilePhoto = localRoute + 'imgurl/defaultPhoto.jpg';
 
 export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {
   
@@ -456,3 +459,4 @@ export function messageNotificator(message: string, members: userShort[], isChan
   })
 
 }
+

@@ -9,7 +9,7 @@ import { readData, saveData, wipeData } from './dataStore';
 import { adminUserRemoveV1 } from './admin';
 import { authRegisterV3, authLoginV3, authLogoutV2, authPasswordResetRequestV1, authPasswordResetResetV1 } from './auth';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelleaveV2, addOwnerV2, removeOwnerV2 } from './channel';
-import { channelsCreateV3, channelsListV2, channelsListAllV3 } from './channels';
+import { channelsCreateV3, channelsListV3, channelsListAllV3 } from './channels';
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageSendLaterDmV1, messageShareV1 } from './messages';
 
@@ -49,7 +49,7 @@ const server = app.listen(PORT, HOST, () => {
   console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
 });
 
-app.use('/profilePhotos', express.static('profilePhotos'));
+app.use('/imgurl', express.static('imgurl'));
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
@@ -59,9 +59,10 @@ app.delete('/clear/v1', (req: Request, res: Response) => {
 app.post('/auth/login/v3', (req: Request, res: Response, next) => {
   try {
     const { email, password } = req.body;
-    saveData();
 
-    return res.json(authLoginV3(email, password));
+    const ret = authLoginV3(email, password);
+    saveData();
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -70,8 +71,10 @@ app.post('/auth/login/v3', (req: Request, res: Response, next) => {
 app.post('/auth/register/v3', (req: Request, res: Response, next) => {
   try {
     const { email, password, nameFirst, nameLast } = req.body;
+
+    const ret = authRegisterV3(email, password, nameFirst, nameLast);
     saveData();
-    return res.json(authRegisterV3(email, password, nameFirst, nameLast));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -82,8 +85,9 @@ app.post('/channels/create/v3', (req: Request, res: Response, next) => {
     const { name, isPublic } = req.body;
     const token = req.header('token');
 
+    const ret = channelsCreateV3(token, name, isPublic);
     saveData();
-    return res.json(channelsCreateV3(token, name, isPublic));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -114,6 +118,7 @@ app.get('/channel/details/v3', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const channelId = req.query.channelId as string;
+
     return res.json(channelDetailsV3(token, parseInt(channelId)));
   } catch (err) {
     next(err);
@@ -137,8 +142,9 @@ app.post('/channel/join/v3', (req: Request, res: Response, next) => {
     const { channelId } = req.body;
     const token = req.header('token');
 
+    const ret = channelJoinV3(token, parseInt(channelId));
     saveData();
-    return res.json(channelJoinV3(token, parseInt(channelId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -149,8 +155,9 @@ app.post('/channel/invite/v3', (req: Request, res: Response, next) => {
     const { channelId, uId } = req.body;
     const token = req.header('token');
 
+    const ret = channelInviteV3(token, parseInt(channelId), parseInt(uId));
     saveData();
-    return res.json(channelInviteV3(token, parseInt(channelId), parseInt(uId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -161,8 +168,9 @@ app.post('/channel/removeowner/v2', (req: Request, res: Response, next) => {
     const { channelId, uId } = req.body;
     const token = req.header('token');
 
+    const ret = removeOwnerV2(token, parseInt(channelId), parseInt(uId));
     saveData();
-    return res.json(removeOwnerV2(token, parseInt(channelId), parseInt(uId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -173,18 +181,19 @@ app.post('/channel/addowner/v2', (req: Request, res: Response, next) => {
     const { channelId, uId } = req.body;
     const token = req.header('token');
 
+    const ret = addOwnerV2(token, parseInt(channelId), parseInt(uId));
     saveData();
-    return res.json(addOwnerV2(token, parseInt(channelId), parseInt(uId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
 });
 
-app.get('/channels/list/v2', (req: Request, res: Response, next) => {
+app.get('/channels/list/v3', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
 
-    res.json(channelsListV2(token));
+    return res.json(channelsListV3(token));
   } catch (err) {
     next(err);
   }
@@ -195,8 +204,9 @@ app.post('/channel/leave/v2', (req: Request, res: Response, next) => {
     const { channelId } = req.body;
     const token = req.header('token');
 
+    const ret = channelleaveV2(token, channelId);
     saveData();
-    return res.json(channelleaveV2(token, channelId));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -207,8 +217,9 @@ app.post('/dm/create/v2', (req: Request, res: Response, next) => {
     const { uIds } = req.body;
     const token = req.header('token');
 
+    const ret = dmCreateV2(token, uIds);
     saveData();
-    return res.json(dmCreateV2(token, uIds));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -219,8 +230,9 @@ app.post('/message/send/v2', (req: Request, res: Response, next) => {
     const { channelId, message } = req.body;
     const token = req.header('token');
 
+    const ret = messageSendV2(token, channelId, message);
     saveData();
-    return res.json(messageSendV2(token, channelId, message));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -240,9 +252,10 @@ app.put('/message/edit/v2', (req: Request, res: Response, next) => {
 app.post('/auth/logout/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
-    saveData();
 
-    return res.json(authLogoutV2(token));
+    const ret = authLogoutV2(token);
+    saveData();
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -252,9 +265,10 @@ app.delete('/dm/remove/v2', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
     const dmId = req.query.dmId as string;
-    saveData();
 
-    return res.json(dmRemoveV2(token, parseInt(dmId)));
+    const ret = dmRemoveV2(token, parseInt(dmId));
+    saveData();
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -320,8 +334,9 @@ app.post('/message/senddm/v2', (req: Request, res: Response, next) => {
     const { dmId, message } = req.body;
     const token = req.header('token');
 
-    res.json(messageSendDmV2(token, parseInt(dmId), message));
+    const ret = messageSendDmV2(token, parseInt(dmId), message);
     saveData();
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -332,8 +347,9 @@ app.post('/dm/leave/v2', (req: Request, res: Response, next) => {
     const { dmId } = req.body;
     const token = req.header('token');
 
+    const ret = dmLeaveV2(token, parseInt(dmId));
     saveData();
-    return res.json(dmLeaveV2(token, parseInt(dmId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -357,7 +373,7 @@ app.put('/user/profile/setemail/v2', (req: Request, res: Response, next) => {
     const token = req.header('token');
 
     saveData();
-    res.json(userSetEmailV2(token, email));
+    return res.json(userSetEmailV2(token, email));
   } catch (err) {
     next(err);
   }
@@ -368,8 +384,9 @@ app.delete('/message/remove/v2', (req: Request, res: Response, next) => {
     const messageId = req.query.messageId as string;
     const token = req.header('token');
 
+    const ret = messageRemoveV2(token, parseInt(messageId));
     saveData();
-    return res.json(messageRemoveV2(token, parseInt(messageId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -380,8 +397,9 @@ app.post('/message/pin/v1', (req: Request, res: Response, next) => {
     const { messageId } = req.body;
     const token = req.header('token');
 
+    const ret = messagePinV1(token, parseInt(messageId));
     saveData();
-    return res.json(messagePinV1(token, parseInt(messageId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -403,8 +421,9 @@ app.post('/standup/start/v1', (req: Request, res: Response, next) => {
     const { channelId, length } = req.body;
     const token = req.header('token');
 
+    const ret = standupStartV1(token, parseInt(channelId), parseInt(length));
     saveData();
-    return res.json(standupStartV1(token, parseInt(channelId), parseInt(length)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -415,8 +434,9 @@ app.post('/message/unpin/v1', (req: Request, res: Response, next) => {
     const { messageId } = req.body;
     const token = req.header('token');
 
+    const ret = messageUnpinV1(token, parseInt(messageId));
     saveData();
-    return res.json(messageUnpinV1(token, parseInt(messageId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -438,8 +458,9 @@ app.post('/message/react/v1', (req: Request, res: Response, next) => {
     const { messageId, reactId } = req.body;
     const token = req.header('token');
 
+    const ret = messageReactV1(token, parseInt(messageId), parseInt(reactId));
     saveData();
-    return res.json(messageReactV1(token, parseInt(messageId), parseInt(reactId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -450,8 +471,9 @@ app.post('/standup/send/v1', (req: Request, res: Response, next) => {
     const { channelId, message } = req.body;
     const token = req.header('token');
 
+    const ret = standupSendV1(token, parseInt(channelId), message);
     saveData();
-    return res.json(standupSendV1(token, parseInt(channelId), message));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -460,6 +482,7 @@ app.post('/standup/send/v1', (req: Request, res: Response, next) => {
 app.get('/user/stats/v1', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
+
     saveData();
     return res.json(userStatsV1(token));
   } catch (err) {
@@ -471,8 +494,9 @@ app.post('/auth/passwordreset/request/v1', (req: Request, res: Response, next) =
   try {
     const { email } = req.body;
 
+    const ret = authPasswordResetRequestV1(email);
     saveData();
-    return res.json(authPasswordResetRequestV1(email));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -483,8 +507,9 @@ app.delete('/admin/user/remove/v1', (req: Request, res: Response, next) => {
     const uId = req.query.uId as string;
     const token = req.header('token');
 
+    const ret = adminUserRemoveV1(token, parseInt(uId));
     saveData();
-    return res.json(adminUserRemoveV1(token, parseInt(uId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -495,8 +520,9 @@ app.post('/message/unreact/v1', (req: Request, res: Response, next) => {
     const { messageId, reactId } = req.body;
     const token = req.header('token');
 
+    const ret = messageUnreactV1(token, parseInt(messageId), parseInt(reactId));
     saveData();
-    return res.json(messageUnreactV1(token, parseInt(messageId), parseInt(reactId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -507,8 +533,9 @@ app.post('/message/share/v1', (req: Request, res: Response, next) => {
     const { ogMessageId, message, channelId, dmId } = req.body;
     const token = req.header('token');
 
+    const ret = messageShareV1(token, parseInt(ogMessageId), message, parseInt(channelId), parseInt(dmId));
     saveData();
-    return res.json(messageShareV1(token, parseInt(ogMessageId), message, parseInt(channelId), parseInt(dmId)));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
@@ -518,8 +545,10 @@ app.post('/message/sendlater/v1', (req: Request, res: Response, next) => {
   try {
     const { channelId, message, timeSent } = req.body;
     const token = req.header('token');
+
+    const ret = messageSendLaterV1(token, parseInt(channelId), message, timeSent);
     saveData();
-    return res.json(messageSendLaterV1(token, parseInt(channelId), message, timeSent));
+    return res.json(ret);
   } catch (err) {
     next(err);
   }
