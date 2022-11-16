@@ -16,7 +16,7 @@ describe('messageSendLaterDm tests', () => {
 	let user2: newUser;
 	let dm0: newDm;
 	let dm1: newDm;
-	let timeSent: number;
+	let timeSent: any;
 	  
 	beforeEach(() => {
 	  requestClear();

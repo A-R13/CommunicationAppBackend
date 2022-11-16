@@ -101,7 +101,7 @@ export function channelJoinV3 (token: string, channelId: number) {
     throw HTTPError(400, `Error: '${token}' is already a member of the channel`);
   }
 
-  if (channel.isPublic === false && data.users[0] !== user) { // User 0 is a global owner by default, thus can join any channel
+  if (channel.isPublic === false && user.permissions !== 1) { // users with perm 1 are global owners
     throw HTTPError(403, `Error: '${channelId}' is private, you cannot join this channel`);
   }
 
@@ -303,7 +303,7 @@ export function addOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
+  if (userIsOwner === undefined && authUserToken.permissions !== 1) {
     throw HTTPError(403, 'Authorised user does not have owner permissions in the channel');
   }
 
@@ -379,7 +379,7 @@ export function removeOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authUser which the token belongs to, is not an owner
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
+  if (userIsOwner === undefined && authUserToken.permissions !== 1) {
     throw HTTPError(403, 'Error: Authorised user is not an owner of channel');
   }
 
