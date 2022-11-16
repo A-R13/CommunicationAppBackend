@@ -18,6 +18,7 @@ import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandle
 import { searchV1 } from './search';
 import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 import { clearV1 } from './other';
+import { notificationsGet } from './notifications';
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
@@ -553,6 +554,18 @@ app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response, next) => 
     const { resetCode, newPassword } = req.body;
     saveData();
     return res.json(authPasswordResetResetV1(resetCode, newPassword));
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/notifications/get/v1', (req: Request, res: Response, next) => {
+  try {
+    const token = req.header('token');
+
+    const ret = notificationsGet(token);
+    saveData()
+    return ret;
   } catch (err) {
     next(err);
   }

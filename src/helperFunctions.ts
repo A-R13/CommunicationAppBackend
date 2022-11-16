@@ -1,4 +1,4 @@
-import { getData, userShort, userType, message, reacts } from './dataStore';
+import { getData, userShort, userType, message, reacts, notification, channelType } from './dataStore';
 import crypto from 'crypto';
 
 /**
@@ -405,3 +405,54 @@ export function userMemberChannel (channelId: number, authUserId: number) {
 }
 
 export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
+
+export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {
+  
+  const splitString = message.split('@a');
+  
+  if (splitString.length === 0) {
+    return 0;
+  }
+
+  splitString.shift();
+  const handleArray = [];
+  for(const i in splitString) {
+    handleArray[i] = splitString[i].substring(0, splitString[i].indexOf(' '));
+  }
+
+  const notifList = [];
+
+  members.forEach(user => {
+    if (handleArray.includes(user.handleStr)) notifList.push(user);
+  });
+
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: -1,
+    notificationMessage: ''
+  }
+
+  let notifString: string;
+  
+  if (isChannel === true){
+    const channel = getChannel(id);
+    notifObj.channelId = channel.channelId;
+    notifString = `${sender} tagged you in ${channel.channelName}: ${message.slice(0,20)}`;
+
+  } else {
+    const dm = getDm(id);
+    notifObj.dmId = dm.dmId;
+    notifString = `${sender} tagged you in ${dm.name}: ${message.slice(0,20)}`;
+  }
+
+  notifObj.notificationMessage = notifString;
+
+  const data = getData().users;
+
+  data.forEach(user => {
+    if (notifList.includes(user.userHandle)) {
+      user.notifications.unshift( notifObj );
+    }
+  })
+
+}

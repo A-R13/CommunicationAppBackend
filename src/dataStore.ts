@@ -5,7 +5,13 @@ import fs from 'fs';
 export interface reacts {
   reactId: number,
   uids: number[],
-  isThisUserReacted: boolean
+  isThisUserReacted: boolean,
+}
+
+export interface notification {
+  channelId: number,
+  dmId: number,
+  notificationMessage: string
 }
 
 export interface userType {
@@ -22,6 +28,7 @@ export interface userType {
   stats?: any,
   resetCode: string,
   profileImgUrl: string
+  notifications: notification[]
 }
 
 export interface userShort {
@@ -100,11 +107,7 @@ export interface newMessage {
   messageId: number
 }
 
-export interface notifications {
-  channelId: number,
-  dmId: number,
-  notificationMessage: string
-}
+
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {

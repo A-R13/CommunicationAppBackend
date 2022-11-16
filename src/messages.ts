@@ -4,7 +4,7 @@ import { getData, setData, userType, userShort, message, dmType } from './dataSt
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel, messageNotificator
 } from './helperFunctions';
 
 /**
@@ -127,6 +127,8 @@ export function messageSendV2 (token: string, channelId: number, message: string
   channel = data.channels.find(c => c === channel);
   channel.messages.unshift(msgg);
 
+  messageNotificator(message, channel.allMembers, true, channelId, user.userHandle);
+
   // adds 1 to the number of messages sent
   data.users[user.authUserId].stats[3].numMessagesSent += 1;
 
@@ -184,6 +186,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
       data.dms[DmIndex].messages.splice(DmMessageIndex, 1);
     } else {
       data.dms[DmIndex].messages[DmMessageIndex].message = message;
+      messageNotificator(message, data.dms[DmIndex].members, false, DmIndex, userToken.userHandle);
     }
   } else {
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
@@ -191,6 +194,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
       data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
     } else {
       data.channels[channelIndex].messages[channelMessageIndex].message = message;
+      messageNotificator(message,  data.channels[channelIndex].allMembers, true, channelIndex, userToken.userHandle);
     }
   }
 
