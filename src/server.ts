@@ -527,7 +527,7 @@ app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response, nex
   try {
     const { imgUrl, xStart, yStart, xEnd, yEnd } = req.body;
     const token = req.header('token');
-    
+
     saveData();
     const ret = await userProfileUploadPhotoV1(token, imgUrl, parseInt(xStart), parseInt(yStart), parseInt(xEnd), parseInt(yEnd));
     return res.json(ret);
