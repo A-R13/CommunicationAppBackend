@@ -100,6 +100,12 @@ export interface newMessage {
   messageId: number
 }
 
+export interface notifications {
+  channelId: number,
+  dmId: number,
+  notificationMessage: string
+}
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
   users: [],
