@@ -5,7 +5,13 @@ import fs from 'fs';
 export interface reacts {
   reactId: number,
   uids: number[],
-  isThisUserReacted: boolean
+  isThisUserReacted: boolean,
+}
+
+export interface notification {
+  channelId: number,
+  dmId: number,
+  notificationMessage: string
 }
 
 export interface userType {
@@ -22,6 +28,7 @@ export interface userType {
   stats?: any,
   resetCode: string,
   profileImgUrl: string
+  notifications: notification[]
 }
 
 export interface userShort {
@@ -190,7 +197,7 @@ const readData = () => {
   }
 };
 
-// NEED TO ADD THIS FUNCTION TO ALL RELEVANT ROUTES, maybe add a wipe route/function see post #1408
+// {"users":[],"channels":[],"dms":[]} BASE DATASTORE
 const saveData = () => {
   const jsonStr = JSON.stringify(data);
   fs.writeFileSync('src/dataBase.json', jsonStr);

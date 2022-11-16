@@ -54,7 +54,7 @@ export function requestChannelsListAll (token: string) {
 }
 
 export function requestChannelsList (token: string) {
-  return requestHelper('GET', '/channels/list/v2', { }, token);
+  return requestHelper('GET', '/channels/list/v3', {}, token);
 }
 
 export function requestchannelDetails(token : string, channelId : number) {
@@ -211,4 +211,8 @@ export function requestMessageSendLaterDm(token: string, dmId: number, message: 
 
 export function requestAuthPasswordResetReset(resetCode: string, newPassword: string) {
   return requestHelper('POST', '/auth/passwordreset/reset/v1', { resetCode, newPassword });
+}
+
+export function requestNotificationsGet(token: string) {
+  return requestHelper('GET', '/notifications/get/v1', { }, token);
 }

@@ -100,7 +100,8 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
         }
       ],
       resetCode: null,
-      profileImgUrl: defaultProfilePhoto
+      profileImgUrl: defaultProfilePhoto,
+      notifications: []
     }
   );
 

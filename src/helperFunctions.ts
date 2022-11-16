@@ -1,5 +1,7 @@
-import { getData, userShort, userType, message, reacts } from './dataStore';
+import { getData, userShort, userType, message, reacts, notification } from './dataStore';
 import crypto from 'crypto';
+import config from './config.json';
+const PORT: number = parseInt(process.env.PORT || config.port);
 
 /**
    * <Description: Returns the object in channels array which corresponds with inputed channelId. >
@@ -24,9 +26,9 @@ export function getUId(uId: number) {
 }
 
 /**
- * <Description: Returns the object in users array which corresponds with inputted uId. >
+ * <Description: Returns the object in users array which corresponds with inputted token. >
  * @param {string} token
- * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
+ * @returns { name, dmId, members, owners, messages, timeJoined? }
  */
 export function getToken(token: string) {
   const data = getData();
@@ -34,7 +36,7 @@ export function getToken(token: string) {
 }
 
 /**
- * <Description: Returns the object in users array which corresponds with inputted uId. >
+ * <Description: Returns the object in the dms array which corresponds with inputted dmId. >
  * @param {string} token
  * @returns { user: { authUserId, user_handle, email, password, nameFirst, nameLast }}
  */
@@ -404,8 +406,6 @@ export function userMemberChannel (channelId: number, authUserId: number) {
   return false;
 }
 
-export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
-
 /**
  * <Description: Function will change the IsthisUserReacted to true>
  * @param channelId
@@ -457,4 +457,59 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
       }
     }
   }
+}
+
+export const localRoute = `http://localhost:${PORT}/`;
+export const defaultProfilePhoto = localRoute + 'imgurl/defaultPhoto.jpg';
+
+export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {
+  const splitString = message.split('@');
+
+  if (splitString.length === 0) {
+    return 0;
+  }
+
+  splitString.shift();
+  const handleArray: string[] = [];
+  for (const i in splitString) {
+    if (splitString[i].includes(' ')) {
+      handleArray[i] = splitString[i].substring(0, splitString[i].indexOf(' '));
+    } else {
+      handleArray[i] = splitString[i];
+    }
+  }
+
+  const notifList: userShort[] = [];
+
+  members.forEach(user => {
+    if (handleArray.includes(user.handleStr)) notifList.push(user);
+  });
+
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: -1,
+    notificationMessage: ''
+  };
+
+  let notifString: string;
+
+  if (isChannel === true) {
+    const channel = getChannel(id);
+    notifObj.channelId = channel.channelId;
+    notifString = `${sender} tagged you in ${channel.channelName}: ${message.slice(0, 20)}`;
+  } else {
+    const dm = getDm(id);
+    notifObj.dmId = dm.dmId;
+    notifString = `${sender} tagged you in ${dm.name}: ${message.slice(0, 20)}`;
+  }
+
+  notifObj.notificationMessage = notifString;
+
+  const data = getData().users;
+
+  data.forEach(user => {
+    if (notifList.some(u => u.uId === user.authUserId)) {
+      user.notifications.unshift(notifObj);
+    }
+  });
 }
