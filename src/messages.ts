@@ -4,7 +4,7 @@ import { getData, setData, userType, userShort, message, dmType } from './dataSt
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel, hasUserReactedDm
 } from './helperFunctions';
 
 /**
@@ -291,6 +291,7 @@ export function dmMessagesV2 (token: string, dmId: number, start: number): { mes
     throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!`);
   }
 
+  hasUserReactedDm(dmId, userToken.authUserId);
   if ((start + 50) > dm.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
@@ -793,7 +794,7 @@ export function messageSendLaterDmV1 (token: string, dmId: number, message: stri
   return { messageId: messageId };
 }
 
-/*
+/** 
  * <Descripton: Given a messageId it will send it to another channel or Dm>
  * @param {string} token - unique identifier for user
  * @param {number} ogMessageId - unique identifier for message
@@ -802,7 +803,7 @@ export function messageSendLaterDmV1 (token: string, dmId: number, message: stri
  * @param {number} dmId - unique identifier for a Dm
  */
 
-export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number): {sharedMessageId: number} {
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 

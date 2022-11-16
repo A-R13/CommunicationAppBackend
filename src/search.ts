@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 import { messagesReacts, userShort } from './dataStore';
 import { getData } from './dataStore';
-import { getToken, getHashOf, SECRET } from './helperFunctions';
+import { getToken, getHashOf, SECRET, hasUserReactedChannel, hasUserReactedDm } from './helperFunctions';
 
 /**
  * < description: Given a string this function searchs all dms and channels that the user is a part
@@ -33,6 +33,7 @@ export function searchV1(token: string, queryStr: string): { messages: messagesR
     }
     for (const messages of channel.messages) {
       if (messages.message.includes(queryStr)) {
+        hasUserReactedChannel(channel.channelId, user.authUserId);
         temp.push(messages);
       }
     }
@@ -47,6 +48,7 @@ export function searchV1(token: string, queryStr: string): { messages: messagesR
     }
     for (const messages of dm.messages) {
       if (messages.message.includes(queryStr)) {
+        hasUserReactedDm(dm.dmId, user.authUserId);
         temp.push(messages);
       }
     }

@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
 import { getData, setData, channelType, userShort, message } from './dataStore';
-import { getChannel, getUId, getToken, getHashOf, SECRET } from './helperFunctions';
+import { getChannel, getUId, getToken, getHashOf, SECRET, hasUserReactedChannel } from './helperFunctions';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -241,6 +241,8 @@ export function channelMessagesV3 (token: string, channelId: number, start: numb
     // If user is not a member of the target channel, return an error
     throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!`);
   }
+
+  hasUserReactedChannel(channelId, userToken.authUserId);
 
   if ((start + 50) > channel.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded

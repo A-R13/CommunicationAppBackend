@@ -1,6 +1,6 @@
 import {
   requestClear, requestAuthRegister, requestDmCreate, requestChannelsCreate, requestMessageReact, 
-  requestMessageSend, requestMessageSendDm, requestChannelJoin
+  requestMessageSend, requestMessageSendDm, requestChannelJoin, requestDmMessages, requestChannelMessages,
 } from '../wrapperFunctions';
 
 import { newUser, newDm, newChannel, newMessage} from '../dataStore';
@@ -53,13 +53,19 @@ describe('Testing react function', () => {
   });
 
   test('Succesful return (Message in Dm)', () => {
+    requestDmMessages(user0.token, dm.dmId, 0);
     expect(requestMessageReact(user0.token, dmMessage.messageId, 1)).toStrictEqual({}); 
+    requestDmMessages(user0.token, dm.dmId, 0);
+    requestDmMessages(user1.token, dm.dmId, 0);
   });
 
   test ('Successful return (Message in Dm and in channel)', () => {
+    requestChannelMessages(user0.token, channel.channelId, 0);
     expect(requestMessageReact(user0.token, dmMessage.messageId, 1)).toStrictEqual({});
     expect(requestMessageReact(user1.token, dmMessage.messageId, 1)).toStrictEqual({});
     expect(requestMessageReact(user0.token, channelMessage.messageId, 1)).toStrictEqual({});
+    requestChannelMessages(user0.token, channel.channelId, 0);
+    requestChannelMessages(user1.token, channel.channelId, 0);
     expect(requestMessageReact(user1.token, channelMessage.messageId, 1)).toStrictEqual({})
   });
 })

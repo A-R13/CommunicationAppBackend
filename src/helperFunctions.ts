@@ -405,3 +405,57 @@ export function userMemberChannel (channelId: number, authUserId: number) {
 }
 
 export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
+
+/**
+ * <Description: Function will change the IsthisUserReacted to true>
+ * @param channelId 
+ * @param authUserId 
+ */
+export function hasUserReactedChannel (channelId: number, authUserId: number) {
+  const data = getData();
+
+  for (const channel of data.channels) {
+    if (channel.channelId === channelId) {
+      for (const message of channel.messages) {
+        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === 1);
+        if (react !== undefined) {
+          react.isThisUserReacted = true;
+          return;
+        }
+        if (reaction === undefined) {
+          return;
+        }
+        if (react === undefined && reaction !== undefined) {
+          reaction.isThisUserReacted = false;
+          return;
+        }
+      }
+    }
+  }
+}
+
+
+export function hasUserReactedDm (dmId: number, authUserId: number) {
+  const data = getData();
+
+  for (const dm of data.dms) {
+    if (dm.dmId === dmId) {
+      for (const message of dm.messages) {
+        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === 1);
+        if (react !== undefined) {
+          react.isThisUserReacted = true;
+          return;
+        }
+        if (reaction === undefined) {
+          return;
+        }
+        if (react === undefined && reaction !== undefined) {
+          reaction.isThisUserReacted = false;
+          return;
+        }
+      }
+    }
+  }
+}
