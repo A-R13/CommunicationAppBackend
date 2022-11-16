@@ -408,8 +408,8 @@ export const defaultProfilePhoto = '/imgurl/defaultPhoto.jpg';
 
 /**
  * <Description: Function will change the IsthisUserReacted to true>
- * @param channelId 
- * @param authUserId 
+ * @param channelId
+ * @param authUserId
  */
 export function hasUserReactedChannel (channelId: number, authUserId: number) {
   const data = getData();
@@ -434,7 +434,6 @@ export function hasUserReactedChannel (channelId: number, authUserId: number) {
     }
   }
 }
-
 
 export function hasUserReactedDm (dmId: number, authUserId: number) {
   const data = getData();

@@ -794,7 +794,7 @@ export function messageSendLaterDmV1 (token: string, dmId: number, message: stri
   return { messageId: messageId };
 }
 
-/** 
+/**
  * <Descripton: Given a messageId it will send it to another channel or Dm>
  * @param {string} token - unique identifier for user
  * @param {number} ogMessageId - unique identifier for message
