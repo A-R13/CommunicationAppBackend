@@ -13,7 +13,7 @@ tests with coverage:
     - npm run ts-node-coverage >& $SERVER_LOG &
     - timeout 30s grep -q "⚡️ Server listening on port" <(tail -f $SERVER_LOG) || exit 1
     - timeout -s SIGINT 180s npm run test || (cat $SERVER_LOG && exit 1)
-    - kill -SIGINT %1 $(pgrep -u $USER -f node)
+    - kill -SIGINT %1 $(pgrep -f node)
     - sleep 2
     - cat $SERVER_LOG
   coverage: '/All files\s*\|\s*(\d+(?:\.\d+)?)/'
