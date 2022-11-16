@@ -593,8 +593,8 @@ app.get('/notifications/get/v1', (req: Request, res: Response, next) => {
     const token = req.header('token');
 
     const ret = notificationsGet(token);
-    saveData()
-    return ret;
+    saveData();
+    return res.json(ret);
   } catch (err) {
     next(err);
   }

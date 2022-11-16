@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, userType, userShort, message, dmType } from './dataStore';
+import { getData, setData, userType, userShort, message, dmType, notification } from './dataStore';
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
@@ -21,9 +21,7 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  let uIdArray;
-
-  uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
+  const uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
 
   if (JSON.stringify(uIdArray) !== JSON.stringify(uIds)) {
     throw HTTPError(400, 'Error: A uId in the input is not valid.');
@@ -36,14 +34,14 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
   }
 
   if (user === undefined) {
-    throw HTTPError(403, `Error: User with token '${token}' does no t exist!`);
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   const length = data.dms.length;
 
-  uIdArray = uIdArray.map(uId => getUId(uId));
+  const userArray = uIdArray.map(uId => getUId(uId));
 
-  uIdArray.unshift(user);
+  userArray.unshift(user);
 
   const ownersArray: userShort[] = [];
 
@@ -51,10 +49,10 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   ownersArray.push(convertedUser);
 
-  const nameArray = uIdArray.map(user => user.userHandle).sort();
+  const nameArray = userArray.map(user => user.userHandle).sort();
   const nameString = nameArray.join(', ');
 
-  const membersArray = uIdArray.map(user => userConvert(user));
+  const membersArray = userArray.map(user => userConvert(user));
 
   const dm: dmType = {
     name: nameString,
@@ -65,6 +63,17 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
   };
 
   data.dms.push(dm);
+
+  // Adding notification
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: length,
+    notificationMessage: `${user.userHandle} added you to ${nameString}`
+  };
+
+  data.users.forEach(user => {
+    if (uIdArray.includes(user.authUserId)) user.notifications.unshift(notifObj);
+  });
 
   for (const i of membersArray) {
     // adds 1 to the number of dms joined
@@ -194,7 +203,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
       data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
     } else {
       data.channels[channelIndex].messages[channelMessageIndex].message = message;
-      messageNotificator(message,  data.channels[channelIndex].allMembers, true, channelIndex, userToken.userHandle);
+      messageNotificator(message, data.channels[channelIndex].allMembers, true, channelIndex, userToken.userHandle);
     }
   }
 
@@ -415,6 +424,8 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
     }
   }
 
+  messageNotificator(message, checkDM.members, false, dmId, checkToken.userHandle);
+
   // adds 1 to the number of messages sent
   data.users[checkToken.authUserId].stats[3].numMessagesSent += 1;
 
@@ -597,6 +608,27 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   }
 
   message.reacts[0].uids.push(user.authUserId);
+
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: -1,
+    notificationMessage: ''
+  };
+
+  let channel;
+  let dm;
+  if (ChInd !== -1) {
+    channel = getChannel(ChInd);
+    notifObj.channelId = ChInd;
+    notifObj.notificationMessage = `${user.userHandle} reacted to your message in ${channel.channelName}`;
+  } else if (DmInd !== -1) {
+    dm = getDm(DmInd);
+    notifObj.dmId = DmInd;
+    notifObj.notificationMessage = `${user.userHandle} reacted to your message in ${dm.name}`;
+  }
+
+  const msgUser = getUId(message.uId);
+  msgUser.notifications.unshift(notifObj);
 
   return {};
 }
