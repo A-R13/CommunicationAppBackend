@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelInvite
 } from '../wrapperFunctions';
@@ -34,20 +35,23 @@ describe('Channel Invite tests', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 1,
           email: 'dennis.pulickal@gmail.com',
           nameFirst: 'dennis',
           nameLast: 'pulickal',
-          handleStr: 'dennispulickal'
+          handleStr: 'dennispulickal',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -65,7 +69,8 @@ describe('Channel Invite tests', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
 
         allMembers: [{
@@ -73,19 +78,22 @@ describe('Channel Invite tests', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 1,
           email: 'dennis.pulickal@gmail.com',
           nameFirst: 'dennis',
           nameLast: 'pulickal',
-          handleStr: 'dennispulickal'
+          handleStr: 'dennispulickal',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 2,
           email: 'geoffrey.mok@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
-          handleStr: 'geoffreymok'
+          handleStr: 'geoffreymok',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -103,20 +111,23 @@ describe('Channel Invite tests', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 1,
           email: 'dennis.pulickal@gmail.com',
           nameFirst: 'dennis',
           nameLast: 'pulickal',
-          handleStr: 'dennispulickal'
+          handleStr: 'dennispulickal',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );

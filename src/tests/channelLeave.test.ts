@@ -1,5 +1,5 @@
-import { channelleaveV2 } from '../channel';
 import { newUser, newChannel } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave,
   requestStandupStart, requestStandupActive
@@ -49,14 +49,16 @@ describe('Channel leave function', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -75,7 +77,8 @@ describe('Channel leave function', () => {
           email: 'geoffrey.mok@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
-          handleStr: 'geoffreymok'
+          handleStr: 'geoffreymok',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -108,14 +111,16 @@ describe('Channel leave function', () => {
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'nicole.jiang@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'jiang',
-          handleStr: 'nicolejiang'
+          handleStr: 'nicolejiang',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -145,7 +150,8 @@ describe('Channel leave function', () => {
           email: 'geoffrey.mok@gmail.com',
           nameFirst: 'geoffrey',
           nameLast: 'mok',
-          handleStr: 'geoffreymok'
+          handleStr: 'geoffreymok',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );

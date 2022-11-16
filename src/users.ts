@@ -231,7 +231,7 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
     throw HTTPError(400, 'Error: Image URL is invalid');
   }
   const body = res.getBody();
-  const filePath = 'profilePhotos/temp';
+  const filePath = 'imgurl/temp';
   fs.writeFileSync(filePath, body, { flag: 'w' });
 
   const image = sharp(filePath);
@@ -253,7 +253,8 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   // Extracting region (Cropping the image)
 
   const croppedImg = image.extract({ left: xStart, top: yStart, width: (xEnd - xStart), height: (yEnd - yStart) });
-  const outputPath = 'profilePhotos/' + `${user.userHandle}` + '.jpg';
+  const uniqueUrl = Math.random().toString(36).substring(2, 10);
+  const outputPath = 'imgurl/' + `${uniqueUrl}` + '.jpg';
   croppedImg.toFile(outputPath);
 
   user.profileImgUrl = outputPath;

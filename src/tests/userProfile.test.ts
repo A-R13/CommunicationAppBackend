@@ -1,4 +1,5 @@
 import { newUser } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import { requestClear, requestAuthRegister, requestUserProfile } from '../wrapperFunctions';
 
 requestClear();
@@ -29,7 +30,7 @@ describe('Testing for userProfileV3', () => {
           nameFirst: 'nicole',
           nameLast: 'Doe',
           handleStr: 'nicoledoe',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         }
       }
     );
@@ -44,7 +45,7 @@ describe('Testing for userProfileV3', () => {
           nameFirst: 'Bob',
           nameLast: 'Doe',
           handleStr: 'bobdoe',
-          profileImgUrl: null
+          profileImgUrl: defaultProfilePhoto
         }
       }
     );

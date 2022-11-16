@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { defaultProfilePhoto } from '../helperFunctions';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin
 } from '../wrapperFunctions';
@@ -52,14 +53,16 @@ describe('Channel details testing', () => {
           email: 'example1@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'Doe',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'example1@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'Doe',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -75,14 +78,16 @@ describe('Channel details testing', () => {
           email: 'example1@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'Doe',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 0,
           email: 'example1@gmail.com',
           nameFirst: 'nicole',
           nameLast: 'Doe',
-          handleStr: 'nicoledoe'
+          handleStr: 'nicoledoe',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -98,14 +103,16 @@ describe('Channel details testing', () => {
           email: 'example2@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Doe',
-          handleStr: 'bobdoe'
+          handleStr: 'bobdoe',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 1,
           email: 'example2@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Doe',
-          handleStr: 'bobdoe'
+          handleStr: 'bobdoe',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
@@ -122,20 +129,23 @@ describe('Channel details testing', () => {
           email: 'example2@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Doe',
-          handleStr: 'bobdoe'
+          handleStr: 'bobdoe',
+          profileImgUrl: defaultProfilePhoto
         }],
         allMembers: [{
           uId: 1,
           email: 'example2@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Doe',
-          handleStr: 'bobdoe'
+          handleStr: 'bobdoe',
+          profileImgUrl: defaultProfilePhoto
         }, {
           uId: 2,
           email: 'example3@gmail.com',
           nameFirst: 'Bob',
           nameLast: 'Doe',
-          handleStr: 'bobdoe0'
+          handleStr: 'bobdoe0',
+          profileImgUrl: defaultProfilePhoto
         }],
       }
     );
