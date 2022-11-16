@@ -212,7 +212,7 @@ export function authPasswordResetRequestV1(email: string) : Record<string, never
   return {};
 }
 
-export function authPasswordResetResetV1(resetCode: string, newPassword: string) {
+export function authPasswordResetResetV1(resetCode: string, newPassword: string): Record<string, never> | {error: string} {
   let checkResetCodeExists = false;
   const data = getData();
   for (const user of data.users) {
