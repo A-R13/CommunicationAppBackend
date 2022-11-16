@@ -201,6 +201,10 @@ export async function requestUserProfilePhotoUpload(token: string, imgUrl: strin
   return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }
 
+export function requestAdminUserpermissionChange(token: string, uId: number, permissionId: number) {
+  return requestHelper('POST', '/admin/userpermission/change/v1', { uId, permissionId }, token);
+}
+
 export function requestMessageSendLaterDm(token: string, dmId: number, message: string, timeSent: number) {
   return requestHelper('POST', '/message/sendlaterdm/v1', { dmId, message, timeSent }, token);
 }
