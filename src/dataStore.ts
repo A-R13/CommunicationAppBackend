@@ -191,7 +191,7 @@ const readData = () => {
   }
 };
 
-// NEED TO ADD THIS FUNCTION TO ALL RELEVANT ROUTES, maybe add a wipe route/function see post #1408
+// {"users":[],"channels":[],"dms":[]} BASE DATASTORE
 const saveData = () => {
   const jsonStr = JSON.stringify(data);
   fs.writeFileSync('src/dataBase.json', jsonStr);

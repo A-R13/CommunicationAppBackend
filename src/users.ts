@@ -5,7 +5,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 
 import { getData, setData } from './dataStore';
-import { getToken, getHashOf, SECRET } from './helperFunctions';
+import { getToken, getHashOf, SECRET, localRoute } from './helperFunctions';
 
 /**
  * <Description: Returns a users profile for a valid uId that is given to check>
@@ -257,7 +257,7 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   const outputPath = 'imgurl/' + `${uniqueUrl}` + '.jpg';
   croppedImg.toFile(outputPath);
 
-  user.profileImgUrl = outputPath;
+  user.profileImgUrl = localRoute + outputPath;
 
   return {};
 }
