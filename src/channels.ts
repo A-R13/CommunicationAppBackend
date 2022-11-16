@@ -80,7 +80,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
  * @returns {Array of objects} - Consists of channelId and channel names that will be listed
  */
 
-export function channelsListV2 (token: string): {channels: channelShort[]} | {error: string} {
+export function channelsListV3 (token: string): {channels: channelShort[]} | {error: string} {
   const data = getData();
 
   const tokenHashed = getHashOf(token + SECRET);

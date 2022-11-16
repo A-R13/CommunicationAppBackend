@@ -1,6 +1,6 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, channelType, userShort, message } from './dataStore';
+import { getData, setData, channelType, userShort, message, notification } from './dataStore';
 import { getChannel, getUId, getToken, getHashOf, SECRET } from './helperFunctions';
 
 /**
@@ -194,6 +194,14 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
     profileImgUrl: userArray[j].profileImgUrl,
   };
   data.channels[channelId].allMembers.push(userData);
+
+  const notifObj: notification = {
+    channelId: channelId,
+    dmId: -1,
+    notificationMessage: `${authUserToken.userHandle} added you to ${channel.channelName}`
+  };
+
+  user.notifications.unshift(notifObj);
 
   // adds 1 to the number of channels joined
   data.users[user.authUserId].stats[3].numChannelsJoined += 1;
