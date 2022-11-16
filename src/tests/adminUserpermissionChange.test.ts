@@ -34,7 +34,7 @@ describe('adminpermission change test', () => {
         requestChannelJoin(user1.token, channel0.channelId);
 
         // uid is not a valid user
-        expect(requestAdminUserpermissionChange(user0.token, 0, 1)).toStrictEqual(400);
+        expect(requestAdminUserpermissionChange(user0.token, 99, 1)).toStrictEqual(400);
         //only global owner
         expect(requestAdminUserpermissionChange(user0.token, user0.authUserId, 2)).toStrictEqual(400);
         //invalid permissionId
@@ -50,15 +50,7 @@ describe('adminpermission change test', () => {
         expect(requestAdminUserpermissionChange(user2.token, user1.authUserId, 1)).toStrictEqual(403);
     });
 
-    // //channel owner requesting to demote the only global owner in channel
-    // test('error return ', () => {
-    //     requestChannelJoin(user0.token, channel1.channelId);
-    //     expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 2)).toStrictEqual(400);
-
-    // });
-
     test('correct return', () => {
-
         expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 1)).toStrictEqual({});
     });
 
@@ -73,17 +65,10 @@ describe('adminpermission change test', () => {
         // user 2 now has global permissions
         expect(requestAdminUserpermissionChange(user0.token, user2.authUserId, 1)).toStrictEqual({});
 
-        // Since user 2 has global permissions they have same permissions as a channel owner, and can thus add a owner. 
+        // Since user 2 has global permissions they have same permissions as a channel owner, and can thus add a owner.
         expect(requestAddOwner(user2.token, channel1.channelId, user0.authUserId)).not.toThrowError;
 
     });
-
-    // test('error return in Dm', () => {
-    //     dm0 = requestDmCreate(user1.token, [0]);
-    //     expect(requestAdminUserpermissionChange(user0.token, user1.authUserId, 2)).toStrictEqual(403);
-    // })
-
-
 
     //global owner changing channel owners permission
     test('correct return', () => {
@@ -100,9 +85,4 @@ describe('adminpermission change test', () => {
         expect(requestAdminUserpermissionChange(user2.token, user0.authUserId, 2)).toStrictEqual({});
 
     });
-
-    // test('correct return in Dm', () => {
-    //     dm0 = requestDmCreate(user1.token, [0]);
-    //     expect(requestAdminUserpermissionChange(user1.token, user0.authUserId, 1)).toStrictEqual({});
-    // });
 })

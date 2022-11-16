@@ -97,6 +97,16 @@ export function adminUserRemoveV1(token: string, uId: number) {
   return { };
 }
 
+/**
+ * <Description: Given a valid uId, the user with that uId will have their permission level changed according to the permissionId
+ * The authorising user needs to be a global owner, and the target user cannot be the only user with global ownership. >
+ * @param {string} token
+ * @param {number} uId
+ * @param {number} permissionId
+ *
+ * @returns {{}}
+ */
+
 export function adminUserpermissionChangeV1 (token: string, uId: number, permissionId: number) {
   const targetUser = getUId(uId);
 
@@ -144,29 +154,4 @@ export function adminUserpermissionChangeV1 (token: string, uId: number, permiss
   setData(data);
 
   return {};
-  // if (data.users[targetUser].permissions === 1 && permission === 1) {
-  // }
-  // if (data.users[targetUser].permissions === 2 && permission === 2) {
-  //   throw HTTPError(400, 'Error: User already has set permission level');
-  // }
-
-  // channels.forEach(channel => {
-  //   if (channel.allMembers.findIndex(user => user.uId === uId) !== -1) {
-  //     if (permission === 1) {
-  //       data.users[targetUser].permissions = 1;
-  //     } else {
-  //       data.users[targetUser].permissions = 2;
-  //     }
-  //   }
-  // });
-
-  // dm.forEach(dm => {
-  //   if (dm.members.findIndex(user => user.uId === uId) !== -1) {
-  //     if (permission === 1) {
-  //       data.users[targetUser].permissions = 1;
-  //     } else {
-  //       data.users[targetUser].permissions = 2;
-  //     }
-  //   }
-  // });
 }
