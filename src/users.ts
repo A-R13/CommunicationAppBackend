@@ -37,7 +37,7 @@ export function userProfileV3 (token : string, uId : number) {
           nameFirst: tokenFinder.nameFirst,
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
-          profileImgUrl: tokenFinder.profileImgUrl
+          profileImgUrl: tokenFinder.profileImgUrl,
         }
       };
     }
@@ -212,38 +212,7 @@ export function usersStats(token: string) {
     throw HTTPError(403, 'Error: token is not valid');
   }
 
-  const numChannelsExist = data.users[userToken.authUserId].stats[3].numChannelsExist;
-  const numDmsExist = data.users[userToken.authUserId].stats[3].numDmsExist;
-  const numMsgsExist = data.users[userToken.authUserId].stats[3].numMessagesExist;
-  const numChannels = data.channels.length;
-  const numDms = data.dms.length;
-  let numMsgs = 0;
 
-  for (const i in data.channels) {
-    numMsgs += data.channels[i].messages.length;
-  }
-
-  for (const i in data.dms) {
-    numMsgs += data.dms[i].messages.length;
-  }
-
-  let utilizationRate = (numChannelsExist + numDmsExist + numMsgsExist) / (numChannels + numDms + numMsgs);
-
-  if (utilizationRate < 0) {
-    utilizationRate = 0;
-  } else if (utilizationRate > 1) {
-    utilizationRate = 1;
-  }
-
-  setData(data);
-
-  return {
-  channelsExist: data.users[userToken.authUserId].stats[0].channelsExist,
-  DmsExist: data.users[userToken.authUserId].stats[1].dmsExist,
-  messagesExist: data.users[userToken.authUserId].stats[2].messagesExist,
-  utilizationRate: utilizationRate,
-
-  }
 };
 
 /**

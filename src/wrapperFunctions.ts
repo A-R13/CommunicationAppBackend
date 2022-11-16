@@ -204,3 +204,14 @@ export async function requestUserProfilePhotoUpload(token: string, imgUrl: strin
 export function requestUsersStats(token: string) {
   return requestHelper('GET', '/users/stats/v1', { }, token);
 }
+export function requestAdminUserpermissionChange(token: string, uId: number, permissionId: number) {
+  return requestHelper('POST', '/admin/userpermission/change/v1', { uId, permissionId }, token);
+}
+
+export function requestMessageSendLaterDm(token: string, dmId: number, message: string, timeSent: number) {
+  return requestHelper('POST', '/message/sendlaterdm/v1', { dmId, message, timeSent }, token);
+}
+
+export function requestAuthPasswordResetReset(resetCode: string, newPassword: string) {
+  return requestHelper('POST', '/auth/passwordreset/reset/v1', { resetCode, newPassword });
+}

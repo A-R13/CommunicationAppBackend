@@ -290,7 +290,7 @@ describe('users stats test', () => {
             });
     });
 
-    test('correct returns for removing dm and message in that dm', () => {
+    test('correct returns for removing dm', () => {
         channel0 = requestChannelsCreate(user0.token, 'channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
         requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
