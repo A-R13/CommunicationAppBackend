@@ -417,7 +417,7 @@ export function messageNotificator(message: string, members: userShort[], isChan
   }
 
   splitString.shift();
-  const handleArray = [];
+  const handleArray: string[] = [];
   for (const i in splitString) {
     if (splitString[i].includes(' ')) {
       handleArray[i] = splitString[i].substring(0, splitString[i].indexOf(' '));
@@ -426,7 +426,7 @@ export function messageNotificator(message: string, members: userShort[], isChan
     }
   }
 
-  const notifList = [];
+  const notifList: userShort[] = [];
 
   members.forEach(user => {
     if (handleArray.includes(user.handleStr)) notifList.push(user);
