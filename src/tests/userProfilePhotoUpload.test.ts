@@ -11,7 +11,7 @@ beforeEach(() => {
 
   user1 = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Bob', 'Doe');
 
-  url = 'http://file-examples.com/storage/fe04183d33637128a9c93a7/2017/10/file_example_JPG_500kB.jpg';
+  url = 'https://www.learningcontainer.com/wp-content/uploads/2020/07/Sample-JPEG-Image-File-Download-scaled.jpg';
 });
 
 afterEach(() => {
@@ -64,7 +64,7 @@ describe('Succesful Upload', () => {
     test('Example 1', () => {
         expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).toStrictEqual(defaultProfilePhoto);
 
-        expect(requestUserProfilePhotoUpload(user1.token, url, 1200, 0, 2800, 1867)).resolves.toStrictEqual( {} );
+        expect(requestUserProfilePhotoUpload(user1.token, url, 1200, 0, 2560, 1920)).resolves.toStrictEqual( {} );
 
         expect(requestUserProfile(user1.token, user1.authUserId).user.profileImgUrl).not.toBe(defaultProfilePhoto);
     })

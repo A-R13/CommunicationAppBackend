@@ -66,6 +66,13 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
       timeStamp: Math.floor(Date.now() / 1000)
     });
 
+    const last = data.workspaceStats.channelsExist.length - 1;
+    const count = data.workspaceStats.channelsExist[last].numChannelsExist;
+    data.workspaceStats.channelsExist.push({
+      numChannelsExist: (count + 1),
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
+
     setData(data);
 
     return { channelId: channelID };
