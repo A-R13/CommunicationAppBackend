@@ -885,9 +885,27 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
   };
   if (dmId === -1) {
     channel.messages.unshift(msgg);
+
+    // adds 1 to the number of messages sent
+    user.stats[3].numMessagesSent += 1;
+
+    // pushes some stats about number of messages sent back to user
+    user.stats[2].messagesSent.push({
+      numMessagesSent: user.stats[3].numMessagesSent,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
   if (channelId === -1) {
     dm.messages.unshift(msgg);
+
+    // adds 1 to the number of messages sent
+    user.stats[3].numMessagesSent += 1;
+
+    // pushes some stats about number of messages sent back to user
+    user.stats[2].messagesSent.push({
+      numMessagesSent: user.stats[3].numMessagesSent,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
 
   return { sharedMessageId: messageid };
