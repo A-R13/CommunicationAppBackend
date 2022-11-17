@@ -1,45 +1,39 @@
-import exp from 'constants';
-import { newUser, newChannel, dmType, userShort } from '../dataStore';
+import { newUser, newChannel, dmType } from '../dataStore';
 
 import {
-  requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin, requestMessageRemove,
-  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave, requestDmRemove, requestDmLeave, requestUsersStats
+  requestClear, requestAuthRegister, requestChannelsCreate, requestMessageRemove,
+  requestDmCreate, requestMessageSend, requestMessageSendDm, requestDmRemove, requestUsersStats
 } from '../wrapperFunctions';
 
 requestClear();
 
-afterEach(() => {
+let user0: newUser;
+let user1: newUser;
+let channel0: newChannel;
+
+let dm0: dmType;
+
+beforeEach(() => {
     requestClear();
+    user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid: 0
+    user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe'); // uid: 1
+
 });
 
-describe('users stats test', () => {
-    let user0: newUser;
-    let user1: newUser;
-    let channel0: newChannel;
-    let channel1: newChannel;
+afterEach(() => {
+    requestClear();
+  });
 
-
-    let dm0: dmType;
-    let dm1: dmType;
-
-
-
-    beforeEach(() => {
-        requestClear();
-        user0 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'Bob', 'Doe'); // uid: 0
-        user1 = requestAuthRegister('example2@gmail.com', 'ABCD1234', 'Jake', 'Doe'); // uid: 1
-
-    });
+describe('users Stats base tests', () => {
 
     test('Error returns', () => {
         expect(requestUsersStats('INVALID TOKEN')).toStrictEqual(403);
     });
 
     test('correct returns', () => {
-     //   requestMessageSend(user0.token, channel0.channelId, 'Message One in channel');
 
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
+        expect(requestUsersStats(user0.token)).toStrictEqual({
+            workspaceStats: {
                 channelsExist: [{
                     numChannelsExist: 0,
                     timeStamp: expect.any(Number)
@@ -52,18 +46,28 @@ describe('users stats test', () => {
                     numMessagesExist: 0,
                     timeStamp: expect.any(Number)
                 }],
-                utilizationRate: expect.any(Number)
+                utilizationRate: 0
             }
-        );
+        });
     });
+});
 
-    test('correct returns with message in channel', () => {
+
+describe('users stats further tests', () => {
+
+    beforeEach(() => {
         channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
         dm0 = requestDmCreate(user0.token, [1]);
-        requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
+    });
 
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
+    afterEach(() => {
+        requestClear();
+      });
+
+    test('correct returns with channel and dm creation', () => {
+        
+        expect(requestUsersStats(user0.token)).toStrictEqual({
+            workspaceStats: {
                 channelsExist: [{
                     numChannelsExist: 0,
                     timeStamp: expect.any(Number)
@@ -72,81 +76,36 @@ describe('users stats test', () => {
                     numChannelsExist: 1,
                     timeStamp: expect.any(Number)
                 }
-            ],
+                ],
                 dmsExist: [{
-                    numDmsExists: 0,
+                    numDmsExist: 0,
                     timeStamp: expect.any(Number)
                 },
                 {
-                    numDmsExists: 1,
+                    numDmsExist: 1,
                     timeStamp: expect.any(Number)
                 }
-            ],
+                ],
                 messagesExist: [{
                     numMessagesExist: 0,
                     timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 1,
-                    timeStamp: expect.any(Number)
                 }
-            ],
-            utilizationRate: expect.any(Number)
-
+                ],
+                utilizationRate: 1
+            }
         });
     });
-
-    test('correct returns with message in dm', () => {
-        channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
-        dm0 = requestDmCreate(user0.token, [1]);
-        requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
-
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
-                channelsExist: [{
-                    numChannelsExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numChannelsExist: 1,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                dmsExist: [{
-                    numDmsExists: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numDmsExists: 1,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                messagesExist: [{
-                    numMessagesExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 1,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-            utilizationRate: expect.any(Number)
-
-        });
-    });
-
+    
     test('correct returns for multiple channels/dms and messages', () => {
-        channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
-        channel1 = requestChannelsCreate(user0.token, 'Channel1', true);
 
-        dm0 = requestDmCreate(user0.token, [1]);
-        dm1 = requestDmCreate(user0.token, [1]);
+        requestChannelsCreate(user1.token, 'Channel1', true);
+        requestDmCreate(user0.token, [1]);
 
         requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
         requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
 
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
+        expect(requestUsersStats(user0.token)).toStrictEqual({
+            workspaceStats: {
                 channelsExist: [{
                     numChannelsExist: 0,
                     timeStamp: expect.any(Number)
@@ -161,15 +120,15 @@ describe('users stats test', () => {
                 }
             ],
                 dmsExist: [{
-                    numDmsExists: 0,
+                    numDmsExist: 0,
                     timeStamp: expect.any(Number)
                 },
                 {
-                    numDmsExists: 1,
+                    numDmsExist: 1,
                     timeStamp: expect.any(Number)
                 },
                 {
-                    numDmsExists: 2,
+                    numDmsExist: 2,
                     timeStamp: expect.any(Number)
                 }
             ],
@@ -186,23 +145,19 @@ describe('users stats test', () => {
                     timeStamp: expect.any(Number)
                 }
             ],
-            utilizationRate: expect.any(Number)
-
+            utilizationRate: 1
+            }
         });
     });
 
+    requestClear();
 
-    test('correct returns for multiple messages', () => {
-        channel0 = requestChannelsCreate(user0.token, 'Channel0', true);
-        dm0 = requestDmCreate(user0.token, [1]);
-
+    test('correct returns for removing dm', () => {
         requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
-        requestMessageSend(user0.token, channel0.channelId, 'Message two in channel');
-        requestMessageSendDm(user0.token, dm0.dmId, 'Message two in dm');
+        requestDmRemove(user0.token, dm0.dmId);
 
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
+        expect(requestUsersStats(user0.token)).toStrictEqual({
+            workspaceStats: {
                 channelsExist: [{
                     numChannelsExist: 0,
                     timeStamp: expect.any(Number)
@@ -213,11 +168,15 @@ describe('users stats test', () => {
                 }
             ],
                 dmsExist: [{
-                    numDmsExists: 0,
+                    numDmsExist: 0,
                     timeStamp: expect.any(Number)
                 },
                 {
-                    numDmsExists: 1,
+                    numDmsExist: 1,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numDmsExist: 0,
                     timeStamp: expect.any(Number)
                 }
             ],
@@ -229,129 +188,19 @@ describe('users stats test', () => {
                     numMessagesExist: 1,
                     timeStamp: expect.any(Number)
                 },
-                {
-                    numMessagesExist: 2,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 3,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 4,
-                    timeStamp: expect.any(Number)
-                },
             ],
-            utilizationRate: expect.any(Number)
-
+                utilizationRate: 0.5
+            }
         });
-    });
-
-    test('correct returns for removing dm', () => {
-        channel0 = requestChannelsCreate(user0.token, 'channel0', true);
-        dm0 = requestDmCreate(user0.token, [1]);
-        requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        requestDmRemove(user0.token, dm0.dmId);
-
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
-                channelsExist: [{
-                    numChannelsExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numChannelsExist: 1,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                dmsExist: [{
-                    numDmsExists: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numDmsExists: 1,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numDmsExists: 0,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                messagesExist: [{
-                    numMessagesExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 1,
-                    timeStamp: expect.any(Number)
-                },
-            ],
-                utilizationRate: expect.any(Number)
-            });
-    });
-
-    test('correct returns for removing dm', () => {
-        channel0 = requestChannelsCreate(user0.token, 'channel0', true);
-        dm0 = requestDmCreate(user0.token, [1]);
-        requestMessageSendDm(user0.token, dm0.dmId, 'Message one in dm');
-        requestMessageSendDm(user0.token, dm0.dmId, 'Message two in dm');
-
-        requestDmRemove(user0.token, dm0.dmId);
-
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
-                channelsExist: [{
-                    numChannelsExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numChannelsExist: 1,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                dmsExist: [{
-                    numDmsExists: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numDmsExists: 1,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numDmsExists: 0,
-                    timeStamp: expect.any(Number)
-                }
-            ],
-                messagesExist: [{
-                    numMessagesExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 1,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 2,
-                    timeStamp: expect.any(Number)
-                },
-                {
-                    numMessagesExist: 0,
-                    timeStamp: expect.any(Number)
-                },
-            ],
-                utilizationRate: expect.any(Number)
-            });
     });
 
     test('correct returns for removing messages', () => {
-        channel0 = requestChannelsCreate(user0.token, 'channel0', true);
-        dm0 = requestDmCreate(user0.token, [1]);
         const msg1 = requestMessageSend(user0.token, channel0.channelId, 'Message one in channel');
-        const msg2 = requestMessageSend(user0.token, channel0.channelId, 'Message two in channel');
+        requestMessageSend(user0.token, channel0.channelId, 'Message two in channel');
         requestMessageRemove(user0.token, msg1.messageId);
 
-        expect(requestUsersStats(user0.token)).toStrictEqual(
-            {
+        expect(requestUsersStats(user0.token)).toStrictEqual({
+            workspaceStats: {
                 channelsExist: [{
                     numChannelsExist: 0,
                     timeStamp: expect.any(Number)
@@ -362,11 +211,11 @@ describe('users stats test', () => {
                 }
             ],
                 dmsExist: [{
-                    numDmsExists: 0,
+                    numDmsExist: 0,
                     timeStamp: expect.any(Number)
                 },
                 {
-                    numDmsExists: 1,
+                    numDmsExist: 1,
                     timeStamp: expect.any(Number)
                 }
             ],
@@ -387,8 +236,8 @@ describe('users stats test', () => {
                     timeStamp: expect.any(Number)
                 }
             ],
-                utilizationRate: expect.any(Number)
-            });
+                utilizationRate: 1
+            }
+        });
     });
 });
-

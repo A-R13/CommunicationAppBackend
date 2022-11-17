@@ -86,6 +86,13 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
     });
   }
 
+  const last = data.workspaceStats.dmsExist.length - 1;
+  const count = data.workspaceStats.dmsExist[last].numDmsExist + 1;
+  data.workspaceStats.dmsExist.push({
+    numDmsExist: count,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
   setData(data);
 
   return { dmId: length };
@@ -144,6 +151,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
   // pushes some stats about number of messages sent back to user
   data.users[user.authUserId].stats[2].messagesSent.push({
     numMessagesSent: data.users[user.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist + 1;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: count,
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
@@ -257,6 +271,20 @@ export function dmRemoveV2(token : string, dmId: number) {
       timeStamp: Math.floor(Date.now() / 1000)
     });
   }
+
+  const last = data.workspaceStats.dmsExist.length - 1;
+  const count = data.workspaceStats.dmsExist[last].numDmsExist - 1;
+  data.workspaceStats.dmsExist.push({
+    numDmsExist: count,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  const end = data.workspaceStats.messagesExist.length - 1;
+  const counter = data.workspaceStats.messagesExist[end].numMessagesExist - dm.messages.length;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: counter,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   // deletes the dm
   for (const i in data.dms) {
@@ -435,6 +463,14 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist + 1;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: count,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
   setData(data);
 
   return { messageId: messageid };
@@ -530,6 +566,13 @@ export function messageRemoveV2 (token: string, messageId: number) {
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
     data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
   }
+  
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist - 1;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: count,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
   return {};
@@ -839,6 +882,8 @@ export function messageSendLaterDmV1 (token: string, dmId: number, message: stri
  */
 
 export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+  const data = getData();
+
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
@@ -889,6 +934,15 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
   if (channelId === -1) {
     dm.messages.unshift(msgg);
   }
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist + 1;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: count,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  setData(data);
 
   return { sharedMessageId: messageid };
 }

@@ -175,15 +175,10 @@ export function userStatsV1(token: string) {
   const numMsgsSent = data.users[userToken.authUserId].stats[3].numMessagesSent;
   const numChannels = data.channels.length;
   const numDms = data.dms.length;
-  let numMsgs = 0;
 
-  for (const i in data.channels) {
-    numMsgs += data.channels[i].messages.length;
-  }
 
-  for (const i in data.dms) {
-    numMsgs += data.dms[i].messages.length;
-  }
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const numMsgs = data.workspaceStats.messagesExist[last].numMessagesExist;
 
   let involvementRate = (numChannelsJoined + numDmsJoined + numMsgsSent) / (numChannels + numDms + numMsgs);
 
@@ -203,7 +198,7 @@ export function userStatsV1(token: string) {
   };
 }
 
-export function usersStats(token: string) {
+export function usersStatsV1(token: string) {
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
   const userToken = getToken(tokenHashed);
@@ -212,7 +207,22 @@ export function usersStats(token: string) {
     throw HTTPError(403, 'Error: token is not valid');
   }
 
+  let numUsersWhoHaveJoinedAtLeastOneChannelOrDm = 0;
+  data.users.forEach(user => {
+    const chLast = user.stats[0].channelsJoined.length - 1;
+    const dmLast = user.stats[1].dmsJoined.length - 1;
+    if (user.stats[0].channelsJoined[chLast].numChannelsJoined > 0 || user.stats[1].dmsJoined[dmLast].numDmsJoined > 0 && 
+      user.isRemoved === false) {
+        numUsersWhoHaveJoinedAtLeastOneChannelOrDm++;
+    }
+  })
 
+  const numUsers = data.users.length;
+  const utilisationRate = numUsersWhoHaveJoinedAtLeastOneChannelOrDm / numUsers;
+
+  data.workspaceStats.utilizationRate = utilisationRate;
+
+  return { workspaceStats: data.workspaceStats };
 };
 
 /**

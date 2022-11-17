@@ -15,7 +15,7 @@ import { channelsCreateV3, channelsListV3, channelsListAllV3 } from './channels'
 
 import { dmCreateV2, messageSendV2, dmMessagesV2, dmRemoveV2, dmDetailsV2, dmListV2, messageEditV2, messageSendDmV2, dmLeaveV2, messageRemoveV2, messagePinV1, messageReactV1, messageUnreactV1, messageUnpinV1, messageSendLaterV1, messageSendLaterDmV1, messageShareV1 } from './messages';
 
-import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1, userProfileUploadPhotoV1 } from './users';
+import { userProfileV3, usersAllV2, userSetNameV2, userSetEmailV2, userSetHandleV2, userStatsV1, userProfileUploadPhotoV1, usersStatsV1 } from './users';
 
 import { searchV1 } from './search';
 import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
@@ -55,7 +55,7 @@ app.use('/imgurl', express.static('imgurl'));
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   wipeData();
-  res.json(clearV1());
+  return res.json(clearV1());
 });
 
 app.post('/auth/login/v3', (req: Request, res: Response, next) => {
@@ -521,8 +521,7 @@ app.get('/users/stats/v1', (req: Request, res: Response, next) => {
   try {
     const token = req.header('token');
 
-    saveData();
-    return res.json(userStatsV1(token));
+    return res.json(usersStatsV1(token));
   } catch (err) {
     next(err);
   }

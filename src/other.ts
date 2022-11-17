@@ -1,4 +1,4 @@
-import { setData, storedData } from './dataStore';
+import { setData, storedData, workspaceStatsBase } from './dataStore';
 
 /**
  * <description: Resets the dataStore to its intial state. 'Clearing' away any additional added objects. >
@@ -12,6 +12,7 @@ export function clearV1 () {
     users: [],
     channels: [],
     dms: [],
+    workspaceStats: null
   };
   setData(clearedData);
 

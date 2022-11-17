@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
 import nodemailer from 'nodemailer';
 
-import { getData, setData } from './dataStore';
+import { getData, setData, workspaceStatsBase } from './dataStore';
 import { getToken, getHashOf, SECRET, defaultProfilePhoto } from './helperFunctions';
 
 /**
@@ -58,6 +58,7 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
   let perm: number;
   if (id === 0) {
     perm = 1;
+    data.workspaceStats = workspaceStatsBase;
   } else {
     perm = 2;
   }
