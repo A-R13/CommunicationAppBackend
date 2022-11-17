@@ -74,6 +74,13 @@ export interface dmType {
   timeJoined?: number,
 }
 
+export interface workspaceStatsType {
+  channelsExist: {numChannelsExist: number, timeStamp: number}[], 
+  dmsExist: {numDmsExist: number, timeStamp: number}[], 
+  messagesExist: {numMessagesExist: number, timeStamp: number}[], 
+  utilizationRate: number
+}
+
 export interface storedData {
   users: userType[],
   channels: channelType[],
@@ -107,17 +114,19 @@ export interface newMessage {
   messageId: number
 }
 
+export const workStatsBase = {
+  channelsExist: [{numChannelsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+  dmsExist: [{numDmsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+  messagesExist: [{numMessagesExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+  utilizationRate: 0
+}
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
   users: [],
   channels: [],
   dms: [],
-  workspaceStats: {
-    channelsExist: [{numChannelsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-    dmsExist: [{numDmsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-    messagesExist: [{numMessagesExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-    utilizationRate: 0
-  }
+  workspaceStats: workStatsBase
 };
 
 /* The manner in which users, channels and dms should be stored.
