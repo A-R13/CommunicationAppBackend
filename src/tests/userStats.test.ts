@@ -3,7 +3,8 @@ import { newUser, newChannel, dmType, userShort } from '../dataStore';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin,
-  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave, requestDmRemove, requestDmLeave
+  requestDmCreate, requestUserStatsV1, requestMessageSend, requestMessageSendDm, requestChannelLeave, requestDmRemove, requestDmLeave,
+  requestMessageShare,
 } from '../wrapperFunctions';
 
 requestClear();
@@ -408,10 +409,12 @@ describe("User Stats Tests", () => {
     }) 
 
     test("Correct output for multiple messages", () => {
-        requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
-        requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER MESSAGE");
+        const msg1 = requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
+        const msg2 = requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER MESSAGE");
         requestMessageSend(user0.token, channel0.channelId, 'THE Second MESSAGE BY OWNER');
         requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER ANOTHER MESSAGE");
+        requestMessageShare(user0.token, msg1.messageId, 'Shared', channel0.channelId, -1)
+        requestMessageShare(user0.token, msg2.messageId, 'Shared', -1, dm0.dmId)
         expect(requestUserStatsV1(user0.token)).toStrictEqual(
             {
                 channelsJoined: [{
@@ -450,6 +453,14 @@ describe("User Stats Tests", () => {
                 },
                 {
                     numMessagesSent: 4,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 5,
+                    timeStamp: expect.any(Number)
+                },
+                {
+                    numMessagesSent: 6,
                     timeStamp: expect.any(Number)
                 }
             ],
