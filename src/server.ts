@@ -22,8 +22,8 @@ import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 import { clearV1 } from './other';
 import { notificationsGet } from './notifications';
 
-export const PORT: number = parseInt(process.env.PORT || config.port);
-export const HOST: string = process.env.IP || 'localhost';
+const PORT: number = parseInt(process.env.PORT || config.port);
+const HOST: string = process.env.IP || 'localhost';
 
 // Set up web app
 const app = express();

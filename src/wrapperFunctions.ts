@@ -1,7 +1,7 @@
 import { port, url } from './config.json';
 
 import request, { HttpVerb } from 'sync-request';
-const SERVER_URL = `${url}:${port}`;
+export const SERVER_URL = `${url}:${port}`;
 
 export function requestHelper(method: HttpVerb, path: string, payload: object, header?: string) {
   let qs = {};
