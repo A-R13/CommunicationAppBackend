@@ -261,3 +261,15 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
 
   return {};
 }
+
+export function usersStatsV1(token: string) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is not valid');
+  }
+
+  return { workspaceStats: data.workspaceStats };
+}

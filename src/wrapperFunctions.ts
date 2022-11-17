@@ -216,3 +216,7 @@ export function requestAuthPasswordResetReset(resetCode: string, newPassword: st
 export function requestNotificationsGet(token: string) {
   return requestHelper('GET', '/notifications/get/v1', { }, token);
 }
+
+export function requestUsersStats(token: string) {
+  return requestHelper('GET', '/users/stats/v1', { }, token);
+}

@@ -12,6 +12,12 @@ export function clearV1 () {
     users: [],
     channels: [],
     dms: [],
+    workspaceStats: {
+      channelsExist: [{numChannelsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+      dmsExist: [{numDmsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+      messagesExist: [{numMessagesExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+      utilizationRate: 0
+    }
   };
   setData(clearedData);
 
