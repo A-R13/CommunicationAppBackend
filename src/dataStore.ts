@@ -85,7 +85,7 @@ export interface storedData {
   users: userType[],
   channels: channelType[],
   dms: dmType[],
-  workspaceStats: workspaceStatsType | null
+  workspaceStats: workspaceStatsType
 }
 
 export interface newUser {
@@ -126,7 +126,7 @@ let data: storedData = {
   users: [],
   channels: [],
   dms: [],
-  workspaceStats: null
+  workspaceStats: workspaceStatsBase
 };
 
 /* The manner in which users, channels and dms should be stored.
@@ -220,7 +220,7 @@ const saveData = () => {
 };
 
 const wipeData = () => {
-  const cleanData: storedData = { users: [], channels: [], dms: [], workspaceStats: null };
+  const cleanData: storedData = { users: [], channels: [], dms: [], workspaceStats: workspaceStatsBase };
   setData(cleanData)
   fs.writeFileSync('src/dataBase.json', JSON.stringify(cleanData));
 
