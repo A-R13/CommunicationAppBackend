@@ -1,7 +1,6 @@
 import { getData, userShort, userType, message, reacts, notification } from './dataStore';
 import crypto from 'crypto';
-import config from './config.json';
-const PORT: number = parseInt(process.env.PORT || config.port);
+import { HOST, PORT} from './server';
 
 /**
    * <Description: Returns the object in channels array which corresponds with inputed channelId. >
@@ -459,7 +458,7 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
   }
 }
 
-export const localRoute = `http://localhost:${PORT}/`;
+export const localRoute = `http://${HOST}:${PORT}/`;
 export const defaultProfilePhoto = localRoute + 'imgurl/defaultPhoto.jpg';
 
 export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {

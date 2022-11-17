@@ -22,8 +22,8 @@ import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 import { clearV1 } from './other';
 import { notificationsGet } from './notifications';
 
-const PORT: number = parseInt(process.env.PORT || config.port);
-const HOST: string = process.env.IP || 'localhost';
+export const PORT: number = parseInt(process.env.PORT || config.port);
+export const HOST: string = process.env.IP || 'localhost';
 
 // Set up web app
 const app = express();
@@ -48,7 +48,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   readData();
-  console.log(`⚡️ Server listening on port ${PORT} at ${HOST}`);
+  console.log(`⚡️ Server listening on port ${process.env.PORT || config.port}`);
 });
 
 app.use('/imgurl', express.static('imgurl'));
