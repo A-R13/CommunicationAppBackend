@@ -5,7 +5,13 @@ import fs from 'fs';
 export interface reacts {
   reactId: number,
   uids: number[],
-  isThisUserReacted: boolean
+  isThisUserReacted: boolean,
+}
+
+export interface notification {
+  channelId: number,
+  dmId: number,
+  notificationMessage: string
 }
 
 export interface userType {
@@ -22,6 +28,7 @@ export interface userType {
   stats?: any,
   resetCode: string,
   profileImgUrl: string
+  notifications: notification[]
 }
 
 export interface userShort {
@@ -37,7 +44,6 @@ export interface userShort {
 export interface message {
   messageId: number,
   uId: number,
-  sharedMessage?: string,
   message: string,
   timeSent: number,
   reacts: reacts[],
@@ -68,10 +74,18 @@ export interface dmType {
   timeJoined?: number,
 }
 
+export interface workspaceStatsType {
+  channelsExist: {numChannelsExist: number, timeStamp: number}[],
+  dmsExist: {numDmsExist: number, timeStamp: number}[],
+  messagesExist: {numMessagesExist: number, timeStamp: number}[],
+  utilizationRate: number
+}
+
 export interface storedData {
   users: userType[],
   channels: channelType[],
   dms: dmType[],
+  workspaceStats: any
 }
 
 export interface newUser {
@@ -100,11 +114,19 @@ export interface newMessage {
   messageId: number
 }
 
+export const workStatsBase = {
+  channelsExist: [{ numChannelsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+  dmsExist: [{ numDmsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+  messagesExist: [{ numMessagesExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+  utilizationRate: 0
+};
+
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
   users: [],
   channels: [],
   dms: [],
+  workspaceStats: workStatsBase
 };
 
 /* The manner in which users, channels and dms should be stored.
@@ -198,7 +220,7 @@ const saveData = () => {
 };
 
 const wipeData = () => {
-  const cleanData: storedData = { users: [], channels: [], dms: [] };
+  const cleanData: storedData = { users: [], channels: [], dms: [], workspaceStats: {} };
   setData(cleanData);
   fs.writeFileSync('src/dataBase.json', JSON.stringify(cleanData));
 

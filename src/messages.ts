@@ -1,10 +1,10 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, userType, userShort, message, dmType } from './dataStore';
+import { getData, setData, userType, userShort, message, dmType, notification } from './dataStore';
 
 import {
   getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
-  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel
+  userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel, messageNotificator, hasUserReactedDm
 } from './helperFunctions';
 
 /**
@@ -21,9 +21,7 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  let uIdArray;
-
-  uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
+  const uIdArray = uIds.filter(uIds => getUId(uIds) !== undefined);
 
   if (JSON.stringify(uIdArray) !== JSON.stringify(uIds)) {
     throw HTTPError(400, 'Error: A uId in the input is not valid.');
@@ -36,14 +34,14 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
   }
 
   if (user === undefined) {
-    throw HTTPError(403, `Error: User with token '${token}' does no t exist!`);
+    throw HTTPError(403, `Error: User with token '${token}' does not exist!`);
   }
 
   const length = data.dms.length;
 
-  uIdArray = uIdArray.map(uId => getUId(uId));
+  const userArray = uIdArray.map(uId => getUId(uId));
 
-  uIdArray.unshift(user);
+  userArray.unshift(user);
 
   const ownersArray: userShort[] = [];
 
@@ -51,10 +49,10 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   ownersArray.push(convertedUser);
 
-  const nameArray = uIdArray.map(user => user.userHandle).sort();
+  const nameArray = userArray.map(user => user.userHandle).sort();
   const nameString = nameArray.join(', ');
 
-  const membersArray = uIdArray.map(user => userConvert(user));
+  const membersArray = userArray.map(user => userConvert(user));
 
   const dm: dmType = {
     name: nameString,
@@ -66,6 +64,17 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
 
   data.dms.push(dm);
 
+  // Adding notification
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: length,
+    notificationMessage: `${user.userHandle} added you to ${nameString}`
+  };
+
+  data.users.forEach(user => {
+    if (uIdArray.includes(user.authUserId)) user.notifications.unshift(notifObj);
+  });
+
   for (const i of membersArray) {
     // adds 1 to the number of dms joined
     data.users[i.uId].stats[3].numDmsJoined += 1;
@@ -76,6 +85,13 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
       timeStamp: Math.floor(Date.now() / 1000)
     });
   }
+
+  const last = data.workspaceStats.dmsExist.length - 1;
+  const count = data.workspaceStats.dmsExist[last].numDmsExist;
+  data.workspaceStats.dmsExist.push({
+    numDmsExist: (count + 1),
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   setData(data);
 
@@ -127,12 +143,21 @@ export function messageSendV2 (token: string, channelId: number, message: string
   channel = data.channels.find(c => c === channel);
   channel.messages.unshift(msgg);
 
+  messageNotificator(message, channel.allMembers, true, channelId, user.userHandle);
+
   // adds 1 to the number of messages sent
   data.users[user.authUserId].stats[3].numMessagesSent += 1;
 
   // pushes some stats about number of messages sent back to user
   data.users[user.authUserId].stats[2].messagesSent.push({
     numMessagesSent: data.users[user.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: (count + 1),
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
@@ -184,6 +209,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
       data.dms[DmIndex].messages.splice(DmMessageIndex, 1);
     } else {
       data.dms[DmIndex].messages[DmMessageIndex].message = message;
+      messageNotificator(message, data.dms[DmIndex].members, false, DmIndex, userToken.userHandle);
     }
   } else {
     const channelMessageIndex = data.channels[channelIndex].messages.findIndex(message => message.messageId === messageId);
@@ -191,6 +217,7 @@ export function messageEditV2(token: string, messageId: number, message: string)
       data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
     } else {
       data.channels[channelIndex].messages[channelMessageIndex].message = message;
+      messageNotificator(message, data.channels[channelIndex].allMembers, true, channelIndex, userToken.userHandle);
     }
   }
 
@@ -245,6 +272,22 @@ export function dmRemoveV2(token : string, dmId: number) {
     });
   }
 
+  const last = data.workspaceStats.dmsExist.length - 1;
+  const count = data.workspaceStats.dmsExist[last].numDmsExist;
+  data.workspaceStats.dmsExist.push({
+    numDmsExist: (count - 1),
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  if (dm.messages.length > 0) {
+    const end = data.workspaceStats.messagesExist.length - 1;
+    const counter = data.workspaceStats.messagesExist[end].numMessagesExist - dm.messages.length;
+    data.workspaceStats.messagesExist.push({
+      numMessagesExist: counter,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
+  }
+
   // deletes the dm
   for (const i in data.dms) {
     if (data.dms[i].dmId === dmId) {
@@ -291,6 +334,7 @@ export function dmMessagesV2 (token: string, dmId: number, start: number): { mes
     throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of dm with dmId '${dmId}'!`);
   }
 
+  hasUserReactedDm(dmId, userToken.authUserId);
   if ((start + 50) > dm.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
     return {
@@ -411,12 +455,21 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
     }
   }
 
+  messageNotificator(message, checkDM.members, false, dmId, checkToken.userHandle);
+
   // adds 1 to the number of messages sent
   data.users[checkToken.authUserId].stats[3].numMessagesSent += 1;
 
   // pushes some stats about number of messages sent back to user
   data.users[checkToken.authUserId].stats[2].messagesSent.push({
     numMessagesSent: data.users[checkToken.authUserId].stats[3].numMessagesSent,
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: (count + 1),
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
@@ -516,10 +569,25 @@ export function messageRemoveV2 (token: string, messageId: number) {
     data.channels[channelIndex].messages.splice(channelMessageIndex, 1);
   }
 
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: (count - 1),
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
+
   setData(data);
   return {};
 }
 
+/**
+ * <Description: Sends a message from the authorised user to the channel specified by channelId automatically at a specified time in the future.>
+ * @param {string} token
+ * @param {number} channelId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns { messageId: messageId} messageId
+ */
 export function messageSendLaterV1 (token: string, channelId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
   const channel = getChannel(channelId);
 
@@ -585,6 +653,27 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   }
 
   message.reacts[0].uids.push(user.authUserId);
+
+  const notifObj: notification = {
+    channelId: -1,
+    dmId: -1,
+    notificationMessage: ''
+  };
+
+  let channel;
+  let dm;
+  if (ChInd !== -1) {
+    channel = getChannel(ChInd);
+    notifObj.channelId = ChInd;
+    notifObj.notificationMessage = `${user.userHandle} reacted to your message in ${channel.channelName}`;
+  } else if (DmInd !== -1) {
+    dm = getDm(DmInd);
+    notifObj.dmId = DmInd;
+    notifObj.notificationMessage = `${user.userHandle} reacted to your message in ${dm.name}`;
+  }
+
+  const msgUser = getUId(message.uId);
+  msgUser.notifications.unshift(notifObj);
 
   return {};
 }
@@ -743,6 +832,49 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
 }
 
 /**
+ * <Description: Sends a message from the authorised user to the DM specified by dmId automatically at a specified time in the future.>
+ * @param {string} token
+ * @param {number} dmId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns { messageId: messageId} messageId
+ */
+export function messageSendLaterDmV1 (token: string, dmId: number, message: string, timeSent: number): {messageId: number} | {error: string} {
+  const data = getData();
+
+  const tokenHashed = getHashOf(token + SECRET);
+  const authUserToken: userType = getToken(tokenHashed);
+  const checkDm: dmType = getDm(dmId);
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  // error checking
+  if (authUserToken === undefined) {
+    throw HTTPError(403, 'Error: User with the token does not exist');
+  } else if (checkDm === undefined) {
+    throw HTTPError(400, 'Error: Invalid dmId');
+  } else if (message.length < 1 || message.length > 1000) {
+    throw HTTPError(400, 'Error: Invalid message length');
+  } else if (timeSent < currentTime) {
+    throw HTTPError(400, 'Error: timeSent is in the past');
+  }
+
+  const userInDm = checkDm.members.find((a: userShort) => a.uId === authUserToken.authUserId);
+  if (userInDm === undefined) {
+    throw HTTPError(403, 'Error: Authorised user is not member of DM');
+  }
+
+  const messageId = Math.floor(Math.random() * 10000);
+
+  const delay = timeSent - currentTime;
+
+  setTimeout(() => { messageSendDmV2(token, checkDm.dmId, message); }, delay);
+
+  setData(data);
+
+  return { messageId: messageId };
+}
+
+/**
  * <Descripton: Given a messageId it will send it to another channel or Dm>
  * @param {string} token - unique identifier for user
  * @param {number} ogMessageId - unique identifier for message
@@ -751,7 +883,7 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
  * @param {number} dmId - unique identifier for a Dm
  */
 
-export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) {
+export function messageShareV1 (token: string, ogMessageId: number, message: string, channelId: number, dmId: number): {sharedMessageId: number} {
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
@@ -791,7 +923,6 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
   const msgg: message = {
     messageId: messageid,
     uId: user.authUserId,
-    sharedMessage: message,
     message: message + '\r\n' + '"""' + '\r\n' + original + '\r\n' + '"""',
     timeSent: Math.floor(Date.now() / 1000),
     reacts: [],
@@ -799,10 +930,36 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
   };
   if (dmId === -1) {
     channel.messages.unshift(msgg);
+
+    // adds 1 to the number of messages sent
+    user.stats[3].numMessagesSent += 1;
+
+    // pushes some stats about number of messages sent back to user
+    user.stats[2].messagesSent.push({
+      numMessagesSent: user.stats[3].numMessagesSent,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
   if (channelId === -1) {
     dm.messages.unshift(msgg);
+
+    // adds 1 to the number of messages sent
+    user.stats[3].numMessagesSent += 1;
+
+    // pushes some stats about number of messages sent back to user
+    user.stats[2].messagesSent.push({
+      numMessagesSent: user.stats[3].numMessagesSent,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
   }
+  const data = getData();
+
+  const last = data.workspaceStats.messagesExist.length - 1;
+  const count = data.workspaceStats.messagesExist[last].numMessagesExist;
+  data.workspaceStats.messagesExist.push({
+    numMessagesExist: (count + 1),
+    timeStamp: Math.floor(Date.now() / 1000)
+  });
 
   return { sharedMessageId: messageid };
 }

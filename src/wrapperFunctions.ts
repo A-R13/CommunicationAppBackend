@@ -200,3 +200,23 @@ export function requestMessageSendLater(token: string, channelId: number, messag
 export async function requestUserProfilePhotoUpload(token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) {
   return await requestHelper('POST', '/user/profile/uploadphoto/v1', { imgUrl, xStart, yStart, xEnd, yEnd }, token);
 }
+
+export function requestAdminUserpermissionChange(token: string, uId: number, permissionId: number) {
+  return requestHelper('POST', '/admin/userpermission/change/v1', { uId, permissionId }, token);
+}
+
+export function requestMessageSendLaterDm(token: string, dmId: number, message: string, timeSent: number) {
+  return requestHelper('POST', '/message/sendlaterdm/v1', { dmId, message, timeSent }, token);
+}
+
+export function requestAuthPasswordResetReset(resetCode: string, newPassword: string) {
+  return requestHelper('POST', '/auth/passwordreset/reset/v1', { resetCode, newPassword });
+}
+
+export function requestNotificationsGet(token: string) {
+  return requestHelper('GET', '/notifications/get/v1', { }, token);
+}
+
+export function requestUsersStats(token: string) {
+  return requestHelper('GET', '/users/stats/v1', { }, token);
+}

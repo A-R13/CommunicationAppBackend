@@ -100,7 +100,8 @@ export function authRegisterV3(email: string, password: string, nameFirst: strin
         }
       ],
       resetCode: null,
-      profileImgUrl: defaultProfilePhoto
+      profileImgUrl: defaultProfilePhoto,
+      notifications: []
     }
   );
 
@@ -208,5 +209,28 @@ export function authPasswordResetRequestV1(email: string) : Record<string, never
   // email t15adream1@gmail.com
   // pass cnjeixndgpzxtxir
   // https://www.receivesms.org/us-phone-number/3640/
+  return {};
+}
+
+export function authPasswordResetResetV1(resetCode: string, newPassword: string): Record<string, never> | {error: string} {
+  let checkResetCodeExists = false;
+  const data = getData();
+  for (const user of data.users) {
+    if (user.resetCode === resetCode) {
+      user.password = getHashOf(newPassword);
+      checkResetCodeExists = true;
+    }
+  }
+
+  if (newPassword.length < 6) {
+    throw HTTPError(400, 'Error: newPassword is less than 6 characters long');
+  } else if (checkResetCodeExists === false) {
+    throw HTTPError(400, 'Error: resetCode is not a valid reset code');
+  }
+
+  const invalidateUser = data.users.find(u => u.resetCode === resetCode);
+  invalidateUser.resetCode = '';
+  setData(data);
+
   return {};
 }

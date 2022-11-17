@@ -1,7 +1,7 @@
 import HTTPError from 'http-errors';
 
-import { getData, setData, channelType, userShort, message } from './dataStore';
-import { getChannel, getUId, getToken, getHashOf, SECRET } from './helperFunctions';
+import { getData, setData, channelType, userShort, message, notification } from './dataStore';
+import { getChannel, getUId, getToken, getHashOf, SECRET, hasUserReactedChannel } from './helperFunctions';
 
 /**
  * <Description: function gives the channel details for a existing channel>
@@ -101,7 +101,7 @@ export function channelJoinV3 (token: string, channelId: number) {
     throw HTTPError(400, `Error: '${token}' is already a member of the channel`);
   }
 
-  if (channel.isPublic === false && data.users[0] !== user) { // User 0 is a global owner by default, thus can join any channel
+  if (channel.isPublic === false && user.permissions !== 1) { // users with perm 1 are global owners
     throw HTTPError(403, `Error: '${channelId}' is private, you cannot join this channel`);
   }
 
@@ -195,6 +195,14 @@ export function channelInviteV3 (token: string, channelId: number, uId: number) 
   };
   data.channels[channelId].allMembers.push(userData);
 
+  const notifObj: notification = {
+    channelId: channelId,
+    dmId: -1,
+    notificationMessage: `${authUserToken.userHandle} added you to ${channel.channelName}`
+  };
+
+  user.notifications.unshift(notifObj);
+
   // adds 1 to the number of channels joined
   data.users[user.authUserId].stats[3].numChannelsJoined += 1;
 
@@ -241,6 +249,8 @@ export function channelMessagesV3 (token: string, channelId: number, start: numb
     // If user is not a member of the target channel, return an error
     throw HTTPError(403, `Error: User with authUserId '${userToken.authUserId}' is not a member of channel with channelId '${channel}'!`);
   }
+
+  hasUserReactedChannel(channelId, userToken.authUserId);
 
   if ((start + 50) > channel.messages.length) {
     // If the end value is more than the messages in the channel, set end to -1, to indicate no more messages can be loaded
@@ -301,7 +311,7 @@ export function addOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authorised user does not have owner permissions in the channel
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
+  if (userIsOwner === undefined && authUserToken.permissions !== 1) {
     throw HTTPError(403, 'Authorised user does not have owner permissions in the channel');
   }
 
@@ -377,7 +387,7 @@ export function removeOwnerV2 (token: string, channelId: number, uId: number) {
 
   // authUser which the token belongs to, is not an owner
   const userIsOwner = data.channels[channelIndex].ownerMembers.find(x => x.uId === authUserToken.authUserId);
-  if (userIsOwner === undefined && authUserToken.authUserId !== 0) {
+  if (userIsOwner === undefined && authUserToken.permissions !== 1) {
     throw HTTPError(403, 'Error: Authorised user is not an owner of channel');
   }
 

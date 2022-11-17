@@ -37,7 +37,7 @@ export function userProfileV3 (token : string, uId : number) {
           nameFirst: tokenFinder.nameFirst,
           nameLast: tokenFinder.nameLast,
           handleStr: tokenFinder.userHandle,
-          profileImgUrl: tokenFinder.profileImgUrl
+          profileImgUrl: tokenFinder.profileImgUrl,
         }
       };
     }
@@ -227,6 +227,7 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
     'GET', imgUrl
   );
 
+  console.log(res.statusCode);
   if (res.statusCode !== 200) {
     throw HTTPError(400, 'Error: Image URL is invalid');
   }
@@ -260,4 +261,31 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   user.profileImgUrl = localRoute + outputPath;
 
   return {};
+}
+
+export function usersStatsV1(token: string) {
+  const data = getData();
+  const tokenHashed = getHashOf(token + SECRET);
+  const userToken = getToken(tokenHashed);
+
+  if (userToken === undefined) {
+    throw HTTPError(403, 'Error: token is not valid');
+  }
+
+  let numUsersWhoHaveJoinedAtLeastOneChannelOrDm = 0;
+  data.users.forEach(user => {
+    const chLast = user.stats[0].channelsJoined.length - 1;
+    const dmLast = user.stats[1].dmsJoined.length - 1;
+    if ((user.stats[0].channelsJoined[chLast].numChannelsJoined > 0 || user.stats[1].dmsJoined[dmLast].numDmsJoined > 0) &&
+      (user.isRemoved === false)) {
+      numUsersWhoHaveJoinedAtLeastOneChannelOrDm++;
+    }
+  });
+
+  const numUsers = data.users.length;
+  const utilisationRate = numUsersWhoHaveJoinedAtLeastOneChannelOrDm / numUsers;
+
+  data.workspaceStats.utilizationRate = utilisationRate;
+
+  return { workspaceStats: data.workspaceStats };
 }
