@@ -6,7 +6,7 @@ build
 coverage/
 .nyc_output
 results/
-imgurl/*
+imgurl/
 !imgurl/defaultPhoto.jpg
 
 # Byte-compiled / optimized / DLL files
