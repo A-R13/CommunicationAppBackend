@@ -93,7 +93,6 @@ export function dmCreateV2 (token: string, uIds: number[]): {dmId: number} | {er
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
-
   setData(data);
 
   return { dmId: length };
@@ -273,7 +272,6 @@ export function dmRemoveV2(token : string, dmId: number) {
     });
   }
 
-  
   const last = data.workspaceStats.dmsExist.length - 1;
   const count = data.workspaceStats.dmsExist[last].numDmsExist;
   data.workspaceStats.dmsExist.push({
@@ -281,12 +279,14 @@ export function dmRemoveV2(token : string, dmId: number) {
     timeStamp: Math.floor(Date.now() / 1000)
   });
 
-  const end = data.workspaceStats.messagesExist.length - 1;
-  const counter = data.workspaceStats.messagesExist[end].numMessagesExist - dm.messages.length;
-  data.workspaceStats.messagesExist.push({
-    numMessagesExist: counter,
-    timeStamp: Math.floor(Date.now() / 1000)
-  });
+  if (dm.messages.length > 0) {
+    const end = data.workspaceStats.messagesExist.length - 1;
+    const counter = data.workspaceStats.messagesExist[end].numMessagesExist - dm.messages.length;
+    data.workspaceStats.messagesExist.push({
+      numMessagesExist: counter,
+      timeStamp: Math.floor(Date.now() / 1000)
+    });
+  }
 
   // deletes the dm
   for (const i in data.dms) {

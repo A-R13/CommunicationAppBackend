@@ -271,5 +271,20 @@ export function usersStatsV1(token: string) {
     throw HTTPError(403, 'Error: token is not valid');
   }
 
+  let numUsersWhoHaveJoinedAtLeastOneChannelOrDm = 0;
+  data.users.forEach(user => {
+    const chLast = user.stats[0].channelsJoined.length - 1;
+    const dmLast = user.stats[1].dmsJoined.length - 1;
+    if ((user.stats[0].channelsJoined[chLast].numChannelsJoined > 0 || user.stats[1].dmsJoined[dmLast].numDmsJoined > 0) &&
+      (user.isRemoved === false)) {
+      numUsersWhoHaveJoinedAtLeastOneChannelOrDm++;
+    }
+  });
+
+  const numUsers = data.users.length;
+  const utilisationRate = numUsersWhoHaveJoinedAtLeastOneChannelOrDm / numUsers;
+
+  data.workspaceStats.utilizationRate = utilisationRate;
+
   return { workspaceStats: data.workspaceStats };
 }

@@ -75,9 +75,9 @@ export interface dmType {
 }
 
 export interface workspaceStatsType {
-  channelsExist: {numChannelsExist: number, timeStamp: number}[], 
-  dmsExist: {numDmsExist: number, timeStamp: number}[], 
-  messagesExist: {numMessagesExist: number, timeStamp: number}[], 
+  channelsExist: {numChannelsExist: number, timeStamp: number}[],
+  dmsExist: {numDmsExist: number, timeStamp: number}[],
+  messagesExist: {numMessagesExist: number, timeStamp: number}[],
   utilizationRate: number
 }
 
@@ -115,11 +115,11 @@ export interface newMessage {
 }
 
 export const workStatsBase = {
-  channelsExist: [{numChannelsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-  dmsExist: [{numDmsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-  messagesExist: [{numMessagesExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+  channelsExist: [{ numChannelsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+  dmsExist: [{ numDmsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+  messagesExist: [{ numMessagesExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
   utilizationRate: 0
-}
+};
 
 // YOU SHOULD MODIFY THIS OBJECT BELOW
 let data: storedData = {
@@ -220,7 +220,7 @@ const saveData = () => {
 };
 
 const wipeData = () => {
-  const cleanData: storedData = { users: [], channels: [], dms: [], workspaceStats: {}};
+  const cleanData: storedData = { users: [], channels: [], dms: [], workspaceStats: {} };
   setData(cleanData);
   fs.writeFileSync('src/dataBase.json', JSON.stringify(cleanData));
 

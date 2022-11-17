@@ -63,7 +63,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
     // pushes some stats back to the user
     data.users[user.authUserId].stats[0].channelsJoined.push({
       numChannelsJoined: data.users[user.authUserId].stats[3].numChannelsJoined,
-      timeStamp: Math.floor(Date.now()/1000)
+      timeStamp: Math.floor(Date.now() / 1000)
     });
 
     const last = data.workspaceStats.channelsExist.length - 1;
@@ -71,8 +71,7 @@ export function channelsCreateV3 (token: string, name: string, isPublic: boolean
     data.workspaceStats.channelsExist.push({
       numChannelsExist: (count + 1),
       timeStamp: Math.floor(Date.now() / 1000)
-    })
-
+    });
 
     setData(data);
 

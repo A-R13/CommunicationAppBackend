@@ -13,9 +13,9 @@ export function clearV1 () {
     channels: [],
     dms: [],
     workspaceStats: {
-      channelsExist: [{numChannelsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-      dmsExist: [{numDmsExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
-      messagesExist: [{numMessagesExist: 0, timeStamp: Math.floor(Date.now()/1000)}], 
+      channelsExist: [{ numChannelsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+      dmsExist: [{ numDmsExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
+      messagesExist: [{ numMessagesExist: 0, timeStamp: Math.floor(Date.now() / 1000) }],
       utilizationRate: 0
     }
   };
