@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType, notification } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
+  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, messageFinder,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel, messageNotificator, hasUserReactedDm
 } from './helperFunctions';
 
@@ -138,7 +138,7 @@ export function messageSendV2 (token: string, channelId: number, message: string
     reacts: [
       {
         reactId: 1,
-        uids: [],
+        uIds: [],
         isThisUserReacted: false,
       }
     ],
@@ -457,7 +457,7 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         reacts: [
           {
             reactId: 1,
-            uids: [],
+            uIds: [],
             isThisUserReacted: false,
           }
         ],
@@ -656,13 +656,13 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
     throw HTTPError(400, 'Invalid reactId');
   }
 
-  const messageCheck = message.reacts.find(a => a.uids.includes(user.authUserId) === true);
-  
+  const messageCheck = message.reacts.find(a => a.uIds.includes(user.authUserId) === true);
+
   if (messageCheck !== undefined) {
     throw HTTPError(400, 'User has already reacted');
   }
 
-  message.reacts[0].uids.push(user.authUserId);
+  message.reacts[0].uIds.push(user.authUserId);
 
   const ChInd = CheckValidMessageChannels(messageId);
   const DmInd = CheckValidMessageDms(messageId);
@@ -830,15 +830,15 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   }
 
   // check if user has reacted
-  const messageCheck = message.reacts.find(a => a.uids.includes(user.authUserId) === true);
+  const messageCheck = message.reacts.find(a => a.uIds.includes(user.authUserId) === true);
 
   if (messageCheck === undefined) {
     throw HTTPError(400, 'User reaction does not exist');
   }
   let index;
   for (const reaction of message.reacts) {
-    index = reaction.uids.indexOf(user.authUserId);
-    reaction.uids.splice(index);
+    index = reaction.uIds.indexOf(user.authUserId);
+    reaction.uIds.splice(index);
   }
 
   return {};
@@ -938,7 +938,13 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
     uId: user.authUserId,
     message: message + '\r\n' + '"""' + '\r\n' + original + '\r\n' + '"""',
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [],
+    reacts: [
+      {
+        reactId: 1,
+        uIds: [],
+        isThisUserReacted: false,
+      }
+    ],
     isPinned: false
   };
   if (dmId === -1) {
