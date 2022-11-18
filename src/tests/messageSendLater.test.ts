@@ -11,13 +11,6 @@ beforeEach(() => {
   requestClear();
 });
 
-// // create a function 'wait' that will run nothing for a matter of time, to ensure the data is not cleared before message is to be sent
-// function wait() {
-//   while (Math.floor(Date.now() / 1000) < ) {
-    
-//   }
-// }
-
 describe('messageSendLater tests', () => {
     let user0: newUser;
     let user1: newUser;

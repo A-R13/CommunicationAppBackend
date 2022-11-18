@@ -461,7 +461,7 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
   }
 }
 
-export const localRoute = `${SERVER_URL}`
+export const localRoute = `${SERVER_URL}`;
 export const defaultProfilePhoto = localRoute + '/imgurl/defaultPhoto.jpg';
 
 export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {

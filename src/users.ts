@@ -194,12 +194,14 @@ export function userStatsV1(token: string) {
 
   setData(data);
 
-  return { userStats: {
-    channelsJoined: data.users[userToken.authUserId].stats[0].channelsJoined,
-    DmsJoined: data.users[userToken.authUserId].stats[1].dmsJoined,
-    messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
-    involvementRate: involvementRate,
-  } };
+  return {
+    userStats: {
+      channelsJoined: data.users[userToken.authUserId].stats[0].channelsJoined,
+      DmsJoined: data.users[userToken.authUserId].stats[1].dmsJoined,
+      messagesSent: data.users[userToken.authUserId].stats[2].messagesSent,
+      involvementRate: involvementRate,
+    }
+  };
 }
 
 /**
