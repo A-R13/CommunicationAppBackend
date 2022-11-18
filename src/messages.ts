@@ -135,7 +135,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [],
+    reacts: [
+      {
+        reactId: 1,
+        uids: [],
+        isThisUserReacted: false,
+      }
+    ],
     isPinned: false
   };
 
@@ -448,7 +454,13 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
-        reacts: [],
+        reacts: [
+          {
+            reactId: 1,
+            uids: [],
+            isThisUserReacted: false,
+          }
+        ],
         isPinned: false
       });
       break;
@@ -630,29 +642,30 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  // Check if messageId exists in channels or dms
-  const DmInd = CheckValidMessageDms(messageId);
-  const ChInd = CheckValidMessageChannels(messageId);
-
   // checks if token is valid
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(user.authUserId, messageId);
   // if message id does not exist in dm or channel
-  if (ChInd === -1 && DmInd === -1) {
+  if (message === false) {
     throw HTTPError(400, 'Message Id is not valid');
   }
   if (reactId !== 1) {
     throw HTTPError(400, 'Invalid reactId');
   }
 
-  const message = userReacted(user.authUserId, messageId, reactId);
-
-  if (message === false) {
+  const messageCheck = message.reacts.find(a => a.uids.includes(user.authUserId) === true);
+  
+  if (messageCheck !== undefined) {
     throw HTTPError(400, 'User has already reacted');
   }
 
   message.reacts[0].uids.push(user.authUserId);
+
+  const ChInd = CheckValidMessageChannels(messageId);
+  const DmInd = CheckValidMessageDms(messageId);
 
   const notifObj: notification = {
     channelId: -1,
@@ -817,9 +830,9 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   }
 
   // check if user has reacted
-  const check = isUserReacted(user.authUserId, messageId, reactId);
+  const messageCheck = message.reacts.find(a => a.uids.includes(user.authUserId) === true);
 
-  if (check === false) {
+  if (messageCheck === undefined) {
     throw HTTPError(400, 'User reaction does not exist');
   }
   let index;
