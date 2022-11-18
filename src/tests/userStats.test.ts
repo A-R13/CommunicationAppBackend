@@ -45,7 +45,7 @@ describe("User Stats Tests", () => {
                 timeStamp: expect.any(Number)
             },
         ],
-            DmsJoined: [{
+            dmsJoined: [{
                 numDmsJoined: 0,
                 timeStamp: expect.any(Number)
             },
@@ -73,7 +73,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 }, 
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -110,7 +110,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 },
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -147,7 +147,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 },
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -179,7 +179,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 }, 
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -220,7 +220,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)  
                 }
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -254,7 +254,7 @@ describe("User Stats Tests", () => {
                 numChannelsJoined: 0,
                 timeStamp: expect.any(Number)
             }],
-            DmsJoined: [{
+            dmsJoined: [{
                 numDmsJoined: 0,
                 timeStamp: expect.any(Number)
             },
@@ -290,7 +290,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 },
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -322,7 +322,7 @@ describe("User Stats Tests", () => {
                         timeStamp: expect.any(Number)
                     }, 
                 ],
-                    DmsJoined: [{
+                    dmsJoined: [{
                         numDmsJoined: 0,
                         timeStamp: expect.any(Number)
                     },
@@ -354,7 +354,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 }, 
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -390,7 +390,7 @@ describe("User Stats Tests", () => {
                         timeStamp: expect.any(Number)
                     }, 
                 ],
-                    DmsJoined: [{
+                    dmsJoined: [{
                         numDmsJoined: 0,
                         timeStamp: expect.any(Number)
                     },
@@ -426,7 +426,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 },
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
@@ -487,7 +487,7 @@ describe("User Stats Tests", () => {
                     timeStamp: expect.any(Number)
                 }, 
             ],
-                DmsJoined: [{
+                dmsJoined: [{
                     numDmsJoined: 0,
                     timeStamp: expect.any(Number)
                 },
