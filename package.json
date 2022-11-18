@@ -48,7 +48,8 @@
     },
     "nyc": {
         "exclude": [
-            "echo.*"
+            "echo.*",
+            "src/wrapperFunctions.ts"
         ],
         "ts-jest": "^28.0.8",
         "ts-node": "^10.9.1",

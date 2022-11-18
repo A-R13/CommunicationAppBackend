@@ -235,7 +235,6 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
     'GET', imgUrl
   );
 
-  console.log(res.statusCode);
   if (res.statusCode !== 200) {
     throw HTTPError(400, 'Error: Image URL is invalid');
   }
@@ -266,7 +265,7 @@ export async function userProfileUploadPhotoV1(token: string, imgUrl: string, xS
   const outputPath = 'imgurl/' + `${uniqueUrl}` + '.jpg';
   croppedImg.toFile(outputPath);
 
-  user.profileImgUrl = localRoute + outputPath;
+  user.profileImgUrl = localRoute + '/' + outputPath;
 
   return {};
 }
