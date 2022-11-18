@@ -1,10 +1,6 @@
 import { getData, userShort, userType, message, reacts, notification } from './dataStore';
 import crypto from 'crypto';
-import config from './config.json';
-// import { SERVER_URL } from './wrapperFunctions';
-// const HOST: string = process.env.IP || config.url || 'localhost';
-const port: number = parseInt(process.env.PORT || config.port);
-const url: string = config.url;
+import { SERVER_URL } from './wrapperFunctions';
 
 export const SECRET = 'dreamBeans';
 
@@ -12,7 +8,12 @@ export function getHashOf(plaintext: string) {
   return crypto.createHash('sha256').update(plaintext).digest('hex');
 }
 
-export const localRoute = `${url}:${port}`;
+export let localRoute: string;
+if (process.env.BACKEND_URL !== undefined) {
+  localRoute = `http://${process.env.BACKEND_URL}`;
+} else {
+  localRoute = `${SERVER_URL}`;
+}
 
 export const defaultProfilePhoto = localRoute + '/imgurl/defaultPhoto.jpg';
 
