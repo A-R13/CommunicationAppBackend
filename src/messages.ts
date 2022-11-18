@@ -665,7 +665,7 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   //message.reacts[0].uIds.push(user.authUserId);
 
   for (const react of message.reacts) {
-    react.uids.push(user.authUserId);
+    react.uIds.push(user.authUserId);
   }
 
   const ChInd = CheckValidMessageChannels(messageId);
