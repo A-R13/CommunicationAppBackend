@@ -160,6 +160,12 @@ export function userSetHandleV2 (token: string, handleStr: string) {
   return {};
 }
 
+/**
+ * <Description: Gets the users stats on UNSW Beans.>
+ * @param {string} token - A unique token string
+ * @returns {}
+ */
+
 export function userStatsV1(token: string) {
   const data = getData();
   const tokenHashed = getHashOf(token + SECRET);
