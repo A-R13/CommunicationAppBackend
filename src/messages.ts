@@ -662,7 +662,11 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
     throw HTTPError(400, 'User has already reacted');
   }
 
-  message.reacts[0].uIds.push(user.authUserId);
+  //message.reacts[0].uIds.push(user.authUserId);
+
+  for (const react of message.reacts) {
+    react.uids.push(user.authUserId);
+  }
 
   const ChInd = CheckValidMessageChannels(messageId);
   const DmInd = CheckValidMessageDms(messageId);
