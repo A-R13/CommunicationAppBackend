@@ -11,7 +11,7 @@ beforeEach(() => {
 
   user1 = requestAuthRegister('example@gmail.com', 'ABCD1234', 'Bob', 'Doe');
 
-  url = 'https://www.learningcontainer.com/wp-content/uploads/2020/07/Sample-JPEG-Image-File-Download-scaled.jpg';
+  url = 'http://www.learningcontainer.com/wp-content/uploads/2020/07/Sample-JPEG-Image-File-Download-scaled.jpg';
 });
 
 afterEach(() => {

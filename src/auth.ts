@@ -212,6 +212,13 @@ export function authPasswordResetRequestV1(email: string) : Record<string, never
   return {};
 }
 
+/**
+ * <Description: Given a reset code for a user, sets that user's new password to the password provided.>
+ * @param {string} resetCode
+ * @param {string} newPassword
+ * @returns {{}}
+ */
+
 export function authPasswordResetResetV1(resetCode: string, newPassword: string): Record<string, never> | {error: string} {
   let checkResetCodeExists = false;
   const data = getData();

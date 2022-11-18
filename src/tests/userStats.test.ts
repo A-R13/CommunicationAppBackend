@@ -34,7 +34,7 @@ describe("User Stats Tests", () => {
 
     test("Correct output in just channels", () => {
         requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
             channelsJoined: [{
                 numChannelsJoined: 0,
@@ -66,7 +66,7 @@ describe("User Stats Tests", () => {
             involvementRate: expect.any(Number)    
         });
 
-        expect(requestUserStatsV1(user1.token)).toStrictEqual(
+        expect(requestUserStatsV1(user1.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -95,7 +95,7 @@ describe("User Stats Tests", () => {
         requestChannelJoin(user1.token, channel0.channelId);
         requestMessageSend(user0.token, channel0.channelId, 'THE FIRST MESSAGE BY OWNER');
         requestChannelLeave(user0.token, channel0.channelId);
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -136,7 +136,7 @@ describe("User Stats Tests", () => {
         requestMessageSendDm(user0.token, dm0.dmId, 'THE FIRST MESSAGE BY OWNER IN DM');
         requestMessageSendDm(user1.token, dm0.dmId, 'THE SECOND MESSAGE BY OWNER IN DM');
         requestMessageSendDm(user0.token, dm0.dmId, 'THE THIRD MESSAGE BY OWNER IN DM');
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -172,7 +172,7 @@ describe("User Stats Tests", () => {
                 involvementRate: expect.any(Number)    
             });
 
-        expect(requestUserStatsV1(user1.token)).toStrictEqual(
+        expect(requestUserStatsV1(user1.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -209,7 +209,7 @@ describe("User Stats Tests", () => {
         requestMessageSend(user1.token, channel0.channelId, 'THE SECOND MESSAGE BY OWNER IN CHANNEL');
 
 
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -249,7 +249,7 @@ describe("User Stats Tests", () => {
                 involvementRate: expect.any(Number)    
             });
 
-        expect(requestUserStatsV1(user1.token)).toStrictEqual({
+        expect(requestUserStatsV1(user1.token).userStats).toStrictEqual({
             channelsJoined: [{
                 numChannelsJoined: 0,
                 timeStamp: expect.any(Number)
@@ -279,7 +279,7 @@ describe("User Stats Tests", () => {
     test("Correct output for removing dms", () => {
         requestMessageSendDm(user0.token, dm0.dmId, 'THE FIRST MESSAGE BY OWNER IN THE DMMSS');
         requestDmRemove(user0.token, dm0.dmId);
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -315,7 +315,7 @@ describe("User Stats Tests", () => {
                 involvementRate: expect.any(Number)    
             });
 
-            expect(requestUserStatsV1(user1.token)).toStrictEqual(
+            expect(requestUserStatsV1(user1.token).userStats).toStrictEqual(
                 {
                     channelsJoined: [{
                         numChannelsJoined: 0,
@@ -347,7 +347,7 @@ describe("User Stats Tests", () => {
     test("Correct output for leaving dms", () => {
         requestMessageSendDm(user1.token, dm0.dmId, 'THE FIRST MESSAGE BY NOT AN OWNER IN THE DMMSS');
         requestDmLeave(user1.token, dm0.dmId);
-        expect(requestUserStatsV1(user1.token)).toStrictEqual(
+        expect(requestUserStatsV1(user1.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -379,7 +379,7 @@ describe("User Stats Tests", () => {
                 involvementRate: expect.any(Number)    
             });
 
-            expect(requestUserStatsV1(user0.token)).toStrictEqual(
+            expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
                 {
                     channelsJoined: [{
                         numChannelsJoined: 0,
@@ -415,7 +415,7 @@ describe("User Stats Tests", () => {
         requestMessageSendDm(user0.token, dm0.dmId, "ANOTHER ANOTHER MESSAGE");
         requestMessageShare(user0.token, msg1.messageId, 'Shared', channel0.channelId, -1)
         requestMessageShare(user0.token, msg2.messageId, 'Shared', -1, dm0.dmId)
-        expect(requestUserStatsV1(user0.token)).toStrictEqual(
+        expect(requestUserStatsV1(user0.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,
@@ -480,7 +480,7 @@ describe("User Stats Tests", () => {
         requestMessageSendDm(user0.token, dm0.dmId, "ANOTHASDASDER MESSAGE");
         requestMessageSend(user0.token, channel0.channelId, 'THE Second MESSAGE BY OWNER');
         requestMessageSendDm(user0.token, dm0.dmId, "ASDASDASD ANOTHER MESSAGE");
-        expect(requestUserStatsV1(user2.token)).toStrictEqual(
+        expect(requestUserStatsV1(user2.token).userStats).toStrictEqual(
             {
                 channelsJoined: [{
                     numChannelsJoined: 0,

@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { sleep } from './testHelper';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestStandupStart, requestStandupSend,
   requestChannelMessages, requestChannelJoin, requestStandupActive
@@ -70,12 +71,8 @@ describe('Error Testing', () => {
 describe('error', () => {
   test('User not in channel.', () => {
     requestStandupStart(user1.token, channel1.channelId, 1);
-    const onehalfsecond = Math.floor(Date.now() / 1000) + 1.5;
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < onehalfsecond) {
-    }
-    /* eslint-enable */
+    sleep(1.5);
 
     expect(requestStandupSend(user2.token, channel1.channelId, "Message but not a user in channel")).toStrictEqual(403);
 
@@ -86,16 +83,12 @@ describe('Correct', () => {
     test('COrrect return v1', () => {
       requestChannelJoin(user2.token, channel1.channelId);
       requestStandupStart(user1.token, channel1.channelId, 1);
-      const onehalfsecond = Math.floor(Date.now() / 1000) + 1.5;
   
       requestStandupSend(user1.token, channel1.channelId, "The first message in a standup");
       requestStandupSend(user2.token, channel1.channelId, "The second message in a standup");
       requestStandupSend(user1.token, channel1.channelId, "The third message in a standup");
 
-        /*eslint-disable */ 
-        while (Math.floor(Date.now() / 1000) < onehalfsecond) {
-        }
-        /* eslint-enable */
+      sleep(1.5);
       
       requestStandupActive(user1.token, channel1.channelId)
 

@@ -3,7 +3,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, userType, userShort, message, dmType, notification } from './dataStore';
 
 import {
-  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, userReacted, isUserReacted, messageFinder,
+  getUId, getToken, getChannel, getDm, checkIsPinned, checkIsUnpinned, messageFinder,
   userConvert, CheckValidMessageDms, CheckValidMessageChannels, CheckMessageUser, getHashOf, SECRET, userMemberDM, userMemberChannel, messageNotificator, hasUserReactedDm
 } from './helperFunctions';
 
@@ -135,7 +135,13 @@ export function messageSendV2 (token: string, channelId: number, message: string
     uId: user.authUserId,
     message: message,
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [],
+    reacts: [
+      {
+        reactId: 1,
+        uIds: [],
+        isThisUserReacted: false,
+      }
+    ],
     isPinned: false
   };
 
@@ -448,7 +454,13 @@ export function messageSendDmV2 (token: string, dmId: number, message: string): 
         uId: checkToken.authUserId,
         message: message,
         timeSent: Math.floor(Date.now() / 1000),
-        reacts: [],
+        reacts: [
+          {
+            reactId: 1,
+            uIds: [],
+            isThisUserReacted: false,
+          }
+        ],
         isPinned: false
       });
       break;
@@ -630,29 +642,34 @@ export function messageReactV1 (token: string, messageId: number, reactId: numbe
   const tokenHashed = getHashOf(token + SECRET);
   const user: userType = getToken(tokenHashed);
 
-  // Check if messageId exists in channels or dms
-  const DmInd = CheckValidMessageDms(messageId);
-  const ChInd = CheckValidMessageChannels(messageId);
-
   // checks if token is valid
   if (user === undefined) {
     throw HTTPError(403, 'Error, User token does not exist!');
   }
+  // Check if messageId exists in channels or dms
+  const message = messageFinder(user.authUserId, messageId);
   // if message id does not exist in dm or channel
-  if (ChInd === -1 && DmInd === -1) {
+  if (message === false) {
     throw HTTPError(400, 'Message Id is not valid');
   }
   if (reactId !== 1) {
     throw HTTPError(400, 'Invalid reactId');
   }
 
-  const message = userReacted(user.authUserId, messageId, reactId);
+  const messageCheck = message.reacts.find(a => a.uIds.includes(user.authUserId) === true);
 
-  if (message === false) {
+  if (messageCheck !== undefined) {
     throw HTTPError(400, 'User has already reacted');
   }
 
-  message.reacts[0].uids.push(user.authUserId);
+  // message.reacts[0].uIds.push(user.authUserId);
+
+  for (const react of message.reacts) {
+    react.uIds.push(user.authUserId);
+  }
+
+  const ChInd = CheckValidMessageChannels(messageId);
+  const DmInd = CheckValidMessageDms(messageId);
 
   const notifObj: notification = {
     channelId: -1,
@@ -817,15 +834,15 @@ export function messageUnreactV1 (token: string, messageId: number, reactId: num
   }
 
   // check if user has reacted
-  const check = isUserReacted(user.authUserId, messageId, reactId);
+  const messageCheck = message.reacts.find(a => a.uIds.includes(user.authUserId) === true);
 
-  if (check === false) {
+  if (messageCheck === undefined) {
     throw HTTPError(400, 'User reaction does not exist');
   }
   let index;
   for (const reaction of message.reacts) {
-    index = reaction.uids.indexOf(user.authUserId);
-    reaction.uids.splice(index);
+    index = reaction.uIds.indexOf(user.authUserId);
+    reaction.uIds.splice(index);
   }
 
   return {};
@@ -925,7 +942,13 @@ export function messageShareV1 (token: string, ogMessageId: number, message: str
     uId: user.authUserId,
     message: message + '\r\n' + '"""' + '\r\n' + original + '\r\n' + '"""',
     timeSent: Math.floor(Date.now() / 1000),
-    reacts: [],
+    reacts: [
+      {
+        reactId: 1,
+        uIds: [],
+        isThisUserReacted: false,
+      }
+    ],
     isPinned: false
   };
   if (dmId === -1) {
