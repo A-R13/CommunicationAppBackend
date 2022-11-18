@@ -19,13 +19,13 @@ describe('messageSendLaterDm tests', () => {
 	let timeSent: number;
 	  
 	beforeEach(() => {
-	  requestClear();
-	  user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 0
-	  user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
+		requestClear();
+		user0 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 0
+		user1 = requestAuthRegister('example1@gmail.com', 'ABCD1234', 'John', 'Doe'); // uid = 1
 		user2 = requestAuthRegister('example0@gmail.com', 'ABCD1234', 'Jeff', 'Doe'); // uid = 2
-    dm1 = requestDmCreate(user1.token,[user0.authUserId]);
-    dm0 = requestDmCreate(user0.token, [user1.authUserId]);
-	  timeSent = Math.floor(Date.now() / 1000);
+    	dm1 = requestDmCreate(user1.token,[user0.authUserId]);
+    	dm0 = requestDmCreate(user0.token, [user1.authUserId]);
+		timeSent = Math.floor(Date.now() / 1000);
 	});
 
 	// dmId does not refer to a valid DM

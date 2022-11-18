@@ -1,4 +1,5 @@
 import { newUser, newChannel, dmType } from '../dataStore';
+import { sleep } from './testHelper';
 
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestChannelMessages, requestDmCreate, requestMessageSend, requestDmMessages,
@@ -166,16 +167,12 @@ describe('Message Edit', () => {
     const msg3 = requestMessageSend(user1.token, channel0.channelId, 'Test Message 3');
 
     requestStandupStart(user0.token, channel0.channelId, 2);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
 
     requestStandupSend(user0.token, channel0.channelId, "The first message in a standup");
     requestStandupSend(user1.token, channel0.channelId, "The second message in a standup");
     requestStandupSend(user0.token, channel0.channelId, "The third message in a standup");
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
+    sleep(3);
 
     requestStandupActive(user0.token, channel0.channelId)
 

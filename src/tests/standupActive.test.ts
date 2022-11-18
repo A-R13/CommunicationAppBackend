@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { sleep } from './testHelper';
 import {
     requestClear, requestAuthRegister, requestChannelsCreate, requestChannelJoin, requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
@@ -49,10 +50,8 @@ describe('standup active tests', () => {
   test('Correct return, after startup has ended', () => {
     requestChannelJoin(user2.token, channel1.channelId);
     requestStandupStart(user1.token, channel1.channelId, 2);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
+    sleep(3);
 
     expect(requestStandupActive(user2.token, channel1.channelId)).toStrictEqual({ isActive: false, timeFinish: null });
   });

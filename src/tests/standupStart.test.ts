@@ -1,4 +1,5 @@
 import { newUser, newChannel } from '../dataStore';
+import { sleep } from './testHelper';
 import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestStandupStart
 } from '../wrapperFunctions';
@@ -50,12 +51,8 @@ describe('Correct Return', () => {
 
   test('Correct return, after startup has ended', () => {
     requestStandupStart(user1.token, channel1.channelId, 2);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
+    sleep(3);
 
     expect(requestStandupStart(user1.token, channel1.channelId, 5)).toStrictEqual({ timeFinish: expect.any(Number) });
   });

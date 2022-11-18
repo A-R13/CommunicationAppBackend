@@ -1,9 +1,20 @@
 import { getData, userShort, userType, message, reacts, notification } from './dataStore';
 import crypto from 'crypto';
 import config from './config.json';
-import { SERVER_URL } from './wrapperFunctions';
-//const HOST: string = process.env.IP || config.url || 'localhost';
-//const PORT: number = parseInt(process.env.PORT || config.port);
+// import { SERVER_URL } from './wrapperFunctions';
+// const HOST: string = process.env.IP || config.url || 'localhost';
+const port: number = parseInt(process.env.PORT || config.port);
+const url: string = config.url;
+
+export const SECRET = 'dreamBeans';
+
+export function getHashOf(plaintext: string) {
+  return crypto.createHash('sha256').update(plaintext).digest('hex');
+}
+
+export const localRoute = `${url}:${port}`;
+
+export const defaultProfilePhoto = localRoute + '/imgurl/defaultPhoto.jpg';
 
 /**
    * <Description: Returns the object in channels array which corresponds with inputed channelId. >
@@ -56,12 +67,6 @@ export function userConvert(user: userType): userShort {
     handleStr: user.userHandle,
     profileImgUrl: user.profileImgUrl
   };
-}
-
-export const SECRET = 'dreamBeans';
-
-export function getHashOf(plaintext: string) {
-  return crypto.createHash('sha256').update(plaintext).digest('hex');
 }
 
 /**
@@ -348,9 +353,6 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
     }
   }
 }
-
-export const localRoute = `${SERVER_URL}`;
-export const defaultProfilePhoto = localRoute + '/imgurl/defaultPhoto.jpg';
 
 export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {
   const splitString = message.split('@');

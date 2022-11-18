@@ -111,8 +111,8 @@ export function standupActiveV1(token: string, channelId: number): { isActive: b
 /**
  * <Description: When a startup is active, send a message>
  *
- * @param {number} channelId - unique ID for a channel 
- * @param {string} message - A message 
+ * @param {number} channelId - unique ID for a channel
+ * @param {string} message - A message
  *
  * @returns { }
  */

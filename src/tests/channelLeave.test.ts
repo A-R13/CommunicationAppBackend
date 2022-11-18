@@ -4,6 +4,7 @@ import {
   requestClear, requestAuthRegister, requestChannelsCreate, requestchannelDetails, requestChannelJoin, requestChannelLeave,
   requestStandupStart, requestStandupActive
 } from '../wrapperFunctions';
+import { sleep } from './testHelper';
 
 requestClear();
 
@@ -86,21 +87,14 @@ describe('Channel leave function', () => {
 
   test('Correct return, after startup has ended. Tests if starter cant leave during standup', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
-    requestStandupStart(nicole.token, channel.channelId, 5);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 3;
+    requestStandupStart(nicole.token, channel.channelId, 4);
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
+    sleep(3);
 
     requestChannelLeave(geoffrey.token, channel.channelId)
     expect(requestChannelLeave(nicole.token, channel.channelId)).toStrictEqual(400);
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
+    sleep(2);
     
     expect(requestchannelDetails(nicole.token, channel.channelId)).toStrictEqual(
       {
@@ -128,13 +122,9 @@ describe('Channel leave function', () => {
 
   test('Correct return, after startup has ended. Another user, not starter, leaves channel', () => {
     requestChannelJoin(geoffrey.token, channel.channelId);
-    requestStandupStart(nicole.token, channel.channelId, 5);
-    const threeSeconds = Math.floor(Date.now() / 1000) + 6;
+    requestStandupStart(nicole.token, channel.channelId, 3);
 
-    /*eslint-disable */ 
-    while (Math.floor(Date.now() / 1000) < threeSeconds) {
-    }
-    /* eslint-enable */
+    sleep(4);
 
     requestStandupActive(nicole.token, channel.channelId)
     
