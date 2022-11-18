@@ -2,8 +2,8 @@ import { getData, userShort, userType, message, reacts, notification } from './d
 import crypto from 'crypto';
 import config from './config.json';
 import { SERVER_URL } from './wrapperFunctions';
-const HOST: string = process.env.IP || config.url || 'localhost';
-const PORT: number = parseInt(process.env.PORT || config.port);
+//const HOST: string = process.env.IP || config.url || 'localhost';
+//const PORT: number = parseInt(process.env.PORT || config.port);
 
 /**
    * <Description: Returns the object in channels array which corresponds with inputed channelId. >
@@ -148,70 +148,6 @@ export function CheckMessageUser(authUserId : number, messageId : number) : bool
   }
 }
 /**
- * <Description: Adds a reaction to a message with messageId>
- * @param {number} - authUserId - Unqiue id for user
- * @param {number} - messaageId - unique id for channel
- * @param {number} - reactId - unique reaction id
- * @returns {message} - returns message object
- */
-export function userReacted (authUserId: number, messageId: number, reactId: number) {
-  const data = getData();
-
-  for (const channel of data.channels) {
-    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
-    const messageInChannel = channel.messages.find((b: message) => b.messageId === messageId);
-
-    if (userInChannel !== undefined && messageInChannel !== undefined) {
-      for (const message of channel.messages) {
-        if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction === undefined) {
-            message.reacts.push(
-              {
-                reactId: reactId,
-                uids: [],
-                isThisUserReacted: false
-              }
-            );
-            return message;
-          } else if (react === undefined) {
-            return message;
-          }
-        }
-      }
-    }
-  }
-
-  for (const dm of data.dms) {
-    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
-    const messageInDm = dm.messages.find((b: message) => b.messageId === messageId);
-
-    if (userInDm !== undefined && messageInDm !== undefined) {
-      for (const message of dm.messages) {
-        if (message.messageId === messageId) {
-          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction2 === undefined) {
-            message.reacts.push(
-              {
-                reactId: reactId,
-                uids: [],
-                isThisUserReacted: false,
-              }
-            );
-            return message;
-          } else if (react2 === undefined) {
-            return message;
-          }
-        }
-      }
-    }
-  }
-  return false;
-}
-
-/**
  * <Description: Checks if message is already pinned >
  * @param {number} messageId - messageId
  * @returns { Booleon }
@@ -281,54 +217,6 @@ export function checkIsUnpinned(messageId: number) : boolean {
       return true;
     }
   }
-}
-
-/**
- * <Description: Checks if user has reacted to message>
- * @param {number} authUserId - unique identifier for user
- * @param {number} messageId - unique identifier for message
- * @param {number} reactId - unique identifier for reaction
- *
- * @returns {boolean} returns true if user has reacted, false otherwise
- */
-
-export function isUserReacted(authUserId: number, messageId: number, reactId: number) {
-  const data = getData();
-
-  for (const channel of data.channels) {
-    const userInChannel = channel.allMembers.find((a: userShort) => a.uId === authUserId);
-    const messageInChannel = channel.messages.find((b: message) => b.messageId === messageId);
-
-    if (userInChannel !== undefined && messageInChannel !== undefined) {
-      for (const message of channel.messages) {
-        if (message.messageId === messageId) {
-          const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction !== undefined && react !== undefined) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-
-  for (const dm of data.dms) {
-    const userInDm = dm.members.find((a: userShort) => a.uId === authUserId);
-    const messageInDm = dm.messages.find((b: message) => b.messageId === messageId);
-
-    if (userInDm !== undefined && messageInDm !== undefined) {
-      for (const message of dm.messages) {
-        if (message.messageId === messageId) {
-          const reaction2: reacts = message.reacts.find((c: reacts) => c.reactId === reactId);
-          const react2: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
-          if (reaction2 !== undefined && react2 !== undefined) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-  return false;
 }
 
 /**
@@ -419,7 +307,7 @@ export function hasUserReactedChannel (channelId: number, authUserId: number) {
   for (const channel of data.channels) {
     if (channel.channelId === channelId) {
       for (const message of channel.messages) {
-        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        const react: reacts = message.reacts.find(c => c.uIds.includes(authUserId) === true);
         const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === 1);
         if (react !== undefined) {
           react.isThisUserReacted = true;
@@ -443,7 +331,7 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
   for (const dm of data.dms) {
     if (dm.dmId === dmId) {
       for (const message of dm.messages) {
-        const react: reacts = message.reacts.find(c => c.uids.includes(authUserId) === true);
+        const react: reacts = message.reacts.find(c => c.uIds.includes(authUserId) === true);
         const reaction: reacts = message.reacts.find((c: reacts) => c.reactId === 1);
         if (react !== undefined) {
           react.isThisUserReacted = true;
@@ -461,7 +349,7 @@ export function hasUserReactedDm (dmId: number, authUserId: number) {
   }
 }
 
-export const localRoute = `${SERVER_URL}` 
+export const localRoute = `${SERVER_URL}`;
 export const defaultProfilePhoto = localRoute + '/imgurl/defaultPhoto.jpg';
 
 export function messageNotificator(message: string, members: userShort[], isChannel: boolean, id: number, sender: string) {

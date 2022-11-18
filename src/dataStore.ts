@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export interface reacts {
   reactId: number,
-  uids: number[],
+  uIds: number[],
   isThisUserReacted: boolean,
 }
 
