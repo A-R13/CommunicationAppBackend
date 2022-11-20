@@ -1,0 +1,1649 @@
+============================= test session starts ==============================
+platform linux -- Python 3.9.2, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /usr/bin/python3
+cachedir: .pytest_cache
+hypothesis profile 'default' -> database=DirectoryBasedExampleDatabase('/import/kamen/3/cs1531/project-automarking/tempstore/.hypothesis/examples')
+metadata: {'Python': '3.9.2', 'Platform': 'Linux-5.10.0-19-amd64-x86_64-with-glibc2.31', 'Packages': {'pytest': '6.2.2', 'py': '1.10.0', 'pluggy': '0.13.1'}, 'Plugins': {'jest': '0.3.0', 'hypothesis': '6.1.1', 'timeout': '1.4.2', 'snapshottest': '0.6.0', 'metadata': '2.0.1', 'flask': '0.15.1'}}
+rootdir: /import/kamen/3/cs1531/project-automarking/tempstore
+plugins: jest-0.3.0, hypothesis-6.1.1, timeout-1.4.2, snapshottest-0.6.0, metadata-2.0.1, flask-0.15.1
+collecting ... collected 374 items
+
+httpTests/adminTests/test_admin_user_remove.py::testOnceRemovedUserCantDoAnything PASSED [  0%]
+httpTests/adminTests/test_admin_user_remove.py::testMessagesAfterUserRemovalCorrectFormat PASSED [  0%]
+httpTests/adminTests/test_admin_user_remove.py::testRemovedProfileStillFetchableWithUserProfile PASSED [  0%]
+httpTests/adminTests/test_admin_user_remove.py::testRemovalRemovedFromChannel PASSED [  1%]
+httpTests/adminTests/test_admin_user_remove.py::testRemovalRemovedFromDm PASSED [  1%]
+httpTests/adminTests/test_admin_user_remove.py::testRemovalNotInUsersAll FAILED [  1%]
+httpTests/adminTests/test_admin_user_remove.py::testEmailReusable PASSED [  1%]
+httpTests/adminTests/test_admin_user_remove.py::testHandleReusable PASSED [  2%]
+httpTests/adminTests/test_admin_user_remove.py::testInvalidUser PASSED   [  2%]
+httpTests/adminTests/test_admin_user_remove.py::testCannotRemoveLastOwner PASSED [  2%]
+httpTests/adminTests/test_admin_user_remove.py::testCannotRemoveUserNonowner FAILED [  2%]
+httpTests/adminTests/test_admin_user_remove.py::testInvalidToken PASSED  [  3%]
+httpTests/adminTests/test_admin_userpermission_change.py::testSuccessfulPermissionChange PASSED [  3%]
+httpTests/adminTests/test_admin_userpermission_change.py::testCannotDemoteLastOwner PASSED [  3%]
+httpTests/adminTests/test_admin_userpermission_change.py::testNonownerCantChangePermissions FAILED [  4%]
+httpTests/adminTests/test_admin_userpermission_change.py::testInvalidUser PASSED [  4%]
+httpTests/adminTests/test_admin_userpermission_change.py::testInvalidPermission PASSED [  4%]
+httpTests/adminTests/test_admin_userpermission_change.py::testSamePermission PASSED [  4%]
+httpTests/adminTests/test_admin_userpermission_change.py::testInvalidToken PASSED [  5%]
+httpTests/authTests/test_auth_login.py::testSuccessfulLogin PASSED       [  5%]
+httpTests/authTests/test_auth_login.py::testCanHaveTwoSessions PASSED    [  5%]
+httpTests/authTests/test_auth_login.py::testUnregisteredUser PASSED      [  5%]
+httpTests/authTests/test_auth_login.py::testRegisteredButIncorrectPassword PASSED [  6%]
+httpTests/authTests/test_auth_logout.py::testSuccessfulLogout PASSED     [  6%]
+httpTests/authTests/test_auth_logout.py::testAccesserrorWhenAlreadyLoggedOut PASSED [  6%]
+httpTests/authTests/test_auth_register.py::testInvalidEmail[@gmail.com] PASSED [  6%]
+httpTests/authTests/test_auth_register.py::testInvalidEmail[bob] PASSED  [  7%]
+httpTests/authTests/test_auth_register.py::testInvalidEmail[bob@bob@bob.com] PASSED [  7%]
+httpTests/authTests/test_auth_register.py::testInvalidPassword[12345] PASSED [  7%]
+httpTests/authTests/test_auth_register.py::testInvalidPassword[] PASSED  [  8%]
+httpTests/authTests/test_auth_register.py::testInvalidNameFirst[] PASSED [  8%]
+httpTests/authTests/test_auth_register.py::testInvalidNameFirst[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] PASSED [  8%]
+httpTests/authTests/test_auth_register.py::testInvalidNameLast[] PASSED  [  8%]
+httpTests/authTests/test_auth_register.py::testInvalidNameLast[bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb] PASSED [  9%]
+httpTests/authTests/test_auth_register.py::testDuplicateEmail PASSED     [  9%]
+httpTests/authTests/test_auth_register.py::testRemovedUserName PASSED    [  9%]
+httpTests/authTests/test_auth_register.py::testSuccessfulRegistration PASSED [  9%]
+httpTests/authTests/test_auth_register.py::testBasicHandleGeneratedCorrectly[Bob-Smith-bobsmith] PASSED [ 10%]
+httpTests/authTests/test_auth_register.py::testBasicHandleGeneratedCorrectly[ababababab-cdcdcdcdcdcd-abababababcdcdcdcdcd] PASSED [ 10%]
+httpTests/authTests/test_auth_register.py::testDuplicateHandlesGeneratedCorrectly[abcdefghij-klmnopqrs-abcdefghijklmnopqrs-abcdefghij-klmnopqrs-abcdefghijklmnopqrs0] PASSED [ 10%]
+httpTests/authTests/test_auth_register.py::testDuplicateHandlesGeneratedCorrectly[abcdefghij-klmnopqrst-abcdefghijklmnopqrst-abcdefghij-klmnopqrst-abcdefghijklmnopqrst0] PASSED [ 10%]
+httpTests/authTests/test_auth_register.py::testDuplicateHandlesGeneratedCorrectly[@bcdefgh!j-klmn opqrst-bcdefghjklmnopqrst-bcdefghj-klmnopqrst-bcdefghjklmnopqrst0] PASSED [ 11%]
+httpTests/authTests/test_auth_register.py::testDuplicateHandlesGeneratedCorrectly[abc-def0-abcdef0-abc-def-abcdef1] PASSED [ 11%]
+httpTests/authTests/test_passwordreset_request.py::testReturnFormatCorrect PASSED [ 11%]
+httpTests/authTests/test_passwordreset_request.py::testPasswordRequestLogsOutEverywhere PASSED [ 12%]
+httpTests/authTests/test_passwordreset_reset.py::testInvalidPassword PASSED [ 12%]
+httpTests/channelTests/test_channel_addowner.py::testChannelOwnerCanAddownerWhenMember PASSED [ 12%]
+httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerMemberCanAddowner PASSED [ 12%]
+httpTests/channelTests/test_channel_addowner.py::testChannelOwnerCantAddownerWhenNonMember PASSED [ 13%]
+httpTests/channelTests/test_channel_addowner.py::testNonMemberCannotAddOwner FAILED [ 13%]
+httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerNonMemberCantAddownerPrivate FAILED [ 13%]
+httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerNonMemberCantAddownerPublic FAILED [ 13%]
+httpTests/channelTests/test_channel_addowner.py::testMemberCannotAddOwner PASSED [ 14%]
+httpTests/channelTests/test_channel_addowner.py::testCannotAddownerPrexistingChannelOwner PASSED [ 14%]
+httpTests/channelTests/test_channel_addowner.py::testWithInvalidUId PASSED [ 14%]
+httpTests/channelTests/test_channel_addowner.py::testWithInvalidChannelId PASSED [ 14%]
+httpTests/channelTests/test_channel_addowner.py::testInvalidToken PASSED [ 15%]
+httpTests/channelTests/test_channel_details.py::testMemberSuccessful PASSED [ 15%]
+httpTests/channelTests/test_channel_details.py::testNonMemberNotSuccessful PASSED [ 15%]
+httpTests/channelTests/test_channel_details.py::testInvalidChannelId PASSED [ 16%]
+httpTests/channelTests/test_channel_details.py::testInvalidToken PASSED  [ 16%]
+httpTests/channelTests/test_channel_invite.py::testDuplicateInvite PASSED [ 16%]
+httpTests/channelTests/test_channel_invite.py::testInviteGlobalOwner PASSED [ 16%]
+httpTests/channelTests/test_channel_invite.py::testInviteGlobalMember PASSED [ 17%]
+httpTests/channelTests/test_channel_invite.py::testInvitationFromNonChannelMember PASSED [ 17%]
+httpTests/channelTests/test_channel_invite.py::testChannelIdInvalid PASSED [ 17%]
+httpTests/channelTests/test_channel_invite.py::testUIdInvalid PASSED     [ 17%]
+httpTests/channelTests/test_channel_invite.py::testInvalidatedToken PASSED [ 18%]
+httpTests/channelTests/test_channel_join.py::testGlobalOwnerJoinChannelPublic PASSED [ 18%]
+httpTests/channelTests/test_channel_join.py::testGlobalOwnerJoinChannelPrivate PASSED [ 18%]
+httpTests/channelTests/test_channel_join.py::testGlobalMemberJoinPublic PASSED [ 18%]
+httpTests/channelTests/test_channel_join.py::testGlobalMemberCantJoinPrivate PASSED [ 19%]
+httpTests/channelTests/test_channel_join.py::testAlreadyJoinedChannel PASSED [ 19%]
+httpTests/channelTests/test_channel_join.py::testJoinInvalidChannelId PASSED [ 19%]
+httpTests/channelTests/test_channel_join.py::testInvalidatedToken PASSED [ 20%]
+httpTests/channelTests/test_channel_leave.py::testMemberLeaveChannelSuccessfully PASSED [ 20%]
+httpTests/channelTests/test_channel_leave.py::testLeaveChannelWhenNotMember PASSED [ 20%]
+httpTests/channelTests/test_channel_leave.py::testInvalidChannelId PASSED [ 20%]
+httpTests/channelTests/test_channel_leave.py::testInvalidToken PASSED    [ 21%]
+httpTests/channelTests/test_channel_messages.py::testMessageTimestamp PASSED [ 21%]
+httpTests/channelTests/test_channel_messages.py::testUnderFiftyMessagesSent PASSED [ 21%]
+httpTests/channelTests/test_channel_messages.py::testOverFiftyMessagesSent FAILED [ 21%]
+httpTests/channelTests/test_channel_messages.py::testRemovalByEditReflected PASSED [ 22%]
+httpTests/channelTests/test_channel_messages.py::testRemovalByDeletionReflected PASSED [ 22%]
+httpTests/channelTests/test_channel_messages.py::testInputErrorWhenStartGreaterThanMessageNum PASSED [ 22%]
+httpTests/channelTests/test_channel_messages.py::testAccessErrorWhenUserIsNonMember PASSED [ 22%]
+httpTests/channelTests/test_channel_messages.py::testInputErrorWhenChannelIdInvalid PASSED [ 23%]
+httpTests/channelTests/test_channel_messages.py::testAccessErrorWhenInvalidTokenGiven PASSED [ 23%]
+httpTests/channelTests/test_channel_removeowner.py::testOwnerCanRemoveOwner PASSED [ 23%]
+httpTests/channelTests/test_channel_removeowner.py::testGlobalOwnerMmberCanRemoveOwner PASSED [ 24%]
+httpTests/channelTests/test_channel_removeowner.py::testGlobalOwnerNonmemberCannotRemoveOwner FAILED [ 24%]
+httpTests/channelTests/test_channel_removeowner.py::testNonmemberCannotRemoveOwner FAILED [ 24%]
+httpTests/channelTests/test_channel_removeowner.py::testMmberCannotRemoveOwner FAILED [ 24%]
+httpTests/channelTests/test_channel_removeowner.py::testCannotRemoveLastOwner PASSED [ 25%]
+httpTests/channelTests/test_channel_removeowner.py::testGlobalOwnerCannotRemoveOnlyOwner PASSED [ 25%]
+httpTests/channelTests/test_channel_removeowner.py::testCannotRemoveNonOwner PASSED [ 25%]
+httpTests/channelTests/test_channel_removeowner.py::testInvalidUId PASSED [ 25%]
+httpTests/channelTests/test_channel_removeowner.py::testWithInvalidChannelId PASSED [ 26%]
+httpTests/channelTests/test_channel_removeowner.py::testInvalidatedToken PASSED [ 26%]
+httpTests/channels_tests/test_channels_create.py::testCreateChannel[True-andys room] PASSED [ 26%]
+httpTests/channels_tests/test_channels_create.py::testCreateChannel[False-andys room] PASSED [ 27%]
+httpTests/channels_tests/test_channels_create.py::testInvalidChannelNameLength[True-] PASSED [ 27%]
+httpTests/channels_tests/test_channels_create.py::testInvalidChannelNameLength[True-I AM NOT A TOY AND ALSO THIS NAME IS TOO LONG] PASSED [ 27%]
+httpTests/channels_tests/test_channels_create.py::testInvalidChannelNameLength[False-] PASSED [ 27%]
+httpTests/channels_tests/test_channels_create.py::testInvalidChannelNameLength[False-I AM NOT A TOY AND ALSO THIS NAME IS TOO LONG] PASSED [ 28%]
+httpTests/channels_tests/test_channels_create.py::testInvalidatedToken PASSED [ 28%]
+httpTests/channels_tests/test_channels_list.py::testWhenInNoChannels PASSED [ 28%]
+httpTests/channels_tests/test_channels_list.py::testWhenInOneChannel[True-andy] PASSED [ 28%]
+httpTests/channels_tests/test_channels_list.py::testWhenInOneChannel[False-andy] PASSED [ 29%]
+httpTests/channels_tests/test_channels_list.py::testWhenInMultipleChannels[False-True-ZERG-andy] PASSED [ 29%]
+httpTests/channels_tests/test_channels_list.py::testWhenInMultipleChannels[False-False-ZERG-andy] PASSED [ 29%]
+httpTests/channels_tests/test_channels_list.py::testWhenInMultipleChannels[True-True-ZERG-andy] PASSED [ 29%]
+httpTests/channels_tests/test_channels_list.py::testWhenInMultipleChannels[True-False-ZERG-andy] PASSED [ 30%]
+httpTests/channels_tests/test_channels_list.py::testListAfterLeaveChannel PASSED [ 30%]
+httpTests/channels_tests/test_channels_list.py::testInvalidatedToken PASSED [ 30%]
+httpTests/channels_tests/test_channels_listall.py::testWhenNoChannels PASSED [ 31%]
+httpTests/channels_tests/test_channels_listall.py::testWhenOneChannelExistsPrivate PASSED [ 31%]
+httpTests/channels_tests/test_channels_listall.py::testWhenOneChannelExistsPublic PASSED [ 31%]
+httpTests/channels_tests/test_channels_listall.py::testWhenMultipleChannelsExist PASSED [ 31%]
+httpTests/channels_tests/test_channels_listall.py::testInvalidatedToken PASSED [ 32%]
+httpTests/dmTests/test_dm_create.py::testSuccessfulDmCreation PASSED     [ 32%]
+httpTests/dmTests/test_dm_create.py::testDmNameCreationSingle PASSED     [ 32%]
+httpTests/dmTests/test_dm_create.py::testDmNameCreationMultiple PASSED   [ 32%]
+httpTests/dmTests/test_dm_create.py::testDmToInvalidUsers PASSED         [ 33%]
+httpTests/dmTests/test_dm_create.py::testDmToUsersButOneInvalid PASSED   [ 33%]
+httpTests/dmTests/test_dm_create.py::testDmToUsersButDuplicate PASSED    [ 33%]
+httpTests/dmTests/test_dm_create.py::testInvalidToken PASSED             [ 33%]
+httpTests/dmTests/test_dm_details.py::testMemberSuccessful PASSED        [ 34%]
+httpTests/dmTests/test_dm_details.py::testNonMemberNotSuccessful PASSED  [ 34%]
+httpTests/dmTests/test_dm_details.py::testInvalidDmId PASSED             [ 34%]
+httpTests/dmTests/test_dm_details.py::testInvalidToken PASSED            [ 35%]
+httpTests/dmTests/test_dm_leave.py::testMemberLeaveDmSuccessfully PASSED [ 35%]
+httpTests/dmTests/test_dm_leave.py::testLeaveDmWhenNotMember PASSED      [ 35%]
+httpTests/dmTests/test_dm_leave.py::testInvalidDmId PASSED               [ 35%]
+httpTests/dmTests/test_dm_leave.py::testInvalidToken PASSED              [ 36%]
+httpTests/dmTests/test_dm_list.py::testWhenInNoDms PASSED                [ 36%]
+httpTests/dmTests/test_dm_list.py::testWhenInOneDm PASSED                [ 36%]
+httpTests/dmTests/test_dm_list.py::testWhenInMultipleDms PASSED          [ 36%]
+httpTests/dmTests/test_dm_list.py::testListAfterLeaveDm PASSED           [ 37%]
+httpTests/dmTests/test_dm_list.py::testInvalidatedToken PASSED           [ 37%]
+httpTests/dmTests/test_dm_messages.py::testUnderFiftyMessagesSent PASSED [ 37%]
+httpTests/dmTests/test_dm_messages.py::testOverFiftyMessagesSent FAILED  [ 37%]
+httpTests/dmTests/test_dm_messages.py::testRemovalByEditReflected PASSED [ 38%]
+httpTests/dmTests/test_dm_messages.py::testRemovalByDeletionReflected PASSED [ 38%]
+httpTests/dmTests/test_dm_messages.py::testInputErrorWhenStartGreaterThanMessageNum PASSED [ 38%]
+httpTests/dmTests/test_dm_messages.py::testAccessErrorWhenUserIsNonMember PASSED [ 39%]
+httpTests/dmTests/test_dm_messages.py::testInputErrorWhenDmIdInvalid PASSED [ 39%]
+httpTests/dmTests/test_dm_messages.py::testAccessErrorWhenInvalidTokenGiven PASSED [ 39%]
+httpTests/dmTests/test_dm_remove.py::testSuccessfulDmRemoval PASSED      [ 39%]
+httpTests/dmTests/test_dm_remove.py::testRemovalRemovesMessages PASSED   [ 40%]
+httpTests/dmTests/test_dm_remove.py::testNonownerCannotRemoveDm PASSED   [ 40%]
+httpTests/dmTests/test_dm_remove.py::testOwnerNonmemberCannotRemoveDm PASSED [ 40%]
+httpTests/dmTests/test_dm_remove.py::testInvalidDmId PASSED              [ 40%]
+httpTests/dmTests/test_dm_remove.py::testInvalidToken PASSED             [ 41%]
+httpTests/messageTests/test_message_edit.py::testOriginalPosterCanEditMessageChannel PASSED [ 41%]
+httpTests/messageTests/test_message_edit.py::testOriginalPosterCanEditMessageDm PASSED [ 41%]
+httpTests/messageTests/test_message_edit.py::testOwnerCanEditMembersMessageChannel PASSED [ 41%]
+httpTests/messageTests/test_message_edit.py::testOwnerCanEditMembersMessageDm PASSED [ 42%]
+httpTests/messageTests/test_message_edit.py::testGlobalOwnerCanEditMembersMessageChannel FAILED [ 42%]
+httpTests/messageTests/test_message_edit.py::testGlobalOwnerCantEditMembersMessageDm PASSED [ 42%]
+httpTests/messageTests/test_message_edit.py::testEmptyEditDeletesMessage PASSED [ 43%]
+httpTests/messageTests/test_message_edit.py::testInvalidMessageLength PASSED [ 43%]
+httpTests/messageTests/test_message_edit.py::testCannotEditDeletedMessage PASSED [ 43%]
+httpTests/messageTests/test_message_edit.py::testNonownerNonposterCantEdit PASSED [ 43%]
+httpTests/messageTests/test_message_edit.py::testInvalidToken PASSED     [ 44%]
+httpTests/messageTests/test_message_meta.py::testMessageIdsUnique PASSED [ 44%]
+httpTests/messageTests/test_message_meta.py::testMessageIdsUniqueIter3 PASSED [ 44%]
+httpTests/messageTests/test_message_pin.py::testSuccessfulPinChannelOwnerInChannel PASSED [ 44%]
+httpTests/messageTests/test_message_pin.py::testSuccessfulPinDmOwnerInDm PASSED [ 45%]
+httpTests/messageTests/test_message_pin.py::testSuccessfulPinGlobalOwnerInChannel FAILED [ 45%]
+httpTests/messageTests/test_message_pin.py::testInvalidMessageId PASSED  [ 45%]
+httpTests/messageTests/test_message_pin.py::testCannotPinTwice PASSED    [ 45%]
+httpTests/messageTests/test_message_pin.py::testChannelMemberCantPin PASSED [ 46%]
+httpTests/messageTests/test_message_pin.py::testDmMemberCantPin PASSED   [ 46%]
+httpTests/messageTests/test_message_pin.py::testGlobalOwnerCantPinInDm PASSED [ 46%]
+httpTests/messageTests/test_message_pin.py::testNonmemberCantPin PASSED  [ 47%]
+httpTests/messageTests/test_message_pin.py::testInvalidToken PASSED      [ 47%]
+httpTests/messageTests/test_message_react.py::testSuccessfulReactInChannel PASSED [ 47%]
+httpTests/messageTests/test_message_react.py::testSuccessfulReactToDmMessage PASSED [ 47%]
+httpTests/messageTests/test_message_react.py::testInvalidMessageId PASSED [ 48%]
+httpTests/messageTests/test_message_react.py::testInvalidReactId PASSED  [ 48%]
+httpTests/messageTests/test_message_react.py::testCantReactTwice PASSED  [ 48%]
+httpTests/messageTests/test_message_react.py::testNonmemberCannotReact PASSED [ 48%]
+httpTests/messageTests/test_message_react.py::testInvalidToken PASSED    [ 49%]
+httpTests/messageTests/test_message_remove.py::testOriginalPosterCanRemoveMessage PASSED [ 49%]
+httpTests/messageTests/test_message_remove.py::testOwnerCanRemoveMembersMessage PASSED [ 49%]
+httpTests/messageTests/test_message_remove.py::testGlobalOwnerCanRemoveMembersMessageChannel FAILED [ 50%]
+httpTests/messageTests/test_message_remove.py::testGlobalOwnerCantRemoveMembersMessageDm PASSED [ 50%]
+httpTests/messageTests/test_message_remove.py::testCannotRemoveDeletedMessage PASSED [ 50%]
+httpTests/messageTests/test_message_remove.py::testNonownerNonposterCantRemoveMessage PASSED [ 50%]
+httpTests/messageTests/test_message_remove.py::testInvalidToken PASSED   [ 51%]
+httpTests/messageTests/test_message_send.py::testValidMessage PASSED     [ 51%]
+httpTests/messageTests/test_message_send.py::testNonmemberPost PASSED    [ 51%]
+httpTests/messageTests/test_message_send.py::testInvalidChannel PASSED   [ 51%]
+httpTests/messageTests/test_message_send.py::testInvalidMessage[] PASSED [ 52%]
+httpTests/messageTests/test_message_send.py::testInvalidMessage[mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm] PASSED [ 52%]
+httpTests/messageTests/test_message_send.py::testInvalidToken PASSED     [ 52%]
+httpTests/messageTests/test_message_senddm.py::testValidMessage PASSED   [ 52%]
+httpTests/messageTests/test_message_senddm.py::testNonmemberPost PASSED  [ 53%]
+httpTests/messageTests/test_message_senddm.py::testInvalidDm PASSED      [ 53%]
+httpTests/messageTests/test_message_senddm.py::testInvalidMessage[] PASSED [ 53%]
+httpTests/messageTests/test_message_senddm.py::testInvalidMessage[mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm] PASSED [ 54%]
+httpTests/messageTests/test_message_senddm.py::testInvalidToken PASSED   [ 54%]
+httpTests/messageTests/test_message_sendlater.py::testValidFutureMessage FAILED [ 54%]
+httpTests/messageTests/test_message_sendlater.py::testReturnsImmediately FAILED [ 54%]
+httpTests/messageTests/test_message_sendlater.py::testInvalidReturnedIdUntilSent FAILED [ 55%]
+httpTests/messageTests/test_message_sendlater.py::testNonmemberCannotSendlater PASSED [ 55%]
+httpTests/messageTests/test_message_sendlater.py::testCannotTimeTravelAkaSendMessageInPast PASSED [ 55%]
+httpTests/messageTests/test_message_sendlater.py::testInvalidMessage[] PASSED [ 55%]
+httpTests/messageTests/test_message_sendlater.py::testInvalidMessage[mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm] PASSED [ 56%]
+httpTests/messageTests/test_message_sendlater.py::testInvalidChannel PASSED [ 56%]
+httpTests/messageTests/test_message_sendlater.py::testInvalidToken PASSED [ 56%]
+httpTests/messageTests/test_message_sendlaterdm.py::testValidFutureMessage FAILED [ 56%]
+httpTests/messageTests/test_message_sendlaterdm.py::testReturnsImmediately FAILED [ 57%]
+httpTests/messageTests/test_message_sendlaterdm.py::testInvalidReturnedIdUntilSent FAILED [ 57%]
+httpTests/messageTests/test_message_sendlaterdm.py::testNonmemberCannotSendlater PASSED [ 57%]
+httpTests/messageTests/test_message_sendlaterdm.py::testCannotTimeTravelAkaSendMessageInPast PASSED [ 58%]
+httpTests/messageTests/test_message_sendlaterdm.py::testInvalidMessage[] PASSED [ 58%]
+httpTests/messageTests/test_message_sendlaterdm.py::testInvalidMessage[mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm] PASSED [ 58%]
+httpTests/messageTests/test_message_sendlaterdm.py::testInvalidDm PASSED [ 58%]
+httpTests/messageTests/test_message_sendlaterdm.py::testInvalidToken PASSED [ 59%]
+httpTests/messageTests/test_message_share.py::testSuccessfulShareToChannel PASSED [ 59%]
+httpTests/messageTests/test_message_share.py::testSuccessfulShareToDm PASSED [ 59%]
+httpTests/messageTests/test_message_share.py::testSuccessfulCrossShare[True] PASSED [ 59%]
+httpTests/messageTests/test_message_share.py::testSuccessfulCrossShare[False] PASSED [ 60%]
+httpTests/messageTests/test_message_share.py::testCannotShareToUnjoinedDm PASSED [ 60%]
+httpTests/messageTests/test_message_share.py::testCannotShareToUnjoinedChannel PASSED [ 60%]
+httpTests/messageTests/test_message_share.py::testCannotShareFromUnjoinedChannel PASSED [ 60%]
+httpTests/messageTests/test_message_share.py::testCannotShareFromUnjoinedDm PASSED [ 61%]
+httpTests/messageTests/test_message_share.py::testInvalidOgMessageId PASSED [ 61%]
+httpTests/messageTests/test_message_share.py::testInvalidMessageLength PASSED [ 61%]
+httpTests/messageTests/test_message_share.py::testShareToInvalidChannelId PASSED [ 62%]
+httpTests/messageTests/test_message_share.py::testShareToInvalidDmId PASSED [ 62%]
+httpTests/messageTests/test_message_share.py::testInvalidToken PASSED    [ 62%]
+httpTests/messageTests/test_message_unpin.py::testSuccessfulUnpinChannelOwnerInChannel PASSED [ 62%]
+httpTests/messageTests/test_message_unpin.py::testSuccessfulUnpinDmOwnerInDm PASSED [ 63%]
+httpTests/messageTests/test_message_unpin.py::testSuccessfulUnpinGlobalOwnerInChannel FAILED [ 63%]
+httpTests/messageTests/test_message_unpin.py::testInvalidMessageId PASSED [ 63%]
+httpTests/messageTests/test_message_unpin.py::testCannotUnpinTwice PASSED [ 63%]
+httpTests/messageTests/test_message_unpin.py::testChannelMemberCantUnpin PASSED [ 64%]
+httpTests/messageTests/test_message_unpin.py::testDmMemberCantUnpin PASSED [ 64%]
+httpTests/messageTests/test_message_unpin.py::testGlobalOwnerCantUnpinInDm PASSED [ 64%]
+httpTests/messageTests/test_message_unpin.py::testNonmemberCantUnpin PASSED [ 64%]
+httpTests/messageTests/test_message_unpin.py::testInvalidToken PASSED    [ 65%]
+httpTests/messageTests/test_message_unreact.py::testSuccessfulUnreactInChannel FAILED [ 65%]
+httpTests/messageTests/test_message_unreact.py::testSuccessfulUnreactToDmMessage FAILED [ 65%]
+httpTests/messageTests/test_message_unreact.py::testInvalidMessageId PASSED [ 66%]
+httpTests/messageTests/test_message_unreact.py::testInvalidReactId PASSED [ 66%]
+httpTests/messageTests/test_message_unreact.py::testCantUnreactTwice PASSED [ 66%]
+httpTests/messageTests/test_message_unreact.py::testNonmemberCannotUnreact PASSED [ 66%]
+httpTests/messageTests/test_message_unreact.py::testInvalidToken PASSED  [ 67%]
+httpTests/otherTests/test_clear.py::testClearWorks PASSED                [ 67%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageSendTriggersNotification PASSED [ 67%]
+httpTests/otherTests/test_notifications_get.py::testTagNotInChannel PASSED [ 67%]
+httpTests/otherTests/test_notifications_get.py::testMultipleSameTagsOnlyOneNotification PASSED [ 68%]
+httpTests/otherTests/test_notifications_get.py::testTagSelf PASSED       [ 68%]
+httpTests/otherTests/test_notifications_get.py::testMultipleTags PASSED  [ 68%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageSenddmTriggersNotification PASSED [ 68%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageEditTriggersNotification PASSED [ 69%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageShareTriggersNotification FAILED [ 69%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageSendlaterTriggersNotification PASSED [ 69%]
+httpTests/otherTests/test_notifications_get.py::testMessageSendlaterTagNotifiesWhenSent FAILED [ 70%]
+httpTests/otherTests/test_notifications_get.py::testTagThruMessageSendlaterdmTriggersNotification PASSED [ 70%]
+httpTests/otherTests/test_notifications_get.py::testTagNotificationMessagePreviewLength[a small message] PASSED [ 70%]
+httpTests/otherTests/test_notifications_get.py::testTagNotificationMessagePreviewLength[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA] PASSED [ 70%]
+httpTests/otherTests/test_notifications_get.py::testReactTriggersNotification[ch] PASSED [ 71%]
+httpTests/otherTests/test_notifications_get.py::testReactTriggersNotification[dm] PASSED [ 71%]
+httpTests/otherTests/test_notifications_get.py::testAddThruChInviteTriggersNotification PASSED [ 71%]
+httpTests/otherTests/test_notifications_get.py::testAddThruDmCreateTriggersNotification PASSED [ 71%]
+httpTests/otherTests/test_notifications_get.py::testMostRecent_20NotificationsFetched FAILED [ 72%]
+httpTests/otherTests/test_notifications_get.py::testInvalidToken PASSED  [ 72%]
+httpTests/otherTests/test_search.py::testNoMatches PASSED                [ 72%]
+httpTests/otherTests/test_search.py::testSingleMatch PASSED              [ 72%]
+httpTests/otherTests/test_search.py::testCaseInsensitiveMatch FAILED     [ 73%]
+httpTests/otherTests/test_search.py::testMultipleMatches PASSED          [ 73%]
+httpTests/otherTests/test_search.py::testMultipleChannelsJoined PASSED   [ 73%]
+httpTests/otherTests/test_search.py::testSearchIncludesOnlyJoinedChannels PASSED [ 74%]
+httpTests/otherTests/test_search.py::testSearchMatchesMoreThanJustAuthorisedUser PASSED [ 74%]
+httpTests/otherTests/test_search.py::testInvalidSearch[] PASSED          [ 74%]
+httpTests/otherTests/test_search.py::testInvalidSearch[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] PASSED [ 74%]
+httpTests/otherTests/test_search.py::testInvalidToken PASSED             [ 75%]
+httpTests/otherTests/test_users_all.py::testSuccessfulUsersAll PASSED    [ 75%]
+httpTests/otherTests/test_users_all.py::testInvalidToken PASSED          [ 75%]
+httpTests/standupTests/test_standup_active.py::testCorrectReturnFormat[True] PASSED [ 75%]
+httpTests/standupTests/test_standup_active.py::testCorrectReturnFormat[False] PASSED [ 76%]
+httpTests/standupTests/test_standup_active.py::testActiveStandup PASSED  [ 76%]
+httpTests/standupTests/test_standup_active.py::testInactiveStandup PASSED [ 76%]
+httpTests/standupTests/test_standup_active.py::testInvalidChannelId PASSED [ 77%]
+httpTests/standupTests/test_standup_active.py::testInvalidToken PASSED   [ 77%]
+httpTests/standupTests/test_standup_send.py::testMessagesBufferedAndDisplayedCorrectly FAILED [ 77%]
+httpTests/standupTests/test_standup_send.py::testStandupSendsAfterLoggedOut FAILED [ 77%]
+httpTests/standupTests/test_standup_send.py::testReturnFormat PASSED     [ 78%]
+httpTests/standupTests/test_standup_send.py::testNonMemberCannotStandupSend PASSED [ 78%]
+httpTests/standupTests/test_standup_send.py::testSendWhenStandupInactive PASSED [ 78%]
+httpTests/standupTests/test_standup_send.py::testInvalidMessageLength PASSED [ 78%]
+httpTests/standupTests/test_standup_send.py::testInvalidChannelId PASSED [ 79%]
+httpTests/standupTests/test_standup_send.py::testInvalidToken PASSED     [ 79%]
+httpTests/standupTests/test_standup_start.py::testStandupStartReturnFormat PASSED [ 79%]
+httpTests/standupTests/test_standup_start.py::testStandupNoMessages PASSED [ 79%]
+httpTests/standupTests/test_standup_start.py::testReturnsImmediately PASSED [ 80%]
+httpTests/standupTests/test_standup_start.py::testStandupRestartableAfterLapse PASSED [ 80%]
+httpTests/standupTests/test_standup_start.py::testStandupAffectsOnlyOneChannel PASSED [ 80%]
+httpTests/standupTests/test_standup_start.py::testNonmemberCannotStartStandup PASSED [ 81%]
+httpTests/standupTests/test_standup_start.py::testCannotStartStandupWhenAlreadyActive PASSED [ 81%]
+httpTests/standupTests/test_standup_start.py::testInvalidStandupLength PASSED [ 81%]
+httpTests/standupTests/test_standup_start.py::testInvalidChannelId PASSED [ 81%]
+httpTests/standupTests/test_standup_start.py::testInvalidToken PASSED    [ 82%]
+httpTests/statsTests/test_user_stats.py::testReturnTypeCorrect FAILED    [ 82%]
+httpTests/statsTests/test_user_stats.py::testChannelsTrackedChannelsCreate PASSED [ 82%]
+httpTests/statsTests/test_user_stats.py::testChannelsTrackedChannelJoin PASSED [ 82%]
+httpTests/statsTests/test_user_stats.py::testChannelsTrackedChannelInvite PASSED [ 83%]
+httpTests/statsTests/test_user_stats.py::testChannelsTrackedChannelLeave PASSED [ 83%]
+httpTests/statsTests/test_user_stats.py::testDmsTrackedDmCreate PASSED   [ 83%]
+httpTests/statsTests/test_user_stats.py::testDmsTrackedDmLeave PASSED    [ 83%]
+httpTests/statsTests/test_user_stats.py::testDmsTrackedDmRemove PASSED   [ 84%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedMessageSend PASSED [ 84%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedMessageSendlater PASSED [ 84%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedMessageSenddm PASSED [ 85%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedMessageSenddmlater PASSED [ 85%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedMessageShare PASSED [ 85%]
+httpTests/statsTests/test_user_stats.py::testMessagesTrackedStandupFinish FAILED [ 85%]
+httpTests/statsTests/test_user_stats.py::testInvolvementTracked FAILED   [ 86%]
+httpTests/statsTests/test_user_stats.py::testInvalidToken PASSED         [ 86%]
+httpTests/statsTests/test_users_stats.py::testReturnTypeCorrect FAILED   [ 86%]
+httpTests/statsTests/test_users_stats.py::testChannelsTrackedChannelsCreate PASSED [ 86%]
+httpTests/statsTests/test_users_stats.py::testDmsTrackedDmCreate PASSED  [ 87%]
+httpTests/statsTests/test_users_stats.py::testDmsTrackedDmRemove PASSED  [ 87%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedMessageSend PASSED [ 87%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedMessageSendlater PASSED [ 87%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedMessageSenddm PASSED [ 88%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedMessageSenddmlater PASSED [ 88%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedMessageShare PASSED [ 88%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedStandupFinish FAILED [ 89%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedEditedToRemoval FAILED [ 89%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedDeleted PASSED [ 89%]
+httpTests/statsTests/test_users_stats.py::testMessagesTrackedDmRemoved PASSED [ 89%]
+httpTests/statsTests/test_users_stats.py::testUtilizationTracked PASSED  [ 90%]
+httpTests/statsTests/test_users_stats.py::testInvalidToken PASSED        [ 90%]
+httpTests/userTests/test_user_profile.py::testUserProfileValid PASSED    [ 90%]
+httpTests/userTests/test_user_profile.py::testInvalidUser PASSED         [ 90%]
+httpTests/userTests/test_user_profile.py::testInvalidToken PASSED        [ 91%]
+httpTests/userTests/test_user_profile_setemail.py::testSuccessfulEmailChange PASSED [ 91%]
+httpTests/userTests/test_user_profile_setemail.py::testCannotChangeToTakenEmail PASSED [ 91%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidEmail[] PASSED [ 91%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidEmail[bob] PASSED [ 92%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidEmail[ab.com] PASSED [ 92%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidEmail[@gmail.com] PASSED [ 92%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidEmail[ab@ab@gmail.com] PASSED [ 93%]
+httpTests/userTests/test_user_profile_setemail.py::testInvalidToken PASSED [ 93%]
+httpTests/userTests/test_user_profile_sethandle.py::testSuccessfulHandleChange PASSED [ 93%]
+httpTests/userTests/test_user_profile_sethandle.py::testCannotChangeToTakenHandle PASSED [ 93%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[] PASSED [ 94%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[a] PASSED [ 94%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[aa] PASSED [ 94%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[aaaaaaaaaaaaaaaaaaaaa] PASSED [ 94%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[new handle] PASSED [ 95%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidHandle[newh@ndle] PASSED [ 95%]
+httpTests/userTests/test_user_profile_sethandle.py::testInvalidToken FAILED [ 95%]
+httpTests/userTests/test_user_profile_setname.py::testUserProfileSetnameValidName PASSED [ 95%]
+httpTests/userTests/test_user_profile_setname.py::testInvalidName[-] PASSED [ 96%]
+httpTests/userTests/test_user_profile_setname.py::testInvalidName[-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM] PASSED [ 96%]
+httpTests/userTests/test_user_profile_setname.py::testInvalidName[PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP-] PASSED [ 96%]
+httpTests/userTests/test_user_profile_setname.py::testInvalidName[PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM] PASSED [ 97%]
+httpTests/userTests/test_user_profile_setname.py::testInvalidToken PASSED [ 97%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testReturnFormatCorrect PASSED [ 97%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testCannotUploadNonJpeg PASSED [ 97%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidDimensions[-1000-0-0-0] PASSED [ 98%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidDimensions[0--1000-0-0] PASSED [ 98%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidDimensions[0-0--1000-0] PASSED [ 98%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidDimensions[0-0-0--1000] PASSED [ 98%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testXEndLessThanStartValue PASSED [ 99%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testYEndLessThanStartValue PASSED [ 99%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidUrl PASSED [ 99%]
+httpTests/userTests/test_user_profile_uploadphoto.py::testInvalidToken PASSED [100%]
+
+====== Marks recorded: 174.22 ======
+
+
+=================================== FAILURES ===================================
+___________________________ testRemovalNotInUsersAll ___________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='811a29b4-fcd5-4684-8db0-a38f6e91b44a', handleStr='sheriffwoody')
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=1, token='aa3dce56-2005-4312-b6ba-835edf3f1714', handleStr='lordzerg')
+ctx = None
+
+    @iteration3
+    def testRemovalNotInUsersAll(userWoody, userZerg, ctx):
+        adminUserRemove(userWoody.token, userZerg.uId, ctx)
+    
+        users = usersAll(userWoody.token, ctx)['users']
+    
+>       assert userZerg.uId not in [u['uId'] for u in users]
+
+httpTests/adminTests/test_admin_user_remove.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f3754c03310>
+
+>   assert userZerg.uId not in [u['uId'] for u in users]
+E   KeyError: 'uId'
+
+httpTests/adminTests/test_admin_user_remove.py:70: KeyError
+_________________________ testCannotRemoveUserNonowner _________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='122b2801-fd0a-47b9-a80f-6583a7f5bedd', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='688978d8-11ed-4810-8df4-bedcd5cc13b5', handleStr='buzzlightyear')
+ctx = None
+
+    @iteration3
+    def testCannotRemoveUserNonowner(userWoody, userBuzz, ctx):
+        with pytest.raises(AccessError):
+>           adminUserRemove(userBuzz.token, userWoody.uId, ctx)
+
+httpTests/adminTests/test_admin_user_remove.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/admin.py:12: in adminUserRemove
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+______________________ testNonownerCantChangePermissions _______________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='0da15977-6035-4c60-b0f7-8d7293ef6ae0', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='c62810b1-e3f1-4cfb-870a-556eb627224a', handleStr='buzzlightyear')
+ctx = None
+
+    @iteration3
+    def testNonownerCantChangePermissions(userWoody, userBuzz, ctx):
+        with pytest.raises(AccessError):
+>           adminUserpermissionChange(userBuzz.token, userWoody.uId, Permissions.DREAMSMEMBER, ctx)
+
+httpTests/adminTests/test_admin_userpermission_change.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/admin.py:25: in adminUserpermissionChange
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+_________________________ testNonMemberCannotAddOwner __________________________
+
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='7542a725-4a85-40df-bf1a-ece25442d130', handleStr='buzzlightyear')
+ctx = None
+
+    def testNonMemberCannotAddOwner(woodysPublicToybox, userBuzz, ctx):
+        with pytest.raises(AccessError):
+>           channelAddowner(userBuzz.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+
+httpTests/channelTests/test_channel_addowner.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/channel.py:77: in channelAddowner
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+_________________ testGlobalOwnerNonMemberCantAddownerPrivate __________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='bff24c2b-a5f6-436d-b4df-ca1acda03c3a', handleStr='sheriffwoody')
+zergsPrivateLair = Channel(name='zergs lair', isPublic=False, channelId=0, ownerMembers=[1], allMembers=[])
+ctx = None
+
+    def testGlobalOwnerNonMemberCantAddownerPrivate(userWoody, zergsPrivateLair, ctx):
+        with pytest.raises(AccessError):
+>           channelAddowner(userWoody.token, zergsPrivateLair.channelId, userWoody.uId, ctx)
+
+httpTests/channelTests/test_channel_addowner.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/channel.py:77: in channelAddowner
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+__________________ testGlobalOwnerNonMemberCantAddownerPublic __________________
+
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=0, token='aefdf14b-497a-4e80-ad0b-4fafed0c6f23', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+ctx = None
+
+    def testGlobalOwnerNonMemberCantAddownerPublic(userBuzz, woodysPublicToybox, ctx):
+        with pytest.raises(AccessError):
+>           channelAddowner(userBuzz.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+
+httpTests/channelTests/test_channel_addowner.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/channel.py:77: in channelAddowner
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+__________________________ testOverFiftyMessagesSent ___________________________
+
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='e0d82731-105a-4830-93ad-7605ed722e49', handleStr='sheriffwoody')
+ctx = None
+
+    def testOverFiftyMessagesSent(woodysPublicToybox, userWoody, ctx):
+        messageIds = [
+            messageSend(userWoody.token, woodysPublicToybox.channelId, 'you are a toy', ctx)['messageId'] for x in
+            range(51)
+        ]
+        messageIds.reverse()
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 0, ctx)
+        assert chMsgs['start'] == 0
+        assert chMsgs['end'] == 50
+        assert messageIds[0: 50] == [m['messageId'] for m in chMsgs['messages']]
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 50, ctx)
+        assert chMsgs['start'] == 50
+        assert chMsgs['end'] == -1
+>       assert [messageIds[-1]] == [m['messageId'] for m in chMsgs['messages']]
+E       assert [8259] == [8849,\n 6495,\n 6492,\n 3779,\n 8581,\n 9575,\n 7744,\n 9742,\n 8428,\n 5896,\n 9888,\n 3969,\n 9513,\n 4916,\n 8524,\n 2971,\n 121,\n 1464,\n 6136,\n 1767,\n 7010,\n 3208,\n 3421,\n 8656,\n 8252,\n 4853,\n 8383,\n 187,\n 8479,\n 8895,\n 4908,\n 3572,\n 3102,\n 2758,\n 3706,\n 2625,\n 811,\n 7032,\n 9817,\n 5141,\n 7072,\n 979,\n 4450,\n 7191,\n 9026,\n 3691,\n 9651,\n 3044,\n 1396,\n 997,\n 8259]
+E         At index 0 diff: 8259 != 8849
+E         Right contains 50 more items, first extra item: 6495
+E         Full diff:
+E           [
+E         -  8849,
+E         -  6495,
+E         -  6492,
+E         -  3779,
+E         -  8581,
+E         -  9575,
+E         -  7744,
+E         -  9742,
+E         -  8428,
+E         -  5896,
+E         -  9888,
+E         -  3969,
+E         -  9513,
+E         -  4916,
+E         -  8524,
+E         -  2971,
+E         -  121,
+E         -  1464,
+E         -  6136,
+E         -  1767,
+E         -  7010,
+E         -  3208,
+E         -  3421,
+E         -  8656,
+E         -  8252,
+E         -  4853,
+E         -  8383,
+E         -  187,
+E         -  8479,
+E         -  8895,
+E         -  4908,
+E         -  3572,
+E         -  3102,
+E         -  2758,
+E         -  3706,
+E         -  2625,
+E         -  811,
+E         -  7032,
+E         -  9817,
+E         -  5141,
+E         -  7072,
+E         -  979,
+E         -  4450,
+E         -  7191,
+E         -  9026,
+E         -  3691,
+E         -  9651,
+E         -  3044,
+E         -  1396,
+E         -  997,
+E            8259,
+E           ]
+
+httpTests/channelTests/test_channel_messages.py:50: AssertionError
+__________________ testGlobalOwnerNonmemberCannotRemoveOwner ___________________
+
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=0, token='08b211cf-927a-4172-9288-55bee08fabbd', handleStr='lordzerg')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='3c89a0d1-f86a-4030-af36-36372f6b4546', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=2, token='c497c5c2-e10a-426b-8400-f6695496eb26', handleStr='buzzlightyear')
+ctx = None
+
+    def testGlobalOwnerNonmemberCannotRemoveOwner(userZerg, userWoody, woodysPublicToybox, userBuzz, ctx):
+        channelInvite(userWoody.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+    
+        channelAddowner(userWoody.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+    
+        with pytest.raises(AccessError):
+>           channelRemoveowner(userZerg.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+E           Failed: DID NOT RAISE <class 'httpTests.error.AccessError'>
+
+httpTests/channelTests/test_channel_removeowner.py:46: Failed
+________________________ testNonmemberCannotRemoveOwner ________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='497f5cc4-edb0-4d5d-9672-61b627fd4ee9', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='04675cd4-c92b-4e28-bd7c-68c0095108cf', handleStr='buzzlightyear')
+ctx = None
+
+    def testNonmemberCannotRemoveOwner(userWoody, woodysPublicToybox, userBuzz, ctx):
+        with pytest.raises(AccessError):
+>           channelRemoveowner(userBuzz.token, woodysPublicToybox.channelId, userWoody.uId, ctx)
+
+httpTests/channelTests/test_channel_removeowner.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/channel.py:90: in channelRemoveowner
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+__________________________ testMmberCannotRemoveOwner __________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='6c3a4cd9-8165-4a7c-a896-2fb012a7e8fa', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='f36194c8-e164-4047-a60e-42707c8e0c6f', handleStr='buzzlightyear')
+ctx = None
+
+    def testMmberCannotRemoveOwner(userWoody, woodysPublicToybox, userBuzz, ctx):
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+        with pytest.raises(AccessError):
+>           channelRemoveowner(userBuzz.token, woodysPublicToybox.channelId, userWoody.uId, ctx)
+
+httpTests/channelTests/test_channel_removeowner.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/channel.py:90: in channelRemoveowner
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+__________________________ testOverFiftyMessagesSent ___________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='f830cbbc-5929-4c7a-a49d-dc7dbf16eb47', handleStr='sheriffwoody')
+woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
+ctx = None
+
+    def testOverFiftyMessagesSent(userWoody, woodyAndBuzzDm, ctx):
+        messageIds = [
+            messageSenddm(userWoody.token, woodyAndBuzzDm.dmId, 'you are a toy', ctx)['messageId'] for x in
+            range(51)
+        ]
+        messageIds.reverse()
+    
+        dmMsgs = dmMessages(userWoody.token, woodyAndBuzzDm.dmId, 0, ctx)
+        assert dmMsgs['start'] == 0
+        assert dmMsgs['end'] == 50
+        assert messageIds[0: 50] == [m['messageId'] for m in dmMsgs['messages']]
+    
+        dmMsgs = dmMessages(userWoody.token, woodyAndBuzzDm.dmId, 50, ctx)
+        assert dmMsgs['start'] == 50
+        assert dmMsgs['end'] == -1
+>       assert [messageIds[-1]] == [m['messageId'] for m in dmMsgs['messages']]
+E       assert [3945] == [5738,\n 7903,\n 4304,\n 4021,\n 4264,\n 2302,\n 9332,\n 1919,\n 6662,\n 8718,\n 9902,\n 990,\n 2030,\n 9364,\n 7988,\n 1568,\n 9032,\n 2095,\n 4169,\n 4646,\n 6224,\n 6664,\n 1622,\n 6271,\n 7803,\n 165,\n 6881,\n 161,\n 1102,\n 3188,\n 1045,\n 9509,\n 4957,\n 9294,\n 8303,\n 365,\n 1139,\n 8916,\n 5702,\n 9605,\n 5412,\n 6934,\n 9002,\n 2999,\n 6744,\n 8636,\n 2266,\n 5952,\n 9058,\n 7834,\n 3945]
+E         At index 0 diff: 3945 != 5738
+E         Right contains 50 more items, first extra item: 7903
+E         Full diff:
+E           [
+E         -  5738,
+E         -  7903,
+E         -  4304,
+E         -  4021,
+E         -  4264,
+E         -  2302,
+E         -  9332,
+E         -  1919,
+E         -  6662,
+E         -  8718,
+E         -  9902,
+E         -  990,
+E         -  2030,
+E         -  9364,
+E         -  7988,
+E         -  1568,
+E         -  9032,
+E         -  2095,
+E         -  4169,
+E         -  4646,
+E         -  6224,
+E         -  6664,
+E         -  1622,
+E         -  6271,
+E         -  7803,
+E         -  165,
+E         -  6881,
+E         -  161,
+E         -  1102,
+E         -  3188,
+E         -  1045,
+E         -  9509,
+E         -  4957,
+E         -  9294,
+E         -  8303,
+E         -  365,
+E         -  1139,
+E         -  8916,
+E         -  5702,
+E         -  9605,
+E         -  5412,
+E         -  6934,
+E         -  9002,
+E         -  2999,
+E         -  6744,
+E         -  8636,
+E         -  2266,
+E         -  5952,
+E         -  9058,
+E         -  7834,
+E            3945,
+E           ]
+
+httpTests/dmTests/test_dm_messages.py:43: AssertionError
+_________________ testGlobalOwnerCanEditMembersMessageChannel __________________
+
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=0, token='d6dc3a00-ee7f-4056-a153-824db58018ce', handleStr='lordzerg')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='1ba7fe06-6c01-4067-9fc3-e2f2f984e6d8', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754c6e820>
+ctx = None
+
+    def testGlobalOwnerCanEditMembersMessageChannel(userZerg, userWoody, woodysPublicToybox, messageFactory, ctx):
+        woodysMsg = messageFactory(userWoody, woodysPublicToybox)
+        channelJoin(userZerg.token, woodysPublicToybox.channelId, ctx)
+>       messageEdit(userZerg.token, woodysMsg.messageId, 'hi', ctx)
+
+httpTests/messageTests/test_message_edit.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:37: in messageEdit
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [403]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+            raise error.InputError()
+        elif res.status_code == 403:
+>           raise error.AccessError()
+E           httpTests.error.AccessError: 403 Forbidden: None
+
+httpTests/fakepi/util.py:150: AccessError
+____________________ testSuccessfulPinGlobalOwnerInChannel _____________________
+
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=0, token='4462f77e-5eb4-4e29-b53d-bb387a1bf1ec', handleStr='buzzlightyear')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='e452f28b-9c2f-459c-9fbe-b1b805d5acbf', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754bc6040>
+ctx = None
+
+    @iteration3
+    def testSuccessfulPinGlobalOwnerInChannel(userBuzz, userWoody, woodysPublicToybox, messageFactory, ctx):
+        aMsg = messageFactory(userWoody, woodysPublicToybox)
+    
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+    
+>       assert messagePin(userBuzz.token, aMsg.messageId, ctx) == {}
+
+httpTests/messageTests/test_message_pin.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:50: in messagePin
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [403]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+            raise error.InputError()
+        elif res.status_code == 403:
+>           raise error.AccessError()
+E           httpTests.error.AccessError: 403 Forbidden: None
+
+httpTests/fakepi/util.py:150: AccessError
+________________ testGlobalOwnerCanRemoveMembersMessageChannel _________________
+
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=0, token='d41b09de-18a8-4f25-9200-99d28ed8c080', handleStr='lordzerg')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='80494956-d5fd-4377-8c31-b1ce7a410e6d', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754bad8b0>
+ctx = None
+
+    def testGlobalOwnerCanRemoveMembersMessageChannel(userZerg, userWoody, woodysPublicToybox, messageFactory, ctx):
+        woodysMsg = messageFactory(userWoody, woodysPublicToybox)
+        channelJoin(userZerg.token, woodysPublicToybox.channelId, ctx)
+>       messageRemove(userZerg.token, woodysMsg.messageId, ctx)
+
+httpTests/messageTests/test_message_remove.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:24: in messageRemove
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [403]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+            raise error.InputError()
+        elif res.status_code == 403:
+>           raise error.AccessError()
+E           httpTests.error.AccessError: 403 Forbidden: None
+
+httpTests/fakepi/util.py:150: AccessError
+____________________________ testValidFutureMessage ____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='c0dbcffa-93e8-4176-85f1-d0cc6f82daa8', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+ctx = None
+
+    @iteration3
+    def testValidFutureMessage(userWoody, woodysPublicToybox, ctx):
+        msgText = 'hello, world'
+        tts = utcNow() + 2
+        msg = messageSendlater(userWoody.token, woodysPublicToybox.channelId, msgText, tts, ctx)
+    
+        sleep(3)
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 0, ctx)
+    
+>       assert chMsgs['messages'][0]['messageId'] == msg['messageId']
+E       assert 8234 == 7399
+E         +8234
+E         -7399
+
+httpTests/messageTests/test_message_sendlater.py:26: AssertionError
+____________________________ testReturnsImmediately ____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='571cbaad-dc69-4515-be85-87550822416f', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+ctx = None
+
+    @iteration3
+    def testReturnsImmediately(userWoody, woodysPublicToybox, ctx):
+        msgText = 'hello, world'
+        timeReq = utcNow()
+        tts = utcNow() + 2
+        msg = messageSendlater(userWoody.token, woodysPublicToybox.channelId, msgText, tts, ctx)
+    
+        assert abs(timeReq - utcNow()) <= 1
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 0, ctx)
+    
+>       assert len(chMsgs['messages']) == 0
+E       assert 1 == 0
+E         +1
+E         -0
+
+httpTests/messageTests/test_message_sendlater.py:43: AssertionError
+________________________ testInvalidReturnedIdUntilSent ________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='56bb4ebf-1b34-4337-a9e3-8444d0acaeae', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+ctx = None
+
+    @iteration3
+    def testInvalidReturnedIdUntilSent(userWoody, woodysPublicToybox, ctx):
+        msgText = 'hello, world'
+        tts = utcNow() + 2
+        msg = messageSendlater(userWoody.token, woodysPublicToybox.channelId, msgText, tts, ctx)
+    
+        with pytest.raises(InputError):
+            messageRemove(userWoody.token, msg['messageId'], ctx)
+    
+        sleep(3)
+    
+>       messageRemove(userWoody.token, msg['messageId'], ctx)
+
+httpTests/messageTests/test_message_sendlater.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:24: in messageRemove
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+____________________________ testValidFutureMessage ____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='88137b10-6113-4a67-bba9-a6c56c70e304', handleStr='sheriffwoody')
+woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
+ctx = None
+
+    @iteration3
+    def testValidFutureMessage(userWoody, woodyAndBuzzDm, ctx):
+        msgText = 'hello, world'
+        tts = utcNow() + 2
+        msg = messageSendlaterdm(userWoody.token, woodyAndBuzzDm.dmId, msgText, tts, ctx)
+    
+        sleep(3)
+    
+        dmMsgs = dmMessages(userWoody.token, woodyAndBuzzDm.dmId, 0, ctx)
+    
+>       assert dmMsgs['messages'][0]['messageId'] == msg['messageId']
+E       assert 8811 == 7601
+E         +8811
+E         -7601
+
+httpTests/messageTests/test_message_sendlaterdm.py:26: AssertionError
+____________________________ testReturnsImmediately ____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='2f2fb657-4061-4e4a-94bc-37d2773252ba', handleStr='sheriffwoody')
+woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
+ctx = None
+
+    @iteration3
+    def testReturnsImmediately(userWoody, woodyAndBuzzDm, ctx):
+        msgText = 'hello, world'
+        timeReq = utcNow()
+        tts = utcNow() + 2
+        msg = messageSendlaterdm(userWoody.token, woodyAndBuzzDm.dmId, msgText, tts, ctx)
+    
+        assert abs(timeReq - utcNow()) <= 1
+    
+        dmMsgs = dmMessages(userWoody.token, woodyAndBuzzDm.dmId, 0, ctx)
+    
+>       assert len(dmMsgs['messages']) == 0
+E       assert 1 == 0
+E         +1
+E         -0
+
+httpTests/messageTests/test_message_sendlaterdm.py:43: AssertionError
+________________________ testInvalidReturnedIdUntilSent ________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='8bf84052-c4dc-4530-8543-94e7593ea561', handleStr='sheriffwoody')
+woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
+ctx = None
+
+    @iteration3
+    def testInvalidReturnedIdUntilSent(userWoody, woodyAndBuzzDm, ctx):
+        msgText = 'hello, world'
+        tts = utcNow() + 2
+        msg = messageSendlaterdm(userWoody.token, woodyAndBuzzDm.dmId, msgText, tts, ctx)
+    
+        with pytest.raises(InputError):
+            messageRemove(userWoody.token, msg['messageId'], ctx)
+    
+        sleep(3)
+    
+>       messageRemove(userWoody.token, msg['messageId'], ctx)
+
+httpTests/messageTests/test_message_sendlaterdm.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:24: in messageRemove
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+___________________ testSuccessfulUnpinGlobalOwnerInChannel ____________________
+
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=0, token='58961279-b6a8-4985-997d-6179a08ea3a7', handleStr='buzzlightyear')
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=1, token='92277dad-f044-4792-b7e9-5513ae060025', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[1], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754cbd3a0>
+ctx = None
+
+    @iteration3
+    def testSuccessfulUnpinGlobalOwnerInChannel(userBuzz, userWoody, woodysPublicToybox, messageFactory, ctx):
+        aMsg = messageFactory(userWoody, woodysPublicToybox)
+    
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+    
+>       msgPin(userBuzz.token, aMsg.messageId, ctx) == {}
+
+httpTests/messageTests/test_message_unpin.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:50: in messagePin
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [403]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+            raise error.InputError()
+        elif res.status_code == 403:
+>           raise error.AccessError()
+E           httpTests.error.AccessError: 403 Forbidden: None
+
+httpTests/fakepi/util.py:150: AccessError
+________________________ testSuccessfulUnreactInChannel ________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='eed748f7-27ed-4de8-8778-7c98de37bb6f', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='308f69f5-b567-4d1e-ae59-5256fc13ca2a', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754cbdca0>
+ctx = None
+
+    @iteration3
+    def testSuccessfulUnreactInChannel(userWoody, userBuzz, woodysPublicToybox, messageFactory, ctx):
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+    
+        aMsg = messageFactory(userWoody, woodysPublicToybox)
+    
+        msgReact(userWoody.token, aMsg.messageId, REACT, ctx)
+        msgReact(userBuzz.token, aMsg.messageId, REACT, ctx)
+    
+        assert messageUnreact(userWoody.token, aMsg.messageId, REACT, ctx) == {}
+>       assert messageUnreact(userBuzz.token, aMsg.messageId, REACT, ctx) == {}
+
+httpTests/messageTests/test_message_unreact.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:89: in messageUnreact
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+_______________________ testSuccessfulUnreactToDmMessage _______________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='895f807d-efd5-47c5-9943-d7a34a707945', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='2d021dfd-f8aa-45c1-b489-7a3549757cff', handleStr='buzzlightyear')
+woodyAndBuzzDm = DM(owner=0, members=[1], name='buzzlightyear, sheriffwoody', dmId=0)
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754bc6430>
+ctx = None
+
+    @iteration3
+    def testSuccessfulUnreactToDmMessage(userWoody, userBuzz, woodyAndBuzzDm, messageFactory, ctx):
+        aMsg = messageFactory(userWoody, woodyAndBuzzDm)
+    
+        msgReact(userWoody.token, aMsg.messageId, REACT, ctx)
+        msgReact(userBuzz.token, aMsg.messageId, REACT, ctx)
+    
+        assert messageUnreact(userWoody.token, aMsg.messageId, REACT, ctx) == {}
+>       assert messageUnreact(userBuzz.token, aMsg.messageId, REACT, ctx) == {}
+
+httpTests/messageTests/test_message_unreact.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/message.py:89: in messageUnreact
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+_________________ testTagThruMessageShareTriggersNotification __________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='952b7c48-1114-4d26-9fab-eff70151e223', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='6e656816-5db8-450a-af76-afc6d3e60511', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754cbdf70>
+ctx = None
+
+    @iteration3
+    def testTagThruMessageShareTriggersNotification(userWoody, userBuzz, woodysPublicToybox, messageFactory, ctx):
+        channelInvite(userWoody.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+    
+        aMsg = messageFactory(userWoody, woodysPublicToybox)
+    
+        messageShare(userBuzz.token, aMsg.messageId, f'@{userWoody.handleStr}', woodysPublicToybox.channelId, -1,
+                      ctx)
+    
+        notifs = notificationsGet(userWoody.token, ctx)['notifications']
+    
+>       assert len(notifs) == 1
+E       assert 0 == 1
+E         +0
+E         -1
+
+httpTests/otherTests/test_notifications_get.py:146: AssertionError
+___________________ testMessageSendlaterTagNotifiesWhenSent ____________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='04cc4927-742e-40ff-817f-996299c1a424', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='ca1ee75a-0245-451f-896f-6762ed110a8b', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754b7db80>
+ctx = None
+
+    @iteration3
+    def testMessageSendlaterTagNotifiesWhenSent(userWoody, userBuzz, woodysPublicToybox, messageFactory, ctx):
+        channelInvite(userWoody.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+    
+        content = f'@{userWoody.handleStr} hi'
+        messageFactory(userBuzz, woodysPublicToybox, content, delay=2)
+    
+        notifs = notificationsGet(userWoody.token, ctx)
+    
+>       assert notifs == {'notifications': []}
+E       AssertionError: assert {'notifications': [{'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody hi'}]} == {'notifications': []}
+E         Differing items:
+E         {'notifications': [{'channelId': 0, 'dmId': -1, 'notificationMessage': 'buzzlightyear tagged you in woodys toybox: @sheriffwoody hi'}]} != {'notifications': []}
+E         Full diff:
+E           {
+E         -  'notifications': [],
+E         +  'notifications': [{'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody hi'}],
+E           }
+
+httpTests/otherTests/test_notifications_get.py:186: AssertionError
+____________________ testMostRecent_20NotificationsFetched _____________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='f8e26aa9-b74b-44ef-8aba-f8a8d78fc6f4', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='53fabd39-0778-4ff3-883a-de068f149dc8', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754d469d0>
+ctx = None
+
+    @iteration3
+    def testMostRecent_20NotificationsFetched(userWoody, userBuzz, woodysPublicToybox, messageFactory, ctx):
+        channelInvite(userWoody.token, woodysPublicToybox.channelId, userBuzz.uId, ctx)
+    
+        expected = {'notifications': []}
+        for ix in range(30):
+            content = f'@{userWoody.handleStr} {ix}'
+            messageFactory(userBuzz, woodysPublicToybox, content)
+    
+            if ix >= 10:
+                expected['notifications'].insert(0, {
+                    'channelId': woodysPublicToybox.channelId,
+                    'dmId': -1,
+                    'notificationMessage': f'{userBuzz.handleStr} tagged you in {woodysPublicToybox.name}: {content[:20]}'
+                })
+    
+        notifs = notificationsGet(userWoody.token, ctx)
+    
+>       assert notifs == expected
+E       AssertionError: assert {'notifications': [{'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 29'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 28'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 27'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 26'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 25'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 24'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 23'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 22'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 21'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 20'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 19'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 18'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 17'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 16'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 15'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 14'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 13'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 12'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 11'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 10'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 9'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 8'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 7'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 6'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 5'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 4'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 3'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 2'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 1'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 0'}]} == {'notifications': [{'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 29'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 28'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 27'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 26'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 25'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 24'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 23'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 22'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 21'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 20'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 19'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 18'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 17'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 16'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 15'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 14'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 13'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 12'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 11'},\n                   {'channelId': 0,\n                    'dmId': -1,\n                    'notificationMessage': 'buzzlightyear tagged you in woodys '\n                                           'toybox: @sheriffwoody 10'}]}
+E         Differing items:
+E         {'notifications': [{'channelId': 0, 'dmId': -1, 'notificationMessage': 'buzzlightyear tagged you in woodys toybox: @sh...channelId': 0, 'dmId': -1, 'notificationMessage': 'buzzlightyear tagged you in woodys toybox: @sheriffwoody 24'}, ...]} != {'notifications': [{'channelId': 0, 'dmId': -1, 'notificationMessage': 'buzzlightyear tagged you in woodys toybox: @sh...channelId': 0, 'dmId': -1, 'notificationMessage': 'buzzlightyear tagged you in woodys toybox: @sheriffwoody 24'}, ...]}
+E         Full diff:
+E           {
+E            'notifications': [{'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 29'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 28'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 27'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 26'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 25'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 24'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 23'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 22'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 21'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 20'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 19'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 18'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 17'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 16'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 15'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 14'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 13'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 12'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E                                                      'toybox: @sheriffwoody 11'},
+E                              {'channelId': 0,
+E                               'dmId': -1,
+E                               'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         -                                            'toybox: @sheriffwoody 10'}],
+E         ?                                                                       -
+E         +                                            'toybox: @sheriffwoody 10'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 9'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 8'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 7'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 6'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 5'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 4'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 3'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 2'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 1'},
+E         +                    {'channelId': 0,
+E         +                     'dmId': -1,
+E         +                     'notificationMessage': 'buzzlightyear tagged you in woodys '
+E         +                                            'toybox: @sheriffwoody 0'}],
+E           }
+
+httpTests/otherTests/test_notifications_get.py:297: AssertionError
+___________________________ testCaseInsensitiveMatch ___________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='c20a95f3-542c-461b-b028-e75953529f0f', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754cbd5e0>
+ctx = None
+
+    @iteration3
+    def testCaseInsensitiveMatch(userWoody, woodysPublicToybox, messageFactory, ctx):
+        aMsg = messageFactory(userWoody, woodysPublicToybox, 'AnYthing')
+    
+        msgs = search(userWoody.token, 'aNy', ctx)
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 0, ctx)
+>       assert msgs['messages'] == chMsgs['messages']
+E       AssertionError: assert [] == [{'isPinned': False,\n  'message': 'AnYthing',\n  'messageId': 9809,\n  'reacts': [{'isThisUserReacted': False, 'reactId': 1, 'uIds': []}],\n  'timeSent': 1668876567,\n  'uId': 0}]
+E         Right contains one more item: {'isPinned': False, 'message': 'AnYthing', 'messageId': 9809, 'reacts': [{'isThisUserReacted': False, 'reactId': 1, 'uIds': []}], ...}
+E         Full diff:
+E           [
+E         +  ,
+E         -  {'isPinned': False,
+E         -   'message': 'AnYthing',
+E         -   'messageId': 9809,
+E         -   'reacts': [{'isThisUserReacted': False,
+E         -               'reactId': 1,
+E         -               'uIds': []}],
+E         -   'timeSent': 1668876567,
+E         -   'uId': 0},
+E           ]
+
+httpTests/otherTests/test_search.py:44: AssertionError
+__________________ testMessagesBufferedAndDisplayedCorrectly ___________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='adbed9dc-f428-43e8-adb8-ffcba5409568', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='ae4e52f5-5d1f-4f0a-92a0-abdc5cf0f4c4', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+standupFactory = <function standupFactory.<locals>.makeStandup at 0x7f3754b32670>
+ctx = None
+
+    @iteration3
+    def testMessagesBufferedAndDisplayedCorrectly(userWoody, userBuzz, woodysPublicToybox, standupFactory, ctx):
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+    
+        std = standupFactory(userWoody, woodysPublicToybox, 1)
+    
+        standupSend(userWoody.token, woodysPublicToybox.channelId, 'welcome', ctx)
+        standupSend(userBuzz.token, woodysPublicToybox.channelId, 'to the', ctx)
+        standupSend(userWoody.token, woodysPublicToybox.channelId, 'black parade', ctx)
+    
+        sleep(2)
+    
+        chMsgs = channelMessages(userWoody.token, woodysPublicToybox.channelId, 0, ctx)['messages']
+        expected = '\n'.join([
+            f'{userWoody.handleStr}: welcome',
+            f'{userBuzz.handleStr}: to the',
+            f'{userWoody.handleStr}: black parade'
+        ])
+    
+>       assert len(chMsgs) == 1 and chMsgs[0]['message'] == expected and chMsgs[0]['timeSent'] == std.timeFinish
+E       assert (0 == 1
+E         +0
+E         -1)
+
+httpTests/standupTests/test_standup_send.py:35: AssertionError
+________________________ testStandupSendsAfterLoggedOut ________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='0c55a60e-4307-4347-a135-c4af61677d14', handleStr='sheriffwoody')
+userBuzz = User(email='buzz.lightyear@starcommand.com', password='qazwsx@@', nameFirst='buzz', nameLast='lightyear', uId=1, token='318c3537-831b-47c2-bed5-01d349e99095', handleStr='buzzlightyear')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+standupFactory = <function standupFactory.<locals>.makeStandup at 0x7f3754d35dc0>
+ctx = None
+
+    @iteration3
+    def testStandupSendsAfterLoggedOut(userWoody, userBuzz, woodysPublicToybox, standupFactory, ctx):
+        channelJoin(userBuzz.token, woodysPublicToybox.channelId, ctx)
+        std = standupFactory(userWoody, woodysPublicToybox, 2)
+    
+        standupSend(userWoody.token, woodysPublicToybox.channelId, 'hello', ctx)
+    
+        authLogout(userWoody.token, ctx)
+    
+        sleep(2)
+    
+        chMsgs = channelMessages(userBuzz.token, woodysPublicToybox.channelId, 0, ctx)['messages']
+        expected = f'{userWoody.handleStr}: hello'
+    
+>       assert len(chMsgs) == 1 and chMsgs[0]['message'] == expected and chMsgs[0]['timeSent'] == std.timeFinish
+E       assert (0 == 1
+E         +0
+E         -1)
+
+httpTests/standupTests/test_standup_send.py:52: AssertionError
+____________________________ testReturnTypeCorrect _____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='eee28181-da09-4629-917a-22ae20a118e9', handleStr='sheriffwoody')
+ctx = None
+
+    @iteration3
+    def testReturnTypeCorrect(userWoody, ctx):
+        stats = userStats(userWoody.token, ctx)
+    
+        assert 'userStats' in stats
+        stats = stats['userStats']
+    
+        assert 'channelsJoined' in stats and isinstance(stats['channelsJoined'], list)
+        assert stats['channelsJoined'][-1]['numChannelsJoined'] == 0
+        assert abs(stats['channelsJoined'][-1]['timeStamp'] - utcNow()) <= 2
+    
+        assert 'dmsJoined' in stats and isinstance(stats['dmsJoined'], list)
+        assert stats['dmsJoined'][-1]['numDmsJoined'] == 0
+        assert abs(stats['dmsJoined'][-1]['timeStamp'] - utcNow()) <= 2
+    
+        assert 'messagesSent' in stats and isinstance(stats['messagesSent'], list)
+        assert stats['messagesSent'][-1]['numMessagesSent'] == 0
+        assert abs(stats['messagesSent'][-1]['timeStamp'] - utcNow()) <= 2
+    
+>       assert 'involvementRate' in stats and isinstance(stats['involvementRate'], float)
+E       AssertionError: assert ('involvementRate' in {'channelsJoined': [{'numChannelsJoined': 0, 'timeStamp': 1668876589}], 'dmsJoined': [{'numDmsJoined': 0, 'timeStamp': 1668876589}], 'involvementRate': None, 'messagesSent': [{'numMessagesSent': 0, 'timeStamp': 1668876589}]} and False)
+E        +  where False = isinstance(None, float)
+
+httpTests/statsTests/test_user_stats.py:38: AssertionError
+_______________________ testMessagesTrackedStandupFinish _______________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='5b9febe1-83ba-4245-b051-dcfdfeda01ca', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+standupFactory = <function standupFactory.<locals>.makeStandup at 0x7f3754b21430>
+ctx = None
+
+    @iteration3
+    def testMessagesTrackedStandupFinish(userWoody, woodysPublicToybox, standupFactory, ctx):
+        standupFactory(userWoody, woodysPublicToybox, 1)
+        standupSend(userWoody.token, woodysPublicToybox.channelId, 'hi', ctx)
+    
+        sleep(2)
+    
+        msgStats = userStats(userWoody.token, ctx)['userStats']['messagesSent']
+    
+>       assert len(msgStats) == 2
+E       assert 1 == 2
+E         +1
+E         -2
+
+httpTests/statsTests/test_user_stats.py:189: AssertionError
+____________________________ testInvolvementTracked ____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='bcd42732-eb2e-432a-8bbe-19ac0230879d', handleStr='sheriffwoody')
+userZerg = User(email='zerg.thedestroyer@zergworld.com', password='!!qazwsx', nameFirst='lord', nameLast='zerg', uId=1, token='c8f45fcd-5d2f-44cd-9296-0ac58a1ba1ea', handleStr='lordzerg')
+channelFactory = <function channelFactory.<locals>.makeChannel at 0x7f3754d35310>
+ctx = None
+
+    @iteration3
+    def testInvolvementTracked(userWoody, userZerg, channelFactory, ctx):
+        stats = userStats(userWoody.token, ctx)['userStats']
+>       assert stats['involvementRate'] == 0
+E       assert None == 0
+E         +None
+E         -0
+
+httpTests/statsTests/test_user_stats.py:197: AssertionError
+____________________________ testReturnTypeCorrect _____________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='12fe03a3-c830-40e3-b52e-79f739448aac', handleStr='sheriffwoody')
+ctx = None
+
+    @iteration3
+    def testReturnTypeCorrect(userWoody, ctx):
+        stats = usersStats(userWoody.token, ctx)
+    
+        assert 'workspaceStats' in stats
+        stats = stats['workspaceStats']
+    
+        assert 'channelsExist' in stats and isinstance(stats['channelsExist'], list)
+        assert len(stats['channelsExist']) == 1
+        assert stats['channelsExist'][-1]['numChannelsExist'] == 0
+        assert abs(stats['channelsExist'][-1]['timeStamp'] - utcNow()) <= 2
+    
+        assert 'dmsExist' in stats and isinstance(stats['dmsExist'], list)
+        assert len(stats['dmsExist']) == 1
+        assert stats['dmsExist'][-1]['numDmsExist'] == 0
+        assert abs(stats['dmsExist'][-1]['timeStamp'] - utcNow()) <= 2
+    
+        assert 'messagesExist' in stats and isinstance(stats['messagesExist'], list)
+        assert len(stats['messagesExist']) == 1
+        assert stats['messagesExist'][-1]['numMessagesExist'] == 0
+        assert abs(stats['messagesExist'][-1]['timeStamp'] - utcNow()) <= 2
+    
+>       assert 'utilizationRate' in stats and isinstance(stats['utilizationRate'], float)
+E       AssertionError: assert ('utilizationRate' in {'channelsExist': [{'numChannelsExist': 0, 'timeStamp': 1668876595}], 'dmsExist': [{'numDmsExist': 0, 'timeStamp': 1668876595}], 'messagesExist': [{'numMessagesExist': 0, 'timeStamp': 1668876595}], 'utilizationRate': 0} and False)
+E        +  where False = isinstance(0, float)
+
+httpTests/statsTests/test_users_stats.py:40: AssertionError
+_______________________ testMessagesTrackedStandupFinish _______________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='b4841811-3430-4ac2-a75d-75afb1398b45', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+standupFactory = <function standupFactory.<locals>.makeStandup at 0x7f3754b7d8b0>
+ctx = None
+
+    @iteration3
+    def testMessagesTrackedStandupFinish(userWoody, woodysPublicToybox, standupFactory, ctx):
+        standupFactory(userWoody, woodysPublicToybox, 1)
+        standupSend(userWoody.token, woodysPublicToybox.channelId, 'hi', ctx)
+    
+        sleep(2)
+    
+        msgStats = usersStats(userWoody.token, ctx)['workspaceStats']['messagesExist']
+    
+>       assert len(msgStats) == 2
+E       assert 1 == 2
+E         +1
+E         -2
+
+httpTests/statsTests/test_users_stats.py:146: AssertionError
+______________________ testMessagesTrackedEditedToRemoval ______________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='e48b554a-784d-4a58-b0db-446147587139', handleStr='sheriffwoody')
+woodysPublicToybox = Channel(name='woodys toybox', isPublic=True, channelId=0, ownerMembers=[0], allMembers=[])
+messageFactory = <function messageFactory.<locals>.makeMessage at 0x7f3754b7d1f0>
+ctx = None
+
+    @iteration3
+    def testMessagesTrackedEditedToRemoval(userWoody, woodysPublicToybox, messageFactory, ctx):
+        aMsg = messageFactory(userWoody, woodysPublicToybox)
+    
+        messageEdit(userWoody.token, aMsg.messageId, '', ctx)
+    
+        msgStats = usersStats(userWoody.token, ctx)['workspaceStats']['messagesExist']
+    
+>       assert len(msgStats) == 3
+E       assert 2 == 3
+E         +2
+E         -3
+
+httpTests/statsTests/test_users_stats.py:159: AssertionError
+_______________________________ testInvalidToken _______________________________
+
+userWoody = User(email='sheriff.woody@andysroom.com', password='qazwsx!!', nameFirst='sheriff', nameLast='woody', uId=0, token='2dae4593-345b-4bf5-ae8b-b4b4f47207b0', handleStr='sheriffwoody')
+ctx = None
+
+    def testInvalidToken(userWoody, ctx):
+        authLogout(userWoody.token, ctx)
+        with pytest.raises(AccessError):
+>           userProfileSethandle(userWoody.token, userWoody.handleStr, ctx)
+
+httpTests/userTests/test_user_profile_sethandle.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+httpTests/fakepi/user.py:50: in userProfileSethandle
+    return util.parseResponse(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+res = <Response [400]>
+
+    def parseResponse(res):
+        if res.status_code in [200, 201]:
+            return res.json()
+        elif res.status_code == 400:
+>           raise error.InputError()
+E           httpTests.error.InputError: 400 Bad Request: None
+
+httpTests/fakepi/util.py:148: InputError
+=========================== short test summary info ============================
+FAILED httpTests/adminTests/test_admin_user_remove.py::testRemovalNotInUsersAll
+FAILED httpTests/adminTests/test_admin_user_remove.py::testCannotRemoveUserNonowner
+FAILED httpTests/adminTests/test_admin_userpermission_change.py::testNonownerCantChangePermissions
+FAILED httpTests/channelTests/test_channel_addowner.py::testNonMemberCannotAddOwner
+FAILED httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerNonMemberCantAddownerPrivate
+FAILED httpTests/channelTests/test_channel_addowner.py::testGlobalOwnerNonMemberCantAddownerPublic
+FAILED httpTests/channelTests/test_channel_messages.py::testOverFiftyMessagesSent
+FAILED httpTests/channelTests/test_channel_removeowner.py::testGlobalOwnerNonmemberCannotRemoveOwner
+FAILED httpTests/channelTests/test_channel_removeowner.py::testNonmemberCannotRemoveOwner
+FAILED httpTests/channelTests/test_channel_removeowner.py::testMmberCannotRemoveOwner
+FAILED httpTests/dmTests/test_dm_messages.py::testOverFiftyMessagesSent - ass...
+FAILED httpTests/messageTests/test_message_edit.py::testGlobalOwnerCanEditMembersMessageChannel
+FAILED httpTests/messageTests/test_message_pin.py::testSuccessfulPinGlobalOwnerInChannel
+FAILED httpTests/messageTests/test_message_remove.py::testGlobalOwnerCanRemoveMembersMessageChannel
+FAILED httpTests/messageTests/test_message_sendlater.py::testValidFutureMessage
+FAILED httpTests/messageTests/test_message_sendlater.py::testReturnsImmediately
+FAILED httpTests/messageTests/test_message_sendlater.py::testInvalidReturnedIdUntilSent
+FAILED httpTests/messageTests/test_message_sendlaterdm.py::testValidFutureMessage
+FAILED httpTests/messageTests/test_message_sendlaterdm.py::testReturnsImmediately
+FAILED httpTests/messageTests/test_message_sendlaterdm.py::testInvalidReturnedIdUntilSent
+FAILED httpTests/messageTests/test_message_unpin.py::testSuccessfulUnpinGlobalOwnerInChannel
+FAILED httpTests/messageTests/test_message_unreact.py::testSuccessfulUnreactInChannel
+FAILED httpTests/messageTests/test_message_unreact.py::testSuccessfulUnreactToDmMessage
+FAILED httpTests/otherTests/test_notifications_get.py::testTagThruMessageShareTriggersNotification
+FAILED httpTests/otherTests/test_notifications_get.py::testMessageSendlaterTagNotifiesWhenSent
+FAILED httpTests/otherTests/test_notifications_get.py::testMostRecent_20NotificationsFetched
+FAILED httpTests/otherTests/test_search.py::testCaseInsensitiveMatch - Assert...
+FAILED httpTests/standupTests/test_standup_send.py::testMessagesBufferedAndDisplayedCorrectly
+FAILED httpTests/standupTests/test_standup_send.py::testStandupSendsAfterLoggedOut
+FAILED httpTests/statsTests/test_user_stats.py::testReturnTypeCorrect - Asser...
+FAILED httpTests/statsTests/test_user_stats.py::testMessagesTrackedStandupFinish
+FAILED httpTests/statsTests/test_user_stats.py::testInvolvementTracked - asse...
+FAILED httpTests/statsTests/test_users_stats.py::testReturnTypeCorrect - Asse...
+FAILED httpTests/statsTests/test_users_stats.py::testMessagesTrackedStandupFinish
+FAILED httpTests/statsTests/test_users_stats.py::testMessagesTrackedEditedToRemoval
+FAILED httpTests/userTests/test_user_profile_sethandle.py::testInvalidToken
+================== 36 failed, 338 passed in 64.14s (0:01:04) ===================

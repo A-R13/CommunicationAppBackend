@@ -1,0 +1,67 @@
+
+> test
+> jest **/?(*.)+(test).ts
+
+  Invalid testPattern **/?(*.)+(test).ts supplied. Running all tests instead.
+  Invalid testPattern **/?(*.)+(test).ts supplied. Running all tests instead.
+FAIL src/tests/messageSendLater.test.ts (6.685 s)
+  ● messageSendLater tests › authorised user is not a member of the channel
+
+    expect(received).toStrictEqual(expected) // deep equality
+
+    Expected: 403
+    Received: 400
+
+      51 |     // channelId is valid and the authorised user is not a member of the channel they are trying to post to
+      52 |     test(('authorised user is not a member of the channel'), () => {
+    > 53 |       expect(requestMessageSendLater(user1.token, channel0.channelId, 'Test Message 1', timeSent)).toStrictEqual(403);
+         |                                                                                                    ^
+      54 |     });
+      55 |
+      56 |     // token is invalid
+
+      at Object.<anonymous> (src/tests/messageSendLater.test.ts:53:100)
+
+PASS src/tests/messageShare.test.ts (11.168 s)
+PASS src/tests/standupStart.test.ts (5.933 s)
+PASS src/tests/channelRemoveOwner.test.ts (6.033 s)
+PASS src/tests/adminUserRemove.test.ts (5.534 s)
+PASS src/tests/channelAddOwner.test.ts (5.937 s)
+PASS src/tests/search.test.ts (8.105 s)
+PASS src/tests/messageUnreact.test.ts (5.912 s)
+PASS src/tests/messageUnpin.test.ts (5.3 s)
+PASS src/tests/channelInvite.test.ts (6.451 s)
+PASS src/tests/messagePin.test.ts
+PASS src/tests/messageReact.test.ts (7.505 s)
+PASS src/tests/adminUserpermissionChange.test.ts (5.319 s)
+PASS src/tests/messageEdit.test.ts (14.042 s)
+PASS src/tests/notificationsGet.test.ts
+PASS src/tests/channelJoin.test.ts
+PASS src/tests/messageRemove.test.ts (7.029 s)
+PASS src/tests/dmLeave.test.ts (5.043 s)
+PASS src/tests/dmDetails.test.ts
+PASS src/tests/dmRemove.test.ts
+PASS src/tests/messageSend.test.ts
+PASS src/tests/messageSendDm.test.ts
+PASS src/tests/dmMessages.test.ts (8.772 s)
+PASS src/tests/channelLeave.test.ts (13.08 s)
+PASS src/tests/channelDetails.test.ts
+PASS src/tests/dmCreate.test.ts
+PASS src/tests/authRegister.test.ts
+PASS src/tests/channelMessages.test.ts (8.616 s)
+PASS src/tests/channelsList.test.ts
+PASS src/tests/dmList.test.ts
+PASS src/tests/channelsCreate.test.ts
+PASS src/tests/authLogin.test.ts
+PASS src/tests/authLogout.test.ts
+PASS src/tests/messageSendLaterDm.test.ts (5.516 s)
+PASS src/tests/authPasswordResetReset.test.ts
+PASS src/tests/authPasswordResetRequest.test.ts
+PASS src/tests/usersStats.test.ts (5.108 s)
+PASS src/tests/userStats.test.ts (9.27 s)
+PASS src/tests/standupActive.test.ts (6.294 s)
+PASS src/tests/userProfile.test.ts
+PASS src/tests/channelsListAll.test.ts
+PASS src/tests/usersAll.test.ts
+PASS src/tests/standupSend.test.ts (7.122 s)
+PASS src/tests/echo.test.ts
