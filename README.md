@@ -3,7 +3,7 @@
 
 Recreating **<a href="https://www.microsoft.com/en-au/microsoft-teams/group-chat-software">Microsoft Teams</a>**.
 
-Built the **backend Javascript server** for a communication platform. Beans is a communication tool that allows you to share, communicate, and collaborate virtually.
+Build the **backend Javascript server** for a communication platform. Beans is a communication tool that allows you to share, communicate, and collaborate virtually.
 
 ## 0. Aims:
 1. Demonstrate effective use of software development tools to build full-stack end-user applications.
